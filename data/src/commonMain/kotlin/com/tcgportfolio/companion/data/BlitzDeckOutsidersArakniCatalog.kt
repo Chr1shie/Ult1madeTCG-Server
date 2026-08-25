@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckOutsidersArakniSetSeed = CardSetSeed(id = "6400008", name = "Blitz Deck: Outsiders - Arakni", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckOutsidersArakniCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400008-ARA001", "6400008", "ARA001", "Arakni, Solitary Confinement", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA001.png", 0.2),
+    CatalogCardSeed("6400008-ARA002", "6400008", "ARA002", "Spider's Bite", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA002.png", 0.35),
+    CatalogCardSeed("6400008-ARA003", "6400008", "ARA003", "Mask of Malicious Manifestations", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA003.png", null),
+    CatalogCardSeed("6400008-ARA004", "6400008", "ARA004", "Blossom of Spring", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA004.png", 1.5),
+    CatalogCardSeed("6400008-ARA005", "6400008", "ARA005", "Toxic Tips", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA005.png", null),
+    CatalogCardSeed("6400008-ARA006", "6400008", "ARA006", "Snapdragon Scalers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA006.png", null),
+    CatalogCardSeed("6400008-ARA007", "6400008", "ARA007", "Hurl (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA007.png", 0.25),
+    CatalogCardSeed("6400008-ARA008", "6400008", "ARA008", "Infect (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA008.png", 0.25),
+    CatalogCardSeed("6400008-ARA009", "6400008", "ARA009", "Isolate (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA009.png", 0.2),
+    CatalogCardSeed("6400008-ARA010", "6400008", "ARA010", "Malign (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA010.png", null),
+    CatalogCardSeed("6400008-ARA011", "6400008", "ARA011", "Prowl (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA011.png", null),
+    CatalogCardSeed("6400008-ARA012", "6400008", "ARA012", "Sedate (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA012.png", 0.25),
+    CatalogCardSeed("6400008-ARA013", "6400008", "ARA013", "Wither (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA013.png", 0.22),
+    CatalogCardSeed("6400008-ARA014", "6400008", "ARA014", "Virulent Touch (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA014.png", 0.25),
+    CatalogCardSeed("6400008-ARA015", "6400008", "ARA015", "Spring Load (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA015.png", null),
+    CatalogCardSeed("6400008-ARA016", "6400008", "ARA016", "Razor's Edge (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA016.png", 0.25),
+    CatalogCardSeed("6400008-ARA017", "6400008", "ARA017", "Short and Sharp (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA017.png", 0.25),
+    CatalogCardSeed("6400008-ARA018", "6400008", "ARA018", "Spike with Bloodrot", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA018.png", 0.22),
+    CatalogCardSeed("6400008-ARA019", "6400008", "ARA019", "Bloodrot Trap", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA019.png", 0.22),
+    CatalogCardSeed("6400008-ARA020", "6400008", "ARA020", "Infect (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA020.png", null),
+    CatalogCardSeed("6400008-ARA021", "6400008", "ARA021", "Prowl (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA021.png", null),
+    CatalogCardSeed("6400008-ARA022", "6400008", "ARA022", "Infect (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA022.png", 0.24),
+    CatalogCardSeed("6400008-ARA023", "6400008", "ARA023", "Prowl (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA023.png", null),
+    CatalogCardSeed("6400008-ARA024", "6400008", "ARA024", "Sedate (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA024.png", null),
+    CatalogCardSeed("6400008-ARA025", "6400008", "ARA025", "Wither (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA025.png", null),
+    CatalogCardSeed("6400008-ARA026", "6400008", "ARA026", "Razor's Edge (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA026.png", null),
+    CatalogCardSeed("6400008-ARA027", "6400008", "ARA027", "Bloodrot Pox", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA027.png", 0.6),
+    CatalogCardSeed("6400008-ARA028", "6400008", "ARA028", "Frailty", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA028.png", 0.35),
+    CatalogCardSeed("6400008-ARA029", "6400008", "ARA029", "Inertia", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA029.png", 0.46),
+)

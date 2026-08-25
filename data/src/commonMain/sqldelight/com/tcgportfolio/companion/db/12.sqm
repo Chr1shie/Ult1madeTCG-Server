@@ -1,0 +1,5 @@
+-- Stabile Sync-Identität für Wunschlisten (28.07., Nutzer-Vorgabe: App und
+-- Server sollen synchron sein). Siehe Kommentar bei WishlistEntity in
+-- Portfolio.sq - die lokale AUTOINCREMENT-id ist nicht geräteübergreifend
+-- stabil, uid schon.
+ALTER TABLE WishlistEntity ADD COLUMN uid TEXT NOT NULL DEFAULT '';

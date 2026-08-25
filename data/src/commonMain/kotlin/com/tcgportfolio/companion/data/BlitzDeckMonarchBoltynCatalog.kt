@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckMonarchBoltynSetSeed = CardSetSeed(id = "6400071", name = "Blitz Deck: Monarch - Boltyn", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckMonarchBoltynCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400071-BOL001", "6400071", "BOL001", "Boltyn", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BOL001.width-450.png", 0.21),
+    CatalogCardSeed("6400071-BOL002", "6400071", "BOL002", "Minerva Themis", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/media/images/BOL002_Minerva_Themis.width-10000.png", 0.4),
+    CatalogCardSeed("6400071-BOL003", "6400071", "BOL003", "Hatchet of Body", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL003.width-450.png", 1.49),
+    CatalogCardSeed("6400071-BOL004", "6400071", "BOL004", "Hatchet of Mind", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL004.width-450.png", 1.34),
+    CatalogCardSeed("6400071-BOL005", "6400071", "BOL005", "Halo of Illumination", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL005.width-450.png", 0.15),
+    CatalogCardSeed("6400071-BOL006", "6400071", "BOL006", "Spell Fray Cloak", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL006.width-450.png", null),
+    CatalogCardSeed("6400071-BOL007", "6400071", "BOL007", "Gallantry Gold", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL007.width-450.png", 0.65),
+    CatalogCardSeed("6400071-BOL008", "6400071", "BOL008", "Snapdragon Scalers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL008.width-450.png", 0.43),
+    CatalogCardSeed("6400071-BOL009", "6400071", "BOL009", "V of the Vanguard", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BOL009.width-450.png", 0.27),
+    CatalogCardSeed("6400071-BOL010", "6400071", "BOL010", "Battlefield Blitz", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BOL010.width-450.png", 0.2),
+    CatalogCardSeed("6400071-BOL011", "6400071", "BOL011", "Bolt of Courage (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL011.width-450.png", 0.19),
+    CatalogCardSeed("6400071-BOL012", "6400071", "BOL012", "Courageous Steelhand", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL012.width-450.png", 0.19),
+    CatalogCardSeed("6400071-BOL013", "6400071", "BOL013", "Cross the Line (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL013.width-450.png", 0.13),
+    CatalogCardSeed("6400071-BOL014", "6400071", "BOL014", "Engulfing Light (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL014.width-450.png", null),
+    CatalogCardSeed("6400071-BOL015", "6400071", "BOL015", "Express Lightning (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL015.width-450.png", 0.25),
+    CatalogCardSeed("6400071-BOL016", "6400071", "BOL016", "Take Flight (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL016.width-450.png", 0.15),
+    CatalogCardSeed("6400071-BOL017", "6400071", "BOL017", "Valiant Thrust", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BOL017.width-450.png", 0.32),
+    CatalogCardSeed("6400071-BOL018", "6400071", "BOL018", "Courageous Steelhand (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL018.width-450.png", 0.15),
+    CatalogCardSeed("6400071-BOL019", "6400071", "BOL019", "Cross the Line (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL019.width-450.png", null),
+    CatalogCardSeed("6400071-BOL020", "6400071", "BOL020", "Express Lightning (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL020.width-450.png", 0.15),
+    CatalogCardSeed("6400071-BOL021", "6400071", "BOL021", "Take Flight (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL021.width-450.png", null),
+    CatalogCardSeed("6400071-BOL022", "6400071", "BOL022", "Bolt of Courage (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL022.width-450.png", 0.13),
+    CatalogCardSeed("6400071-BOL023", "6400071", "BOL023", "Engulfing Light (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL023.width-450.png", null),
+    CatalogCardSeed("6400071-BOL024", "6400071", "BOL024", "Invigorating Light (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BOL024.width-450.png", null),
+    CatalogCardSeed("6400071-BOL025", "6400071", "BOL025", "Rising Solartide (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL025.width-450.png", null),
+    CatalogCardSeed("6400071-BOL026", "6400071", "BOL026", "Rising Solartide (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL026.width-450.png", 0.1),
+    CatalogCardSeed("6400071-BOL027", "6400071", "BOL027", "Illuminate (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL027.width-450.png", null),
+    CatalogCardSeed("6400071-BOL028", "6400071", "BOL028", "Seek Enlightenment (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL028.width-450.png", null),
+    CatalogCardSeed("6400071-BOL029", "6400071", "BOL029", "Dusk Path Pilgrimage (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BOL029.width-450.png", 0.4),
+    CatalogCardSeed("6400071-BOL030", "6400071", "BOL030", "Push Forward (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BOL030.width-450.png", 0.2),
+)

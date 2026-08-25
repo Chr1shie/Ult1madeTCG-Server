@@ -1,0 +1,4 @@
+-- Holo-Stil je Karte (18.08., Nutzer-Vorgabe: globaler Stil-Schalter in den
+-- Einstellungen + Pro-Karte-Override, "lieber haben als brauchen") - siehe
+-- Spalten-Kommentar in Portfolio.sq.
+ALTER TABLE PortfolioItemEntity ADD COLUMN holoStyle TEXT;

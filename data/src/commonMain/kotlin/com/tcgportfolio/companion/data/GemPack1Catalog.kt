@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val gemPack1SetSeed = CardSetSeed(id = "6400061", name = "GEM Pack 1", game = "FleshAndBlood", totalCards = 32)
+
+val gemPack1CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400061-GEM001", "6400061", "GEM001", "Uzuri, Switchblade", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM001-CF.webp", 45.14),
+    CatalogCardSeed("6400061-GEM002", "6400061", "GEM002", "Kunai of Retribution - GEM002", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM002-CF.webp", 4.82),
+    CatalogCardSeed("6400061-GEM003", "6400061", "GEM003", "Kunai of Retribution - GEM003", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM003-CF.webp", 22.77),
+    CatalogCardSeed("6400061-GEM004", "6400061", "GEM004", "Obsidian Fire Vein - GEM004", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM004-CF.webp", 3.66),
+    CatalogCardSeed("6400061-GEM005", "6400061", "GEM005", "Obsidian Fire Vein - GEM005", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM005-CF.webp", 22.69),
+    CatalogCardSeed("6400061-GEM006", "6400061", "GEM006", "Mark of the Huntsman - GEM006", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM006-CF.webp", 1.62),
+    CatalogCardSeed("6400061-GEM007", "6400061", "GEM007", "Mark of the Huntsman - GEM007", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM007-CF.webp", 8.39),
+    CatalogCardSeed("6400061-GEM008", "6400061", "GEM008", "Graphene Chelicera - GEM008", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM008-CF.webp", 28.21),
+    CatalogCardSeed("6400061-GEM009", "6400061", "GEM009", "Graphene Chelicera - GEM009", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM009-CF.webp", 39.33),
+    CatalogCardSeed("6400061-GEM010", "6400061", "GEM010", "Display Loyalty (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM010.webp", 6.49),
+    CatalogCardSeed("6400061-GEM011", "6400061", "GEM011", "Demonstrate Devotion (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM011.webp", 4.57),
+    CatalogCardSeed("6400061-GEM012", "6400061", "GEM012", "Affirm Loyalty - GEM012", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM012.webp", 3.63),
+    CatalogCardSeed("6400061-GEM013", "6400061", "GEM013", "Endear Devotion - GEM013", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM013.webp", 3.12),
+    CatalogCardSeed("6400061-GEM014", "6400061", "GEM014", "Hunt the Hunter (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM014.webp", 2.5),
+    CatalogCardSeed("6400061-GEM015", "6400061", "GEM015", "Hunt to the Ends of Rathe (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM015.webp", 8.44),
+    CatalogCardSeed("6400061-GEM016", "6400061", "GEM016", "March of Loyalty (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM016.webp", 3.06),
+    CatalogCardSeed("6400061-GEM017", "6400061", "GEM017", "Smoke Out (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM017.webp", 0.92),
+    CatalogCardSeed("6400061-GEM018", "6400061", "GEM018", "Proclaim Vengeance - GEM018", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM018.webp", 0.3),
+    CatalogCardSeed("6400061-GEM019", "6400061", "GEM019", "Rake Over the Coals (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM019.webp", 6.57),
+    CatalogCardSeed("6400061-GEM020", "6400061", "GEM020", "Tooth of the Dragon (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM020.webp", 1.11),
+    CatalogCardSeed("6400061-GEM021", "6400061", "GEM021", "Mark of the Black Widow - GEM021", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM021.webp", 12.55),
+    CatalogCardSeed("6400061-GEM022", "6400061", "GEM022", "Mark of the Funnel Web (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM022.webp", 1.11),
+    CatalogCardSeed("6400061-GEM023", "6400061", "GEM023", "Mark the Prey (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM023.webp", 0.49),
+    CatalogCardSeed("6400061-GEM024", "6400061", "GEM024", "Plunge the Prospect (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM024.webp", 0.29),
+    CatalogCardSeed("6400061-GEM025", "6400061", "GEM025", "Scuttle the Canal (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM025.webp", 0.54),
+    CatalogCardSeed("6400061-GEM026", "6400061", "GEM026", "Whittle from Bone (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM026.webp", 0.51),
+    CatalogCardSeed("6400061-GEM027", "6400061", "GEM027", "Cut Through (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM027.webp", 4.52),
+    CatalogCardSeed("6400061-GEM028", "6400061", "GEM028", "Pick Up the Point (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM028.webp", 4.16),
+    CatalogCardSeed("6400061-GEM029", "6400061", "GEM029", "Incision (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM029.webp", 1.49),
+    CatalogCardSeed("6400061-GEM030", "6400061", "GEM030", "Scar Tissue (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM030.webp", 12.93),
+    CatalogCardSeed("6400061-GEM031", "6400061", "GEM031", "Calming Breeze (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM031.webp", 6.65),
+    CatalogCardSeed("6400061-GEM032", "6400061", "GEM032", "Razor Reflex (Red)", "Normal", "Promo", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/GEM032.webp", 11.37),
+)

@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val brilliantStarsTrainerGallerySetSeed = CardSetSeed(id = "BRSTG", name = "SWSH09: Brilliant Stars Trainer Gallery", game = "Pokemon", totalCards = 30)
+
+val brilliantStarsTrainerGalleryCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("BRSTG-TG01/TG30", "BRSTG", "TG01/TG30", "Flareon", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG01_hires.png", 24.65),
+    CatalogCardSeed("BRSTG-TG02/TG30", "BRSTG", "TG02/TG30", "Vaporeon", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG02_hires.png", 22.58),
+    CatalogCardSeed("BRSTG-TG03/TG30", "BRSTG", "TG03/TG30", "Octillery", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG03_hires.png", 3.45),
+    CatalogCardSeed("BRSTG-TG04/TG30", "BRSTG", "TG04/TG30", "Jolteon", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG04_hires.png", 19.32),
+    CatalogCardSeed("BRSTG-TG05/TG30", "BRSTG", "TG05/TG30", "Zekrom", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG05_hires.png", 16.38),
+    CatalogCardSeed("BRSTG-TG06/TG30", "BRSTG", "TG06/TG30", "Dusknoir", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG06_hires.png", 3.07),
+    CatalogCardSeed("BRSTG-TG07/TG30", "BRSTG", "TG07/TG30", "Dedenne", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG07_hires.png", 8.1),
+    CatalogCardSeed("BRSTG-TG08/TG30", "BRSTG", "TG08/TG30", "Alcremie", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG08_hires.png", 4.02),
+    CatalogCardSeed("BRSTG-TG09/TG30", "BRSTG", "TG09/TG30", "Ariados", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG09_hires.png", 2.2348),
+    CatalogCardSeed("BRSTG-TG10/TG30", "BRSTG", "TG10/TG30", "Houndoom", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG10_hires.png", 3.61),
+    CatalogCardSeed("BRSTG-TG11/TG30", "BRSTG", "TG11/TG30", "Eevee", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG11_hires.png", 19.98),
+    CatalogCardSeed("BRSTG-TG12/TG30", "BRSTG", "TG12/TG30", "Oranguru", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG12_hires.png", 3.3),
+    CatalogCardSeed("BRSTG-TG13/TG30", "BRSTG", "TG13/TG30", "Boltund V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG13_hires.png", 14.19),
+    CatalogCardSeed("BRSTG-TG14/TG30", "BRSTG", "TG14/TG30", "Sylveon V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG14_hires.png", 80.49),
+    CatalogCardSeed("BRSTG-TG15/TG30", "BRSTG", "TG15/TG30", "Sylveon VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG15_hires.png", 78.73),
+    CatalogCardSeed("BRSTG-TG16/TG30", "BRSTG", "TG16/TG30", "Mimikyu V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG16_hires.png", 84.01),
+    CatalogCardSeed("BRSTG-TG17/TG30", "BRSTG", "TG17/TG30", "Mimikyu VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG17_hires.png", 81.12),
+    CatalogCardSeed("BRSTG-TG18/TG30", "BRSTG", "TG18/TG30", "Single Strike Urshifu V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG18_hires.png", 5.72),
+    CatalogCardSeed("BRSTG-TG19/TG30", "BRSTG", "TG19/TG30", "Single Strike Urshifu VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG19_hires.png", 10.3),
+    CatalogCardSeed("BRSTG-TG20/TG30", "BRSTG", "TG20/TG30", "Rapid Strike Urshifu V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG20_hires.png", 5.97),
+    CatalogCardSeed("BRSTG-TG21/TG30", "BRSTG", "TG21/TG30", "Rapid Strike Urshifu VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG21_hires.png", 11.0204),
+    CatalogCardSeed("BRSTG-TG22/TG30", "BRSTG", "TG22/TG30", "Umbreon V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG22_hires.png", 76.82),
+    CatalogCardSeed("BRSTG-TG23/TG30", "BRSTG", "TG23/TG30", "Umbreon VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG23_hires.png", 122.25),
+    CatalogCardSeed("BRSTG-TG24/TG30", "BRSTG", "TG24/TG30", "Acerola's Premonition", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG24_hires.png", 7.9),
+    CatalogCardSeed("BRSTG-TG25/TG30", "BRSTG", "TG25/TG30", "Cafe Master", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG25_hires.png", 2.18),
+    CatalogCardSeed("BRSTG-TG26/TG30", "BRSTG", "TG26/TG30", "Gloria", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG26_hires.png", 6.54),
+    CatalogCardSeed("BRSTG-TG27/TG30", "BRSTG", "TG27/TG30", "Rapid Strike Style Mustard", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG27_hires.png", 1.7),
+    CatalogCardSeed("BRSTG-TG28/TG30", "BRSTG", "TG28/TG30", "Single Strike Style Mustard", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG28_hires.png", 1.41),
+    CatalogCardSeed("BRSTG-TG29/TG30-SEC", "BRSTG", "TG29/TG30", "Single Strike Urshifu VMAX", "Secret", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG29_hires.png", 4.71),
+    CatalogCardSeed("BRSTG-TG30/TG30-SEC", "BRSTG", "TG30/TG30", "Rapid Strike Urshifu VMAX", "Secret", "Ultra Rare", "https://images.pokemontcg.io/swsh9tg/TG30_hires.png", 4.26),
+)

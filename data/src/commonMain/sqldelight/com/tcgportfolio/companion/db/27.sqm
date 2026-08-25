@@ -1,0 +1,3 @@
+-- Wunschlisten-Umbenennen (19.08., Nutzer-Vorgabe "man kann Wantslisten
+-- nicht im Nachhinein umbenennen") - LWW-Zeitstempel wie beim Binder
+ALTER TABLE WishlistEntity ADD COLUMN nameUpdatedAt INTEGER NOT NULL DEFAULT 0;

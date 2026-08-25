@@ -1,0 +1,5 @@
+-- Mehrere Cardmarket-Preisoptionen je Karte + manuelle Nutzer-Auswahl
+-- (28.07.) - siehe Kommentar bei CardCatalogEntity in Portfolio.sq.
+ALTER TABLE CardCatalogEntity ADD COLUMN marketPriceEurOptions TEXT;
+ALTER TABLE CardCatalogEntity ADD COLUMN marketPriceEurSelectedIndex INTEGER;
+ALTER TABLE CardCatalogEntity ADD COLUMN marketPriceEurSelectedAt INTEGER;

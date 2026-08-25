@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckPartTheMistveilEnigmaSetSeed = CardSetSeed(id = "6400021", name = "Blitz Deck: Part the Mistveil - Enigma", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckPartTheMistveilEnigmaCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400021-ENG001", "6400021", "ENG001", "Enigma", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG001.png", 3.02),
+    CatalogCardSeed("6400021-ENG002", "6400021", "ENG002", "Cosmo, Scroll of Ancestral Tapestry", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG002.png", 0.79),
+    CatalogCardSeed("6400021-ENG003", "6400021", "ENG003", "Truths Retold", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG003.png", null),
+    CatalogCardSeed("6400021-ENG004", "6400021", "ENG004", "Heirloom of Rabbit Hide", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG004.png", 0.25),
+    CatalogCardSeed("6400021-ENG005", "6400021", "ENG005", "Uphold Tradition", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG005.png", null),
+    CatalogCardSeed("6400021-ENG006", "6400021", "ENG006", "Skywalker Keikoi", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG006.png", null),
+    CatalogCardSeed("6400021-ENG007", "6400021", "ENG007", "Battlefront Bastion (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG007.png", 0.39),
+    CatalogCardSeed("6400021-ENG008", "6400021", "ENG008", "Spectral Manifestations", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG008.png", 0.2),
+    CatalogCardSeed("6400021-ENG009", "6400021", "ENG009", "Haze Shelter", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG009.png", 0.23),
+    CatalogCardSeed("6400021-ENG010", "6400021", "ENG010", "Waxing Specter", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG010.png", null),
+    CatalogCardSeed("6400021-ENG011", "6400021", "ENG011", "Waning Vengeance (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG011.png", 0.82),
+    CatalogCardSeed("6400021-ENG012", "6400021", "ENG012", "Battlefront Bastion (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG012.png", 0.3),
+    CatalogCardSeed("6400021-ENG013", "6400021", "ENG013", "Waning Vengeance (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG013.png", null),
+    CatalogCardSeed("6400021-ENG014", "6400021", "ENG014", "Spillover", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG014.png", null),
+    CatalogCardSeed("6400021-ENG015", "6400021", "ENG015", "Big Blue Sky", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG015.png", 0.35),
+    CatalogCardSeed("6400021-ENG016", "6400021", "ENG016", "Astral Etchings", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG016.png", 0.35),
+    CatalogCardSeed("6400021-ENG017", "6400021", "ENG017", "Essence of Ancestry: Mind", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG017.png", 0.25),
+    CatalogCardSeed("6400021-ENG018", "6400021", "ENG018", "First Tenet of Chi: Moon", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG018.png", null),
+    CatalogCardSeed("6400021-ENG019", "6400021", "ENG019", "Second Tenet of Chi: Tide", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG019.png", 0.29),
+    CatalogCardSeed("6400021-ENG020", "6400021", "ENG020", "Single Minded Determination", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG020.png", null),
+    CatalogCardSeed("6400021-ENG021", "6400021", "ENG021", "Solitary Companion", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG021.png", null),
+    CatalogCardSeed("6400021-ENG022", "6400021", "ENG022", "Vengeful Apparition", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG022.png", 0.15),
+    CatalogCardSeed("6400021-ENG023", "6400021", "ENG023", "Moon Chakra", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG023.png", 0.15),
+    CatalogCardSeed("6400021-ENG024", "6400021", "ENG024", "Waning Vengeance (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG024.png", null),
+    CatalogCardSeed("6400021-ENG025", "6400021", "ENG025", "A Drop in the Ocean", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG025.png", 4.3),
+    CatalogCardSeed("6400021-ENG026", "6400021", "ENG026", "Homage to Ancestors", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG026.png", 2.38),
+    CatalogCardSeed("6400021-ENG027", "6400021", "ENG027", "Preserve Tradition", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG027.png", 4.38),
+    CatalogCardSeed("6400021-ENG028", "6400021", "ENG028", "Rising Sun, Setting Moon", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG028.png", 4.38),
+    CatalogCardSeed("6400021-ENG029", "6400021", "ENG029", "Spectral Shield", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-ENG/EN/ENG029.png", 0.38),
+)

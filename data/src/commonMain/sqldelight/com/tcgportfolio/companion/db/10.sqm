@@ -1,0 +1,10 @@
+-- Zeitstempel für den Sync-Existenz-Abgleich (siehe Migration 9/DeletionLog):
+-- ohne einen Zeitpunkt "seit wann existiert dieser Eintrag" kann der Sync
+-- nicht unterscheiden, ob ein Eintrag einfach nie angefasst wurde oder gerade
+-- eben (z.B. durch ein Backup-Restore) neu entstanden ist - und damit auch
+-- nicht korrekt entscheiden, ob ein Eintrag eine ältere Löschung "überholt".
+-- Default 0 für bestehende Zeilen ist sicher: die gelten dann einfach als
+-- "sehr alt", was nur relevant wird, falls es für denselben Schlüssel
+-- irgendwo eine (dann zwangsläufig neuere) Löschung gibt.
+ALTER TABLE PortfolioItemEntity ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE SealedProductEntity ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0;

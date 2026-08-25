@@ -1,0 +1,3 @@
+-- Echter Cardmarket-EUR-Preis (28.07.) - siehe Kommentar bei CardCatalogEntity
+-- in Portfolio.sq.
+ALTER TABLE CardCatalogEntity ADD COLUMN marketPriceEur REAL;

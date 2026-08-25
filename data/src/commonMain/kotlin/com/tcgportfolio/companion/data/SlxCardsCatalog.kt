@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val slxCardsSetSeed = CardSetSeed(id = "1200152", name = "SLX Cards", game = "MTG", totalCards = 30)
+
+val slxCardsCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("1200152-1", "1200152", "1", "Arvinox, the Mind Flail", "Normal", "M", "https://cards.scryfall.io/large/front/c/8/c83542de-38ca-4aad-acba-189374be37e2.jpg?1783923612", 0.458),
+    CatalogCardSeed("1200152-10", "1200152", "10", "Baldin, Century Herdmaster", "Normal", "R", "https://cards.scryfall.io/large/front/e/f/ef84fedd-43a9-4c42-9f8a-e8147cc5eea2.jpg?1783917775", 1.16),
+    CatalogCardSeed("1200152-11", "1200152", "11", "Vikya, Scorching Stalwart", "Normal", "R", "https://cards.scryfall.io/large/front/f/3/f3a9eac0-cc71-48ae-bb60-ae26160f2000.jpg?1783917775", 0.3),
+    CatalogCardSeed("1200152-12", "1200152", "12", "Aisha of Sparks and Smoke", "Normal", "R", "https://cards.scryfall.io/large/front/0/9/093aa76d-2154-4e71-a2bf-461d1afb887b.jpg?1783917774", 0.67),
+    CatalogCardSeed("1200152-13", "1200152", "13", "The Howling Abomination", "Normal", "R", "https://cards.scryfall.io/large/front/5/a/5aa862c3-69a3-4d6c-abe8-201e1868c204.jpg?1783917774", 0.35),
+    CatalogCardSeed("1200152-14", "1200152", "14", "Immard, the Stormcleaver", "Normal", "R", "https://cards.scryfall.io/large/front/d/2/d2f60c02-55f7-4584-b68c-f23e466b3b0b.jpg?1783917774", 0.35),
+    CatalogCardSeed("1200152-15", "1200152", "15", "Maarika, Brutal Gladiator", "Normal", "R", "https://cards.scryfall.io/large/front/8/6/86123ab7-ee60-4ef2-8467-1ad420213eb1.jpg?1783917774", 2.24),
+    CatalogCardSeed("1200152-16", "1200152", "16", "Tadeas, Juniper Ascendant", "Normal", "R", "https://cards.scryfall.io/large/front/e/b/eb79f973-2384-4de4-81fb-14ba5a0e5556.jpg?1783917774", 1.15),
+    CatalogCardSeed("1200152-17", "1200152", "17", "Zethi, Arcane Blademaster", "Normal", "R", "https://cards.scryfall.io/large/front/8/7/87b56584-8a61-40bc-99b5-7434a681fcdc.jpg?1783917773", 2.59),
+    CatalogCardSeed("1200152-18", "1200152", "18", "Greymond, Avacyn's Stalwart", "Normal", "M", "https://cards.scryfall.io/large/front/b/7/b7848325-c46e-4e63-90d0-c9524380eb63.jpg?1783915139", 67.34),
+    CatalogCardSeed("1200152-19", "1200152", "19", "Gisa's Favorite Shovel", "Normal", "M", "https://cards.scryfall.io/large/front/8/1/8139bb44-47e8-4076-99ed-ad3623198ad9.jpg?1783915139", 22.99),
+    CatalogCardSeed("1200152-2", "1200152", "2", "Bjorna, Nightfall Alchemist", "Normal", "R", "https://cards.scryfall.io/large/front/8/3/83b0b716-bcb0-4044-b64a-354e3cbbd563.jpg?1783923612", 0.35),
+    CatalogCardSeed("1200152-20", "1200152", "20", "Enkira, Hostile Scavenger", "Normal", "M", "https://cards.scryfall.io/large/front/f/7/f7cad73d-312c-4ea5-93c7-8a422b16f207.jpg?1783915138", 1.03),
+    CatalogCardSeed("1200152-21", "1200152", "21", "Gregor, Shrewd Magistrate", "Normal", "M", "https://cards.scryfall.io/large/front/8/8/88818c8b-dfd8-4aa6-b7bb-1c8e67d01c48.jpg?1783915138", 7.26),
+    CatalogCardSeed("1200152-22", "1200152", "22", "Hansk, Slayer Zealot", "Normal", "M", "https://cards.scryfall.io/large/front/f/6/f6ea7c19-71ec-44ff-affc-fc76fe3146a7.jpg?1783915138", 9.41),
+    CatalogCardSeed("1200152-23", "1200152", "23", "Malik, Grim Manipulator", "Normal", "M", "https://cards.scryfall.io/large/front/5/c/5cf4fee3-3059-4ca4-a47d-0848410b294d.jpg?1783915138", 5.3),
+    CatalogCardSeed("1200152-24", "1200152", "24", "Rashel, Fist of Torm", "Normal", "R", "https://cards.scryfall.io/large/front/1/2/12401fc7-3332-48e5-b38a-efaae29b3ee1.jpg?1783906767", 15.15),
+    CatalogCardSeed("1200152-25", "1200152", "25", "Mathise, Surge Channeler", "Normal", "R", "https://cards.scryfall.io/large/front/3/c/3c560e53-73d9-4b0e-9b93-c729e00e7bbe.jpg?1783906767", 5.58),
+    CatalogCardSeed("1200152-26", "1200152", "26", "Evin, Waterdeep Opportunist", "Normal", "R", "https://cards.scryfall.io/large/front/c/3/c35accd3-92ee-4b0b-a30a-4dcd3252d1b8.jpg?1783906766", 11.13),
+    CatalogCardSeed("1200152-27", "1200152", "27", "Jurin, Leading the Charge", "Normal", "R", "https://cards.scryfall.io/large/front/8/6/867b4e3d-e175-4d6b-868a-87b3d6f61b07.jpg?1783906767", 2.06),
+    CatalogCardSeed("1200152-28", "1200152", "28", "Themberchaud", "Normal", "R", "https://cards.scryfall.io/large/front/1/d/1dc40449-0660-4350-900c-ec9b2aaefe1c.jpg?1783906765", 18.25),
+    CatalogCardSeed("1200152-29", "1200152", "29", "Casal, Lurkwood Pathfinder", "Normal", "R", "https://cards.scryfall.io/large/front/d/5/d571c367-c786-41f9-9cdb-cb02594fa413.jpg?1783906769", 14.37),
+    CatalogCardSeed("1200152-3", "1200152", "3", "Cecily, Haunted Mage", "Normal", "R", "https://cards.scryfall.io/large/front/a/0/a09ffd51-8ea4-40a6-b64e-58f3acfee533.jpg?1783923611", 0.38),
+    CatalogCardSeed("1200152-30", "1200152", "30", "Bohn, Beguiling Balladeer", "Normal", "R", "https://cards.scryfall.io/large/front/6/e/6e779a16-7528-49f4-8304-502bb603c15b.jpg?1783906765", 12.83),
+    CatalogCardSeed("1200152-4", "1200152", "4", "Elmar, Ulvenwald Informant", "Normal", "R", "https://cards.scryfall.io/large/front/9/5/95d197b3-fc56-43a2-981f-b5b905222b5c.jpg?1783923613", 0.4),
+    CatalogCardSeed("1200152-5", "1200152", "5", "Hargilde, Kindly Runechanter", "Normal", "R", "https://cards.scryfall.io/large/front/5/9/59e1fa94-056a-4570-97b3-17e964077965.jpg?1783923610", 0.34),
+    CatalogCardSeed("1200152-6", "1200152", "6", "Othelm, Sigardian Outcast", "Normal", "R", "https://cards.scryfall.io/large/front/b/8/b867fb22-4f2a-47aa-9432-1bcc5e731947.jpg?1783923610", 0.41),
+    CatalogCardSeed("1200152-7", "1200152", "7", "Sophina, Spearsage Deserter", "Normal", "R", "https://cards.scryfall.io/large/front/e/0/e0a64924-068e-483f-91a6-d450b67b3c75.jpg?1783923609", 0.35),
+    CatalogCardSeed("1200152-8", "1200152", "8", "Wernog, Rider's Chaplain", "Normal", "R", "https://cards.scryfall.io/large/front/3/9/39491011-bdf6-4e61-8534-fe26c1571f8f.jpg?1783923608", 0.79),
+    CatalogCardSeed("1200152-9", "1200152", "9", "Havengul Laboratory", "Normal", "R", "https://cards.scryfall.io/large/front/8/2/823b019e-10c0-4712-8167-d4f37a71e782.jpg?1783923615", 0.68),
+)

@@ -1,0 +1,16 @@
+-- Cardmarket-Preiszuordnung auch für Sealed-Produkte (11.08., Nutzer-Vorgabe
+-- "können wir das dann so wie bei den Karten machen die garnicht zu geordnet
+-- sind oder von denen es mehrere Preise gibt") - exakt dasselbe Muster wie
+-- CardCatalogEntity.marketPriceEurOptions/-SelectedIndex/-SelectedAt (siehe
+-- dortigen Kommentar) und CardmarketManualMapping, nur für SealedCatalogEntity
+-- statt CardCatalogEntity.
+ALTER TABLE SealedCatalogEntity ADD COLUMN marketPriceEurOptions TEXT;
+ALTER TABLE SealedCatalogEntity ADD COLUMN marketPriceEurSelectedIndex INTEGER;
+ALTER TABLE SealedCatalogEntity ADD COLUMN marketPriceEurSelectedAt INTEGER;
+
+CREATE TABLE SealedCardmarketManualMapping (
+    sealedId TEXT NOT NULL PRIMARY KEY REFERENCES SealedCatalogEntity(id),
+    cardmarketProductId INTEGER NOT NULL,
+    cardmarketProductName TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);

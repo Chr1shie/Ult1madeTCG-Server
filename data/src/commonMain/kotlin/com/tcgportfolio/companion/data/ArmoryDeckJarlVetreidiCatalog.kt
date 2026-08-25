@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckJarlVetreidiSetSeed = CardSetSeed(id = "6400002", name = "Armory Deck: Jarl Vetreidi", game = "FleshAndBlood", totalCards = 30)
+
+val armoryDeckJarlVetreidiCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400002-AJV001", "6400002", "AJV001", "Jarl Vetreiði", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AJV001-RF.webp", null),
+    CatalogCardSeed("6400002-AJV002", "6400002", "AJV002", "Summit, the Unforgiving", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AJV002-RF.webp", null),
+    CatalogCardSeed("6400002-AJV003", "6400002", "AJV003", "Steelbraid Buckler", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV003.webp", null),
+    CatalogCardSeed("6400002-AJV004", "6400002", "AJV004", "Ollin Ice Cap", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AJV004-RF.webp", null),
+    CatalogCardSeed("6400002-AJV005", "6400002", "AJV005", "Tectonic Crust", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AJV005-RF.webp", null),
+    CatalogCardSeed("6400002-AJV006", "6400002", "AJV006", "Gauntlets of the Boreal Domain", "Normal", "Legendary", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AJV006-RF.webp", null),
+    CatalogCardSeed("6400002-AJV007", "6400002", "AJV007", "Root-Bound Trunks", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AJV007-RF.webp", null),
+    CatalogCardSeed("6400002-AJV008", "6400002", "AJV008", "Buckling Blow", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV008.webp", null),
+    CatalogCardSeed("6400002-AJV009", "6400002", "AJV009", "Earth Form", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV009.webp", null),
+    CatalogCardSeed("6400002-AJV010", "6400002", "AJV010", "Icy Encounter", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV010.webp", null),
+    CatalogCardSeed("6400002-AJV011", "6400002", "AJV011", "Mangle", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV011.webp", null),
+    CatalogCardSeed("6400002-AJV012", "6400002", "AJV012", "Snow Under", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV012.webp", null),
+    CatalogCardSeed("6400002-AJV013", "6400002", "AJV013", "Unforgetting Unforgiving", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV013.webp", null),
+    CatalogCardSeed("6400002-AJV014", "6400002", "AJV014", "Autumn's Touch", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV014.webp", null),
+    CatalogCardSeed("6400002-AJV015", "6400002", "AJV015", "Glacial Footsteps", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV015.webp", null),
+    CatalogCardSeed("6400002-AJV016", "6400002", "AJV016", "Winter's Grasp", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV016.webp", null),
+    CatalogCardSeed("6400002-AJV017", "6400002", "AJV017", "Channel Mount Isen", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV017.webp", null),
+    CatalogCardSeed("6400002-AJV018", "6400002", "AJV018", "Crumble to Eternity", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV018.webp", null),
+    CatalogCardSeed("6400002-AJV019", "6400002", "AJV019", "Emerging Avalanche", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV019.webp", null),
+    CatalogCardSeed("6400002-AJV020", "6400002", "AJV020", "Frozen to Death", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV020.webp", null),
+    CatalogCardSeed("6400002-AJV021", "6400002", "AJV021", "Polar Blast", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV021.webp", null),
+    CatalogCardSeed("6400002-AJV022", "6400002", "AJV022", "Sigil of Earth", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV022.webp", null),
+    CatalogCardSeed("6400002-AJV023", "6400002", "AJV023", "Strength of Sequoia", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV023.webp", null),
+    CatalogCardSeed("6400002-AJV024", "6400002", "AJV024", "Strong Yield", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV024.webp", null),
+    CatalogCardSeed("6400002-AJV025", "6400002", "AJV025", "Winter's Bite", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV025.webp", null),
+    CatalogCardSeed("6400002-AJV026", "6400002", "AJV026", "Amulet of Ice", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV026.webp", null),
+    CatalogCardSeed("6400002-AJV027", "6400002", "AJV027", "Exposed to the Elements", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV027.webp", null),
+    CatalogCardSeed("6400002-AJV028", "6400002", "AJV028", "Embodiment of Earth", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV028.webp", null),
+    CatalogCardSeed("6400002-AJV029", "6400002", "AJV029", "Frostbite", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV029.webp", null),
+    CatalogCardSeed("6400002-AJV030", "6400002", "AJV030", "Seismic Surge", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AJV030.webp", null),
+)

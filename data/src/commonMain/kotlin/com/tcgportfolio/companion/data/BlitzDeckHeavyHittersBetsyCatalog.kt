@@ -1,0 +1,37 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckHeavyHittersBetsySetSeed = CardSetSeed(id = "6400083", name = "Blitz Deck: Heavy Hitters - Betsy", game = "FleshAndBlood", totalCards = 31)
+
+val blitzDeckHeavyHittersBetsyCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400083-BET001", "6400083", "BET001", "Betsy", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET001.png", 1.2),
+    CatalogCardSeed("6400083-BET002", "6400083", "BET002", "High Riser", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET002.png", 0.98),
+    CatalogCardSeed("6400083-BET003", "6400083", "BET003", "Bloodied Oval", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET003.png", 0.28),
+    CatalogCardSeed("6400083-BET004", "6400083", "BET004", "Good Time Chapeau", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET004.png", 0.27),
+    CatalogCardSeed("6400083-BET005", "6400083", "BET005", "Vigor Girth", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET005.png", null),
+    CatalogCardSeed("6400083-BET006", "6400083", "BET006", "Gauntlet of Might", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET006.png", 0.2),
+    CatalogCardSeed("6400083-BET007", "6400083", "BET007", "Stand Ground", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET007.png", 0.25),
+    CatalogCardSeed("6400083-BET008", "6400083", "BET008", "Command Respect (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET008.png", null),
+    CatalogCardSeed("6400083-BET009", "6400083", "BET009", "Concuss (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET009.png", 0.25),
+    CatalogCardSeed("6400083-BET010", "6400083", "BET010", "Over the Top (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET010.png", 0.25),
+    CatalogCardSeed("6400083-BET011", "6400083", "BET011", "Smack of Reality", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET011.png", null),
+    CatalogCardSeed("6400083-BET012", "6400083", "BET012", "Wage Gold (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET012.png", 0.33),
+    CatalogCardSeed("6400083-BET013", "6400083", "BET013", "Wage Might (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET013.png", null),
+    CatalogCardSeed("6400083-BET014", "6400083", "BET014", "Wage Vigor (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET014.png", 0.3),
+    CatalogCardSeed("6400083-BET015", "6400083", "BET015", "Big Bop (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET015.png", null),
+    CatalogCardSeed("6400083-BET016", "6400083", "BET016", "Bigger Than Big (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET016.png", null),
+    CatalogCardSeed("6400083-BET017", "6400083", "BET017", "Money Where Ya Mouth Is (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET017.png", 3.2),
+    CatalogCardSeed("6400083-BET018", "6400083", "BET018", "Money Where Ya Mouth Is (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET018.png", 0.89),
+    CatalogCardSeed("6400083-BET019", "6400083", "BET019", "Command Respect (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET019.png", 0.2),
+    CatalogCardSeed("6400083-BET020", "6400083", "BET020", "Concuss (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET020.png", 0.25),
+    CatalogCardSeed("6400083-BET021", "6400083", "BET021", "Over the Top (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET021.png", null),
+    CatalogCardSeed("6400083-BET022", "6400083", "BET022", "Lunging Press", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET022.png", 0.25),
+    CatalogCardSeed("6400083-BET023", "6400083", "BET023", "Big Bop (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET023.png", null),
+    CatalogCardSeed("6400083-BET024", "6400083", "BET024", "Bigger Than Big (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET024.png", null),
+    CatalogCardSeed("6400083-BET025", "6400083", "BET025", "Money Where Ya Mouth Is (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET025.png", 1.09),
+    CatalogCardSeed("6400083-BET026", "6400083", "BET026", "Pint of Strong and Stout", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET026.png", null),
+    CatalogCardSeed("6400083-BET027", "6400083", "BET027", "Stacked in Your Favor (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET027.png", null),
+    CatalogCardSeed("6400083-BET028", "6400083", "BET028", "Might", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET028.png", null),
+    CatalogCardSeed("6400083-BET029", "6400083", "BET029", "Vigor", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET029.png", 2.95),
+    CatalogCardSeed("6400083-BET030", "6400083", "BET030", "Gold", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-BET/EN/BET030.png", 1.45),
+    CatalogCardSeed("6400083-FAB205", "6400083", "FAB205", "Might - FAB205", "Normal", "Promo", "https://storage.googleapis.com/fabmaster/cardfaces/promos/FAB205.png", null),
+)

@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckOutsidersAzaleaSetSeed = CardSetSeed(id = "6400018", name = "Blitz Deck: Outsiders - Azalea", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckOutsidersAzaleaCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400018-AZL001", "6400018", "AZL001", "Azalea", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL001.png", null),
+    CatalogCardSeed("6400018-AZL002", "6400018", "AZL002", "Barbed Castaway", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL002.png", null),
+    CatalogCardSeed("6400018-AZL003", "6400018", "AZL003", "Crow's Nest", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL003.png", null),
+    CatalogCardSeed("6400018-AZL004", "6400018", "AZL004", "Wayfinder's Crest", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL004.png", null),
+    CatalogCardSeed("6400018-AZL005", "6400018", "AZL005", "Threadbare Tunic", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL005.png", null),
+    CatalogCardSeed("6400018-AZL006", "6400018", "AZL006", "Bracers of Belief", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL006.png", 0.26),
+    CatalogCardSeed("6400018-AZL007", "6400018", "AZL007", "Ironrot Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL007.png", null),
+    CatalogCardSeed("6400018-AZL008", "6400018", "AZL008", "Falcon Wing (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL008.png", 0.22),
+    CatalogCardSeed("6400018-AZL009", "6400018", "AZL009", "Infecting Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL009.png", null),
+    CatalogCardSeed("6400018-AZL010", "6400018", "AZL010", "Murkmire Grapnel (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL010.png", null),
+    CatalogCardSeed("6400018-AZL011", "6400018", "AZL011", "Salvage Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL011.png", 0.1),
+    CatalogCardSeed("6400018-AZL012", "6400018", "AZL012", "Sedation Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL012.png", null),
+    CatalogCardSeed("6400018-AZL013", "6400018", "AZL013", "Skybound Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL013.png", 0.3),
+    CatalogCardSeed("6400018-AZL014", "6400018", "AZL014", "Spire Sniping (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL014.png", null),
+    CatalogCardSeed("6400018-AZL015", "6400018", "AZL015", "Widowmaker (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL015.png", null),
+    CatalogCardSeed("6400018-AZL016", "6400018", "AZL016", "Withering Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL016.png", null),
+    CatalogCardSeed("6400018-AZL017", "6400018", "AZL017", "Ravenous Rabble (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL017.png", 0.25),
+    CatalogCardSeed("6400018-AZL018", "6400018", "AZL018", "Seek Horizon (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL018.png", 0.25),
+    CatalogCardSeed("6400018-AZL019", "6400018", "AZL019", "Fletch a Red Tail (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL019.png", 0.6),
+    CatalogCardSeed("6400018-AZL020", "6400018", "AZL020", "Scout the Periphery (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL020.png", null),
+    CatalogCardSeed("6400018-AZL021", "6400018", "AZL021", "Sedation Shot (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL021.png", 0.1),
+    CatalogCardSeed("6400018-AZL022", "6400018", "AZL022", "Spire Sniping (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL022.png", null),
+    CatalogCardSeed("6400018-AZL023", "6400018", "AZL023", "Falcon Wing (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL023.png", null),
+    CatalogCardSeed("6400018-AZL024", "6400018", "AZL024", "Sedation Shot (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL024.png", null),
+    CatalogCardSeed("6400018-AZL025", "6400018", "AZL025", "Spire Sniping (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL025.png", null),
+    CatalogCardSeed("6400018-AZL026", "6400018", "AZL026", "Scout the Periphery (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL026.png", 0.1),
+    CatalogCardSeed("6400018-AZL027", "6400018", "AZL027", "Toxicity (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL027.png", null),
+    CatalogCardSeed("6400018-AZL028", "6400018", "AZL028", "Bloodrot Pox", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL028.png", 0.25),
+    CatalogCardSeed("6400018-AZL029", "6400018", "AZL029", "Frailty", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL029.png", 0.75),
+    CatalogCardSeed("6400018-AZL030", "6400018", "AZL030", "Inertia", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-AZL/EN/AZL030.png", 0.25),
+)

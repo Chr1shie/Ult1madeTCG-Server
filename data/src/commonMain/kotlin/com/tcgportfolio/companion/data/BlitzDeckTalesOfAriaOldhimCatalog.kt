@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckTalesOfAriaOldhimSetSeed = CardSetSeed(id = "6400004", name = "Blitz Deck: Tales of Aria - Oldhim", game = "FleshAndBlood", totalCards = 32)
+
+val blitzDeckTalesOfAriaOldhimCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400004-OLD001", "6400004", "OLD001", "Oldhim", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD001.width-450.png", 0.99),
+    CatalogCardSeed("6400004-OLD002", "6400004", "OLD002", "Titan's Fist", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD002.width-450.png", 6.4),
+    CatalogCardSeed("6400004-OLD003", "6400004", "OLD003", "Rotten Old Buckler", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD003.width-450.png", null),
+    CatalogCardSeed("6400004-OLD004", "6400004", "OLD004", "Helm of Isen's Peak", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD004.width-450.png", null),
+    CatalogCardSeed("6400004-OLD005", "6400004", "OLD005", "Coat of Frost", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD005.width-450.png", null),
+    CatalogCardSeed("6400004-OLD006", "6400004", "OLD006", "Goliath Gauntlet", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD006.width-450.png", null),
+    CatalogCardSeed("6400004-OLD007", "6400004", "OLD007", "Ironhide Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD007.width-450.png", 0.5),
+    CatalogCardSeed("6400004-OLD008", "6400004", "OLD008", "Glacial Footsteps (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD008.width-450.png", 0.16),
+    CatalogCardSeed("6400004-OLD009", "6400004", "OLD009", "Snow Under (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD009.width-450.png", null),
+    CatalogCardSeed("6400004-OLD010", "6400004", "OLD010", "Glacial Footsteps (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD010.width-450.png", 0.23),
+    CatalogCardSeed("6400004-OLD011", "6400004", "OLD011", "Snow Under (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD011.width-450.png", 0.15),
+    CatalogCardSeed("6400004-OLD012", "6400004", "OLD012", "Biting Gale (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD012.width-450.png", null),
+    CatalogCardSeed("6400004-OLD013", "6400004", "OLD013", "Frost Fang (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD013.width-450.png", 0.71),
+    CatalogCardSeed("6400004-OLD014", "6400004", "OLD014", "Weave Ice (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD014.width-450.png", 0.38),
+    CatalogCardSeed("6400004-OLD015", "6400004", "OLD015", "Polar Blast (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD015.width-450.png", null),
+    CatalogCardSeed("6400004-OLD016", "6400004", "OLD016", "Winter's Bite (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD016.width-450.png", 0.15),
+    CatalogCardSeed("6400004-OLD017", "6400004", "OLD017", "Winter's Grasp (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD017.width-450.png", 0.22),
+    CatalogCardSeed("6400004-OLD018", "6400004", "OLD018", "Amulet of Ice", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD018.width-450.png", 0.2),
+    CatalogCardSeed("6400004-OLD019", "6400004", "OLD019", "Turn Timber (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD019.width-450.png", 0.17),
+    CatalogCardSeed("6400004-OLD020", "6400004", "OLD020", "Strength of Sequoia (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD020.width-450.png", null),
+    CatalogCardSeed("6400004-OLD021", "6400004", "OLD021", "Entangle (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD021.width-450.png", null),
+    CatalogCardSeed("6400004-OLD022", "6400004", "OLD022", "Mulch (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD022.width-450.png", null),
+    CatalogCardSeed("6400004-OLD023", "6400004", "OLD023", "Strength of Sequoia (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD023.width-450.png", null),
+    CatalogCardSeed("6400004-OLD024", "6400004", "OLD024", "Autumn's Touch (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD024.width-450.png", 0.15),
+    CatalogCardSeed("6400004-OLD025", "6400004", "OLD025", "Break Ground (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD025.width-450.png", null),
+    CatalogCardSeed("6400004-OLD026", "6400004", "OLD026", "Evergreen (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD026.width-450.png", 0.26),
+    CatalogCardSeed("6400004-OLD027", "6400004", "OLD027", "Earthlore Surge (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD027.width-450.png", null),
+    CatalogCardSeed("6400004-OLD028", "6400004", "OLD028", "Thump (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD028.width-450.png", 0.47),
+    CatalogCardSeed("6400004-OLD029", "6400004", "OLD029", "Thump (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/OLD029.width-450.png", 0.34),
+    CatalogCardSeed("6400004-OLD030", "6400004", "OLD030", "Embolden (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/OLD030.width-450.png", 0.54),
+    CatalogCardSeed("6400004-OLD031", "6400004", "OLD031", "Frostbite", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/OLD031.width-450.png", null),
+    CatalogCardSeed("6400004-OLD031 // OLD032", "6400004", "OLD031 // OLD032", "Frostbite // Seismic Surge", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/OLD031.width-450.png", null),
+)

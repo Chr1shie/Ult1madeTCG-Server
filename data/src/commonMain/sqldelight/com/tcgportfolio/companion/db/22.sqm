@@ -1,0 +1,7 @@
+-- Cardmarket-ID-Abgleich (06.08., Nutzer-Vorgabe) - siehe Kommentar bei
+-- cardmarketId in Portfolio.sq/CardCatalogSeed.kt. Fehlte hier (Bugfix
+-- 07.08., Nutzer-Fund "Xcode-Crash beim App-Start") - die CREATE TABLE-
+-- Zeile in Portfolio.sq wurde direkt geändert, ohne diese Migration
+-- anzulegen, wodurch NativeSqliteDriver bei bereits installierten Apps
+-- die Spalte nie nachgezogen hat ("no such column: cardmarketId").
+ALTER TABLE CardCatalogEntity ADD COLUMN cardmarketId INTEGER;

@@ -1,0 +1,6 @@
+-- Eigener Preis für Sealed-Produkte (20.08., Nutzer-Vorgabe "im Vault bei
+-- Produkten ohne Marktpreis selbst einen Wert eingeben ... genau so wie bei
+-- Karten") - gleiche Semantik wie die gleichnamigen Karten-Spalten.
+ALTER TABLE SealedProductEntity ADD COLUMN customPriceEur REAL;
+ALTER TABLE SealedProductEntity ADD COLUMN customPriceInTotal INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE SealedProductEntity ADD COLUMN customPriceInGameTotal INTEGER NOT NULL DEFAULT 1;

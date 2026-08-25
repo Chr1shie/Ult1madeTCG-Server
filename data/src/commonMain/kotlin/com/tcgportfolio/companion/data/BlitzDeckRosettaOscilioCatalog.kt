@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckRosettaOscilioSetSeed = CardSetSeed(id = "6400001", name = "Blitz Deck: Rosetta - Oscilio", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckRosettaOscilioCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400001-OSC001", "6400001", "OSC001", "Oscilio", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC001-RF.webp", 2.72),
+    CatalogCardSeed("6400001-OSC002", "6400001", "OSC002", "Volzar, the Lightning Rod", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC002.webp", 3.68),
+    CatalogCardSeed("6400001-OSC003", "6400001", "OSC003", "Flash of Brilliance", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC003.webp", 0.25),
+    CatalogCardSeed("6400001-OSC004", "6400001", "OSC004", "Ink-lined Cloak", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC004.webp", null),
+    CatalogCardSeed("6400001-OSC005", "6400001", "OSC005", "Hold Focus", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC005.webp", 0.25),
+    CatalogCardSeed("6400001-OSC006", "6400001", "OSC006", "Twinkle Toes", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC006.webp", 0.25),
+    CatalogCardSeed("6400001-OSC007", "6400001", "OSC007", "Blast to Oblivion (Red)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC007.webp", 0.25),
+    CatalogCardSeed("6400001-OSC008", "6400001", "OSC008", "Flittering Charge (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC008.webp", null),
+    CatalogCardSeed("6400001-OSC009", "6400001", "OSC009", "Fry (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC009.webp", 0.27),
+    CatalogCardSeed("6400001-OSC010", "6400001", "OSC010", "Lightning Surge (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC010.webp", null),
+    CatalogCardSeed("6400001-OSC011", "6400001", "OSC011", "Aether Quickening (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC011.webp", 0.18),
+    CatalogCardSeed("6400001-OSC012", "6400001", "OSC012", "Arcane Twining (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC012.webp", null),
+    CatalogCardSeed("6400001-OSC013", "6400001", "OSC013", "Comet Storm // Shock", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC013.webp", 0.28),
+    CatalogCardSeed("6400001-OSC014", "6400001", "OSC014", "Etchings of Arcana (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC014.webp", 5.2),
+    CatalogCardSeed("6400001-OSC015", "6400001", "OSC015", "Exploding Aether (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC015.webp", null),
+    CatalogCardSeed("6400001-OSC016", "6400001", "OSC016", "Flash (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC016.webp", null),
+    CatalogCardSeed("6400001-OSC017", "6400001", "OSC017", "Glyph Overlay (Red)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC017.webp", 0.24),
+    CatalogCardSeed("6400001-OSC018", "6400001", "OSC018", "Photon Splicing (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC018.webp", 0.27),
+    CatalogCardSeed("6400001-OSC019", "6400001", "OSC019", "Trailblazing Aether (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC019.webp", 0.2),
+    CatalogCardSeed("6400001-OSC020", "6400001", "OSC020", "Electrostatic Discharge (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC020.webp", 0.18),
+    CatalogCardSeed("6400001-OSC021", "6400001", "OSC021", "Etchings of Arcana (Yellow)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC021.webp", 1.16),
+    CatalogCardSeed("6400001-OSC022", "6400001", "OSC022", "Chorus of the Amphitheater (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC022.webp", 0.3),
+    CatalogCardSeed("6400001-OSC023", "6400001", "OSC023", "Etchings of Arcana (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC023.webp", 1.25),
+    CatalogCardSeed("6400001-OSC024", "6400001", "OSC024", "Sigil of Conductivity", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC024.webp", 0.18),
+    CatalogCardSeed("6400001-OSC025", "6400001", "OSC025", "Sigil of Forethought", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC025.webp", 0.1),
+    CatalogCardSeed("6400001-OSC026", "6400001", "OSC026", "Sigil of Lightning", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC026.webp", 0.15),
+    CatalogCardSeed("6400001-OSC027", "6400001", "OSC027", "Embodiment of Lightning", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC027.webp", null),
+    CatalogCardSeed("6400001-OSC028", "6400001", "OSC028", "Sanctuary of Aria", "Normal", "None", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC028.webp", null),
+    CatalogCardSeed("6400001-OSC029", "6400001", "OSC029", "Ponder", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/OSC029.webp", 0.25),
+)

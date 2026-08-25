@@ -1,0 +1,5 @@
+package com.tcgportfolio.companion.data
+
+val teenageMutantNinjaTurtlesEternalLegalSetSeed = CardSetSeed(id = "1200103", name = "Teenage Mutant Ninja Turtles Eternal-Legal", game = "MTG", totalCards = 1812)
+
+val teenageMutantNinjaTurtlesEternalLegalCatalogSeed: List<CatalogCardSeed> = teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart1 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart2 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart3 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart4 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart5 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart6 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart7 + teenageMutantNinjaTurtlesEternalLegalCatalogSeedPart8

@@ -1,0 +1,4 @@
+-- Binder umbenennen (03.08., Nutzer-Vorgabe) - eigener Zeitstempel NUR für
+-- den Namen, analog zu BinderItemEntity.positionUpdatedAt, siehe Kommentar
+-- bei BinderEntity in Portfolio.sq.
+ALTER TABLE BinderEntity ADD COLUMN nameUpdatedAt INTEGER NOT NULL DEFAULT 0;

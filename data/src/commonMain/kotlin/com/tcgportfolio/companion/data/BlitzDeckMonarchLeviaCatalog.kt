@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckMonarchLeviaSetSeed = CardSetSeed(id = "6400072", name = "Blitz Deck: Monarch - Levia", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckMonarchLeviaCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400072-LEV001", "6400072", "LEV001", "Levia", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LEV001.width-450.png", 0.37),
+    CatalogCardSeed("6400072-LEV002", "6400072", "LEV002", "Lady Barthimont", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/media/images/LEV002_Lady_Barthimont.width-10000.png", 0.42),
+    CatalogCardSeed("6400072-LEV003", "6400072", "LEV003", "Ravenous Meataxe", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV003.width-450.png", 2.23),
+    CatalogCardSeed("6400072-LEV004", "6400072", "LEV004", "Ebon Fold", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV004.width-450.png", 0.24),
+    CatalogCardSeed("6400072-LEV005", "6400072", "LEV005", "Spell Fray Cloak", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV005.width-450.png", 0.13),
+    CatalogCardSeed("6400072-LEV006", "6400072", "LEV006", "Goliath Gauntlet", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV006.width-450.png", null),
+    CatalogCardSeed("6400072-LEV007", "6400072", "LEV007", "Hooves of the Shadowbeast", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV007.width-450.png", null),
+    CatalogCardSeed("6400072-LEV008", "6400072", "LEV008", "Soul Harvest", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LEV008.width-450.png", 0.13),
+    CatalogCardSeed("6400072-LEV009", "6400072", "LEV009", "Boneyard Marauder (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV009.width-450.png", 0.14),
+    CatalogCardSeed("6400072-LEV010", "6400072", "LEV010", "Deadwood Rumbler (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV010.width-450.png", 0.15),
+    CatalogCardSeed("6400072-LEV011", "6400072", "LEV011", "Dread Screamer (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV011.width-450.png", 0.17),
+    CatalogCardSeed("6400072-LEV012", "6400072", "LEV012", "Endless Maw (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LEV012.width-450.png", 0.68),
+    CatalogCardSeed("6400072-LEV013", "6400072", "LEV013", "Graveling Growl (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV013.width-450.png", 0.15),
+    CatalogCardSeed("6400072-LEV014", "6400072", "LEV014", "Hungering Slaughterbeast (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV014.width-450.png", 0.15),
+    CatalogCardSeed("6400072-LEV015", "6400072", "LEV015", "Unworldly Bellow (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV015.width-450.png", 0.14),
+    CatalogCardSeed("6400072-LEV016", "6400072", "LEV016", "Writhing Beast Hulk (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LEV016.width-450.png", 0.3),
+    CatalogCardSeed("6400072-LEV017", "6400072", "LEV017", "Hungering Slaughterbeast (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV017.width-450.png", 0.13),
+    CatalogCardSeed("6400072-LEV018", "6400072", "LEV018", "Boneyard Marauder (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV018.width-450.png", null),
+    CatalogCardSeed("6400072-LEV019", "6400072", "LEV019", "Convulsions from the Bellows of Hell (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LEV019.width-450.png", 0.34),
+    CatalogCardSeed("6400072-LEV020", "6400072", "LEV020", "Deadwood Rumbler (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV020.width-450.png", 0.2),
+    CatalogCardSeed("6400072-LEV021", "6400072", "LEV021", "Dread Screamer (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV021.width-450.png", 0.27),
+    CatalogCardSeed("6400072-LEV022", "6400072", "LEV022", "Unworldly Bellow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV022.width-450.png", 0.15),
+    CatalogCardSeed("6400072-LEV023", "6400072", "LEV023", "Consuming Aftermath (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LEV023.width-450.png", null),
+    CatalogCardSeed("6400072-LEV024", "6400072", "LEV024", "Lunartide Plunderer (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV024.width-450.png", null),
+    CatalogCardSeed("6400072-LEV025", "6400072", "LEV025", "Blood Tribute (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV025.width-450.png", 0.15),
+    CatalogCardSeed("6400072-LEV026", "6400072", "LEV026", "Smash with Big Tree (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV026.width-450.png", 0.1),
+    CatalogCardSeed("6400072-LEV027", "6400072", "LEV027", "Smash with Big Tree (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV027.width-450.png", 0.15),
+    CatalogCardSeed("6400072-LEV028", "6400072", "LEV028", "Rally the Rearguard (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV028.width-450.png", null),
+    CatalogCardSeed("6400072-LEV029", "6400072", "LEV029", "Rally the Rearguard (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LEV029.width-450.png", 0.05),
+)

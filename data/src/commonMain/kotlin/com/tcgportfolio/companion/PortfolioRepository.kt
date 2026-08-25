@@ -1,0 +1,5936 @@
+package com.tcgportfolio.companion
+
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import com.tcgportfolio.companion.data.BackupPayload
+import com.tcgportfolio.companion.data.ExportedCard
+import com.tcgportfolio.companion.data.ExportedSealedProduct
+import com.tcgportfolio.companion.data.SyncAccount
+import com.tcgportfolio.companion.data.SyncBinder
+import com.tcgportfolio.companion.data.SyncBinderItem
+import com.tcgportfolio.companion.data.SyncCard
+import com.tcgportfolio.companion.data.SyncCardmarketPriceSelection
+import com.tcgportfolio.companion.data.SyncSealedCardmarketPriceSelection
+import com.tcgportfolio.companion.data.SyncDeck
+import com.tcgportfolio.companion.data.SyncDeckCard
+import com.tcgportfolio.companion.data.SyncDeletion
+import com.tcgportfolio.companion.data.SyncPayload
+import com.tcgportfolio.companion.data.SyncSealedProduct
+import com.tcgportfolio.companion.data.SyncWishlist
+import com.tcgportfolio.companion.data.SyncWishlistItem
+import com.tcgportfolio.companion.data.adventureOnKamisIslandCatalogSeed
+import com.tcgportfolio.companion.data.adventureOnKamisIslandSetSeed
+import com.tcgportfolio.companion.data.awakenedPulseCatalogSeed
+import com.tcgportfolio.companion.data.awakenedPulseSetSeed
+// DBFW Promo-/Bonuskarten (Release Event Cards, Pre-Release Cards, Alternate
+// Art Reprints, Promotion Cards & Packs, Tournament Promos) - siehe CONCEPT.md
+import com.tcgportfolio.companion.data.fb01AarCatalogSeed
+import com.tcgportfolio.companion.data.fb01AarSetSeed
+import com.tcgportfolio.companion.data.fb01PrCatalogSeed
+import com.tcgportfolio.companion.data.fb01PrSetSeed
+import com.tcgportfolio.companion.data.fb02AarCatalogSeed
+import com.tcgportfolio.companion.data.fb02AarSetSeed
+import com.tcgportfolio.companion.data.fb02ReCatalogSeed
+import com.tcgportfolio.companion.data.fb02ReSetSeed
+import com.tcgportfolio.companion.data.fb03AarCatalogSeed
+import com.tcgportfolio.companion.data.fb03AarSetSeed
+import com.tcgportfolio.companion.data.fb03ReCatalogSeed
+import com.tcgportfolio.companion.data.fb03ReSetSeed
+import com.tcgportfolio.companion.data.fb04AarCatalogSeed
+import com.tcgportfolio.companion.data.fb04AarSetSeed
+import com.tcgportfolio.companion.data.fb04ReCatalogSeed
+import com.tcgportfolio.companion.data.fb04ReSetSeed
+import com.tcgportfolio.companion.data.fb05AarCatalogSeed
+import com.tcgportfolio.companion.data.fb05AarSetSeed
+import com.tcgportfolio.companion.data.fb05ReCatalogSeed
+import com.tcgportfolio.companion.data.fb05ReSetSeed
+import com.tcgportfolio.companion.data.fb06ReCatalogSeed
+import com.tcgportfolio.companion.data.fb06ReSetSeed
+import com.tcgportfolio.companion.data.fb07ReCatalogSeed
+import com.tcgportfolio.companion.data.fb07ReSetSeed
+import com.tcgportfolio.companion.data.fb08ReCatalogSeed
+import com.tcgportfolio.companion.data.fb08ReSetSeed
+import com.tcgportfolio.companion.data.fb09ReCatalogSeed
+import com.tcgportfolio.companion.data.fb09ReSetSeed
+import com.tcgportfolio.companion.data.fb10ReCatalogSeed
+import com.tcgportfolio.companion.data.fb10ReSetSeed
+import com.tcgportfolio.companion.data.fbPromoCatalogSeed
+import com.tcgportfolio.companion.data.fbPromoSetSeed
+import com.tcgportfolio.companion.data.fbTournCatalogSeed
+import com.tcgportfolio.companion.data.fbTournSetSeed
+// Pokemon Promo-/Bonuskarten (Black-Star-Promos je Ära, McDonald's-Promos,
+// Detective Pikachu) - siehe CONCEPT.md
+import com.tcgportfolio.companion.data.pkmAapCatalogSeed
+import com.tcgportfolio.companion.data.pkmAapSetSeed
+import com.tcgportfolio.companion.data.pkmDetpikaCatalogSeed
+import com.tcgportfolio.companion.data.pkmDetpikaSetSeed
+import com.tcgportfolio.companion.data.pkmMcd2011CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2011SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2012CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2012SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2014CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2014SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2015CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2015SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2016CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2016SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2017CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2017SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2018CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2018SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2019CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2019SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2022CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2022SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2023CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2023SetSeed
+import com.tcgportfolio.companion.data.pkmMcd2024CatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd2024SetSeed
+import com.tcgportfolio.companion.data.pkmMcd25thCatalogSeed
+import com.tcgportfolio.companion.data.pkmMcd25thSetSeed
+import com.tcgportfolio.companion.data.pkmMepCatalogSeed
+import com.tcgportfolio.companion.data.pkmMepSetSeed
+import com.tcgportfolio.companion.data.pkmSmpCatalogSeed
+import com.tcgportfolio.companion.data.pkmSmpSetSeed
+import com.tcgportfolio.companion.data.pkmSvpCatalogSeed
+import com.tcgportfolio.companion.data.pkmSvpSetSeed
+import com.tcgportfolio.companion.data.pkmSwshpCatalogSeed
+import com.tcgportfolio.companion.data.pkmSwshpSetSeed
+import com.tcgportfolio.companion.data.awakeningOfTheNewEraCatalogSeed
+import com.tcgportfolio.companion.data.awakeningOfTheNewEraSetSeed
+import com.tcgportfolio.companion.data.azureSeasSevenCatalogSeed
+import com.tcgportfolio.companion.data.azureSeasSevenSetSeed
+import com.tcgportfolio.companion.data.blazingAuraCatalogSeed
+import com.tcgportfolio.companion.data.blazingAuraSetSeed
+import com.tcgportfolio.companion.data.CardSetSeed
+import com.tcgportfolio.companion.data.carryingOnHisWillCatalogSeed
+import com.tcgportfolio.companion.data.carryingOnHisWillSetSeed
+import com.tcgportfolio.companion.data.CatalogCardSeed
+import com.tcgportfolio.companion.data.originsCatalogSeed
+import com.tcgportfolio.companion.data.originsSetSeed
+import com.tcgportfolio.companion.data.originsProvingGroundsCatalogSeed
+import com.tcgportfolio.companion.data.originsProvingGroundsSetSeed
+import com.tcgportfolio.companion.data.riftboundPromotionalCardsCatalogSeed
+import com.tcgportfolio.companion.data.riftboundPromotionalCardsSetSeed
+import com.tcgportfolio.companion.data.riftboundOrganizedPlayPromotionalCardsCatalogSeed
+import com.tcgportfolio.companion.data.riftboundOrganizedPlayPromotionalCardsSetSeed
+import com.tcgportfolio.companion.data.riftboundJudgePromotionalCardsCatalogSeed
+import com.tcgportfolio.companion.data.riftboundJudgePromotionalCardsSetSeed
+// Gundam Card Game (09.08., Nutzer-Vorgabe "Gundam TCG einbauen") - Katalog
+// per Skript aus der freien gcg-api (api.gcgapi.com, MIT/ODbL, siehe
+// generate_gundam_catalog.py) gezogen, eine Datei pro offiziellem Set
+// (GundamGd01Catalog.kt usw.), 24 Sets/1816 Karten insgesamt. Cyberpunk TCG
+// bekommt bewusst KEINEN Katalog-Eintrag hier - siehe Kommentar bei allSets.
+import com.tcgportfolio.companion.data.narutoKayouNrsa01SetSeed
+import com.tcgportfolio.companion.data.narutoKayouNrsa01CatalogSeed
+import com.tcgportfolio.companion.data.narutoKayouNrsa02SetSeed
+import com.tcgportfolio.companion.data.narutoKayouNrsa02CatalogSeed
+import com.tcgportfolio.companion.data.narutoKayouNrsa03SetSeed
+import com.tcgportfolio.companion.data.narutoKayouNrsa03CatalogSeed
+import com.tcgportfolio.companion.data.narutoKayouNrea01SetSeed
+import com.tcgportfolio.companion.data.narutoKayouNrea01CatalogSeed
+import com.tcgportfolio.companion.data.narutoKayouNrea02SetSeed
+import com.tcgportfolio.companion.data.narutoKayouNrea02CatalogSeed
+import com.tcgportfolio.companion.data.narutoKayouNrccnaSetSeed
+import com.tcgportfolio.companion.data.narutoKayouNrccnaCatalogSeed
+import com.tcgportfolio.companion.data.narutoKayouPromoSetSeed
+import com.tcgportfolio.companion.data.narutoKayouPromoCatalogSeed
+import com.tcgportfolio.companion.data.gundamEb01SetSeed
+import com.tcgportfolio.companion.data.gundamEb01CatalogSeed
+import com.tcgportfolio.companion.data.gundamExbSetSeed
+import com.tcgportfolio.companion.data.gundamExbCatalogSeed
+import com.tcgportfolio.companion.data.gundamExbpSetSeed
+import com.tcgportfolio.companion.data.gundamExbpCatalogSeed
+import com.tcgportfolio.companion.data.gundamExrSetSeed
+import com.tcgportfolio.companion.data.gundamExrCatalogSeed
+import com.tcgportfolio.companion.data.gundamExrpSetSeed
+import com.tcgportfolio.companion.data.gundamExrpCatalogSeed
+import com.tcgportfolio.companion.data.gundamGd01SetSeed
+import com.tcgportfolio.companion.data.gundamGd01CatalogSeed
+import com.tcgportfolio.companion.data.gundamGd02SetSeed
+import com.tcgportfolio.companion.data.gundamGd02CatalogSeed
+import com.tcgportfolio.companion.data.gundamGd03SetSeed
+import com.tcgportfolio.companion.data.gundamGd03CatalogSeed
+import com.tcgportfolio.companion.data.gundamGd04SetSeed
+import com.tcgportfolio.companion.data.gundamGd04CatalogSeed
+import com.tcgportfolio.companion.data.gundamGd05SetSeed
+import com.tcgportfolio.companion.data.gundamGd05CatalogSeed
+import com.tcgportfolio.companion.data.gundamRSetSeed
+import com.tcgportfolio.companion.data.gundamRCatalogSeed
+import com.tcgportfolio.companion.data.gundamRpSetSeed
+import com.tcgportfolio.companion.data.gundamRpCatalogSeed
+import com.tcgportfolio.companion.data.gundamSc01SetSeed
+import com.tcgportfolio.companion.data.gundamSc01CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt01SetSeed
+import com.tcgportfolio.companion.data.gundamSt01CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt02SetSeed
+import com.tcgportfolio.companion.data.gundamSt02CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt03SetSeed
+import com.tcgportfolio.companion.data.gundamSt03CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt04SetSeed
+import com.tcgportfolio.companion.data.gundamSt04CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt05SetSeed
+import com.tcgportfolio.companion.data.gundamSt05CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt06SetSeed
+import com.tcgportfolio.companion.data.gundamSt06CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt07SetSeed
+import com.tcgportfolio.companion.data.gundamSt07CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt08SetSeed
+import com.tcgportfolio.companion.data.gundamSt08CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt09SetSeed
+import com.tcgportfolio.companion.data.gundamSt09CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt10SetSeed
+import com.tcgportfolio.companion.data.gundamSt10CatalogSeed
+import com.tcgportfolio.companion.data.gundamTSetSeed
+import com.tcgportfolio.companion.data.gundamTCatalogSeed
+import com.tcgportfolio.companion.data.spiritforgedCatalogSeed
+import com.tcgportfolio.companion.data.spiritforgedSetSeed
+import com.tcgportfolio.companion.data.unleashedCatalogSeed
+import com.tcgportfolio.companion.data.unleashedSetSeed
+import com.tcgportfolio.companion.data.vendettaCatalogSeed
+import com.tcgportfolio.companion.data.vendettaSetSeed
+import com.tcgportfolio.companion.data.riftboundSealedCatalogSeed
+import com.tcgportfolio.companion.data.finalFantasySealedCatalogSeed
+import com.tcgportfolio.companion.data.fleshAndBloodSealedCatalogSeed
+import com.tcgportfolio.companion.data.welcomeDeckIraSetSeed
+import com.tcgportfolio.companion.data.welcomeDeckIraCatalogSeed
+import com.tcgportfolio.companion.data.fleshAndBloodPromoCardsSetSeed
+import com.tcgportfolio.companion.data.fleshAndBloodPromoCardsCatalogSeed
+import com.tcgportfolio.companion.data.heroDeckDorintheaSetSeed
+import com.tcgportfolio.companion.data.heroDeckDorintheaCatalogSeed
+import com.tcgportfolio.companion.data.heroDeckKatsuSetSeed
+import com.tcgportfolio.companion.data.heroDeckKatsuCatalogSeed
+import com.tcgportfolio.companion.data.heroDeckRhinarSetSeed
+import com.tcgportfolio.companion.data.heroDeckRhinarCatalogSeed
+import com.tcgportfolio.companion.data.heroDeckBravoSetSeed
+import com.tcgportfolio.companion.data.heroDeckBravoCatalogSeed
+import com.tcgportfolio.companion.data.welcomeToRatheSetSeed
+import com.tcgportfolio.companion.data.welcomeToRatheCatalogSeed
+import com.tcgportfolio.companion.data.arcaneRisingSetSeed
+import com.tcgportfolio.companion.data.arcaneRisingCatalogSeed
+import com.tcgportfolio.companion.data.crucibleOfWarSetSeed
+import com.tcgportfolio.companion.data.crucibleOfWarCatalogSeed
+import com.tcgportfolio.companion.data.monarchSetSeed
+import com.tcgportfolio.companion.data.monarchCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchLeviaSetSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchLeviaCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchChaneSetSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchChaneCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchBoltynSetSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchBoltynCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchPrismSetSeed
+import com.tcgportfolio.companion.data.blitzDeckMonarchPrismCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTalesOfAriaBriarSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTalesOfAriaBriarCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTalesOfAriaOldhimSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTalesOfAriaOldhimCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTalesOfAriaLexiSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTalesOfAriaLexiCatalogSeed
+import com.tcgportfolio.companion.data.talesOfAriaSetSeed
+import com.tcgportfolio.companion.data.talesOfAriaCatalogSeed
+import com.tcgportfolio.companion.data.everfestSetSeed
+import com.tcgportfolio.companion.data.everfestCatalogSeed
+import com.tcgportfolio.companion.data.historyPackVol1SetSeed
+import com.tcgportfolio.companion.data.historyPackVol1CatalogSeed
+import com.tcgportfolio.companion.data.classicBattlesRhinarVsDorintheaSetSeed
+import com.tcgportfolio.companion.data.classicBattlesRhinarVsDorintheaCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckUprisingDromaiSetSeed
+import com.tcgportfolio.companion.data.blitzDeckUprisingDromaiCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckUprisingFaiSetSeed
+import com.tcgportfolio.companion.data.blitzDeckUprisingFaiCatalogSeed
+import com.tcgportfolio.companion.data.uprisingSetSeed
+import com.tcgportfolio.companion.data.uprisingCatalogSeed
+import com.tcgportfolio.companion.data.dynastySetSeed
+import com.tcgportfolio.companion.data.dynastyCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersUzuriSetSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersUzuriCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersRiptideSetSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersRiptideCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersKatsuSetSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersKatsuCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersBenjiSetSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersBenjiCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersAzaleaSetSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersAzaleaCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersArakniSetSeed
+import com.tcgportfolio.companion.data.blitzDeckOutsidersArakniCatalogSeed
+import com.tcgportfolio.companion.data.outsidersSetSeed
+import com.tcgportfolio.companion.data.outsidersCatalogSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckViseraiSetSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckViseraiCatalogSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckRhinarSetSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckRhinarCatalogSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckKanoSetSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckKanoCatalogSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckDorintheaSetSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckDorintheaCatalogSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckDashSetSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckDashCatalogSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckBravoSetSeed
+import com.tcgportfolio.companion.data.historicPack1BlitzDeckBravoCatalogSeed
+import com.tcgportfolio.companion.data.duskTillDawnSetSeed
+import com.tcgportfolio.companion.data.duskTillDawnCatalogSeed
+import com.tcgportfolio.companion.data.roundTheTableTccxlssSetSeed
+import com.tcgportfolio.companion.data.roundTheTableTccxlssCatalogSeed
+import com.tcgportfolio.companion.data.brightLightsSetSeed
+import com.tcgportfolio.companion.data.brightLightsCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersVictorSetSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersVictorCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersOlympiaSetSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersOlympiaCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersBetsySetSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersBetsyCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersRhinarSetSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersRhinarCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersKayoSetSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersKayoCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersKassaiSetSeed
+import com.tcgportfolio.companion.data.blitzDeckHeavyHittersKassaiCatalogSeed
+import com.tcgportfolio.companion.data.heavyHittersSetSeed
+import com.tcgportfolio.companion.data.heavyHittersCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckKayoSetSeed
+import com.tcgportfolio.companion.data.armoryDeckKayoCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckPartTheMistveilZenSetSeed
+import com.tcgportfolio.companion.data.blitzDeckPartTheMistveilZenCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckPartTheMistveilNuuSetSeed
+import com.tcgportfolio.companion.data.blitzDeckPartTheMistveilNuuCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckPartTheMistveilEnigmaSetSeed
+import com.tcgportfolio.companion.data.blitzDeckPartTheMistveilEnigmaCatalogSeed
+import com.tcgportfolio.companion.data.partTheMistveilSetSeed
+import com.tcgportfolio.companion.data.partTheMistveilCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckBoltynSetSeed
+import com.tcgportfolio.companion.data.armoryDeckBoltynCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckAzaleaSetSeed
+import com.tcgportfolio.companion.data.armoryDeckAzaleaCatalogSeed
+import com.tcgportfolio.companion.data.s1stStrikeSetSeed
+import com.tcgportfolio.companion.data.s1stStrikeCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaVerdanceSetSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaVerdanceCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaOscilioSetSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaOscilioCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaAuroraSetSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaAuroraCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaFlorianSetSeed
+import com.tcgportfolio.companion.data.blitzDeckRosettaFlorianCatalogSeed
+import com.tcgportfolio.companion.data.rosettaSetSeed
+import com.tcgportfolio.companion.data.rosettaCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckDashSetSeed
+import com.tcgportfolio.companion.data.armoryDeckDashCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckJarlVetreidiSetSeed
+import com.tcgportfolio.companion.data.armoryDeckJarlVetreidiCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedCindraSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedCindraCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedArakniWebOfDeceitSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedArakniWebOfDeceitCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedFangSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedFangCatalogSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedArakniSetSeed
+import com.tcgportfolio.companion.data.blitzDeckTheHuntedArakniCatalogSeed
+import com.tcgportfolio.companion.data.theHuntedSetSeed
+import com.tcgportfolio.companion.data.theHuntedCatalogSeed
+import com.tcgportfolio.companion.data.gemPack1SetSeed
+import com.tcgportfolio.companion.data.gemPack1CatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckAuroraSetSeed
+import com.tcgportfolio.companion.data.armoryDeckAuroraCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckMaxxNitroSetSeed
+import com.tcgportfolio.companion.data.armoryDeckMaxxNitroCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckGravyBonesSetSeed
+import com.tcgportfolio.companion.data.armoryDeckGravyBonesCatalogSeed
+import com.tcgportfolio.companion.data.gemPack2SetSeed
+import com.tcgportfolio.companion.data.gemPack2CatalogSeed
+import com.tcgportfolio.companion.data.highSeasSetSeed
+import com.tcgportfolio.companion.data.highSeasCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckIraSetSeed
+import com.tcgportfolio.companion.data.armoryDeckIraCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckLegendsPrismSetSeed
+import com.tcgportfolio.companion.data.armoryDeckLegendsPrismCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckLegendsViseraiSetSeed
+import com.tcgportfolio.companion.data.armoryDeckLegendsViseraiCatalogSeed
+import com.tcgportfolio.companion.data.welcomeDeckBravoSetSeed
+import com.tcgportfolio.companion.data.welcomeDeckBravoCatalogSeed
+import com.tcgportfolio.companion.data.masteryPackGuardianSetSeed
+import com.tcgportfolio.companion.data.masteryPackGuardianCatalogSeed
+import com.tcgportfolio.companion.data.smashPalaceSetSeed
+import com.tcgportfolio.companion.data.smashPalaceCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckPleiadesSetSeed
+import com.tcgportfolio.companion.data.armoryDeckPleiadesCatalogSeed
+import com.tcgportfolio.companion.data.superSlamSetSeed
+import com.tcgportfolio.companion.data.superSlamCatalogSeed
+import com.tcgportfolio.companion.data.gemPack3SetSeed
+import com.tcgportfolio.companion.data.gemPack3CatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckRhinarSetSeed
+import com.tcgportfolio.companion.data.armoryDeckRhinarCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckArakniSetSeed
+import com.tcgportfolio.companion.data.armoryDeckArakniCatalogSeed
+import com.tcgportfolio.companion.data.compendiumOfRatheAntiquityPackSetSeed
+import com.tcgportfolio.companion.data.compendiumOfRatheAntiquityPackCatalogSeed
+import com.tcgportfolio.companion.data.compendiumOfRatheSetSeed
+import com.tcgportfolio.companion.data.compendiumOfRatheCatalogSeed
+import com.tcgportfolio.companion.data.silverAgeChapter2SetSeed
+import com.tcgportfolio.companion.data.silverAgeChapter2CatalogSeed
+import com.tcgportfolio.companion.data.silverAgeChapter1SetSeed
+import com.tcgportfolio.companion.data.silverAgeChapter1CatalogSeed
+import com.tcgportfolio.companion.data.gemPack4SetSeed
+import com.tcgportfolio.companion.data.gemPack4CatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckOriginsHalaSetSeed
+import com.tcgportfolio.companion.data.armoryDeckOriginsHalaCatalogSeed
+import com.tcgportfolio.companion.data.masteryPackWarriorSetSeed
+import com.tcgportfolio.companion.data.masteryPackWarriorCatalogSeed
+import com.tcgportfolio.companion.data.armoryDeckZyggySetSeed
+import com.tcgportfolio.companion.data.armoryDeckZyggyCatalogSeed
+import com.tcgportfolio.companion.data.gemPack5SetSeed
+import com.tcgportfolio.companion.data.gemPack5CatalogSeed
+import com.tcgportfolio.companion.data.silverAgeChapter3SetSeed
+import com.tcgportfolio.companion.data.silverAgeChapter3CatalogSeed
+import com.tcgportfolio.companion.data.omensOfTheThirdAgeSetSeed
+import com.tcgportfolio.companion.data.omensOfTheThirdAgeCatalogSeed
+import com.tcgportfolio.companion.data.opusIiSetSeed
+import com.tcgportfolio.companion.data.opusIiCatalogSeed
+import com.tcgportfolio.companion.data.opusISetSeed
+import com.tcgportfolio.companion.data.opusICatalogSeed
+import com.tcgportfolio.companion.data.ffPromoCardsSetSeed
+import com.tcgportfolio.companion.data.ffPromoCardsCatalogSeed
+import com.tcgportfolio.companion.data.opusIiiSetSeed
+import com.tcgportfolio.companion.data.opusIiiCatalogSeed
+import com.tcgportfolio.companion.data.opusIvSetSeed
+import com.tcgportfolio.companion.data.opusIvCatalogSeed
+import com.tcgportfolio.companion.data.opusVSetSeed
+import com.tcgportfolio.companion.data.opusVCatalogSeed
+import com.tcgportfolio.companion.data.opusViSetSeed
+import com.tcgportfolio.companion.data.opusViCatalogSeed
+import com.tcgportfolio.companion.data.deckExclusiveCardsSetSeed
+import com.tcgportfolio.companion.data.deckExclusiveCardsCatalogSeed
+import com.tcgportfolio.companion.data.opusViiSetSeed
+import com.tcgportfolio.companion.data.opusViiCatalogSeed
+import com.tcgportfolio.companion.data.opusViiiSetSeed
+import com.tcgportfolio.companion.data.opusViiiCatalogSeed
+import com.tcgportfolio.companion.data.opusIxSetSeed
+import com.tcgportfolio.companion.data.opusIxCatalogSeed
+import com.tcgportfolio.companion.data.opusXSetSeed
+import com.tcgportfolio.companion.data.opusXCatalogSeed
+import com.tcgportfolio.companion.data.opusXiSetSeed
+import com.tcgportfolio.companion.data.opusXiCatalogSeed
+import com.tcgportfolio.companion.data.opusXiiSetSeed
+import com.tcgportfolio.companion.data.opusXiiCatalogSeed
+import com.tcgportfolio.companion.data.bossDeckChaosSetSeed
+import com.tcgportfolio.companion.data.bossDeckChaosCatalogSeed
+import com.tcgportfolio.companion.data.opusXiiiCrystalRadianceSetSeed
+import com.tcgportfolio.companion.data.opusXiiiCrystalRadianceCatalogSeed
+import com.tcgportfolio.companion.data.opusXivCrystalAbyssSetSeed
+import com.tcgportfolio.companion.data.opusXivCrystalAbyssCatalogSeed
+import com.tcgportfolio.companion.data.crystalDominionSetSeed
+import com.tcgportfolio.companion.data.crystalDominionCatalogSeed
+import com.tcgportfolio.companion.data.emissariesOfLightSetSeed
+import com.tcgportfolio.companion.data.emissariesOfLightCatalogSeed
+import com.tcgportfolio.companion.data.rebellionsCallSetSeed
+import com.tcgportfolio.companion.data.rebellionsCallCatalogSeed
+import com.tcgportfolio.companion.data.resurgenceOfPowerSetSeed
+import com.tcgportfolio.companion.data.resurgenceOfPowerCatalogSeed
+import com.tcgportfolio.companion.data.bossDeckFinalFantasyViiSetSeed
+import com.tcgportfolio.companion.data.bossDeckFinalFantasyViiCatalogSeed
+import com.tcgportfolio.companion.data.fromNightmaresSetSeed
+import com.tcgportfolio.companion.data.fromNightmaresCatalogSeed
+import com.tcgportfolio.companion.data.dawnOfHeroesSetSeed
+import com.tcgportfolio.companion.data.dawnOfHeroesCatalogSeed
+import com.tcgportfolio.companion.data.beyondDestinySetSeed
+import com.tcgportfolio.companion.data.beyondDestinyCatalogSeed
+import com.tcgportfolio.companion.data.hiddenHopeSetSeed
+import com.tcgportfolio.companion.data.hiddenHopeCatalogSeed
+import com.tcgportfolio.companion.data.hiddenTrialsSetSeed
+import com.tcgportfolio.companion.data.hiddenTrialsCatalogSeed
+import com.tcgportfolio.companion.data.hiddenLegendsSetSeed
+import com.tcgportfolio.companion.data.hiddenLegendsCatalogSeed
+import com.tcgportfolio.companion.data.legacyCollectionSetSeed
+import com.tcgportfolio.companion.data.legacyCollectionCatalogSeed
+import com.tcgportfolio.companion.data.tearsOfThePlanetSetSeed
+import com.tcgportfolio.companion.data.tearsOfThePlanetCatalogSeed
+import com.tcgportfolio.companion.data.gunslingerInTheAbyssSetSeed
+import com.tcgportfolio.companion.data.gunslingerInTheAbyssCatalogSeed
+import com.tcgportfolio.companion.data.worldChampionDecks2024SetSeed
+import com.tcgportfolio.companion.data.worldChampionDecks2024CatalogSeed
+import com.tcgportfolio.companion.data.starterSet2025SetSeed
+import com.tcgportfolio.companion.data.starterSet2025CatalogSeed
+import com.tcgportfolio.companion.data.journeyOfDiscoverySetSeed
+import com.tcgportfolio.companion.data.journeyOfDiscoveryCatalogSeed
+import com.tcgportfolio.companion.data.dreamlikeOceansSetSeed
+import com.tcgportfolio.companion.data.dreamlikeOceansCatalogSeed
+import com.tcgportfolio.companion.data.chaosRisingCatalogSeed
+import com.tcgportfolio.companion.data.chaosRisingSetSeed
+import com.tcgportfolio.companion.data.pitchBlackCatalogSeed
+import com.tcgportfolio.companion.data.pitchBlackSetSeed
+import com.tcgportfolio.companion.data.swuSorSetSeed
+import com.tcgportfolio.companion.data.swuSorCatalogSeed
+import com.tcgportfolio.companion.data.swuShdSetSeed
+import com.tcgportfolio.companion.data.swuShdCatalogSeed
+import com.tcgportfolio.companion.data.swuTwiSetSeed
+import com.tcgportfolio.companion.data.swuTwiCatalogSeed
+import com.tcgportfolio.companion.data.swuJtlSetSeed
+import com.tcgportfolio.companion.data.swuJtlCatalogSeed
+import com.tcgportfolio.companion.data.swuLawSetSeed
+import com.tcgportfolio.companion.data.swuLawCatalogSeed
+import com.tcgportfolio.companion.data.swuAshSetSeed
+import com.tcgportfolio.companion.data.swuAshCatalogSeed
+import com.tcgportfolio.companion.data.swuSecSetSeed
+import com.tcgportfolio.companion.data.swuSecCatalogSeed
+import com.tcgportfolio.companion.data.swuLofSetSeed
+import com.tcgportfolio.companion.data.swuLofCatalogSeed
+import com.tcgportfolio.companion.data.alteredCoreSetSeed
+import com.tcgportfolio.companion.data.alteredCoreCatalogSeed
+import com.tcgportfolio.companion.data.alteredAlizeSetSeed
+import com.tcgportfolio.companion.data.alteredAlizeCatalogSeed
+import com.tcgportfolio.companion.data.alteredBiseSetSeed
+import com.tcgportfolio.companion.data.alteredBiseCatalogSeed
+import com.tcgportfolio.companion.data.alteredCycloneSetSeed
+import com.tcgportfolio.companion.data.alteredCycloneCatalogSeed
+import com.tcgportfolio.companion.data.alteredDusterSetSeed
+import com.tcgportfolio.companion.data.alteredDusterCatalogSeed
+import com.tcgportfolio.companion.data.alteredEoleSetSeed
+import com.tcgportfolio.companion.data.alteredEoleCatalogSeed
+import com.tcgportfolio.companion.data.alteredFugueSetSeed
+import com.tcgportfolio.companion.data.alteredFugueCatalogSeed
+import com.tcgportfolio.companion.data.crossForceCatalogSeed
+import com.tcgportfolio.companion.data.crossForceSetSeed
+import com.tcgportfolio.companion.data.dualEvolutionCatalogSeed
+import com.tcgportfolio.companion.data.dualEvolutionSetSeed
+import com.tcgportfolio.companion.data.emperorsInTheNewWorldCatalogSeed
+import com.tcgportfolio.companion.data.emperorsInTheNewWorldSetSeed
+import com.tcgportfolio.companion.data.fistOfDivineSpeedCatalogSeed
+import com.tcgportfolio.companion.data.fistOfDivineSpeedSetSeed
+import com.tcgportfolio.companion.data.fiveHundredYearsFutureCatalogSeed
+import com.tcgportfolio.companion.data.fiveHundredYearsFutureSetSeed
+import com.tcgportfolio.companion.data.kingdomsOfIntrigueCatalogSeed
+import com.tcgportfolio.companion.data.kingdomsOfIntrigueSetSeed
+import com.tcgportfolio.companion.data.legacyOfTheMasterCatalogSeed
+import com.tcgportfolio.companion.data.legacyOfTheMasterSetSeed
+import com.tcgportfolio.companion.data.megaEvolutionCatalogSeed
+import com.tcgportfolio.companion.data.megaEvolutionSetSeed
+import com.tcgportfolio.companion.data.newAdventureCatalogSeed
+import com.tcgportfolio.companion.data.newAdventureSetSeed
+import com.tcgportfolio.companion.data.paramountWarCatalogSeed
+import com.tcgportfolio.companion.data.paramountWarSetSeed
+import com.tcgportfolio.companion.data.perfectOrderCatalogSeed
+import com.tcgportfolio.companion.data.perfectOrderSetSeed
+import com.tcgportfolio.companion.data.phantasmalFlamesCatalogSeed
+import com.tcgportfolio.companion.data.phantasmalFlamesSetSeed
+import com.tcgportfolio.companion.data.pillarsOfStrengthCatalogSeed
+import com.tcgportfolio.companion.data.pillarsOfStrengthSetSeed
+import com.tcgportfolio.companion.data.ragingRoarCatalogSeed
+import com.tcgportfolio.companion.data.ragingRoarSetSeed
+import com.tcgportfolio.companion.data.rivalsClashCatalogSeed
+import com.tcgportfolio.companion.data.rivalsClashSetSeed
+import com.tcgportfolio.companion.data.romanceDawnCatalogSeed
+import com.tcgportfolio.companion.data.romanceDawnSetSeed
+import com.tcgportfolio.companion.data.royalBloodCatalogSeed
+import com.tcgportfolio.companion.data.royalBloodSetSeed
+import com.tcgportfolio.companion.data.saiyansPrideCatalogSeed
+import com.tcgportfolio.companion.data.saiyansPrideSetSeed
+import com.tcgportfolio.companion.data.SealedCatalogSeed
+import com.tcgportfolio.companion.data.starterDecksCatalogSeed
+import com.tcgportfolio.companion.data.onePieceStarterDecksCatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDecksCatalogSeed
+import com.tcgportfolio.companion.data.onePieceSpecialSealedCatalogSeed
+import com.tcgportfolio.companion.data.digimonSpecialSealedCatalogSeed
+import com.tcgportfolio.companion.data.pokemonEliteTrainerBoxesCatalogSeed
+import com.tcgportfolio.companion.data.timeOfBattleCatalogSeed
+import com.tcgportfolio.companion.data.timeOfBattleSetSeed
+import com.tcgportfolio.companion.data.op02PrCatalogSeed
+import com.tcgportfolio.companion.data.op02PrSetSeed
+import com.tcgportfolio.companion.data.op03PrCatalogSeed
+import com.tcgportfolio.companion.data.op03PrSetSeed
+import com.tcgportfolio.companion.data.op04PrCatalogSeed
+import com.tcgportfolio.companion.data.op04PrSetSeed
+import com.tcgportfolio.companion.data.op06PrCatalogSeed
+import com.tcgportfolio.companion.data.op06PrSetSeed
+import com.tcgportfolio.companion.data.op07PrCatalogSeed
+import com.tcgportfolio.companion.data.op07PrSetSeed
+import com.tcgportfolio.companion.data.op08PrCatalogSeed
+import com.tcgportfolio.companion.data.op08PrSetSeed
+import com.tcgportfolio.companion.data.op10ReCatalogSeed
+import com.tcgportfolio.companion.data.op10ReSetSeed
+import com.tcgportfolio.companion.data.op11ReCatalogSeed
+import com.tcgportfolio.companion.data.op11ReSetSeed
+import com.tcgportfolio.companion.data.op12ReCatalogSeed
+import com.tcgportfolio.companion.data.op12ReSetSeed
+import com.tcgportfolio.companion.data.op14ReCatalogSeed
+import com.tcgportfolio.companion.data.op14ReSetSeed
+import com.tcgportfolio.companion.data.op15ReCatalogSeed
+import com.tcgportfolio.companion.data.op15ReSetSeed
+import com.tcgportfolio.companion.data.op16ReCatalogSeed
+import com.tcgportfolio.companion.data.op16ReSetSeed
+import com.tcgportfolio.companion.data.op05AnnCatalogSeed
+import com.tcgportfolio.companion.data.op05AnnSetSeed
+import com.tcgportfolio.companion.data.op09AnnCatalogSeed
+import com.tcgportfolio.companion.data.op09AnnSetSeed
+import com.tcgportfolio.companion.data.op13AnnCatalogSeed
+import com.tcgportfolio.companion.data.op13AnnSetSeed
+import com.tcgportfolio.companion.data.opPromoCatalogSeed
+import com.tcgportfolio.companion.data.opPromoSetSeed
+import com.tcgportfolio.companion.data.opRevisionCatalogSeed
+import com.tcgportfolio.companion.data.opRevisionSetSeed
+import com.tcgportfolio.companion.data.opDemoCatalogSeed
+import com.tcgportfolio.companion.data.opDemoSetSeed
+import com.tcgportfolio.companion.data.twoLegendsCatalogSeed
+import com.tcgportfolio.companion.data.twoLegendsSetSeed
+import com.tcgportfolio.companion.data.ultraLimitCatalogSeed
+import com.tcgportfolio.companion.data.ultraLimitSetSeed
+import com.tcgportfolio.companion.data.wingsOfTheCaptainCatalogSeed
+import com.tcgportfolio.companion.data.wingsOfTheCaptainSetSeed
+import com.tcgportfolio.companion.data.wishForShenronCatalogSeed
+import com.tcgportfolio.companion.data.wishForShenronSetSeed
+// Digimon-Sets (BT04-BT26/EX02-EX12, Hauptset-Booster ohne Starter Decks/Promos)
+import com.tcgportfolio.companion.data.greatLegendCatalogSeed
+import com.tcgportfolio.companion.data.greatLegendSetSeed
+import com.tcgportfolio.companion.data.battleOfOmniCatalogSeed
+import com.tcgportfolio.companion.data.battleOfOmniSetSeed
+import com.tcgportfolio.companion.data.doubleDiamondCatalogSeed
+import com.tcgportfolio.companion.data.doubleDiamondSetSeed
+import com.tcgportfolio.companion.data.nextAdventureDigimonCatalogSeed
+import com.tcgportfolio.companion.data.nextAdventureDigimonSetSeed
+import com.tcgportfolio.companion.data.newAwakeningCatalogSeed
+import com.tcgportfolio.companion.data.newAwakeningSetSeed
+import com.tcgportfolio.companion.data.digitalHazardCatalogSeed
+import com.tcgportfolio.companion.data.digitalHazardSetSeed
+import com.tcgportfolio.companion.data.xRecordCatalogSeed
+import com.tcgportfolio.companion.data.xRecordSetSeed
+import com.tcgportfolio.companion.data.xrosEncounterCatalogSeed
+import com.tcgportfolio.companion.data.xrosEncounterSetSeed
+import com.tcgportfolio.companion.data.draconicRoarCatalogSeed
+import com.tcgportfolio.companion.data.draconicRoarSetSeed
+import com.tcgportfolio.companion.data.dimensionalPhaseCatalogSeed
+import com.tcgportfolio.companion.data.dimensionalPhaseSetSeed
+import com.tcgportfolio.companion.data.acrossTimeCatalogSeed
+import com.tcgportfolio.companion.data.acrossTimeSetSeed
+import com.tcgportfolio.companion.data.versusRoyalKnightsCatalogSeed
+import com.tcgportfolio.companion.data.versusRoyalKnightsSetSeed
+import com.tcgportfolio.companion.data.blastAceCatalogSeed
+import com.tcgportfolio.companion.data.blastAceSetSeed
+import com.tcgportfolio.companion.data.animalColosseumCatalogSeed
+import com.tcgportfolio.companion.data.animalColosseumSetSeed
+import com.tcgportfolio.companion.data.exceedApocalypseCatalogSeed
+import com.tcgportfolio.companion.data.exceedApocalypseSetSeed
+import com.tcgportfolio.companion.data.beginningObserverCatalogSeed
+import com.tcgportfolio.companion.data.beginningObserverSetSeed
+import com.tcgportfolio.companion.data.infernalAscensionCatalogSeed
+import com.tcgportfolio.companion.data.infernalAscensionSetSeed
+import com.tcgportfolio.companion.data.secretCrisisCatalogSeed
+import com.tcgportfolio.companion.data.secretCrisisSetSeed
+import com.tcgportfolio.companion.data.digimonLiberatorCatalogSeed
+import com.tcgportfolio.companion.data.digimonLiberatorSetSeed
+import com.tcgportfolio.companion.data.chainOfLiberationCatalogSeed
+import com.tcgportfolio.companion.data.chainOfLiberationSetSeed
+import com.tcgportfolio.companion.data.worldConvergenceCatalogSeed
+import com.tcgportfolio.companion.data.worldConvergenceSetSeed
+import com.tcgportfolio.companion.data.versusMonstersCatalogSeed
+import com.tcgportfolio.companion.data.versusMonstersSetSeed
+import com.tcgportfolio.companion.data.cyberEdenCatalogSeed
+import com.tcgportfolio.companion.data.cyberEdenSetSeed
+import com.tcgportfolio.companion.data.sinisterOrderCatalogSeed
+import com.tcgportfolio.companion.data.sinisterOrderSetSeed
+import com.tcgportfolio.companion.data.hackersSlumberCatalogSeed
+import com.tcgportfolio.companion.data.hackersSlumberSetSeed
+import com.tcgportfolio.companion.data.timeStrangerCatalogSeed
+import com.tcgportfolio.companion.data.timeStrangerSetSeed
+import com.tcgportfolio.companion.data.dawnOfLiberatorCatalogSeed
+import com.tcgportfolio.companion.data.dawnOfLiberatorSetSeed
+import com.tcgportfolio.companion.data.dualRevolutionCatalogSeed
+import com.tcgportfolio.companion.data.dualRevolutionSetSeed
+import com.tcgportfolio.companion.data.digitalWorldShambalaCatalogSeed
+import com.tcgportfolio.companion.data.digitalWorldShambalaSetSeed
+import com.tcgportfolio.companion.data.timelessBondsCatalogSeed
+import com.tcgportfolio.companion.data.timelessBondsSetSeed
+// Pokemon-Historie ab BREAKpoint (2016), Hauptsets + kuratierte Sondersets
+import com.tcgportfolio.companion.data.breakpointCatalogSeed
+import com.tcgportfolio.companion.data.breakpointSetSeed
+import com.tcgportfolio.companion.data.generationsCatalogSeed
+import com.tcgportfolio.companion.data.generationsSetSeed
+import com.tcgportfolio.companion.data.generationsRadiantCatalogSeed
+import com.tcgportfolio.companion.data.generationsRadiantSetSeed
+import com.tcgportfolio.companion.data.fatesCollideCatalogSeed
+import com.tcgportfolio.companion.data.fatesCollideSetSeed
+import com.tcgportfolio.companion.data.steamSiegeCatalogSeed
+import com.tcgportfolio.companion.data.steamSiegeSetSeed
+import com.tcgportfolio.companion.data.xyEvolutionsCatalogSeed
+import com.tcgportfolio.companion.data.xyEvolutionsSetSeed
+import com.tcgportfolio.companion.data.smBaseSetCatalogSeed
+import com.tcgportfolio.companion.data.smBaseSetSetSeed
+import com.tcgportfolio.companion.data.guardiansRisingCatalogSeed
+import com.tcgportfolio.companion.data.guardiansRisingSetSeed
+import com.tcgportfolio.companion.data.burningShadowsCatalogSeed
+import com.tcgportfolio.companion.data.burningShadowsSetSeed
+import com.tcgportfolio.companion.data.shiningLegendsCatalogSeed
+import com.tcgportfolio.companion.data.shiningLegendsSetSeed
+import com.tcgportfolio.companion.data.crimsonInvasionCatalogSeed
+import com.tcgportfolio.companion.data.crimsonInvasionSetSeed
+import com.tcgportfolio.companion.data.ultraPrismCatalogSeed
+import com.tcgportfolio.companion.data.ultraPrismSetSeed
+import com.tcgportfolio.companion.data.forbiddenLightCatalogSeed
+import com.tcgportfolio.companion.data.forbiddenLightSetSeed
+import com.tcgportfolio.companion.data.celestialStormCatalogSeed
+import com.tcgportfolio.companion.data.celestialStormSetSeed
+import com.tcgportfolio.companion.data.dragonMajestyCatalogSeed
+import com.tcgportfolio.companion.data.dragonMajestySetSeed
+import com.tcgportfolio.companion.data.astralRadianceCatalogSeed
+import com.tcgportfolio.companion.data.astralRadianceSetSeed
+import com.tcgportfolio.companion.data.astralRadianceTrainerGalleryCatalogSeed
+import com.tcgportfolio.companion.data.astralRadianceTrainerGallerySetSeed
+import com.tcgportfolio.companion.data.battleStylesCatalogSeed
+import com.tcgportfolio.companion.data.battleStylesSetSeed
+import com.tcgportfolio.companion.data.blackBoltCatalogSeed
+import com.tcgportfolio.companion.data.blackBoltSetSeed
+import com.tcgportfolio.companion.data.boosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.digimonBoosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.lorcanaBoosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.lorcanaStarterDecksCatalogSeed
+import com.tcgportfolio.companion.data.mtgBoosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.mtgCollectorBoostersCatalogSeed
+import com.tcgportfolio.companion.data.mtgCommanderDecksCatalogSeed
+import com.tcgportfolio.companion.data.mtgSetBoostersCatalogSeed
+import com.tcgportfolio.companion.data.onePieceBoosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.pokemonBattleDecksCatalogSeed
+import com.tcgportfolio.companion.data.pokemonBoosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.starWarsUnlimitedSealedCatalogSeed
+import com.tcgportfolio.companion.data.alteredSealedCatalogSeed
+import com.tcgportfolio.companion.data.yugiohBoosterBoxesCatalogSeed
+import com.tcgportfolio.companion.data.yugiohStructureDecksCatalogSeed
+import com.tcgportfolio.companion.data.brilliantStarsCatalogSeed
+import com.tcgportfolio.companion.data.brilliantStarsSetSeed
+import com.tcgportfolio.companion.data.brilliantStarsTrainerGalleryCatalogSeed
+import com.tcgportfolio.companion.data.brilliantStarsTrainerGallerySetSeed
+import com.tcgportfolio.companion.data.celebrationsCatalogSeed
+import com.tcgportfolio.companion.data.celebrationsClassicCollectionCatalogSeed
+import com.tcgportfolio.companion.data.celebrationsClassicCollectionSetSeed
+import com.tcgportfolio.companion.data.celebrationsSetSeed
+import com.tcgportfolio.companion.data.championsPathCatalogSeed
+import com.tcgportfolio.companion.data.championsPathSetSeed
+import com.tcgportfolio.companion.data.chillingReignCatalogSeed
+import com.tcgportfolio.companion.data.chillingReignSetSeed
+import com.tcgportfolio.companion.data.cosmicEclipseCatalogSeed
+import com.tcgportfolio.companion.data.cosmicEclipseSetSeed
+import com.tcgportfolio.companion.data.crownZenithCatalogSeed
+import com.tcgportfolio.companion.data.crownZenithGalarianGalleryCatalogSeed
+import com.tcgportfolio.companion.data.crownZenithGalarianGallerySetSeed
+import com.tcgportfolio.companion.data.crownZenithSetSeed
+import com.tcgportfolio.companion.data.darknessAblazeCatalogSeed
+import com.tcgportfolio.companion.data.darknessAblazeSetSeed
+import com.tcgportfolio.companion.data.destinedRivalsCatalogSeed
+import com.tcgportfolio.companion.data.destinedRivalsSetSeed
+import com.tcgportfolio.companion.data.evolvingSkiesCatalogSeed
+import com.tcgportfolio.companion.data.evolvingSkiesSetSeed
+import com.tcgportfolio.companion.data.fusionStrikeCatalogSeed
+import com.tcgportfolio.companion.data.fusionStrikeSetSeed
+import com.tcgportfolio.companion.data.hiddenFatesCatalogSeed
+import com.tcgportfolio.companion.data.hiddenFatesSetSeed
+import com.tcgportfolio.companion.data.hiddenFatesShinyVaultCatalogSeed
+import com.tcgportfolio.companion.data.hiddenFatesShinyVaultSetSeed
+import com.tcgportfolio.companion.data.journeyTogetherCatalogSeed
+import com.tcgportfolio.companion.data.journeyTogetherSetSeed
+import com.tcgportfolio.companion.data.lostOriginCatalogSeed
+import com.tcgportfolio.companion.data.lostOriginSetSeed
+import com.tcgportfolio.companion.data.lostOriginTrainerGalleryCatalogSeed
+import com.tcgportfolio.companion.data.lostOriginTrainerGallerySetSeed
+import com.tcgportfolio.companion.data.lostThunderCatalogSeed
+import com.tcgportfolio.companion.data.lostThunderSetSeed
+import com.tcgportfolio.companion.data.obsidianFlamesCatalogSeed
+import com.tcgportfolio.companion.data.obsidianFlamesSetSeed
+import com.tcgportfolio.companion.data.paldeaEvolvedCatalogSeed
+import com.tcgportfolio.companion.data.paldeaEvolvedSetSeed
+import com.tcgportfolio.companion.data.paldeanFatesCatalogSeed
+import com.tcgportfolio.companion.data.paldeanFatesSetSeed
+import com.tcgportfolio.companion.data.paradoxRiftCatalogSeed
+import com.tcgportfolio.companion.data.paradoxRiftSetSeed
+import com.tcgportfolio.companion.data.pokemonGoCatalogSeed
+import com.tcgportfolio.companion.data.pokemonGoSetSeed
+import com.tcgportfolio.companion.data.prismaticEvolutionsCatalogSeed
+import com.tcgportfolio.companion.data.prismaticEvolutionsSetSeed
+import com.tcgportfolio.companion.data.rebelClashCatalogSeed
+import com.tcgportfolio.companion.data.rebelClashSetSeed
+import com.tcgportfolio.companion.data.shiningFatesCatalogSeed
+import com.tcgportfolio.companion.data.shiningFatesSetSeed
+import com.tcgportfolio.companion.data.shiningFatesShinyVaultCatalogSeed
+import com.tcgportfolio.companion.data.shiningFatesShinyVaultSetSeed
+import com.tcgportfolio.companion.data.shroudedFableCatalogSeed
+import com.tcgportfolio.companion.data.shroudedFableSetSeed
+import com.tcgportfolio.companion.data.silverTempestCatalogSeed
+import com.tcgportfolio.companion.data.silverTempestSetSeed
+import com.tcgportfolio.companion.data.silverTempestTrainerGalleryCatalogSeed
+import com.tcgportfolio.companion.data.silverTempestTrainerGallerySetSeed
+import com.tcgportfolio.companion.data.stellarCrownCatalogSeed
+import com.tcgportfolio.companion.data.stellarCrownSetSeed
+import com.tcgportfolio.companion.data.surgingSparksCatalogSeed
+import com.tcgportfolio.companion.data.surgingSparksSetSeed
+import com.tcgportfolio.companion.data.sv151CatalogSeed
+import com.tcgportfolio.companion.data.sv151SetSeed
+import com.tcgportfolio.companion.data.svBaseSetCatalogSeed
+import com.tcgportfolio.companion.data.svBaseSetSetSeed
+import com.tcgportfolio.companion.data.scarletVioletEnergiesCatalogSeed
+import com.tcgportfolio.companion.data.scarletVioletEnergiesSetSeed
+import com.tcgportfolio.companion.data.swshBaseSetCatalogSeed
+import com.tcgportfolio.companion.data.swshBaseSetSetSeed
+import com.tcgportfolio.companion.data.teamUpCatalogSeed
+import com.tcgportfolio.companion.data.teamUpSetSeed
+import com.tcgportfolio.companion.data.temporalForcesCatalogSeed
+import com.tcgportfolio.companion.data.temporalForcesSetSeed
+import com.tcgportfolio.companion.data.twilightMasqueradeCatalogSeed
+import com.tcgportfolio.companion.data.twilightMasqueradeSetSeed
+import com.tcgportfolio.companion.data.unbrokenBondsCatalogSeed
+import com.tcgportfolio.companion.data.unbrokenBondsSetSeed
+import com.tcgportfolio.companion.data.unifiedMindsCatalogSeed
+import com.tcgportfolio.companion.data.unifiedMindsSetSeed
+import com.tcgportfolio.companion.data.vividVoltageCatalogSeed
+import com.tcgportfolio.companion.data.vividVoltageSetSeed
+import com.tcgportfolio.companion.data.whiteFlareCatalogSeed
+import com.tcgportfolio.companion.data.whiteFlareSetSeed
+import com.tcgportfolio.companion.data.advancedDemoDeckExtraPackCatalogSeed
+import com.tcgportfolio.companion.data.advancedDemoDeckExtraPackSetSeed
+import com.tcgportfolio.companion.data.adventCalendar2018CatalogSeed
+import com.tcgportfolio.companion.data.adventCalendar2018SetSeed
+import com.tcgportfolio.companion.data.adventCalendar2019CatalogSeed
+import com.tcgportfolio.companion.data.adventCalendar2019SetSeed
+import com.tcgportfolio.companion.data.ageOfOverlordCatalogSeed
+import com.tcgportfolio.companion.data.ageOfOverlordSetSeed
+import com.tcgportfolio.companion.data.allianceInsightCatalogSeed
+import com.tcgportfolio.companion.data.allianceInsightSetSeed
+import com.tcgportfolio.companion.data.amazingDefendersCatalogSeed
+import com.tcgportfolio.companion.data.amazingDefendersSetSeed
+import com.tcgportfolio.companion.data.ancientGuardiansCatalogSeed
+import com.tcgportfolio.companion.data.ancientGuardiansSetSeed
+import com.tcgportfolio.companion.data.battleOfChaosCatalogSeed
+import com.tcgportfolio.companion.data.battleOfChaosSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendArmageddonCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendArmageddonSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendChapter1CatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendChapter1SetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendCrystalRevengeCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendCrystalRevengeSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendGloriousGalleryCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendGloriousGallerySetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendHerosRevengeCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendHerosRevengeSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendLightsRevengeCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendLightsRevengeSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendMonsterMayhemCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendMonsterMayhemSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendMonstrousRevengeCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendMonstrousRevengeSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendRelentlessRevengeCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendRelentlessRevengeSetSeed
+import com.tcgportfolio.companion.data.battlesOfLegendTerminalRevengeCatalogSeed
+import com.tcgportfolio.companion.data.battlesOfLegendTerminalRevengeSetSeed
+import com.tcgportfolio.companion.data.blazingDominionCatalogSeed
+import com.tcgportfolio.companion.data.blazingDominionSetSeed
+import com.tcgportfolio.companion.data.blazingVortexCatalogSeed
+import com.tcgportfolio.companion.data.blazingVortexSetSeed
+import com.tcgportfolio.companion.data.breakersOfShadowCatalogSeed
+import com.tcgportfolio.companion.data.breakersOfShadowSetSeed
+import com.tcgportfolio.companion.data.brothersOfLegendCatalogSeed
+import com.tcgportfolio.companion.data.brothersOfLegendSetSeed
+import com.tcgportfolio.companion.data.burstOfDestinyCatalogSeed
+import com.tcgportfolio.companion.data.burstOfDestinySetSeed
+import com.tcgportfolio.companion.data.burstProtocolCatalogSeed
+import com.tcgportfolio.companion.data.burstProtocolSetSeed
+import com.tcgportfolio.companion.data.chaosImpactCatalogSeed
+import com.tcgportfolio.companion.data.chaosImpactSetSeed
+import com.tcgportfolio.companion.data.chaosOriginsCatalogSeed
+import com.tcgportfolio.companion.data.chaosOriginsSetSeed
+import com.tcgportfolio.companion.data.circuitBreakCatalogSeed
+import com.tcgportfolio.companion.data.circuitBreakSetSeed
+import com.tcgportfolio.companion.data.codeOfTheDuelistCatalogSeed
+import com.tcgportfolio.companion.data.codeOfTheDuelistSetSeed
+import com.tcgportfolio.companion.data.collectorsBoxesCatalogSeed
+import com.tcgportfolio.companion.data.collectorsBoxesSetSeed
+import com.tcgportfolio.companion.data.crossoverBreakersCatalogSeed
+import com.tcgportfolio.companion.data.crossoverBreakersSetSeed
+import com.tcgportfolio.companion.data.cyberneticHorizonCatalogSeed
+import com.tcgportfolio.companion.data.cyberneticHorizonSetSeed
+import com.tcgportfolio.companion.data.cyberstormAccessCatalogSeed
+import com.tcgportfolio.companion.data.cyberstormAccessSetSeed
+import com.tcgportfolio.companion.data.darkBeginning1CatalogSeed
+import com.tcgportfolio.companion.data.darkBeginning1SetSeed
+import com.tcgportfolio.companion.data.darkCrisis25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.darkCrisis25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.darkNeostormCatalogSeed
+import com.tcgportfolio.companion.data.darkNeostormSetSeed
+import com.tcgportfolio.companion.data.darkSaviorsCatalogSeed
+import com.tcgportfolio.companion.data.darkSaviorsSetSeed
+import com.tcgportfolio.companion.data.darkwingBlastCatalogSeed
+import com.tcgportfolio.companion.data.darkwingBlastSetSeed
+import com.tcgportfolio.companion.data.dawnOfMajestyCatalogSeed
+import com.tcgportfolio.companion.data.dawnOfMajestySetSeed
+import com.tcgportfolio.companion.data.demoDeck2016CatalogSeed
+import com.tcgportfolio.companion.data.demoDeck2016SetSeed
+import com.tcgportfolio.companion.data.destinySoldiersCatalogSeed
+import com.tcgportfolio.companion.data.destinySoldiersSetSeed
+import com.tcgportfolio.companion.data.dimensionForceCatalogSeed
+import com.tcgportfolio.companion.data.dimensionForceSetSeed
+import com.tcgportfolio.companion.data.doomOfDimensionsCatalogSeed
+import com.tcgportfolio.companion.data.doomOfDimensionsSetSeed
+import com.tcgportfolio.companion.data.dragonsOfLegendTheCompleteSeriesCatalogSeed
+import com.tcgportfolio.companion.data.dragonsOfLegendTheCompleteSeriesSetSeed
+import com.tcgportfolio.companion.data.dragonsOfLegendUnleashedCatalogSeed
+import com.tcgportfolio.companion.data.dragonsOfLegendUnleashedSetSeed
+import com.tcgportfolio.companion.data.duelDevastatorCatalogSeed
+import com.tcgportfolio.companion.data.duelDevastatorSetSeed
+import com.tcgportfolio.companion.data.duelOverloadCatalogSeed
+import com.tcgportfolio.companion.data.duelOverloadSetSeed
+import com.tcgportfolio.companion.data.duelPowerCatalogSeed
+import com.tcgportfolio.companion.data.duelPowerSetSeed
+import com.tcgportfolio.companion.data.duelistNexusCatalogSeed
+import com.tcgportfolio.companion.data.duelistNexusSetSeed
+import com.tcgportfolio.companion.data.duelistPackDimensionalGuardiansCatalogSeed
+import com.tcgportfolio.companion.data.duelistPackDimensionalGuardiansSetSeed
+import com.tcgportfolio.companion.data.duelistPackRivalsOfThePharaohCatalogSeed
+import com.tcgportfolio.companion.data.duelistPackRivalsOfThePharaohSetSeed
+import com.tcgportfolio.companion.data.duelistSagaCatalogSeed
+import com.tcgportfolio.companion.data.duelistSagaSetSeed
+import com.tcgportfolio.companion.data.duelistsAdvanceCatalogSeed
+import com.tcgportfolio.companion.data.duelistsAdvanceSetSeed
+import com.tcgportfolio.companion.data.earlyDaysCollectionPromotionalCardsCatalogSeed
+import com.tcgportfolio.companion.data.earlyDaysCollectionPromotionalCardsSetSeed
+import com.tcgportfolio.companion.data.efootballCollaborationPromosCatalogSeed
+import com.tcgportfolio.companion.data.efootballCollaborationPromosSetSeed
+import com.tcgportfolio.companion.data.egyptianGodDeckObeliskTheTormentorCatalogSeed
+import com.tcgportfolio.companion.data.egyptianGodDeckObeliskTheTormentorSetSeed
+import com.tcgportfolio.companion.data.egyptianGodDeckSliferTheSkyDragonCatalogSeed
+import com.tcgportfolio.companion.data.egyptianGodDeckSliferTheSkyDragonSetSeed
+import com.tcgportfolio.companion.data.eternityCodeCatalogSeed
+import com.tcgportfolio.companion.data.eternityCodeSetSeed
+import com.tcgportfolio.companion.data.eventPackSpeedDuelCatalogSeed
+import com.tcgportfolio.companion.data.eventPackSpeedDuelSetSeed
+import com.tcgportfolio.companion.data.extremeForceCatalogSeed
+import com.tcgportfolio.companion.data.extremeForceSetSeed
+import com.tcgportfolio.companion.data.fistsOfTheGadgetsCatalogSeed
+import com.tcgportfolio.companion.data.fistsOfTheGadgetsSetSeed
+import com.tcgportfolio.companion.data.flamesOfDestructionCatalogSeed
+import com.tcgportfolio.companion.data.flamesOfDestructionSetSeed
+import com.tcgportfolio.companion.data.fusionEnforcersCatalogSeed
+import com.tcgportfolio.companion.data.fusionEnforcersSetSeed
+import com.tcgportfolio.companion.data.genesisImpactCatalogSeed
+import com.tcgportfolio.companion.data.genesisImpactSetSeed
+import com.tcgportfolio.companion.data.ghostsFromThePastCatalogSeed
+import com.tcgportfolio.companion.data.ghostsFromThePastSetSeed
+import com.tcgportfolio.companion.data.ghostsFromThePastThe2ndHauntingCatalogSeed
+import com.tcgportfolio.companion.data.ghostsFromThePastThe2ndHauntingSetSeed
+import com.tcgportfolio.companion.data.hiddenArsenalChapter1CatalogSeed
+import com.tcgportfolio.companion.data.hiddenArsenalChapter1SetSeed
+import com.tcgportfolio.companion.data.hiddenSummonersCatalogSeed
+import com.tcgportfolio.companion.data.hiddenSummonersSetSeed
+import com.tcgportfolio.companion.data.ignitionAssaultCatalogSeed
+import com.tcgportfolio.companion.data.ignitionAssaultSetSeed
+import com.tcgportfolio.companion.data.invasionOfChaos25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.invasionOfChaos25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.invasionVengeanceCatalogSeed
+import com.tcgportfolio.companion.data.invasionVengeanceSetSeed
+import com.tcgportfolio.companion.data.justiceHuntersCatalogSeed
+import com.tcgportfolio.companion.data.justiceHuntersSetSeed
+import com.tcgportfolio.companion.data.kingOfGamesYugisLegendaryDecks2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.kingOfGamesYugisLegendaryDecks2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.kingsCourtCatalogSeed
+import com.tcgportfolio.companion.data.kingsCourtSetSeed
+import com.tcgportfolio.companion.data.legacyOfDarknessCatalogSeed
+import com.tcgportfolio.companion.data.legacyOfDarknessSetSeed
+import com.tcgportfolio.companion.data.legacyOfDestructionCatalogSeed
+import com.tcgportfolio.companion.data.legacyOfDestructionSetSeed
+import com.tcgportfolio.companion.data.legendOfBlueEyesWhiteDragon25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.legendOfBlueEyesWhiteDragon25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.legendary5dsDecksCatalogSeed
+import com.tcgportfolio.companion.data.legendary5dsDecksSetSeed
+import com.tcgportfolio.companion.data.legendaryCollection25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.legendaryCollection25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.legendaryCollection2CatalogSeed
+import com.tcgportfolio.companion.data.legendaryCollection2SetSeed
+import com.tcgportfolio.companion.data.legendaryCollectionKaiba2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.legendaryCollectionKaiba2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.legendaryCollectionKaibaCatalogSeed
+import com.tcgportfolio.companion.data.legendaryCollectionKaibaSetSeed
+import com.tcgportfolio.companion.data.legendaryDecksIi2020ReprintCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDecksIi2020ReprintSetSeed
+import com.tcgportfolio.companion.data.legendaryDecksIiCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDecksIiSetSeed
+import com.tcgportfolio.companion.data.legendaryDragonDecks2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDragonDecks2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.legendaryDragonDecksCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDragonDecksSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsAncientMillenniumCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsAncientMillenniumSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsDuelsFromTheDeepCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsDuelsFromTheDeepSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsImmortalDestinyCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsImmortalDestinySetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsMagicalHeroCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsMagicalHeroSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsRageOfRaCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsRageOfRaSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSeason1CatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSeason1SetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSeason2CatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSeason2SetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSeason3CatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSeason3SetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSistersOfTheRoseCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSistersOfTheRoseSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSoulburningVolcanoCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSoulburningVolcanoSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSynchroStormCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsSynchroStormSetSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsWhiteDragonAbyssCatalogSeed
+import com.tcgportfolio.companion.data.legendaryDuelistsWhiteDragonAbyssSetSeed
+import com.tcgportfolio.companion.data.legendaryHeroDecksCatalogSeed
+import com.tcgportfolio.companion.data.legendaryHeroDecksSetSeed
+import com.tcgportfolio.companion.data.legendaryModernDecks2026CatalogSeed
+import com.tcgportfolio.companion.data.legendaryModernDecks2026SetSeed
+import com.tcgportfolio.companion.data.lightOfDestruction2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.lightOfDestruction2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.lightningOverdriveCatalogSeed
+import com.tcgportfolio.companion.data.lightningOverdriveSetSeed
+import com.tcgportfolio.companion.data.limitedPackWorldChampionship2025CatalogSeed
+import com.tcgportfolio.companion.data.limitedPackWorldChampionship2025SetSeed
+import com.tcgportfolio.companion.data.magnificentMavensCatalogSeed
+import com.tcgportfolio.companion.data.magnificentMavensSetSeed
+import com.tcgportfolio.companion.data.maximumCrisisCatalogSeed
+import com.tcgportfolio.companion.data.maximumCrisisSetSeed
+import com.tcgportfolio.companion.data.maximumGoldCatalogSeed
+import com.tcgportfolio.companion.data.maximumGoldElDoradoCatalogSeed
+import com.tcgportfolio.companion.data.maximumGoldElDoradoSetSeed
+import com.tcgportfolio.companion.data.maximumGoldSetSeed
+import com.tcgportfolio.companion.data.mazeOfMemoriesCatalogSeed
+import com.tcgportfolio.companion.data.mazeOfMemoriesSetSeed
+import com.tcgportfolio.companion.data.mazeOfMillenniaCatalogSeed
+import com.tcgportfolio.companion.data.mazeOfMillenniaSetSeed
+import com.tcgportfolio.companion.data.mazeOfMuertosCatalogSeed
+import com.tcgportfolio.companion.data.mazeOfMuertosSetSeed
+import com.tcgportfolio.companion.data.mazeOfTheMasterCatalogSeed
+import com.tcgportfolio.companion.data.mazeOfTheMasterSetSeed
+import com.tcgportfolio.companion.data.metalRaiders25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.metalRaiders25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.millenniumPackCatalogSeed
+import com.tcgportfolio.companion.data.millenniumPackSetSeed
+import com.tcgportfolio.companion.data.miscellaneousPromotionalCardsCatalogSeed
+import com.tcgportfolio.companion.data.miscellaneousPromotionalCardsSetSeed
+import com.tcgportfolio.companion.data.mysticFightersCatalogSeed
+import com.tcgportfolio.companion.data.mysticFightersSetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack10CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack10SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack11CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack11SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack12CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack12SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack13CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack13SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack14CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack14SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack15CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack15SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack16CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack16SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack17CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack17SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack18CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack18SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack19CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack19SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack1CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack1SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack20CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack20SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack21CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack21SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack22CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack22SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack23CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack23SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack24CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack24SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack25CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack25SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack26CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack26SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack27CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack27SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack28CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack28SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack29CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack29SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack2CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack2SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack30CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack30SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack3CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack3SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack4CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack4SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack5CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack5SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack6CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack6SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack7CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack7SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack8CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack8SetSeed
+import com.tcgportfolio.companion.data.otsTournamentPack9CatalogSeed
+import com.tcgportfolio.companion.data.otsTournamentPack9SetSeed
+import com.tcgportfolio.companion.data.pendulumEvolutionCatalogSeed
+import com.tcgportfolio.companion.data.pendulumEvolutionSetSeed
+import com.tcgportfolio.companion.data.phantomNightmareCatalogSeed
+import com.tcgportfolio.companion.data.phantomNightmareSetSeed
+import com.tcgportfolio.companion.data.phantomRageCatalogSeed
+import com.tcgportfolio.companion.data.phantomRageSetSeed
+import com.tcgportfolio.companion.data.phantomRevengeCatalogSeed
+import com.tcgportfolio.companion.data.phantomRevengeSetSeed
+import com.tcgportfolio.companion.data.pharaohsServant25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.pharaohsServant25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.photonHypernovaCatalogSeed
+import com.tcgportfolio.companion.data.photonHypernovaSetSeed
+import com.tcgportfolio.companion.data.powerOfTheElementsCatalogSeed
+import com.tcgportfolio.companion.data.powerOfTheElementsSetSeed
+import com.tcgportfolio.companion.data.premiumGoldInfiniteGoldCatalogSeed
+import com.tcgportfolio.companion.data.premiumGoldInfiniteGoldSetSeed
+import com.tcgportfolio.companion.data.quarterCenturyBonanzaCatalogSeed
+import com.tcgportfolio.companion.data.quarterCenturyBonanzaSetSeed
+import com.tcgportfolio.companion.data.quarterCenturyStampedeCatalogSeed
+import com.tcgportfolio.companion.data.quarterCenturyStampedeSetSeed
+import com.tcgportfolio.companion.data.rageOfTheAbyssCatalogSeed
+import com.tcgportfolio.companion.data.rageOfTheAbyssSetSeed
+import com.tcgportfolio.companion.data.ragingTempestCatalogSeed
+import com.tcgportfolio.companion.data.ragingTempestSetSeed
+import com.tcgportfolio.companion.data.rarityCollection5CatalogSeed
+import com.tcgportfolio.companion.data.rarityCollection5SetSeed
+import com.tcgportfolio.companion.data.retroPack2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.retroPack2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.retroPack22020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.retroPack22020DateReprintSetSeed
+import com.tcgportfolio.companion.data.riseOfTheDuelistCatalogSeed
+import com.tcgportfolio.companion.data.riseOfTheDuelistSetSeed
+import com.tcgportfolio.companion.data.risingRampageCatalogSeed
+import com.tcgportfolio.companion.data.risingRampageSetSeed
+import com.tcgportfolio.companion.data.s2016MegaTinsCatalogSeed
+import com.tcgportfolio.companion.data.s2016MegaTinsMegaPackCatalogSeed
+import com.tcgportfolio.companion.data.s2016MegaTinsMegaPackSetSeed
+import com.tcgportfolio.companion.data.s2016MegaTinsSetSeed
+import com.tcgportfolio.companion.data.s2017MegaTinsCatalogSeed
+import com.tcgportfolio.companion.data.s2017MegaTinsMegaPackCatalogSeed
+import com.tcgportfolio.companion.data.s2017MegaTinsMegaPackSetSeed
+import com.tcgportfolio.companion.data.s2017MegaTinsSetSeed
+import com.tcgportfolio.companion.data.s2018MegaTinsCatalogSeed
+import com.tcgportfolio.companion.data.s2018MegaTinsMegaPackCatalogSeed
+import com.tcgportfolio.companion.data.s2018MegaTinsMegaPackSetSeed
+import com.tcgportfolio.companion.data.s2018MegaTinsSetSeed
+import com.tcgportfolio.companion.data.s2019GoldSarcophagusTinCatalogSeed
+import com.tcgportfolio.companion.data.s2019GoldSarcophagusTinMegaPackCatalogSeed
+import com.tcgportfolio.companion.data.s2019GoldSarcophagusTinMegaPackSetSeed
+import com.tcgportfolio.companion.data.s2019GoldSarcophagusTinSetSeed
+import com.tcgportfolio.companion.data.s2020TinOfLostMemoriesCatalogSeed
+import com.tcgportfolio.companion.data.s2020TinOfLostMemoriesSetSeed
+import com.tcgportfolio.companion.data.s2021TinOfAncientBattlesCatalogSeed
+import com.tcgportfolio.companion.data.s2021TinOfAncientBattlesSetSeed
+import com.tcgportfolio.companion.data.s2022TinOfThePharaohsGodsCatalogSeed
+import com.tcgportfolio.companion.data.s2022TinOfThePharaohsGodsSetSeed
+import com.tcgportfolio.companion.data.s2025MegaPackCatalogSeed
+import com.tcgportfolio.companion.data.s2025MegaPackSetSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryRarityCollectionCatalogSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryRarityCollectionIiCatalogSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryRarityCollectionIiSetSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryRarityCollectionSetSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryTinDuelingHeroesCatalogSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryTinDuelingHeroesMegaPackCatalogSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryTinDuelingHeroesMegaPackSetSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryTinDuelingHeroesSetSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryTinDuelingMirrorsCatalogSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryTinDuelingMirrorsSetSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryUltimateKaibaSetCatalogSeed
+import com.tcgportfolio.companion.data.s25thAnniversaryUltimateKaibaSetSetSeed
+import com.tcgportfolio.companion.data.s2PlayerStarterSetCatalogSeed
+import com.tcgportfolio.companion.data.s2PlayerStarterSetSetSeed
+import com.tcgportfolio.companion.data.savageStrikeCatalogSeed
+import com.tcgportfolio.companion.data.savageStrikeSetSeed
+import com.tcgportfolio.companion.data.secretSlayersCatalogSeed
+import com.tcgportfolio.companion.data.secretSlayersSetSeed
+import com.tcgportfolio.companion.data.shadowsInValhallaCatalogSeed
+import com.tcgportfolio.companion.data.shadowsInValhallaSetSeed
+import com.tcgportfolio.companion.data.shiningVictoriesCatalogSeed
+import com.tcgportfolio.companion.data.shiningVictoriesSetSeed
+import com.tcgportfolio.companion.data.shonenJumpMagazinePromosCatalogSeed
+import com.tcgportfolio.companion.data.shonenJumpMagazinePromosSetSeed
+import com.tcgportfolio.companion.data.soulFusionCatalogSeed
+import com.tcgportfolio.companion.data.soulFusionSetSeed
+import com.tcgportfolio.companion.data.speedDuelArenaOfLostSoulsCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelArenaOfLostSoulsSetSeed
+import com.tcgportfolio.companion.data.speedDuelAttackFromTheDeepCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelAttackFromTheDeepSetSeed
+import com.tcgportfolio.companion.data.speedDuelBattleCityBoxCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelBattleCityBoxSetSeed
+import com.tcgportfolio.companion.data.speedDuelBattleCityFinalsCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelBattleCityFinalsSetSeed
+import com.tcgportfolio.companion.data.speedDuelDecksDestinyMastersCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDecksDestinyMastersSetSeed
+import com.tcgportfolio.companion.data.speedDuelDecksDuelistsOfTomorrowCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDecksDuelistsOfTomorrowSetSeed
+import com.tcgportfolio.companion.data.speedDuelDecksMatchOfTheMillenniumCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDecksMatchOfTheMillenniumSetSeed
+import com.tcgportfolio.companion.data.speedDuelDecksTwistedNightmaresCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDecksTwistedNightmaresSetSeed
+import com.tcgportfolio.companion.data.speedDuelDecksUltimatePredatorsCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDecksUltimatePredatorsSetSeed
+import com.tcgportfolio.companion.data.speedDuelDemoDeck2020CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDemoDeck2020SetSeed
+import com.tcgportfolio.companion.data.speedDuelDemoDeckCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelDemoDeckSetSeed
+import com.tcgportfolio.companion.data.speedDuelGxDuelAcademyBoxCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelGxDuelAcademyBoxSetSeed
+import com.tcgportfolio.companion.data.speedDuelGxDuelistsOfShadowsCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelGxDuelistsOfShadowsSetSeed
+import com.tcgportfolio.companion.data.speedDuelGxMidtermDestructionCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelGxMidtermDestructionSetSeed
+import com.tcgportfolio.companion.data.speedDuelGxMidtermParadoxCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelGxMidtermParadoxSetSeed
+import com.tcgportfolio.companion.data.speedDuelScarsOfBattleCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelScarsOfBattleSetSeed
+import com.tcgportfolio.companion.data.speedDuelStreetsOfBattleCityCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelStreetsOfBattleCitySetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack1CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack1SetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack2CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack2SetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack3CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack3SetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack4CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack4SetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack5CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack5SetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack6CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack6SetSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack7CatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTournamentPack7SetSeed
+import com.tcgportfolio.companion.data.speedDuelTrialsOfTheKingdomCatalogSeed
+import com.tcgportfolio.companion.data.speedDuelTrialsOfTheKingdomSetSeed
+import com.tcgportfolio.companion.data.spellRuler25thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.spellRuler25thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.spiritWarriorsCatalogSeed
+import com.tcgportfolio.companion.data.spiritWarriorsSetSeed
+import com.tcgportfolio.companion.data.starPackBattleRoyalCatalogSeed
+import com.tcgportfolio.companion.data.starPackBattleRoyalSetSeed
+import com.tcgportfolio.companion.data.starPackVrainsCatalogSeed
+import com.tcgportfolio.companion.data.starPackVrainsSetSeed
+import com.tcgportfolio.companion.data.starterDeckCodebreakerCatalogSeed
+import com.tcgportfolio.companion.data.starterDeckCodebreakerSetSeed
+import com.tcgportfolio.companion.data.starterDeckLinkStrikeCatalogSeed
+import com.tcgportfolio.companion.data.starterDeckLinkStrikeSetSeed
+import com.tcgportfolio.companion.data.starterDeckYuyaCatalogSeed
+import com.tcgportfolio.companion.data.starterDeckYuyaSetSeed
+import com.tcgportfolio.companion.data.structureDeckAlbazStrikeCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckAlbazStrikeSetSeed
+import com.tcgportfolio.companion.data.structureDeckBewareOfTraptrixCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckBewareOfTraptrixSetSeed
+import com.tcgportfolio.companion.data.structureDeckBlueEyesWhiteDestinyCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckBlueEyesWhiteDestinySetSeed
+import com.tcgportfolio.companion.data.structureDeckCyberStrikeCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckCyberStrikeSetSeed
+import com.tcgportfolio.companion.data.structureDeckCyberseLinkCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckCyberseLinkSetSeed
+import com.tcgportfolio.companion.data.structureDeckDarkWorldCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckDarkWorldSetSeed
+import com.tcgportfolio.companion.data.structureDeckDinosmashersFuryCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckDinosmashersFurySetSeed
+import com.tcgportfolio.companion.data.structureDeckEmperorOfDarknessCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckEmperorOfDarknessSetSeed
+import com.tcgportfolio.companion.data.structureDeckFireKingsCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckFireKingsSetSeed
+import com.tcgportfolio.companion.data.structureDeckFreezingChainsCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckFreezingChainsSetSeed
+import com.tcgportfolio.companion.data.structureDeckLairOfDarknessCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckLairOfDarknessSetSeed
+import com.tcgportfolio.companion.data.structureDeckLegendOfTheCrystalBeastsCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckLegendOfTheCrystalBeastsSetSeed
+import com.tcgportfolio.companion.data.structureDeckMachineReactorCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckMachineReactorSetSeed
+import com.tcgportfolio.companion.data.structureDeckMechanizedMadnessCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckMechanizedMadnessSetSeed
+import com.tcgportfolio.companion.data.structureDeckOrderOfTheSpellcastersCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckOrderOfTheSpellcastersSetSeed
+import com.tcgportfolio.companion.data.structureDeckPendulumDominationCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckPendulumDominationSetSeed
+import com.tcgportfolio.companion.data.structureDeckPowercodeLinkCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckPowercodeLinkSetSeed
+import com.tcgportfolio.companion.data.structureDeckRealmOfLight2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckRealmOfLight2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.structureDeckRiseOfTheTrueDragonsCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckRiseOfTheTrueDragonsSetSeed
+import com.tcgportfolio.companion.data.structureDeckRokketRevoltCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckRokketRevoltSetSeed
+import com.tcgportfolio.companion.data.structureDeckSacredBeastsCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckSacredBeastsSetSeed
+import com.tcgportfolio.companion.data.structureDeckSagaOfBlueEyesWhiteDragon2020DateReprintCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckSagaOfBlueEyesWhiteDragon2020DateReprintSetSeed
+import com.tcgportfolio.companion.data.structureDeckSetoKaibaCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckSetoKaibaSetSeed
+import com.tcgportfolio.companion.data.structureDeckShaddollShowdownCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckShaddollShowdownSetSeed
+import com.tcgportfolio.companion.data.structureDeckSoulburnerCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckSoulburnerSetSeed
+import com.tcgportfolio.companion.data.structureDeckSpiritCharmersCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckSpiritCharmersSetSeed
+import com.tcgportfolio.companion.data.structureDeckTheCrimsonKingCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckTheCrimsonKingSetSeed
+import com.tcgportfolio.companion.data.structureDeckWaveOfLightCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckWaveOfLightSetSeed
+import com.tcgportfolio.companion.data.structureDeckYugiMutoCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckYugiMutoSetSeed
+import com.tcgportfolio.companion.data.structureDeckZombieHordeCatalogSeed
+import com.tcgportfolio.companion.data.structureDeckZombieHordeSetSeed
+import com.tcgportfolio.companion.data.supremeDarknessCatalogSeed
+import com.tcgportfolio.companion.data.supremeDarknessSetSeed
+import com.tcgportfolio.companion.data.tacticalMastersCatalogSeed
+import com.tcgportfolio.companion.data.tacticalMastersSetSeed
+import com.tcgportfolio.companion.data.theChroniclesDeckSpiritCharmersAllFoilEditionCatalogSeed
+import com.tcgportfolio.companion.data.theChroniclesDeckSpiritCharmersAllFoilEditionSetSeed
+import com.tcgportfolio.companion.data.theChroniclesDeckTheFallenAndTheVirtuousAllFoilEditionCatalogSeed
+import com.tcgportfolio.companion.data.theChroniclesDeckTheFallenAndTheVirtuousAllFoilEditionSetSeed
+import com.tcgportfolio.companion.data.theDarkIllusionCatalogSeed
+import com.tcgportfolio.companion.data.theDarkIllusionSetSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackCatalogSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackGoldEditionCatalogSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackGoldEditionSetSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackSecretEditionCatalogSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackSecretEditionSetSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackSetSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackSpecialEditionCatalogSeed
+import com.tcgportfolio.companion.data.theDarkSideOfDimensionsMoviePackSpecialEditionSetSeed
+import com.tcgportfolio.companion.data.theGrandCreatorsCatalogSeed
+import com.tcgportfolio.companion.data.theGrandCreatorsSetSeed
+import com.tcgportfolio.companion.data.theInfiniteForbiddenCatalogSeed
+import com.tcgportfolio.companion.data.theInfiniteForbiddenSetSeed
+import com.tcgportfolio.companion.data.theInfinityChasersCatalogSeed
+import com.tcgportfolio.companion.data.theInfinityChasersSetSeed
+import com.tcgportfolio.companion.data.theLostArtPromotionCatalogSeed
+import com.tcgportfolio.companion.data.theLostArtPromotionSetSeed
+import com.tcgportfolio.companion.data.thePotCollectionCatalogSeed
+import com.tcgportfolio.companion.data.thePotCollectionSetSeed
+import com.tcgportfolio.companion.data.toonChaosCatalogSeed
+import com.tcgportfolio.companion.data.toonChaosSetSeed
+import com.tcgportfolio.companion.data.ultimateTournamentPack1CatalogSeed
+import com.tcgportfolio.companion.data.ultimateTournamentPack1SetSeed
+import com.tcgportfolio.companion.data.valiantSmashersCatalogSeed
+import com.tcgportfolio.companion.data.valiantSmashersSetSeed
+import com.tcgportfolio.companion.data.wildSurvivorsCatalogSeed
+import com.tcgportfolio.companion.data.wildSurvivorsSetSeed
+import com.tcgportfolio.companion.data.wingRaidersCatalogSeed
+import com.tcgportfolio.companion.data.wingRaidersSetSeed
+import com.tcgportfolio.companion.data.worldChampionshipJppCardsCatalogSeed
+import com.tcgportfolio.companion.data.worldChampionshipJppCardsSetSeed
+import com.tcgportfolio.companion.data.yuGiOhArcVPromoCardsCatalogSeed
+import com.tcgportfolio.companion.data.yuGiOhArcVPromoCardsSetSeed
+import com.tcgportfolio.companion.data.yuGiOhChampionshipSeries2025PrizeCardsCatalogSeed
+import com.tcgportfolio.companion.data.yuGiOhChampionshipSeries2025PrizeCardsSetSeed
+import com.tcgportfolio.companion.data.yuGiOhDayPromosCatalogSeed
+import com.tcgportfolio.companion.data.yuGiOhDayPromosSetSeed
+import com.tcgportfolio.companion.data.yuGiOhZexalWorldDuelCarnivalPromosCatalogSeed
+import com.tcgportfolio.companion.data.yuGiOhZexalWorldDuelCarnivalPromosSetSeed
+import com.tcgportfolio.companion.data.archaziasIslandCatalogSeed
+import com.tcgportfolio.companion.data.archaziasIslandSetSeed
+import com.tcgportfolio.companion.data.attackOfTheVineCatalogSeed
+import com.tcgportfolio.companion.data.attackOfTheVineSetSeed
+import com.tcgportfolio.companion.data.azuriteSeaCatalogSeed
+import com.tcgportfolio.companion.data.azuriteSeaSetSeed
+import com.tcgportfolio.companion.data.d23PromosCatalogSeed
+import com.tcgportfolio.companion.data.d23PromosSetSeed
+import com.tcgportfolio.companion.data.disney100PromosCatalogSeed
+import com.tcgportfolio.companion.data.disney100PromosSetSeed
+import com.tcgportfolio.companion.data.disneyLorcanaPromoCardsCatalogSeed
+import com.tcgportfolio.companion.data.disneyLorcanaPromoCardsSetSeed
+import com.tcgportfolio.companion.data.fabledCatalogSeed
+import com.tcgportfolio.companion.data.fabledSetSeed
+import com.tcgportfolio.companion.data.intoTheInklandsCatalogSeed
+import com.tcgportfolio.companion.data.intoTheInklandsSetSeed
+import com.tcgportfolio.companion.data.reignOfJafarCatalogSeed
+import com.tcgportfolio.companion.data.reignOfJafarSetSeed
+import com.tcgportfolio.companion.data.riseOfTheFloodbornCatalogSeed
+import com.tcgportfolio.companion.data.riseOfTheFloodbornSetSeed
+import com.tcgportfolio.companion.data.shimmeringSkiesCatalogSeed
+import com.tcgportfolio.companion.data.shimmeringSkiesSetSeed
+import com.tcgportfolio.companion.data.theFirstChapterCatalogSeed
+import com.tcgportfolio.companion.data.theFirstChapterSetSeed
+import com.tcgportfolio.companion.data.ursulasReturnCatalogSeed
+import com.tcgportfolio.companion.data.ursulasReturnSetSeed
+import com.tcgportfolio.companion.data.whispersInTheWellCatalogSeed
+import com.tcgportfolio.companion.data.whispersInTheWellSetSeed
+import com.tcgportfolio.companion.data.wildsUnknownCatalogSeed
+import com.tcgportfolio.companion.data.wildsUnknownSetSeed
+import com.tcgportfolio.companion.data.winterspellCatalogSeed
+import com.tcgportfolio.companion.data.winterspellSetSeed
+import com.tcgportfolio.companion.data.adventuresInTheForgottenRealmsCatalogSeed
+import com.tcgportfolio.companion.data.adventuresInTheForgottenRealmsSetSeed
+import com.tcgportfolio.companion.data.aetherRevoltCatalogSeed
+import com.tcgportfolio.companion.data.aetherRevoltSetSeed
+import com.tcgportfolio.companion.data.aetherdriftCatalogSeed
+import com.tcgportfolio.companion.data.aetherdriftSetSeed
+import com.tcgportfolio.companion.data.afrAmpersandPromosCatalogSeed
+import com.tcgportfolio.companion.data.afrAmpersandPromosSetSeed
+import com.tcgportfolio.companion.data.amonkhetCatalogSeed
+import com.tcgportfolio.companion.data.amonkhetSetSeed
+import com.tcgportfolio.companion.data.archenemyNicolBolasCatalogSeed
+import com.tcgportfolio.companion.data.archenemyNicolBolasSetSeed
+import com.tcgportfolio.companion.data.artSeriesAdventuresInTheForgottenRealmsCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesAdventuresInTheForgottenRealmsSetSeed
+import com.tcgportfolio.companion.data.artSeriesAetherdriftCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesAetherdriftSetSeed
+import com.tcgportfolio.companion.data.artSeriesAvatarTheLastAirbenderCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesAvatarTheLastAirbenderSetSeed
+import com.tcgportfolio.companion.data.artSeriesBloomburrowCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesBloomburrowSetSeed
+import com.tcgportfolio.companion.data.artSeriesCommanderLegendsBattleForBaldursGateCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesCommanderLegendsBattleForBaldursGateSetSeed
+import com.tcgportfolio.companion.data.artSeriesCommanderMastersCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesCommanderMastersSetSeed
+import com.tcgportfolio.companion.data.artSeriesDominariaUnitedCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesDominariaUnitedSetSeed
+import com.tcgportfolio.companion.data.artSeriesDuskmournHouseOfHorrorCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesDuskmournHouseOfHorrorSetSeed
+import com.tcgportfolio.companion.data.artSeriesEdgeOfEternitiesCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesEdgeOfEternitiesSetSeed
+import com.tcgportfolio.companion.data.artSeriesFinalFantasyCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesFinalFantasySetSeed
+import com.tcgportfolio.companion.data.artSeriesFoundationsCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesFoundationsSetSeed
+import com.tcgportfolio.companion.data.artSeriesInnistradCrimsonVowCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesInnistradCrimsonVowSetSeed
+import com.tcgportfolio.companion.data.artSeriesInnistradMidnightHuntCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesInnistradMidnightHuntSetSeed
+import com.tcgportfolio.companion.data.artSeriesInnistradRemasteredCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesInnistradRemasteredSetSeed
+import com.tcgportfolio.companion.data.artSeriesKaldheimCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesKaldheimSetSeed
+import com.tcgportfolio.companion.data.artSeriesKamigawaNeonDynastyCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesKamigawaNeonDynastySetSeed
+import com.tcgportfolio.companion.data.artSeriesLorwynEclipsedCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesLorwynEclipsedSetSeed
+import com.tcgportfolio.companion.data.artSeriesMarchOfTheMachineCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesMarchOfTheMachineSetSeed
+import com.tcgportfolio.companion.data.artSeriesMarvelSuperHeroesCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesMarvelSuperHeroesSetSeed
+import com.tcgportfolio.companion.data.artSeriesMarvelsSpiderManCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesMarvelsSpiderManSetSeed
+import com.tcgportfolio.companion.data.artSeriesModernHorizons2CatalogSeed
+import com.tcgportfolio.companion.data.artSeriesModernHorizons2SetSeed
+import com.tcgportfolio.companion.data.artSeriesModernHorizons3CatalogSeed
+import com.tcgportfolio.companion.data.artSeriesModernHorizons3SetSeed
+import com.tcgportfolio.companion.data.artSeriesModernHorizonsCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesModernHorizonsSetSeed
+import com.tcgportfolio.companion.data.artSeriesMurdersAtKarlovManorCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesMurdersAtKarlovManorSetSeed
+import com.tcgportfolio.companion.data.artSeriesOutlawsOfThunderJunctionCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesOutlawsOfThunderJunctionSetSeed
+import com.tcgportfolio.companion.data.artSeriesPhyrexiaAllWillBeOneCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesPhyrexiaAllWillBeOneSetSeed
+import com.tcgportfolio.companion.data.artSeriesSecretsOfStrixhavenCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesSecretsOfStrixhavenSetSeed
+import com.tcgportfolio.companion.data.artSeriesStreetsOfNewCapennaCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesStreetsOfNewCapennaSetSeed
+import com.tcgportfolio.companion.data.artSeriesStrixhavenCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesStrixhavenSetSeed
+import com.tcgportfolio.companion.data.artSeriesTarkirDragonstormCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesTarkirDragonstormSetSeed
+import com.tcgportfolio.companion.data.artSeriesTeenageMutantNinjaTurtlesCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesTeenageMutantNinjaTurtlesSetSeed
+import com.tcgportfolio.companion.data.artSeriesTheBrothersWarCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesTheBrothersWarSetSeed
+import com.tcgportfolio.companion.data.artSeriesTheLostCavernsOfIxalanCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesTheLostCavernsOfIxalanSetSeed
+import com.tcgportfolio.companion.data.artSeriesUniversesBeyondAssassinsCreedCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesUniversesBeyondAssassinsCreedSetSeed
+import com.tcgportfolio.companion.data.artSeriesUniversesBeyondTheLordOfTheRingsTalesOfMiddleEarthCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesUniversesBeyondTheLordOfTheRingsTalesOfMiddleEarthSetSeed
+import com.tcgportfolio.companion.data.artSeriesWildsOfEldraineCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesWildsOfEldraineSetSeed
+import com.tcgportfolio.companion.data.artSeriesZendikarRisingCatalogSeed
+import com.tcgportfolio.companion.data.artSeriesZendikarRisingSetSeed
+import com.tcgportfolio.companion.data.avatarTheLastAirbenderCatalogSeed
+import com.tcgportfolio.companion.data.avatarTheLastAirbenderEternalLegalCatalogSeed
+import com.tcgportfolio.companion.data.avatarTheLastAirbenderEternalLegalSetSeed
+import com.tcgportfolio.companion.data.avatarTheLastAirbenderSetSeed
+import com.tcgportfolio.companion.data.battlebondCatalogSeed
+import com.tcgportfolio.companion.data.battlebondSetSeed
+import com.tcgportfolio.companion.data.bloomburrowCatalogSeed
+import com.tcgportfolio.companion.data.bloomburrowSetSeed
+import com.tcgportfolio.companion.data.commander2016CatalogSeed
+import com.tcgportfolio.companion.data.commander2016SetSeed
+import com.tcgportfolio.companion.data.commander2017CatalogSeed
+import com.tcgportfolio.companion.data.commander2017SetSeed
+import com.tcgportfolio.companion.data.commander2018CatalogSeed
+import com.tcgportfolio.companion.data.commander2018SetSeed
+import com.tcgportfolio.companion.data.commander2019CatalogSeed
+import com.tcgportfolio.companion.data.commander2019SetSeed
+import com.tcgportfolio.companion.data.commander2020CatalogSeed
+import com.tcgportfolio.companion.data.commander2020SetSeed
+import com.tcgportfolio.companion.data.commander2021CatalogSeed
+import com.tcgportfolio.companion.data.commander2021SetSeed
+import com.tcgportfolio.companion.data.commanderAdventuresInTheForgottenRealmsCatalogSeed
+import com.tcgportfolio.companion.data.commanderAdventuresInTheForgottenRealmsSetSeed
+import com.tcgportfolio.companion.data.commanderAetherdriftCatalogSeed
+import com.tcgportfolio.companion.data.commanderAetherdriftSetSeed
+import com.tcgportfolio.companion.data.commanderAnthologyCatalogSeed
+import com.tcgportfolio.companion.data.commanderAnthologySetSeed
+import com.tcgportfolio.companion.data.commanderAnthologyVolumeIiCatalogSeed
+import com.tcgportfolio.companion.data.commanderAnthologyVolumeIiSetSeed
+import com.tcgportfolio.companion.data.commanderBloomburrowCatalogSeed
+import com.tcgportfolio.companion.data.commanderBloomburrowSetSeed
+import com.tcgportfolio.companion.data.commanderCollectionBlackCatalogSeed
+import com.tcgportfolio.companion.data.commanderCollectionBlackSetSeed
+import com.tcgportfolio.companion.data.commanderCollectionGreenCatalogSeed
+import com.tcgportfolio.companion.data.commanderCollectionGreenSetSeed
+import com.tcgportfolio.companion.data.commanderDominariaUnitedCatalogSeed
+import com.tcgportfolio.companion.data.commanderDominariaUnitedSetSeed
+import com.tcgportfolio.companion.data.commanderDuskmournHouseOfHorrorCatalogSeed
+import com.tcgportfolio.companion.data.commanderDuskmournHouseOfHorrorSetSeed
+import com.tcgportfolio.companion.data.commanderEdgeOfEternitiesCatalogSeed
+import com.tcgportfolio.companion.data.commanderEdgeOfEternitiesSetSeed
+import com.tcgportfolio.companion.data.commanderFinalFantasyCatalogSeed
+import com.tcgportfolio.companion.data.commanderFinalFantasySetSeed
+import com.tcgportfolio.companion.data.commanderFoundationsCatalogSeed
+import com.tcgportfolio.companion.data.commanderFoundationsSetSeed
+import com.tcgportfolio.companion.data.commanderInnistradCrimsonVowCatalogSeed
+import com.tcgportfolio.companion.data.commanderInnistradCrimsonVowSetSeed
+import com.tcgportfolio.companion.data.commanderInnistradMidnightHuntCatalogSeed
+import com.tcgportfolio.companion.data.commanderInnistradMidnightHuntSetSeed
+import com.tcgportfolio.companion.data.commanderKaldheimCatalogSeed
+import com.tcgportfolio.companion.data.commanderKaldheimSetSeed
+import com.tcgportfolio.companion.data.commanderKamigawaNeonDynastyCatalogSeed
+import com.tcgportfolio.companion.data.commanderKamigawaNeonDynastySetSeed
+import com.tcgportfolio.companion.data.commanderLegendsBattleForBaldursGateCatalogSeed
+import com.tcgportfolio.companion.data.commanderLegendsBattleForBaldursGateSetSeed
+import com.tcgportfolio.companion.data.commanderLegendsCatalogSeed
+import com.tcgportfolio.companion.data.commanderLegendsSetSeed
+import com.tcgportfolio.companion.data.commanderLorwynEclipsedCatalogSeed
+import com.tcgportfolio.companion.data.commanderLorwynEclipsedSetSeed
+import com.tcgportfolio.companion.data.commanderMarchOfTheMachineCatalogSeed
+import com.tcgportfolio.companion.data.commanderMarchOfTheMachineSetSeed
+import com.tcgportfolio.companion.data.commanderMarvelSuperHeroesCatalogSeed
+import com.tcgportfolio.companion.data.commanderMarvelSuperHeroesSetSeed
+import com.tcgportfolio.companion.data.commanderMastersCatalogSeed
+import com.tcgportfolio.companion.data.commanderMastersSetSeed
+import com.tcgportfolio.companion.data.commanderModernHorizons3CatalogSeed
+import com.tcgportfolio.companion.data.commanderModernHorizons3SetSeed
+import com.tcgportfolio.companion.data.commanderMurdersAtKarlovManorCatalogSeed
+import com.tcgportfolio.companion.data.commanderMurdersAtKarlovManorSetSeed
+import com.tcgportfolio.companion.data.commanderOutlawsOfThunderJunctionCatalogSeed
+import com.tcgportfolio.companion.data.commanderOutlawsOfThunderJunctionSetSeed
+import com.tcgportfolio.companion.data.commanderPhyrexiaAllWillBeOneCatalogSeed
+import com.tcgportfolio.companion.data.commanderPhyrexiaAllWillBeOneSetSeed
+import com.tcgportfolio.companion.data.commanderSecretsOfStrixhavenCatalogSeed
+import com.tcgportfolio.companion.data.commanderSecretsOfStrixhavenSetSeed
+import com.tcgportfolio.companion.data.commanderStreetsOfNewCapennaCatalogSeed
+import com.tcgportfolio.companion.data.commanderStreetsOfNewCapennaSetSeed
+import com.tcgportfolio.companion.data.commanderTarkirDragonstormCatalogSeed
+import com.tcgportfolio.companion.data.commanderTarkirDragonstormSetSeed
+import com.tcgportfolio.companion.data.commanderTeenageMutantNinjaTurtlesCatalogSeed
+import com.tcgportfolio.companion.data.commanderTeenageMutantNinjaTurtlesSetSeed
+import com.tcgportfolio.companion.data.commanderTheBrothersWarCatalogSeed
+import com.tcgportfolio.companion.data.commanderTheBrothersWarSetSeed
+import com.tcgportfolio.companion.data.commanderTheLordOfTheRingsTalesOfMiddleEarthCatalogSeed
+import com.tcgportfolio.companion.data.commanderTheLordOfTheRingsTalesOfMiddleEarthSetSeed
+import com.tcgportfolio.companion.data.commanderTheLostCavernsOfIxalanCatalogSeed
+import com.tcgportfolio.companion.data.commanderTheLostCavernsOfIxalanSetSeed
+import com.tcgportfolio.companion.data.commanderWildsOfEldraineCatalogSeed
+import com.tcgportfolio.companion.data.commanderWildsOfEldraineSetSeed
+import com.tcgportfolio.companion.data.commanderZendikarRisingCatalogSeed
+import com.tcgportfolio.companion.data.commanderZendikarRisingSetSeed
+import com.tcgportfolio.companion.data.conspiracyTakeTheCrownCatalogSeed
+import com.tcgportfolio.companion.data.conspiracyTakeTheCrownSetSeed
+import com.tcgportfolio.companion.data.coreSet2019CatalogSeed
+import com.tcgportfolio.companion.data.coreSet2019SetSeed
+import com.tcgportfolio.companion.data.coreSet2020CatalogSeed
+import com.tcgportfolio.companion.data.coreSet2020SetSeed
+import com.tcgportfolio.companion.data.coreSet2021CatalogSeed
+import com.tcgportfolio.companion.data.coreSet2021SetSeed
+import com.tcgportfolio.companion.data.dominariaCatalogSeed
+import com.tcgportfolio.companion.data.dominariaRemasteredCatalogSeed
+import com.tcgportfolio.companion.data.dominariaRemasteredSetSeed
+import com.tcgportfolio.companion.data.dominariaSetSeed
+import com.tcgportfolio.companion.data.dominariaUnitedCatalogSeed
+import com.tcgportfolio.companion.data.dominariaUnitedSetSeed
+import com.tcgportfolio.companion.data.doubleMasters2022CatalogSeed
+import com.tcgportfolio.companion.data.doubleMasters2022SetSeed
+import com.tcgportfolio.companion.data.doubleMastersCatalogSeed
+import com.tcgportfolio.companion.data.doubleMastersSetSeed
+import com.tcgportfolio.companion.data.duelDecksBlessedVsCursedCatalogSeed
+import com.tcgportfolio.companion.data.duelDecksBlessedVsCursedSetSeed
+import com.tcgportfolio.companion.data.duelDecksElvesVsInventorsCatalogSeed
+import com.tcgportfolio.companion.data.duelDecksElvesVsInventorsSetSeed
+import com.tcgportfolio.companion.data.duelDecksMerfolkVsGoblinsCatalogSeed
+import com.tcgportfolio.companion.data.duelDecksMerfolkVsGoblinsSetSeed
+import com.tcgportfolio.companion.data.duelDecksMindVsMightCatalogSeed
+import com.tcgportfolio.companion.data.duelDecksMindVsMightSetSeed
+import com.tcgportfolio.companion.data.duelDecksNissaVsObNixilisCatalogSeed
+import com.tcgportfolio.companion.data.duelDecksNissaVsObNixilisSetSeed
+import com.tcgportfolio.companion.data.duskmournHouseOfHorrorCatalogSeed
+import com.tcgportfolio.companion.data.duskmournHouseOfHorrorSetSeed
+import com.tcgportfolio.companion.data.edgeOfEternitiesCatalogSeed
+import com.tcgportfolio.companion.data.edgeOfEternitiesSetSeed
+import com.tcgportfolio.companion.data.edgeOfEternitiesStellarSightsCatalogSeed
+import com.tcgportfolio.companion.data.edgeOfEternitiesStellarSightsSetSeed
+import com.tcgportfolio.companion.data.eldritchMoonCatalogSeed
+import com.tcgportfolio.companion.data.eldritchMoonSetSeed
+import com.tcgportfolio.companion.data.eternalMastersCatalogSeed
+import com.tcgportfolio.companion.data.eternalMastersSetSeed
+import com.tcgportfolio.companion.data.explorersOfIxalanCatalogSeed
+import com.tcgportfolio.companion.data.explorersOfIxalanSetSeed
+import com.tcgportfolio.companion.data.finalFantasyCatalogSeed
+import com.tcgportfolio.companion.data.finalFantasySetSeed
+import com.tcgportfolio.companion.data.finalFantasyThroughTheAgesCatalogSeed
+import com.tcgportfolio.companion.data.finalFantasyThroughTheAgesSetSeed
+import com.tcgportfolio.companion.data.foundationsCatalogSeed
+import com.tcgportfolio.companion.data.foundationsJumpstartCatalogSeed
+import com.tcgportfolio.companion.data.foundationsJumpstartSetSeed
+import com.tcgportfolio.companion.data.foundationsSetSeed
+import com.tcgportfolio.companion.data.fromTheVaultLoreCatalogSeed
+import com.tcgportfolio.companion.data.fromTheVaultLoreSetSeed
+import com.tcgportfolio.companion.data.fromTheVaultTransformCatalogSeed
+import com.tcgportfolio.companion.data.fromTheVaultTransformSetSeed
+import com.tcgportfolio.companion.data.giftBoxesAndPromosCatalogSeed
+import com.tcgportfolio.companion.data.giftBoxesAndPromosSetSeed
+import com.tcgportfolio.companion.data.globalSeriesJiangYangguAndMuYanlingCatalogSeed
+import com.tcgportfolio.companion.data.globalSeriesJiangYangguAndMuYanlingSetSeed
+import com.tcgportfolio.companion.data.guildsOfRavnicaCatalogSeed
+import com.tcgportfolio.companion.data.guildsOfRavnicaGuildKitsCatalogSeed
+import com.tcgportfolio.companion.data.guildsOfRavnicaGuildKitsSetSeed
+import com.tcgportfolio.companion.data.guildsOfRavnicaSetSeed
+import com.tcgportfolio.companion.data.hourOfDevastationCatalogSeed
+import com.tcgportfolio.companion.data.hourOfDevastationSetSeed
+import com.tcgportfolio.companion.data.iconicMastersCatalogSeed
+import com.tcgportfolio.companion.data.iconicMastersSetSeed
+import com.tcgportfolio.companion.data.ikoriaLairOfBehemothsCatalogSeed
+import com.tcgportfolio.companion.data.ikoriaLairOfBehemothsSetSeed
+import com.tcgportfolio.companion.data.innistradCrimsonVowCatalogSeed
+import com.tcgportfolio.companion.data.innistradCrimsonVowSetSeed
+import com.tcgportfolio.companion.data.innistradDoubleFeatureCatalogSeed
+import com.tcgportfolio.companion.data.innistradDoubleFeatureSetSeed
+import com.tcgportfolio.companion.data.innistradMidnightHuntCatalogSeed
+import com.tcgportfolio.companion.data.innistradMidnightHuntSetSeed
+import com.tcgportfolio.companion.data.innistradRemasteredCatalogSeed
+import com.tcgportfolio.companion.data.innistradRemasteredSetSeed
+import com.tcgportfolio.companion.data.ixalanCatalogSeed
+import com.tcgportfolio.companion.data.ixalanSetSeed
+import com.tcgportfolio.companion.data.jumpstart2022CatalogSeed
+import com.tcgportfolio.companion.data.jumpstart2022SetSeed
+import com.tcgportfolio.companion.data.jumpstartCatalogSeed
+import com.tcgportfolio.companion.data.jumpstartSetSeed
+import com.tcgportfolio.companion.data.kaladeshCatalogSeed
+import com.tcgportfolio.companion.data.kaladeshSetSeed
+import com.tcgportfolio.companion.data.kaldheimCatalogSeed
+import com.tcgportfolio.companion.data.kaldheimSetSeed
+import com.tcgportfolio.companion.data.kamigawaNeonDynastyCatalogSeed
+import com.tcgportfolio.companion.data.kamigawaNeonDynastySetSeed
+import com.tcgportfolio.companion.data.leaguePromosCatalogSeed
+import com.tcgportfolio.companion.data.leaguePromosSetSeed
+import com.tcgportfolio.companion.data.lorwynEclipsedCatalogSeed
+import com.tcgportfolio.companion.data.lorwynEclipsedSetSeed
+import com.tcgportfolio.companion.data.magicGameNight2019CatalogSeed
+import com.tcgportfolio.companion.data.magicGameNight2019SetSeed
+import com.tcgportfolio.companion.data.magicGameNightCatalogSeed
+import com.tcgportfolio.companion.data.magicGameNightFreeForAllCatalogSeed
+import com.tcgportfolio.companion.data.magicGameNightFreeForAllSetSeed
+import com.tcgportfolio.companion.data.magicGameNightSetSeed
+import com.tcgportfolio.companion.data.magicfestCardsCatalogSeed
+import com.tcgportfolio.companion.data.magicfestCardsSetSeed
+import com.tcgportfolio.companion.data.marchOfTheMachineCatalogSeed
+import com.tcgportfolio.companion.data.marchOfTheMachineMultiverseLegendsCatalogSeed
+import com.tcgportfolio.companion.data.marchOfTheMachineMultiverseLegendsSetSeed
+import com.tcgportfolio.companion.data.marchOfTheMachineSetSeed
+import com.tcgportfolio.companion.data.marchOfTheMachineTheAftermathCatalogSeed
+import com.tcgportfolio.companion.data.marchOfTheMachineTheAftermathSetSeed
+import com.tcgportfolio.companion.data.marvelSuperHeroesCatalogSeed
+import com.tcgportfolio.companion.data.marvelSuperHeroesSetSeed
+import com.tcgportfolio.companion.data.marvelUniverseEternalLegalCatalogSeed
+import com.tcgportfolio.companion.data.marvelUniverseEternalLegalSetSeed
+import com.tcgportfolio.companion.data.marvelsSpiderManCatalogSeed
+import com.tcgportfolio.companion.data.marvelsSpiderManEternalLegalCatalogSeed
+import com.tcgportfolio.companion.data.marvelsSpiderManEternalLegalSetSeed
+import com.tcgportfolio.companion.data.marvelsSpiderManSetSeed
+import com.tcgportfolio.companion.data.masterpieceSeriesAmonkhetInvocationsCatalogSeed
+import com.tcgportfolio.companion.data.masterpieceSeriesAmonkhetInvocationsSetSeed
+import com.tcgportfolio.companion.data.masterpieceSeriesKaladeshInventionsCatalogSeed
+import com.tcgportfolio.companion.data.masterpieceSeriesKaladeshInventionsSetSeed
+import com.tcgportfolio.companion.data.masters25CatalogSeed
+import com.tcgportfolio.companion.data.masters25SetSeed
+import com.tcgportfolio.companion.data.modernHorizons2CatalogSeed
+import com.tcgportfolio.companion.data.modernHorizons2SetSeed
+import com.tcgportfolio.companion.data.modernHorizons3CatalogSeed
+import com.tcgportfolio.companion.data.modernHorizons3SetSeed
+import com.tcgportfolio.companion.data.modernHorizonsCatalogSeed
+import com.tcgportfolio.companion.data.modernHorizonsSetSeed
+import com.tcgportfolio.companion.data.modernMasters2017CatalogSeed
+import com.tcgportfolio.companion.data.modernMasters2017SetSeed
+import com.tcgportfolio.companion.data.murdersAtKarlovManorCatalogSeed
+import com.tcgportfolio.companion.data.murdersAtKarlovManorSetSeed
+import com.tcgportfolio.companion.data.mysteryBooster2CatalogSeed
+import com.tcgportfolio.companion.data.mysteryBooster2SetSeed
+import com.tcgportfolio.companion.data.mythicEditionGuildsOfRavnicaCatalogSeed
+import com.tcgportfolio.companion.data.mythicEditionGuildsOfRavnicaSetSeed
+import com.tcgportfolio.companion.data.mythicEditionRavnicaAllegianceCatalogSeed
+import com.tcgportfolio.companion.data.mythicEditionRavnicaAllegianceSetSeed
+import com.tcgportfolio.companion.data.mythicEditionWarOfTheSparkCatalogSeed
+import com.tcgportfolio.companion.data.mythicEditionWarOfTheSparkSetSeed
+import com.tcgportfolio.companion.data.oathOfTheGatewatchCatalogSeed
+import com.tcgportfolio.companion.data.oathOfTheGatewatchSetSeed
+import com.tcgportfolio.companion.data.openHousePromosCatalogSeed
+import com.tcgportfolio.companion.data.openHousePromosSetSeed
+import com.tcgportfolio.companion.data.outlawsOfThunderJunctionBreakingNewsCatalogSeed
+import com.tcgportfolio.companion.data.outlawsOfThunderJunctionBreakingNewsSetSeed
+import com.tcgportfolio.companion.data.outlawsOfThunderJunctionCatalogSeed
+import com.tcgportfolio.companion.data.outlawsOfThunderJunctionSetSeed
+import com.tcgportfolio.companion.data.outlawsOfThunderJunctionTheBigScoreCatalogSeed
+import com.tcgportfolio.companion.data.outlawsOfThunderJunctionTheBigScoreSetSeed
+import com.tcgportfolio.companion.data.phyrexiaAllWillBeOneCatalogSeed
+import com.tcgportfolio.companion.data.phyrexiaAllWillBeOneSetSeed
+import com.tcgportfolio.companion.data.planechaseAnthologyCatalogSeed
+import com.tcgportfolio.companion.data.planechaseAnthologySetSeed
+import com.tcgportfolio.companion.data.planeswalkerEventPromosCatalogSeed
+import com.tcgportfolio.companion.data.planeswalkerEventPromosSetSeed
+import com.tcgportfolio.companion.data.playPromosCatalogSeed
+import com.tcgportfolio.companion.data.playPromosSetSeed
+import com.tcgportfolio.companion.data.poniesTheGallopingCatalogSeed
+import com.tcgportfolio.companion.data.poniesTheGallopingSetSeed
+import com.tcgportfolio.companion.data.promoPackAdventuresInTheForgottenRealmsCatalogSeed
+import com.tcgportfolio.companion.data.promoPackAdventuresInTheForgottenRealmsSetSeed
+import com.tcgportfolio.companion.data.promoPackAetherdriftCatalogSeed
+import com.tcgportfolio.companion.data.promoPackAetherdriftSetSeed
+import com.tcgportfolio.companion.data.promoPackBloomburrowCatalogSeed
+import com.tcgportfolio.companion.data.promoPackBloomburrowSetSeed
+import com.tcgportfolio.companion.data.promoPackCoreSet2020CatalogSeed
+import com.tcgportfolio.companion.data.promoPackCoreSet2020SetSeed
+import com.tcgportfolio.companion.data.promoPackCoreSet2021CatalogSeed
+import com.tcgportfolio.companion.data.promoPackCoreSet2021SetSeed
+import com.tcgportfolio.companion.data.promoPackDominariaUnitedCatalogSeed
+import com.tcgportfolio.companion.data.promoPackDominariaUnitedSetSeed
+import com.tcgportfolio.companion.data.promoPackDuskmournHouseOfHorrorCatalogSeed
+import com.tcgportfolio.companion.data.promoPackDuskmournHouseOfHorrorSetSeed
+import com.tcgportfolio.companion.data.promoPackEdgeOfEternitiesCatalogSeed
+import com.tcgportfolio.companion.data.promoPackEdgeOfEternitiesSetSeed
+import com.tcgportfolio.companion.data.promoPackIkoriaCatalogSeed
+import com.tcgportfolio.companion.data.promoPackIkoriaSetSeed
+import com.tcgportfolio.companion.data.promoPackInnistradMidnightHuntCatalogSeed
+import com.tcgportfolio.companion.data.promoPackInnistradMidnightHuntSetSeed
+import com.tcgportfolio.companion.data.promoPackKaldheimCatalogSeed
+import com.tcgportfolio.companion.data.promoPackKaldheimSetSeed
+import com.tcgportfolio.companion.data.promoPackKamigawaNeonDynastyCatalogSeed
+import com.tcgportfolio.companion.data.promoPackKamigawaNeonDynastySetSeed
+import com.tcgportfolio.companion.data.promoPackLorwynEclipsedCatalogSeed
+import com.tcgportfolio.companion.data.promoPackLorwynEclipsedSetSeed
+import com.tcgportfolio.companion.data.promoPackMarchOfTheMachineCatalogSeed
+import com.tcgportfolio.companion.data.promoPackMarchOfTheMachineSetSeed
+import com.tcgportfolio.companion.data.promoPackMurdersAtKarlovManorCatalogSeed
+import com.tcgportfolio.companion.data.promoPackMurdersAtKarlovManorSetSeed
+import com.tcgportfolio.companion.data.promoPackOutlawsOfThunderJunctionCatalogSeed
+import com.tcgportfolio.companion.data.promoPackOutlawsOfThunderJunctionSetSeed
+import com.tcgportfolio.companion.data.promoPackPhyrexiaAllWillBeOneCatalogSeed
+import com.tcgportfolio.companion.data.promoPackPhyrexiaAllWillBeOneSetSeed
+import com.tcgportfolio.companion.data.promoPackSecretsOfStrixhavenCatalogSeed
+import com.tcgportfolio.companion.data.promoPackSecretsOfStrixhavenSetSeed
+import com.tcgportfolio.companion.data.promoPackStreetsOfNewCapennaCatalogSeed
+import com.tcgportfolio.companion.data.promoPackStreetsOfNewCapennaSetSeed
+import com.tcgportfolio.companion.data.promoPackStrixhavenCatalogSeed
+import com.tcgportfolio.companion.data.promoPackStrixhavenSetSeed
+import com.tcgportfolio.companion.data.promoPackTarkirDragonstormCatalogSeed
+import com.tcgportfolio.companion.data.promoPackTarkirDragonstormSetSeed
+import com.tcgportfolio.companion.data.promoPackTheBrothersWarCatalogSeed
+import com.tcgportfolio.companion.data.promoPackTheBrothersWarSetSeed
+import com.tcgportfolio.companion.data.promoPackTheLostCavernsOfIxalanCatalogSeed
+import com.tcgportfolio.companion.data.promoPackTheLostCavernsOfIxalanSetSeed
+import com.tcgportfolio.companion.data.promoPackTherosBeyondDeathCatalogSeed
+import com.tcgportfolio.companion.data.promoPackTherosBeyondDeathSetSeed
+import com.tcgportfolio.companion.data.promoPackThroneOfEldraineCatalogSeed
+import com.tcgportfolio.companion.data.promoPackThroneOfEldraineSetSeed
+import com.tcgportfolio.companion.data.promoPackWildsOfEldraineCatalogSeed
+import com.tcgportfolio.companion.data.promoPackWildsOfEldraineSetSeed
+import com.tcgportfolio.companion.data.promoPackZendikarRisingCatalogSeed
+import com.tcgportfolio.companion.data.promoPackZendikarRisingSetSeed
+import com.tcgportfolio.companion.data.ravnicaAllegianceCatalogSeed
+import com.tcgportfolio.companion.data.ravnicaAllegianceGuildKitsCatalogSeed
+import com.tcgportfolio.companion.data.ravnicaAllegianceGuildKitsSetSeed
+import com.tcgportfolio.companion.data.ravnicaAllegianceSetSeed
+import com.tcgportfolio.companion.data.ravnicaClueEditionCatalogSeed
+import com.tcgportfolio.companion.data.ravnicaClueEditionSetSeed
+import com.tcgportfolio.companion.data.ravnicaRemasteredCatalogSeed
+import com.tcgportfolio.companion.data.ravnicaRemasteredSetSeed
+import com.tcgportfolio.companion.data.rivalsOfIxalanCatalogSeed
+import com.tcgportfolio.companion.data.rivalsOfIxalanSetSeed
+import com.tcgportfolio.companion.data.s30thAnniversaryEditionCatalogSeed
+import com.tcgportfolio.companion.data.s30thAnniversaryEditionSetSeed
+import com.tcgportfolio.companion.data.s30thAnniversaryPromosCatalogSeed
+import com.tcgportfolio.companion.data.s30thAnniversaryPromosSetSeed
+import com.tcgportfolio.companion.data.secretLairCountdownKitCatalogSeed
+import com.tcgportfolio.companion.data.secretLairCountdownKitSetSeed
+import com.tcgportfolio.companion.data.secretLairDropSeriesCatalogSeed
+import com.tcgportfolio.companion.data.secretLairDropSeriesSetSeed
+import com.tcgportfolio.companion.data.secretLairSeriesCatalogSeed
+import com.tcgportfolio.companion.data.secretLairSeriesSetSeed
+import com.tcgportfolio.companion.data.secretLairShowdownCatalogSeed
+import com.tcgportfolio.companion.data.secretLairShowdownSetSeed
+import com.tcgportfolio.companion.data.secretsOfStrixhavenCatalogSeed
+import com.tcgportfolio.companion.data.secretsOfStrixhavenMysticalArchiveCatalogSeed
+import com.tcgportfolio.companion.data.secretsOfStrixhavenMysticalArchiveSetSeed
+import com.tcgportfolio.companion.data.secretsOfStrixhavenSetSeed
+import com.tcgportfolio.companion.data.shadowsOverInnistradCatalogSeed
+import com.tcgportfolio.companion.data.shadowsOverInnistradSetSeed
+import com.tcgportfolio.companion.data.signatureSpellbookChandraCatalogSeed
+import com.tcgportfolio.companion.data.signatureSpellbookChandraSetSeed
+import com.tcgportfolio.companion.data.signatureSpellbookGideonCatalogSeed
+import com.tcgportfolio.companion.data.signatureSpellbookGideonSetSeed
+import com.tcgportfolio.companion.data.signatureSpellbookJaceCatalogSeed
+import com.tcgportfolio.companion.data.signatureSpellbookJaceSetSeed
+import com.tcgportfolio.companion.data.slxCardsCatalogSeed
+import com.tcgportfolio.companion.data.slxCardsSetSeed
+import com.tcgportfolio.companion.data.specialGuestsCatalogSeed
+import com.tcgportfolio.companion.data.specialGuestsSetSeed
+import com.tcgportfolio.companion.data.standardShowdownPromosCatalogSeed
+import com.tcgportfolio.companion.data.standardShowdownPromosSetSeed
+import com.tcgportfolio.companion.data.starterCommanderDecksCatalogSeed
+import com.tcgportfolio.companion.data.starterCommanderDecksSetSeed
+import com.tcgportfolio.companion.data.streetsOfNewCapennaCatalogSeed
+import com.tcgportfolio.companion.data.streetsOfNewCapennaSetSeed
+import com.tcgportfolio.companion.data.strixhavenMysticalArchiveCatalogSeed
+import com.tcgportfolio.companion.data.strixhavenMysticalArchiveSetSeed
+import com.tcgportfolio.companion.data.strixhavenMysticalArchivesCatalogSeed
+import com.tcgportfolio.companion.data.strixhavenMysticalArchivesSetSeed
+import com.tcgportfolio.companion.data.strixhavenSchoolOfMagesCatalogSeed
+import com.tcgportfolio.companion.data.strixhavenSchoolOfMagesSetSeed
+import com.tcgportfolio.companion.data.tarkirDragonstormCatalogSeed
+import com.tcgportfolio.companion.data.tarkirDragonstormSetSeed
+import com.tcgportfolio.companion.data.teenageMutantNinjaTurtlesCatalogSeed
+import com.tcgportfolio.companion.data.teenageMutantNinjaTurtlesEternalLegalCatalogSeed
+import com.tcgportfolio.companion.data.teenageMutantNinjaTurtlesEternalLegalSetSeed
+import com.tcgportfolio.companion.data.teenageMutantNinjaTurtlesSetSeed
+import com.tcgportfolio.companion.data.teenageMutantNinjaTurtlesSourceMaterialCatalogSeed
+import com.tcgportfolio.companion.data.teenageMutantNinjaTurtlesSourceMaterialSetSeed
+import com.tcgportfolio.companion.data.theBrothersWarCatalogSeed
+import com.tcgportfolio.companion.data.theBrothersWarRetroFrameArtifactsCatalogSeed
+import com.tcgportfolio.companion.data.theBrothersWarRetroFrameArtifactsSetSeed
+import com.tcgportfolio.companion.data.theBrothersWarSetSeed
+import com.tcgportfolio.companion.data.theListReprintsCatalogSeed
+import com.tcgportfolio.companion.data.theListReprintsSetSeed
+import com.tcgportfolio.companion.data.theLostCavernsOfIxalanCatalogSeed
+import com.tcgportfolio.companion.data.theLostCavernsOfIxalanSetSeed
+import com.tcgportfolio.companion.data.therosBeyondDeathCatalogSeed
+import com.tcgportfolio.companion.data.therosBeyondDeathSetSeed
+import com.tcgportfolio.companion.data.throneOfEldraineCatalogSeed
+import com.tcgportfolio.companion.data.throneOfEldraineSetSeed
+import com.tcgportfolio.companion.data.timeSpiralRemasteredCatalogSeed
+import com.tcgportfolio.companion.data.timeSpiralRemasteredSetSeed
+import com.tcgportfolio.companion.data.ultimateMastersBoxToppersCatalogSeed
+import com.tcgportfolio.companion.data.ultimateMastersBoxToppersSetSeed
+import com.tcgportfolio.companion.data.ultimateMastersCatalogSeed
+import com.tcgportfolio.companion.data.ultimateMastersSetSeed
+import com.tcgportfolio.companion.data.unfinityCatalogSeed
+import com.tcgportfolio.companion.data.unfinitySetSeed
+import com.tcgportfolio.companion.data.universesBeyondAssassinsCreedCatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondAssassinsCreedSetSeed
+import com.tcgportfolio.companion.data.universesBeyondDoctorWhoCatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondDoctorWhoSetSeed
+import com.tcgportfolio.companion.data.universesBeyondFalloutCatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondFalloutSetSeed
+import com.tcgportfolio.companion.data.universesBeyondJurassicWorldCollectionCatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondJurassicWorldCollectionSetSeed
+import com.tcgportfolio.companion.data.universesBeyondTheLordOfTheRingsTalesOfMiddleEarthCatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondTheLordOfTheRingsTalesOfMiddleEarthSetSeed
+import com.tcgportfolio.companion.data.universesBeyondTransformersCatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondTransformersSetSeed
+import com.tcgportfolio.companion.data.universesBeyondWarhammer40000CatalogSeed
+import com.tcgportfolio.companion.data.universesBeyondWarhammer40000SetSeed
+import com.tcgportfolio.companion.data.unsanctionedCatalogSeed
+import com.tcgportfolio.companion.data.unsanctionedSetSeed
+import com.tcgportfolio.companion.data.unstableCatalogSeed
+import com.tcgportfolio.companion.data.unstableSetSeed
+import com.tcgportfolio.companion.data.warOfTheSparkCatalogSeed
+import com.tcgportfolio.companion.data.warOfTheSparkSetSeed
+import com.tcgportfolio.companion.data.welcomeDeck2016CatalogSeed
+import com.tcgportfolio.companion.data.welcomeDeck2016SetSeed
+import com.tcgportfolio.companion.data.welcomeDeck2017CatalogSeed
+import com.tcgportfolio.companion.data.welcomeDeck2017SetSeed
+import com.tcgportfolio.companion.data.wildsOfEldraineCatalogSeed
+import com.tcgportfolio.companion.data.wildsOfEldraineEnchantingTalesCatalogSeed
+import com.tcgportfolio.companion.data.wildsOfEldraineEnchantingTalesSetSeed
+import com.tcgportfolio.companion.data.wildsOfEldraineSetSeed
+import com.tcgportfolio.companion.data.wmcqPromoCardsCatalogSeed
+import com.tcgportfolio.companion.data.wmcqPromoCardsSetSeed
+import com.tcgportfolio.companion.data.zendikarRisingCatalogSeed
+import com.tcgportfolio.companion.data.zendikarRisingExpeditionsCatalogSeed
+import com.tcgportfolio.companion.data.zendikarRisingExpeditionsSetSeed
+import com.tcgportfolio.companion.data.zendikarRisingSetSeed
+import com.tcgportfolio.companion.db.CardCatalogEntity
+import com.tcgportfolio.companion.db.CardSet
+import com.tcgportfolio.companion.db.PortfolioDatabase
+import com.tcgportfolio.companion.db.SealedCardmarketManualMapping
+import com.tcgportfolio.companion.db.SealedCatalogEntity
+import com.tcgportfolio.companion.db.SealedProductEntity
+import com.tcgportfolio.companion.db.SearchCatalog
+import com.tcgportfolio.companion.db.SelectAll
+import com.tcgportfolio.companion.db.SelectAllWithGame
+import com.tcgportfolio.companion.db.SelectSetProgress
+import com.tcgportfolio.companion.db.SelectBinderItemsForGame
+import com.tcgportfolio.companion.db.SelectWishlistItemsForGame
+import com.tcgportfolio.companion.db.BinderEntity
+import com.tcgportfolio.companion.db.BinderItemEntity
+import com.tcgportfolio.companion.db.WishlistEntity
+import com.tcgportfolio.companion.db.AccountEntity
+import com.tcgportfolio.companion.db.DeckEntity
+import com.tcgportfolio.companion.db.DeckCardEntity
+import com.tcgportfolio.companion.db.SelectDeckCardsForDeck
+import com.tcgportfolio.companion.db.CardmarketManualMapping
+
+private val backupJson = Json { prettyPrint = true; ignoreUnknownKeys = true }
+
+// Top-Level-Fassung von PortfolioRepository.decodeRuleSubtypes (19.08.,
+// Typ-/Farb-Filter in App + Deckbau) - auch ohne Repository-Instanz
+// nutzbar (DeckScreen bekommt keine); die Methoden-Fassung in der Klasse
+// bleibt für Server/Regelprüfung unverändert bestehen.
+fun decodeRuleSubtypesJson(json: String?): List<String> {
+    if (json.isNullOrBlank()) return emptyList()
+    return runCatching { backupJson.decodeFromString<List<String>>(json) }.getOrDefault(emptyList())
+}
+
+// Versionswächter für die gebündelten Katalog-Seed-Daten (03.08., siehe
+// Kommentar bei ensureCatalogSeeded()/ensureSealedCatalogSeeded()) - beim
+// nächsten inhaltlichen Update von allSets (neue Karten/Sets, korrigierte
+// Preise) hochzählen, sonst bleibt der Nachtrag unbemerkt. allSealedCatalogs
+// hat bewusst eine EIGENE Versionsnummer (siehe dortiger Kommentar), auch
+// wenn beide aktuell zufällig bei 1 starten.
+private const val CATALOG_SEED_VERSION_KEY = "catalogSeedVersion"
+// 06.08.: MTG-Katalog von den Alt-Produktdaten auf Scryfall umgestellt
+// (echte gedruckte Set-Codes/Sammelnummern, größere Bilder statt 400x400 -
+// siehe generate_mtg_catalog.py/CONCEPT.md) - Nutzer-Vorgabe war, dabei den
+// KOMPLETTEN Kartenbestand (alle Accounts, alle Spiele, nicht nur MTG) zu
+// purgen statt zu migrieren, da ohnehin frisch neu gescannt wird. Dieser
+// Reset läuft nur EINMALIG genau bei diesem Versionssprung (siehe
+// ensureCatalogSeeded()) - weitere TCGs folgen nach und nach im selben
+// Muster, lösen aber keinen erneuten Reset mehr aus (schon erledigt).
+// 07.08.: MTG-Sammelnummern korrigiert UND überfälliger Stammdaten-Nachzug
+// (Bildquellen-Umstellungen mehrerer TCGs kamen bei bereits gesäten
+// Installationen nie an, siehe updateCatalogSeedFields in Portfolio.sq/
+// seedSet()) - Sprung auf < 4 gibt's hier absichtlich NICHT, also KEIN
+// erneuter Sammlungs-Reset, bereits gescannte Karten bleiben unangetastet,
+// nur number/name/variant/rarity/imageUrl werden pro Karte nachgezogen.
+// 09.08.: MEP-Promo-Katalog (Pokemon) von der Alt-Quelle auf TCGdex umgestellt
+// (Nutzer-Fund "MEP 081 nicht gefunden" + Nutzer-Vorgabe "die Alt-Quelle raus,
+// kostet sonst monatlich Geld beim Release") - setId von "PKM-MEP" auf den
+// echten aufgedruckten Code "MEP" korrigiert (ermöglicht jetzt auch
+// detectSetIdHint-Treffer beim Scannen), 4 bisher fehlende Karten (071,
+// 078-080) ergänzt. TCGdex hat für dieses Promo-Set keine Bilder - imageUrl
+// zeigt bewusst auf eine garantiert fehlschlagende Adresse (bestehender
+// CardArtFailurePlaceholder greift), bis es die Eigenes-Foto-Funktion gibt.
+// 09.08.: Zwei neue TCGs ergaenzt (Nutzer-Vorgabe "Cyberpunk TCG und Gundam
+// TCG einbauen") - Gundam Card Game komplett mit echtem Katalog (24 Sets/
+// 1816 Karten, gcg-api.com, siehe Import-Kommentar oben), Cyberpunk TCG nur
+// als Spiel registriert, noch OHNE Katalog (Release erst September 2026, es
+// gibt noch keine echten Kartendaten). Kein Sammlungs-Reset noetig, betrifft
+// nur neue Sets/Karten, keine bestehenden.
+// 09.08.: Erste Runde YuGiOh von der Alt-Quelle auf YGOPRODeck umgestellt
+// (Nutzer-Vorgabe "die Alt-Quelle raus, kostet sonst monatlich Geld beim
+// Release", Fortsetzung der MEP-Umstellung oben) - 82 von 131 noch
+// noch nicht migrierten YuGiOh-Sets/Produkten (Bildquelle + setId bleiben
+// gleich, nur imageUrl zeigt jetzt auf images.ygoprodeck.com statt
+// die alte Bild-CDN, marketPriceUsd kommt weiterhin aus
+// YGOPRODecks eigenem Preisindex-Feld - das ist nur eine Preiszahl
+// aus deren freier API, keine kostenpflichtige Bild-Einbindung mehr). Die
+// restlichen 49 (Mega-Pack-/Legendary-Collection-Sammelboxen mit
+// abweichender Kartenanzahl gegenueber YGOPRODecks Set-Zuordnung, plus
+// verstreute Promo-Kataloge ohne eindeutigen Set-Treffer) bleiben bewusst
+// unangetastet statt geraten zu werden, siehe Uebersicht in der laufenden
+// Migrations-Aufgabe. totalCards wurde dabei je Set auf die tatsaechlich
+// gefundene Kartenzahl korrigiert (vorher teils von der Alt-Quelle geerbte,
+// nicht immer stimmige Werte).
+// 09.08.: One Piece - 15 der 32 noch nicht migrierten Hauptset-Booster
+// (OP01-OP16) direkt von der offiziellen en.onepiece-cardgame.com
+// umgestellt (Kartenliste + Bild-CDN, imageUrl zeigt jetzt auf
+// en.onepiece-cardgame.com/images/cardlist/card/... statt
+// die alte Bild-CDN - exakt dasselbe Bild-Hosting-Muster wie
+// bei den bereits migrierten Sets). Mehrfach-Parallelen (manche Karten
+// haben bis zu 4 verschiedene Paralleldrucke) bekommen jeweils eine eigene
+// Zeile ("Alternate Art", "Alternate Art 2", ...). Die offizielle Seite
+// führt keine Marktpreise - marketPriceUsd ist bei diesen 15 Sets bewusst
+// NULL statt geraten (zeigt "-" in der App, kein falscher Wert). Die
+// restlichen 17 (Pre-Release-/Anniversary-/Release-Event-Promo-Karten,
+// die auf der offiziellen Seite alle in einem gemeinsamen "Promotion
+// card"-Topf ohne einzelne Set-Zuordnung landen) bleiben für eine
+// gesonderte Recherche stehen.
+// 09.08.: Digimon - 29 der 30 noch nicht migrierten Booster-Sets
+// (BT04-BT25, EX02-EX12) von der offiziellen world.digimoncard.com
+// bezogen, exakt dasselbe Vorgehen wie bei One Piece (eigene Kartenliste
+// per Set-Filter gescrapt, Bild-CDN world.digimoncard.com/images/cardlist/
+// card/... statt der alten Bild-CDN). Ältere Sets (BT04-BT09,
+// EX02-EX09) drucken ihre Kartennummer auf der offiziellen Seite OHNE
+// führende Null (z.B. "EX8-001" statt "EX08-001") - number übernimmt
+// bewusst genau diese echte Aufdruck-Form, nur die interne setId bleibt
+// beim bisherigen zweistelligen Schema. marketPriceUsd bleibt auch hier
+// NULL (offizielle Seite führt keine Preise). BT26 (Timeless Bonds) fehlt
+// noch in der offiziellen Set-Auswahl (zu neu) und bleibt unangetastet.
+// 10.08.: Flesh and Blood - 16 der 25 noch nicht migrierten Sets/
+// Produkte auf das offene, community-gepflegte Kartendatenset
+// github.com/the-fab-cube/flesh-and-blood-cards umgestellt (JSON-Export,
+// MIT-lizenziert, Bilder ueber genau dasselbe storage.googleapis.com/
+// fabmaster-Hosting wie die bereits fruehere migrierten FAB-Sets). Bei
+// mehreren Editionen/Foilierungen pro Karte wird bevorzugt die normale
+// Edition ohne Sonder-Foil als Katalogzeile genommen (kein Zeilen-Wildwuchs
+// durch jede Foil-Variante). Die 6 "Historic Pack 1"-Blitz-Decks (Bravo,
+// Dash, Dorinthea, Kano, Rhinar, Viserai) bleiben unangetastet - im
+// Datensatz teilen sich alle sechs Helden denselben "1HP"-Sammel-Code ohne
+// erkennbare Zuordnung, welche Karnummer zu welchem Helden gehoert, das
+// waere Raten statt echter Zuordnung. "Flesh and Blood: Promo Cards"
+// (Sammelsurium aus mehreren eigenstaendigen Promo-Quellen) und "Welcome
+// Deck Bravo" (im Datensatz nicht als eigenes Produkt gefuehrt) bleiben aus
+// demselben Grund ebenfalls stehen.
+// 10.08.: DBFW - alle 10 Hauptset-Booster (FB01-FB10) von der Alt-Quelle auf die
+// offizielle dbs-cardgame.com/fw umgestellt. Der Filter-Parameter der
+// Kartenlisten-Suche dort heisst "category[0]" (Array-Syntax, nicht
+// "category" wie zunaechst angenommen - kostete etwas Recherche). Die
+// Ergebnisliste selbst zeigt keine Raritaet an, die kam per zusaetzlichem
+// Abruf der Kartendetailseite je eindeutigem Kartencode (1280 Abrufe
+// insgesamt, ueber alle 10 Sets). Bild-URL-Muster exakt wie bei den
+// bereits frueher migrierten FB01-FB06-Zeilen (dbs-cardgame.com/fw/images/
+// cards/card/en/...), marketPriceUsd bleibt NULL (offizielle Seite fuehrt
+// keine Preise).
+// 10.08.: Final Fantasy - 17 der 18 noch nicht migrierten Sets auf
+// die freie KupoDB-REST-API (api.kupodb.com, offen dokumentiert unter
+// api.kupodb.com/docs) umgestellt - exakt dieselbe Quelle wie die bereits
+// frueher migrierten Opus-I-bis-Opus-VII-Zeilen. Unsere internen Namen
+// ("Crystal Dominion" etc.) lassen bei KupoDB den "Opus XV -"-Praefix weg,
+// das kostete eine manuelle Namenszuordnung statt automatischem Abgleich.
+// full_art/special_print-Kartenversionen bekommen wie Alternate-Art-
+// Varianten bei anderen TCGs jeweils eine eigene Zeile. "FF: Promo Cards"
+// bleibt unangetastet - KupoDBs "Promos"-Sammlung hat eine spuerbar
+// abweichende Kartenzahl (243 vs. unsere 208), lieber genauer
+// nachrecherchieren als falsch zuordnen.
+// 10.08.: Pokemon - 4 der 9 noch nicht migrierten Sets (Forbidden
+// Light, Guardians Rising, McDonald's Promos 2023/2024) auf TCGdex
+// umgestellt, dieselbe bereits etablierte Quelle wie bei der MEP-Korrektur.
+// McDonald's 2023/2024 haben bei TCGdex (wie schon MEP) keine echten
+// Kartenbilder - imageUrl zeigt bewusst auf eine garantiert
+// fehlschlagende Adresse, greift jetzt aber die seit dieser Session neue
+// Eigenes-Foto-Funktion. Die restlichen 5 (Alternate Art Promos, SM/SV/
+// SWSH-Promo-Sammelkataloge, McDonald's 25th Anniversary) bleiben
+// unangetastet - verstreute Sammelbecken ohne eindeutigen TCGdex-Set-Treffer.
+// 10.08.: Riftbound (alle 4 verbleibenden Sets) und Lorcana (2 von 5) von
+// die Alt-Quelle umgestellt. Riftbound ueber die freie riftcodex.com-API
+// (api.riftcodex.com, offener REST-Dienst), Bild-Hosting exakt dasselbe
+// cmsassets.rgpub.io/sanity/... wie bei den bereits frueher migrierten
+// Riftbound-Zeilen. Lorcana (D23 Promos, Ursula's Return) ueber dieselbe
+// Lorcast-API wie die bereits migrierten Haupt-Chapter. Karten mit
+// mehreren Paralleldrucken bekommen wie bei anderen TCGs eigene Zeilen.
+// Die beiden "Illumineer's Quest"-Sonderdecks (eigenstaendige Dungeon-
+// Crawl-Produkte, nicht als regulaeres Set bei Lorcast gefuehrt) und
+// "Disney Lorcana Promo Cards" (vermutlich ein Sammelbecken mehrerer
+// einzelner Promo-Serien) bleiben unangetastet.
+// 10.08.: MTG - 3 der 27 noch nicht migrierten Sets (Outlaws of
+// Thunder Junction: Breaking News/The Big Score, Secret Lair Countdown
+// Kit) auf Scryfall umgestellt. Die restlichen 24 sind allesamt
+// von der Alt-Quelle erfundene Sammelbecken (z.B. "League Promos", "Mythic
+// Edition", "Magic Game Night"), die sich NICHT sauber auf Scryfalls
+// eigene, viel feinere Set-Struktur abbilden lassen (Scryfall trennt
+// z.B. jede "Mythic Edition" nach Jahr einzeln, hat für andere gar
+// keine einzelne Entsprechung) - blieben bewusst unangetastet statt
+// falsch geraten zu werden. setId wechselt bei diesen 3 Sets bewusst
+// auf Scryfalls echten, kurzen Set-Code (z.B. "otp" statt der alten
+// Produktgruppen-Nummer der Alt-Quelle) - passend zur Konvention aller
+// anderen bereits migrierten MTG-Sets (z.B. Amonkhet = "akh"), die
+// exakt aus diesem Grund schon bei der ursprünglichen MTG-Umstellung
+// (06.08.) eingeführt wurde. Anders als bei den übrigen TCGs dieser
+// Migrationsrunde bleibt die alte Nummer hier NICHT erhalten - ein
+// bereits gescanntes Exemplar aus genau einem dieser 3 (eher seltenen)
+// Sets würde dadurch nicht automatisch das neue Bild ziehen, sondern
+// müsste neu gescannt werden. Kein neuer Sammlungs-Reset (der wäre für
+// nur 3 Nischen-Sets unverhältnismäßig, siehe Kommentar beim
+// ursprünglichen MTG-Umstieg oben für den Fall, wann ein Reset
+// tatsächlich gerechtfertigt war).
+// 10.08.: One Piece - die 14 verbleibenden Promo-Kataloge (Pre-Release OP02-
+// OP08, Release Event OP10-OP15, Anniversary Tournament OP05/OP09/OP13)
+// waren jeweils schon GROSSTEILS auf optcgapi.com (freie Quelle) migriert -
+// nur vereinzelte Straggler-Zeilen pro Datei (10-69 von 74-90 Karten,
+// insgesamt 271) zeigten noch auf die alte Bild-CDN. Alle 271
+// Straggler-URLs 1:1 auf dasselbe optcgapi.com/media/static/Card_Images/
+// {number}.jpg-Muster umgestellt wie die bereits migrierten Zeilen
+// derselben Datei (jede einzelne neue URL vor dem Schreiben per HTTP-HEAD-
+// Abruf verifiziert, alle 271 lieferten 200). setId/number unveraendert,
+// reiner Bild-URL-Tausch. Offen bleiben: Pre-Release OP07 und Release Event
+// OP10 (auf der offiziellen onepiece-cardgame.com-Promo-Übersicht aktuell
+// nicht gelistet, evtl. aus der Rotation genommen - keine freie Quelle
+// gefunden) sowie alle uebrigen One-Piece-Sammelbecken ohne eindeutige
+// Zuordnung (Pirates Party, Treasure Cup, Tournament/Winner Packs etc.).
+// 10.08.: Straggler-Bereinigung ueber viele TCGs hinweg - bei der
+// Bestandsaufnahme fuer die "restlichen 194 Dateien" fiel auf, dass die
+// meisten davon KEINE komplett unmigrierten Kataloge mehr waren, sondern
+// schon zu 85-100% auf freien Quellen liefen und nur noch vereinzelte
+// Straggler-Zeilen (10-15 typischerweise) auf die alte Bild-CDN
+// zeigten - vermutlich Karten, bei denen ein frueherer Migrations-Durchlauf
+// keinen Treffer fand. Alle nach demselben Muster bereinigt: Bild-URL 1:1
+// gegen dieselbe Quelle ersetzt, die die MEHRHEIT der Zeilen derselben Datei
+// schon nutzt, name/setId/number/Preis unangetastet.
+// - YuGiOh (56 Dateien, 544 Straggler): 406 per exaktem card_sets[].set_code-
+// Treffer gegen den kompletten YGOPRODeck-Datenbank-Dump aufgeloest (number
+// entspricht 1:1 dem set_code), weitere 28 per Namenstreffer. 110
+// verbleibende (Token-Karten wie "Token: Kaiba", Speed-Duel-Skill-Karten wie
+// "Sky God Revelation") sind bei YGOPRODeck nachweislich NICHT gelistet
+// (Token-Suche liefert dort grundsaetzlich 0 Treffer) - keine freie Quelle
+// gefunden, bleiben unangetastet.
+// - DBFW (14 Dateien, 433 Straggler): alle aufgeloest. dbs-cardgame.com
+// kennt pro Kartencode mehrere Parallel-/Foil-Varianten (_p1, _p2, ...) ohne
+// erkennbare 1:1-Zuordnung zum jeweiligen Promo-Produktnamen - jede Zeile
+// bekam trotzdem eine ECHTE, verifizierte Variante desselben Kartencodes
+// zugewiesen (bei mehreren Zeilen mit demselben Code reihum verschiedene
+// Varianten, um wenigstens etwas visuelle Unterscheidung zu behalten), auch
+// wenn die exakt richtige Foil-Variante pro Zeile nicht sicher feststellbar
+// war.
+// - Flesh and Blood Promo Cards + 2 Klein-Dateien (84 Straggler): alle
+// aufgeloest, per Produkt-ID-Treffer (1x) bzw. Namenstreffer (83x)
+// gegen denselben the-fab-cube-Datensatz wie beim urspruenglichen FAB-
+// Umstieg.
+// - Disney Lorcana Promo Cards (33 Straggler): alle aufgeloest per
+// Namenssuche (name+version) gegen die Lorcast-API.
+// Zusammen 984 einzelne Kartenbild-URLs bereinigt. Verbleibend sind fast nur
+// noch echte Vollmigrationen (TheListReprintsCatalog x20, MTG Mythic
+// Editions/Magic Game Night/Secret Lair, Lorcana Illumineer's Quest, FAB
+// Historic Pack Blitz Decks etc.) - siehe Aufgabenliste fuer den Rest.
+// 10.08. (2): Nutzer-Vorgabe "alles was nicht in einer offiziellen Datenbank
+// zu finden ist, kann geloescht werden - wir tracken nur offizielle Dinge".
+// - YuGiOh: 110 Token-/Speed-Duel-Skill-Karten-Zeilen (ueber 21 Dateien
+// verteilt) ERSATZLOS GELOESCHT - YGOPRODeck (die de-facto offizielle,
+// turnierrelevante Community-Datenbank) fuehrt Tokens/Skill-Karten
+// nachweislich gar nicht (Token-Suche liefert dort 0 Treffer), sind also
+// nichts, was sich "offiziell tracken" liesse. totalCards der betroffenen
+// Sets entsprechend nach unten korrigiert, damit die Fortschrittsanzeige
+// nicht dauerhaft "X von Y" mit nie erreichbarem Y zeigt.
+// - MTG-Grossoffensive: Bei der Bestandsaufnahme fiel auf, dass etliche
+// "harte" Sammelbecken (The List, Secret Lair Drop Series, Strixhaven
+// Mystical Archives, die Universes-Beyond-Commander-Decks TMNT/Avatar/
+// Spider-Man, Mythic Editions, Magic Game Night, diverse Promo-Serien) ZWAR
+// echte, offizielle Wizards-Produkte sind, aber die Alt-CDN nutzten, weil
+// sich ihre Sammelbecken-Struktur der Alt-Quelle nicht sauber auf Scryfalls
+// Set-Struktur abbilden liess. Loesung: Scryfalls kompletten "default_cards"-
+// Bulk-Datensatz geladen und JEDE einzelne verbleibende Alt-CDN-Zeile
+// projektweit (nicht nur MTG-Dateien) per EXAKTEM Treffer auf
+// Scryfalls Produkt-ID-Feld ersetzt - Produkt-IDs der Alt-Quelle sind seitenweit
+// eindeutig, eine Kollision mit einer anderen TCG ist praktisch
+// ausgeschlossen. Ergebnis: 10.464 Kartenbild-URLs auf einen Schlag über 68
+// Dateien bereinigt (u.a. alle 20 Teile von "The List", 9 von 12 Teilen
+// "Secret Lair Drop Series", alle Mythic Editions, beide Magic Game Night,
+// etc.) - name/setId/number/Preis überall unangetastet, reiner
+// Bild-URL-Tausch wie bei allen bisherigen Migrationsrunden.
+// Verbleibend (~3373 Zeilen, ~62 Dateien): One-Piece-Promo-Sammelbecken
+// (597, eigene Quelle noetig), die komplett unangetastete "Sealed-Produkte"-
+// Bucket (Booster-Boxen/Starter-Decks/Elite-Trainer-Boxen ueber alle TCGs,
+// anderes Datenmodell als CatalogCardSeed), Pokemon-Promo-Serien (SM/SV/
+// SWSH/AAP/McDonald's), FAB Historic-Pack-Blitz-Decks, Lorcana Illumineer's
+// Quest, Final-Fantasy-Promo-Rest, einige MTG-Art-Series/Sealed-Sonderfaelle.
+// 10.08. (3): Pokemon SM/SV/SWSH-Promo-Serien (PKM-SMP/SVP/SWSHP) teilweise
+// via TCGdex-Set-Endpunkte (smp/svp/swshp) per Namensabgleich aufgeloest -
+// 240 von 446 verbleibenden Zeilen (SMP 132/247, SVP 62/114, SWSHP 46/85).
+// Rest scheitert am strikten Namensabgleich (unsere Zeilen haben oft
+// Zusatzbezeichnungen wie "(Cosmos Holo)"/Store-Namen, die sich nicht 1:1
+// auf TCGdex' schlichtere Kartennamen abbilden, oder TCGdex fuehrt die
+// jeweilige Karte schlicht nicht) - fuer eine zukuenftige Runde stehen
+// gelassen statt schlecht geraten. Bild-URL-Muster identisch zu den bereits
+// frueher migrierten Pokemon-Zeilen (assets.tcgdex.net/.../high.webp).
+// 10.08. (4): Rest der heutigen Runde.
+// - One Piece Promotion Cards (OpPromoPromoCatalog, 1031 Karten insgesamt,
+// deckt Jahre an Promo-Ausgaben ab): nur 52 der 597 Straggler ueber die
+// offizielle onepiece-cardgame.com-Seite aufloesbar - die Live-Seite zeigt
+// nur AKTUELL relevante Promos, nicht das komplette historische Archiv.
+// Rest bleibt stehen (Grund identisch zu allen anderen bereits dokumentierten
+// One-Piece-Sammelbecken oben).
+// - Lorcana "Illumineer's Quest: Deep Trouble"/"Palace Heist" (75 Karten,
+// beide Sets KOMPLETT) - Nutzer-Vorgabe "nur offizielle Dinge tracken"
+// angewandt: Lorcast (die de-facto offizielle Community-Datenbank, Quelle
+// fuer den kompletten Rest von Lorcana) fuehrt diese beiden eigenstaendigen
+// Dungeon-Crawl-Zusatzprodukte nachweislich NICHT (0 Treffer, auch nicht per
+// Namenssuche) - sind kein regulaeres, turnierlegales Lorcana-Kartenset.
+// Beide Dateien komplett geloescht (nicht nur die Alt-CDN-Zeilen),
+// inkl. Eintrag/Import in der Katalog-Zuordnung unten - anders als beim
+// YuGiOh-Token-Fall (einzelne Zeilen INNERHALB sonst legitimer Sets) ist
+// hier das GANZE Set nicht offiziell trackbar.
+// - FAB "Historic Pack 1"-Blitz-Decks (6 Dateien, alle 6 Helden): 132 von
+// 162 Stragglern per Namensabgleich gegen den gemeinsamen "1HP"-Sammelcode-
+// Pool im the-fab-cube-Datensatz aufgeloest (der Pool selbst unterscheidet
+// NICHT nach Held, alle 6 Decks ziehen aus demselben ~427-Karten-Topf - exakt
+// der Grund, warum der urspruengliche Migrations-Versuch diese Decks beim
+// FAB-Umstieg zunaechst uebersprungen hatte). 30 Karten (meist farbvariante
+// Aktionskarten wie "Payload (Red)"/"Thump (Red)") bleiben ohne Treffer im
+// Pool stehen.
+// 10.08. (5): Pokemon-Promo-Rest.
+// - SM/SV/SWSH-Promo-Serien (PkmSmpPromoCatalog/PkmSvpPromoCatalog/
+// PkmSwshpPromoCatalog): 126 weitere ueber denselben TCGdex-Set-Endpunkt
+// aufgeloest - die meisten Stragglers waren "[Staff]"-gestempelte Varianten
+// derselben Kartennummer, die auf TCGdex kein eigenes Bild bekommen, daher
+// direkter Nummern-Treffer statt Namensabgleich. 80 bleiben offen (aeltere
+// Promo-Nummerierungen wie "15/131", die TCGdex unter diesem Set-Code gar
+// nicht fuehrt).
+// - McDonald's 25th Anniversary Promos (PkmMcd25thPromoCatalog, 25 Karten):
+// TCGdex kennt das Set (2021swsh) inkl. Namen/Preisen, hat aber fuer KEINE
+// der 25 Karten ein Bild hinterlegt (verifiziert per Karten-Detailabruf) -
+// bewusst derselbe garantiert fehlschlagende Platzhalter wie bei den bereits
+// frueher migrierten McDonald's 2023/2024-Promos (greift die Eigenes-Foto-
+// Funktion), statt eine falsche URL zu raten.
+// - Alternate Art Promos (PkmAapPromoCatalog, 56 Karten, urspruenglich
+// bewusst uebersprungen - Karten aus VIELEN verschiedenen Haupt-Sets ohne
+// bekannten Ursprungs-Set-Code): 50 per Namensabgleich gegen TCGdex'
+// KOMPLETTE Kartendatenbank (nicht nur ein Set) aufgeloest, 6 bleiben offen.
+// Nebenbei: derselbe Zeilenumbruch-Bug wie beim letzten Mal (fehlendes "\n"
+// in einigen der heutigen Ersetzungs-Skripte) tauchte in 11 weiteren
+// Dateien auf - mit demselben Kartenanzahl-verifizierten Skript bereinigt.
+// 10.08. (6): Final Fantasy-Promo-Rest + weitere MTG-Sammelbecken.
+// - Final Fantasy Promo Cards (FfPromoCardsCatalog, 165 Straggler): 161
+// aufgeloest - die "number"-Spalte enthaelt bei diesen Alternate-Art-/
+// Turnier-Promos das eingebettete Original-Kartenkuerzel (z.B. "PR-004/
+// 1-027H" -> "1-027H"), das sich direkt gegen KupoDBs /tgc/cards/code/
+// {code}-Endpunkt aufloesen liess (echter Einzelkartenabruf statt
+// Set-weitem Dump, 157 eindeutige Codes). 4 Karten ohne Treffer bleiben
+// offen.
+// - MTG "Art Series: Tales of Middle-earth" (161 Straggler): Scryfalls
+// Bulk-Produkt-ID-Abgleich vom letzten Mal hatte dieses Set fast komplett
+// verfehlt, weil Scryfall fuer Art-Series-Karten fast nie eine
+// eine solche Produkt-ID fuehrt (nur 1 von 81) - stattdessen per Namensabgleich
+// gegen Scryfalls "altr"-Set geloest (inkl. Umlaut-Normalisierung fuer
+// "Éowyn"/"Sméagol"/"Théoden"/"Uglúk", die unser Katalog ohne Akzente
+// führt). Alle 161 aufgeloest.
+// - Secret Lair Drop Series (12 Teile) + Commander Teenage Mutant Ninja
+// Turtles: 547 weitere Straggler per Namensabgleich gegen Scryfalls
+// "sld"/"tmc"-Sets geloest (die vorherige exakte Produkt-ID-Runde hatte
+// nur die REGULAERE Ausfuehrung jeder Karte getroffen, nicht die
+// zusaetzlichen Foil-Ausfuehrungen wie "Rainbow Foil"/"Surge Foil" - die
+// teilen sich dasselbe Kartenbild, nur andere Oberflaeche). ~103
+// verbleibende Straggler sind ueberwiegend Doppelgesicht-Crossover-Karten
+// (z.B. Assassin's-Creed-Charaktere), deren unser Katalog-Name nicht mit
+// dem tatsaechlichen Scryfall-Namen uebereinstimmt - bleiben offen statt
+// falsch zugeordnet zu werden.
+// 10.08. (7): Aufraeumen der letzten kleinen Straggler-Haeufchen.
+// - YuGiOh "Judge Promotional Cards" (11 Karten, ALLE "Official Judge
+// Token: ...") - komplett geloescht (Datei + Katalog-Eintrag), exakt
+// derselbe Grund wie die 110 bereits geloeschten Token-Zeilen: YGOPRODeck
+// fuehrt Tokens nachweislich nicht.
+// - MTG Standard Showdown Promos: 1 "Snake Token (Year of the Snake 2025)"
+// geloescht (in Scryfall nicht auffindbar, auch nicht per Volltextsuche -
+// reines Lunar-New-Year-Werbegeschenk, kein reguläres, trackable
+// MTG-Objekt). Die restlichen 37 Karten der Datei per Namensabgleich
+// aufgeloest.
+// - The List Reprints (6 Teile) + Teenage Mutant Ninja Turtles Eternal
+// Legal (3 Teile) + MagicFest Cards: 20 letzte Straggler (v.a. Basisländer
+// mit Set-Klammer wie "(MKM)"/"(LCI)" sowie "Foil Etched"/"Rainbow
+// Foil"-Sondervarianten) per Namensabgleich geloest, bei Basisländern
+// zusaetzlich nach dem in Klammern angegebenen Set gefiltert, damit nicht
+// irgendein beliebiger Forest/Island/Plains-Druck landet.
+// - One Piece "Revision Pack"/"Demo Deck" (OpRevisionPromoCatalog,
+// OpDemoPromoCatalog): 47 von 48 ueber dieselbe optcgapi.com-Bildquelle wie
+// die bereits migrierten Haupt-Sets aufgeloest (Kartennummer + Parallel-
+// Suffix-Probieren, exakt dieselbe Technik wie beim DBFW-Umstieg).
+// - Digimon "Timeless Bonds" (BT26, 24 Karten) erneut geprueft: die
+// offizielle Seite listet als neuestes Set weiterhin nur BT-25 "Dual
+// Revolution" - BT26 ist schlicht noch nicht erschienen, keine
+// Datenquelle kann das vorwegnehmen. Bleibt unangetastet, bis es
+// veroeffentlicht ist (kein "nicht offiziell trackbar"-Fall wie bei
+// Tokens, nur eine Frage der Zeit).
+// 11.08. (8): Pokemon "Perfect Order" (ME03, Nutzer-Fund per Foto - "Mauzi
+// eX" 062/088 und "Parfinesse" 036/088 nicht im Katalog gefunden, obwohl
+// die Nummer vom Scan korrekt gelesen wurde). War schlicht ein fehlendes
+// Set - die anderen Mega-Evolution-Sets (ME01 Mega Evolution, ME02
+// Phantasmal Flames, ME04 Chaos Rising, ME05 Pitch Black, MEP Promos)
+// waren laengst da, nur ME03 fehlte in der Reihe komplett (siehe Notiz zu
+// Task #19 "POR blockiert auf Datenverfuegbarkeit" - zum damaligen
+// Zeitpunkt hatte TCGdex das Set noch nicht gefuehrt). Jetzt bei TCGdex
+// verfuegbar: alle 124 Karten (88 offizielle + 36 Secret Rares) per
+// TCGdex-API geladen, exakt dasselbe Bild-/Preis-Schema wie die
+// Geschwister-Sets (assets.tcgdex.net, USD-Marktpreis aus den
+// TCGdex-eigenen Pricing-Daten). "Ascended Heroes" (ME02.5) fehlt nach
+// demselben Muster ebenfalls noch, aber ohne konkreten Nutzer-Fund dazu
+// bewusst zurueckgestellt statt blind mitgezogen.
+// 11.08. (Nachtlauf, 26): Rest-Migration der Alt-CDN-Kartenbilder
+// (Aufgabe #21). Pokemon-Promo-Sets (SMP/SVP/SWSHP/AAP, 66 von 89
+// fehlenden Karten) via TCGdex + images.pokemontcg.io. Alle MTG-Dateien
+// (Secret Lair Parts 3-12, Commander TMNT, TMNT Eternal Legal Part 2, 111
+// Karten) zu 100% via Scryfall (Sammlernummer-Abgleich im "sld"/"tmc"-Set -
+// kein SVG-Problem wie bei den MTG-Sealed-Produkten, da Scryfall für
+// einzelne Karten normale JPG/PNG-Bilder liefert, nur die Set-Symbole sind
+// SVG). Final-Fantasy-Promos (4 Karten) via KupoDBs offizielle API
+// (api.kupodb.com/tcg/cards/search) statt der bisher genutzten
+// Bild-URL-Wiederverwendung. One-Piece-Promo-Katalog (545 Karten, größte
+// einzelne Datei): 103 Karten mit genau einer Druckvariante pro
+// Kartennummer bekamen das Basisbild von en.onepiece-cardgame.com, die
+// übrigen 442 mit mehreren unbeschrifteten Varianten (Regional-Preise,
+// Turnierpakete) bleiben auf dem "no-image"-Sentinel, da Bandais Seite
+// nicht verrät, welche Bildvariante zu welcher Beschriftung gehört (siehe
+// Kommentar in OpPromoPromoCatalog.kt). FAB Historic-Pack-1-Blitz-Decks (30
+// Karten, 6 Dateien) und Digimon "Timeless Bonds"/BT26 (24 Karten, noch
+// nicht offiziell erschienen) ebenfalls auf dem Sentinel, siehe jeweilige
+// Kommentare. Nach diesem Durchlauf: 0 verbleibende echte
+// Alt-CDN-Bildreferenzen im gesamten Kartenkatalog.
+// 13.08. (27): Bugfix "POR 036/088 auch nach cleanem Rebuild nicht
+// gefunden" - siehe ausführlichen Kommentar bei seedSet() weiter oben.
+// existingCount > 0 reichte bisher, um das Nachtragen fehlender Karten
+// eines Sets KOMPLETT zu überspringen, auch wenn das Set eigentlich
+// unvollständig war. Reiner Sicherheitsnetz-Versionssprung, um bei allen
+// Geräten (nicht nur Neuinstallationen) einmal erneut durch seedSet() mit
+// der jetzt robusteren Logik zu laufen. Gleichzeitig PitchBlackCatalog.kt
+// (ME05) komplett aus TCGdex neu gezogen statt der alten
+// pokemontcg.io-Daten (Nutzer-Fund "Normifin 021/084 nicht im Katalog") -
+// TCGdex fuehrt das Set inzwischen vollstaendig (120 statt vorher 84
+// Karten), siehe Kommentar in PitchBlackCatalog.kt.
+// 13.08. (28): Star Wars: Unlimited neu eingebaut - alle 8 Hauptsets
+// (SOR/SHD/TWI/JTL/LAW/ASH/SEC/LOF, 4275 Karten inkl. Hyperspace/Showcase-
+// Alternate-Arts) von api.swu-db.com, siehe StarWarsUnlimitedSorCatalog.kt
+// (und Geschwisterdateien) für Details.
+// 13.08. (29): Altered TCG neu eingebaut - alle 7 Hauptsets (CORE/ALIZE/
+// BISE/CYCLONE/DUSTER/EOLE/FUGUE, 2300 Karten) direkt von AlteredEquinox'
+// eigenem GitHub (github.com/AlteredEquinox/cards-nonunique), siehe
+// AlteredCoreCatalog.kt für Details.
+// 13.08. (30): Scan-Bugfixes nach ersten echten Nutzer-Tests von Lorcana/
+// Gundam/Star Wars: Unlimited/Altered (siehe CardScanner.kt-Kommentare für
+// Details je TCG). Für Star Wars: Unlimited musste dabei auch das number-
+// Feld in StarWarsUnlimited*Catalog.kt von der nackten Zahl auf "Nummer/
+// Setgröße" umgestellt werden (das ursprünglich angenommene Bindestrich-
+// Format war ungeprüft und falsch). Gleichzeitig alle Altered-
+// Katalogbilder von den toten altered-dev-S3-Sentinel-Links auf echte,
+// per Recherche gefundene und verifizierte GitHub-Raw-URLs
+// (AlteredEquinox/cards-nonunique, assets/-Ordner statt Art/JPG/-Pfad)
+// umgestellt, siehe Kommentar in AlteredCoreCatalog.kt. Dieser
+// Versionssprung ist deshalb nicht nur ein Sicherheitsnetz, sondern zieht
+// bei allen Geräten die korrigierten Nummern UND Bilder nach
+// (updateCatalogSeedFields() aktualisiert number/imageUrl auch bei längst
+// vorhandenen Katalogzeilen, siehe seedSet()).
+// 14.08. (31): Regression aus Version 30 zurückgenommen (Lorcana matchte
+// nach der 204/207-Toleranz plötzlich JEDE Karte in ALLEN 14 Sets statt
+// nur der richtigen, siehe cardCodeMatchesCatalogNumber-Kommentar in
+// CardScanner.kt) und stattdessen die eigentliche Ursache direkt in
+// AttackOfTheVineCatalog.kt korrigiert (241 falsche "/204"-Nenner auf
+// "/207" vereinheitlicht).
+// Kurzzeitig auf Version 32 hochgezählt und wieder zurückgenommen (14.08.)
+// - ein Versuch, Lorcanas AVIF-Bilder (von der Pipeline nicht dekodierbar)
+// auf Produktbilder der Alt-CDN umzustellen, wurde vom Nutzer explizit
+// gestoppt: das Projekt hat über mehrere Tage hinweg GENAU umgekehrt daran
+// gearbeitet, JEDE Bildquelle im Katalog von den Alt-Quellen WEG auf
+// offizielle Hersteller-/Fan-Projekt-Lizenzquellen umzustellen (Lorcast für
+// Lorcana ist bewusst genau diese Umstellung) - siehe CONCEPT.md
+// "Copyright-/Release-Recherche". Das AVIF-Problem bleibt offen, braucht
+// eine Lösung OHNE die Alt-Quelle (z.B. serverseitige Konvertierung).
+// 14.08. (32): Star Wars: Unlimited-Bugfix (Nutzer-Fund "Reisende
+// Kriegerin/Itinerant Warrior 550 nicht im Katalog") - reine Foil-
+// Varianten (Foil/Hyperspace Foil/Prestige/Prestige Foil/Prestige
+// Serialized) waren bisher komplett ausgeschlossen, weil bei den meisten
+// anderen TCGs Foil dieselbe Nummer wie Normal teilt (deckt der
+// bestehende Holo-Schalter ab) - bei SWU druckt aber jede Variante eine
+// eigene, unabhängige Sammelnummer. Alle 8 Katalogdateien komplett neu
+// aus api.swu-db.com gezogen, jetzt mit allen 8 Druckvarianten (4275 ->
+// 7680 Zeilen), siehe Kommentar in StarWarsUnlimitedSorCatalog.kt.
+// 17.08. (33): Alt-Quellen-Endreinigung (Nutzer-Vorgabe "der letzte Rest
+// ... migriert wird oder verschwindet") - die 33 letzten Alt-CDN-Bild-URLs
+// im Katalog (alle in DisneyLorcanaPromoCardsCatalog.kt) ersetzt: 2 per
+// eindeutigem Lorcast-Namenstreffer, 31 mehrdeutige Promo-Mehrfachdrucke
+// bewusst auf die no-image-Sentinel-URL (Eigenes-Foto-Fallback greift)
+// statt zu raten. Damit ist der gesamte Kartenkatalog frei von
+// Alt-Quellen-Referenzen; Historie nur noch in CONCEPT.md.
+// 18.08. (34): Naruto Kayou (NA-Releases) als 15. TCG - 7 Sets, 908
+// Karten von narutodb.com (siehe NarutoKayou*Catalog.kt + CONCEPT.md).
+// 18.08. (35): One Piece Starter Decks ST-31 bis ST-36 (Nutzer-Fund beim
+// Vault-Befüllen: "ST-33 und ST-35 sind nicht im Katalog") - die Sechs-
+// Farben-Welle vom 31.07.2026, siehe OnePieceStarterDecksCatalog.kt.
+// 18.08. (36): Flesh and Blood "Mastery Pack Warrior" (MPW, Release
+// 07.08.2026, 156 Karten) - beim Scan-Testpass aufgefallen, siehe
+// MasteryPackWarriorCatalog.kt.
+// 18.08. (37): Digimon BT26 "Timeless Bonds" komplett neu aufgebaut -
+// das Set ist inzwischen auf world.digimoncard.com live (25 Spoiler-
+// Karten mit no-image-Sentinel -> 104 Karten + 32 Alternate Arts mit
+// echten Bildern), siehe TimelessBondsCatalog.kt.
+private const val CATALOG_SEED_VERSION = 37
+
+private const val SEALED_CATALOG_SEED_VERSION_KEY = "sealedCatalogSeedVersion"
+// 2 (11.08.): Pokemon Elite Trainer Boxes von Alt-CDN-Produktfotos auf
+// TCGdex-Set-Logos umgestellt, siehe Kommentar in
+// PokemonEliteTrainerBoxesCatalog.kt. Erster Schritt der Sealed-Produkt-
+// Migration (923 Stück insgesamt), Rest folgt in weiteren Runden.
+// 3 (11.08.): Alle 24 DBFW-Sealed-Produkte (10 Booster Boxen + 2 Manga-
+// Booster-Boxen + 12 Starter Decks, siehe BoosterBoxesCatalog.kt/
+// StarterDecksCatalog.kt) von Alt-CDN-Fotos auf echte offizielle
+// Packungsfotos von Bandais eigener dbs-cardgame.com/fw-Seite umgestellt
+// (über deren Sitemap ermittelt, kein Rate-Limit-/ToS-Risiko wie beim
+// Hotlinken einer fremden bezahlten Datenbank).
+// 4 (11.08.): Alle 51 OnePiece-Sealed-Produkte (16 Booster Boxen + 7 Ultra-
+// Decks/Extra-/Premium-Booster + 28 Starter Decks, siehe
+// OnePieceBoosterBoxesCatalog.kt/OnePieceSpecialSealedCatalog.kt/
+// OnePieceStarterDecksCatalog.kt) von Alt-CDN-Fotos auf echte
+// offizielle Packungsfotos von Bandais eigener en.onepiece-cardgame.com-
+// Seite umgestellt (über deren Produktlisting ermittelt, analog zu DBFW).
+// 5 (11.08.): Alle 60 Digimon-Sealed-Produkte (30 Booster Boxen + 7 Special-
+// Booster/Limited-Packs + 23 Starter Decks, siehe
+// DigimonBoosterBoxesCatalog.kt/DigimonSpecialSealedCatalog.kt/
+// DigimonStarterDecksCatalog.kt) von Alt-CDN-Fotos auf echte
+// offizielle Packungsfotos von Bandais eigener en.digimoncard.com-Seite
+// umgestellt (2 kombinierte Special-Booster-Sets von der Schwesterseite
+// world.digimoncard.com, 1 "Resurgence Booster" bleibt auf dem "no-image"-
+// Sentinel, da der Produktcode inzwischen für ein anderes Produkt
+// wiederverwendet wurde - siehe DigimonSpecialSealedCatalog.kt-Kommentar).
+// 6 (11.08.): Pokemon Booster Boxes (41 Stück) von Alt-CDN-Fotos auf
+// TCGdex-Set-Logos umgestellt (direkt aus der bereits im Kartenkatalog
+// verwendeten TCGdex-Zuordnung übernommen, siehe
+// PokemonBoosterBoxesCatalog.kt-Kommentar). Pokemon Battle Decks (9 Stück)
+// bleiben auf dem "no-image"-Sentinel - kein Set zum Logo-Wiederverwenden,
+// pokemon.com liefert seine Produktseiten nur clientseitig per JavaScript
+// (siehe PokemonBattleDecksCatalog.kt-Kommentar).
+// 7 (11.08.): MTG-Sealed-Produkte (323 Stück, das größte einzelne Sealed-
+// Konvolut) bewusst auf den "no-image"-Sentinel zurückgestellt statt
+// die Alt-CDN - Scryfall liefert für Sets nur ein SVG-Symbol, unsere
+// Bildbibliothek (kamel-image) hat aber keinen SVG-Decoder eingebunden
+// (siehe ausführlichen Kommentar in MtgSealedCatalog.kt). Kein Datenfehler,
+// sondern eine bewusste Zwischenstufe bis zu einer echten Bildquelle/einer
+// SVG-fähigen Bildbibliothek.
+// 8 (11.08.): YuGiOh-Sealed-Produkte (146 Stück) ebenfalls auf den "no-
+// image"-Sentinel zurückgestellt - Konamis offizielle Seite hätte echte
+// Fotos UND 145/146 Namens-/Code-Zuordnungen waren schon fertig, blockt
+// automatisierte Zugriffe aber aktiv per Akamai (siehe ausführlichen
+// Kommentar in YugiohSealedCatalog.kt). Eigene, langsamere Runde später.
+// 9 (11.08.): FleshAndBlood-Sealed-Produkte (74 Stück) ebenfalls auf den
+// "no-image"-Sentinel zurückgestellt - fabtcg.com blockt automatisierte
+// Zugriffe direkt beim ersten Abruf (siehe Kommentar in
+// FleshAndBloodSealedCatalog.kt).
+// 10 (11.08.): Riftbound-Sealed-Produkte (22 Stück) ebenfalls auf den "no-
+// image"-Sentinel zurückgestellt - Riots Merch-Store ist zwar erreichbar,
+// aber eine schwer greifbare Next.js-Seite ohne sauberes og:image (siehe
+// Kommentar in RiftboundSealedCatalog.kt).
+// 11 (11.08.): FinalFantasy-Sealed-Produkte (83 Stück) - 5 der aktuell noch
+// aktiv verkauften Sets bekamen echte Packungsfotos von Square Enix' Store
+// (na.store.square-enix-games.com), der Rest (ältere Opus-Booster, alte
+// Starter Sets, alle Prerelease Kits) bleibt auf dem "no-image"-Sentinel -
+// diese Produkte sind dort schlicht nicht mehr/nie gelistet (siehe Kommentar
+// in FinalFantasySealedCatalog.kt).
+// 12 (11.08.): Lorcana-Sealed-Produkte (38 Stück) - 32 von 38 (alle 13
+// Booster Boxen, 19 von 25 Starter Decks) bekamen echte Packungsfotos von
+// Ravensburgers eigener disneylorcana.com-Seite, siehe Kommentar in
+// LorcanaSealedCatalog.kt. Letzte Datei der ersten kompletten Sealed-
+// Migrationsrunde (alle 17 Dateien jetzt bearbeitet, 0 verbleibende
+// Alt-CDN-Bildreferenzen).
+// 13 (11.08., Nachtlauf): YuGiOh-Sealed-Produkte nachgeholt - mit
+// sequenziellem Abruf (1 Request alle 4-6s statt parallel) liess sich der
+// Akamai-Block von Konamis Seite umgehen. 95 von 146 Produkten haben jetzt
+// ein echtes Foto von yugioh-card.com, die restlichen 51 (v.a. ältere
+// Booster/Structure Decks) liefern unter dem aus dem Kartenkatalog
+// abgeleiteten Setcode ein echtes 404 (kein Bot-Block) - Konami nutzt für
+// diese vermutlich einen anderen internen Slug, siehe Kommentar in
+// YugiohSealedCatalog.kt.
+// 14 (13.08.): Star Wars: Unlimited Sealed-Produkte (48 Stück) - echte
+// Produktnamen von Cardmarkets eigener Produktliste (game-id 21), Bilder
+// auf dem Sentinel (Cardmarket liefert keine), siehe Kommentar in
+// StarWarsUnlimitedSealedCatalog.kt.
+// 15 (13.08.): Altered-Sealed-Produkte (7 Booster Boxen, eine pro Set) -
+// Cardmarket fuehrt Altered noch nicht, Produktnamen deshalb nach
+// einheitlichem Muster mit den echten Set-Titeln gebildet, siehe
+// Kommentar in AlteredSealedCatalog.kt.
+private const val SEALED_CATALOG_SEED_VERSION = 15
+
+class PortfolioRepository(database: PortfolioDatabase) {
+    // Hier hat sich der Name bei dir zu 'portfolioQueries' geändert
+    private val dbQueries = database.portfolioQueries
+
+    // Alle bekannten DBFW-Sets, die als Katalog gebündelt sind
+    private val allSets: List<Pair<CardSetSeed, List<CatalogCardSeed>>> = listOf(
+        awakenedPulseSetSeed to awakenedPulseCatalogSeed,
+        blazingAuraSetSeed to blazingAuraCatalogSeed,
+        ragingRoarSetSeed to ragingRoarCatalogSeed,
+        ultraLimitSetSeed to ultraLimitCatalogSeed,
+        newAdventureSetSeed to newAdventureCatalogSeed,
+        rivalsClashSetSeed to rivalsClashCatalogSeed,
+        wishForShenronSetSeed to wishForShenronCatalogSeed,
+        saiyansPrideSetSeed to saiyansPrideCatalogSeed,
+        dualEvolutionSetSeed to dualEvolutionCatalogSeed,
+        crossForceSetSeed to crossForceCatalogSeed,
+        fb02ReSetSeed to fb02ReCatalogSeed,
+        fb03ReSetSeed to fb03ReCatalogSeed,
+        fb04ReSetSeed to fb04ReCatalogSeed,
+        fb05ReSetSeed to fb05ReCatalogSeed,
+        fb06ReSetSeed to fb06ReCatalogSeed,
+        fb07ReSetSeed to fb07ReCatalogSeed,
+        fb08ReSetSeed to fb08ReCatalogSeed,
+        fb09ReSetSeed to fb09ReCatalogSeed,
+        fb10ReSetSeed to fb10ReCatalogSeed,
+        fb01PrSetSeed to fb01PrCatalogSeed,
+        fb01AarSetSeed to fb01AarCatalogSeed,
+        fb02AarSetSeed to fb02AarCatalogSeed,
+        fb03AarSetSeed to fb03AarCatalogSeed,
+        fb04AarSetSeed to fb04AarCatalogSeed,
+        fb05AarSetSeed to fb05AarCatalogSeed,
+        fbPromoSetSeed to fbPromoCatalogSeed,
+        fbTournSetSeed to fbTournCatalogSeed,
+        pkmAapSetSeed to pkmAapCatalogSeed,
+        pkmSmpSetSeed to pkmSmpCatalogSeed,
+        pkmSwshpSetSeed to pkmSwshpCatalogSeed,
+        pkmSvpSetSeed to pkmSvpCatalogSeed,
+        pkmMepSetSeed to pkmMepCatalogSeed,
+        pkmDetpikaSetSeed to pkmDetpikaCatalogSeed,
+        pkmMcd2011SetSeed to pkmMcd2011CatalogSeed,
+        pkmMcd2012SetSeed to pkmMcd2012CatalogSeed,
+        pkmMcd2014SetSeed to pkmMcd2014CatalogSeed,
+        pkmMcd2015SetSeed to pkmMcd2015CatalogSeed,
+        pkmMcd2016SetSeed to pkmMcd2016CatalogSeed,
+        pkmMcd2017SetSeed to pkmMcd2017CatalogSeed,
+        pkmMcd2018SetSeed to pkmMcd2018CatalogSeed,
+        pkmMcd2019SetSeed to pkmMcd2019CatalogSeed,
+        pkmMcd25thSetSeed to pkmMcd25thCatalogSeed,
+        pkmMcd2022SetSeed to pkmMcd2022CatalogSeed,
+        pkmMcd2023SetSeed to pkmMcd2023CatalogSeed,
+        pkmMcd2024SetSeed to pkmMcd2024CatalogSeed,
+        chaosRisingSetSeed to chaosRisingCatalogSeed,
+        pitchBlackSetSeed to pitchBlackCatalogSeed,
+        // Star Wars: Unlimited (13.08., Nutzer-Vorgabe "zwei TCGs
+        // hinzufügen... sämtliche Karten suchen") - alle 8 Hauptsets von
+        // api.swu-db.com (freie, gut gepflegte Community-API mit direkten
+        // Bildlinks + Alt-Quellen-Marktpreisen). Pro Karte nur die "Normal"-
+        // Variante PLUS echte Alternate-Art-Drucke (Hyperspace/Showcase) als
+        // eigene Katalogzeilen - reine Foil-Versionen (Foil/Hyperspace Foil)
+        // ausgeschlossen, das deckt der bestehende Holo-Schalter ab, exakt
+        // dieselbe Konvention wie bei allen anderen TCGs. Die zahlreichen
+        // kleinen Promo-/OP-/Judge-/Vorverkaufs-Sets (P25, J24, SOROP, ...)
+        // bewusst NOCH nicht mitgezogen - eigene Runde später, analog zu den
+        // Promo-Katalogen der anderen TCGs.
+        swuSorSetSeed to swuSorCatalogSeed,
+        swuShdSetSeed to swuShdCatalogSeed,
+        swuTwiSetSeed to swuTwiCatalogSeed,
+        swuJtlSetSeed to swuJtlCatalogSeed,
+        swuLawSetSeed to swuLawCatalogSeed,
+        swuAshSetSeed to swuAshCatalogSeed,
+        swuSecSetSeed to swuSecCatalogSeed,
+        swuLofSetSeed to swuLofCatalogSeed,
+        // Altered TCG (13.08.) - alle 7 Hauptsets direkt von AlteredEquinox'
+        // eigenem GitHub (github.com/AlteredEquinox/cards-nonunique, siehe
+        // ausführlichen Kommentar in AlteredCoreCatalog.kt), 2300 Karten
+        // insgesamt. Nur die "Booster"-Produktversion pro Karte, keine
+        // Unique-Zufallsvarianten (kein endlicher Katalog) und noch keine
+        // Turnier-/Kickstarter-Sondersets.
+        alteredCoreSetSeed to alteredCoreCatalogSeed,
+        alteredAlizeSetSeed to alteredAlizeCatalogSeed,
+        alteredBiseSetSeed to alteredBiseCatalogSeed,
+        alteredCycloneSetSeed to alteredCycloneCatalogSeed,
+        alteredDusterSetSeed to alteredDusterCatalogSeed,
+        alteredEoleSetSeed to alteredEoleCatalogSeed,
+        alteredFugueSetSeed to alteredFugueCatalogSeed,
+        megaEvolutionSetSeed to megaEvolutionCatalogSeed,
+        phantasmalFlamesSetSeed to phantasmalFlamesCatalogSeed,
+        perfectOrderSetSeed to perfectOrderCatalogSeed,
+        romanceDawnSetSeed to romanceDawnCatalogSeed,
+        paramountWarSetSeed to paramountWarCatalogSeed,
+        pillarsOfStrengthSetSeed to pillarsOfStrengthCatalogSeed,
+        kingdomsOfIntrigueSetSeed to kingdomsOfIntrigueCatalogSeed,
+        awakeningOfTheNewEraSetSeed to awakeningOfTheNewEraCatalogSeed,
+        wingsOfTheCaptainSetSeed to wingsOfTheCaptainCatalogSeed,
+        fiveHundredYearsFutureSetSeed to fiveHundredYearsFutureCatalogSeed,
+        twoLegendsSetSeed to twoLegendsCatalogSeed,
+        emperorsInTheNewWorldSetSeed to emperorsInTheNewWorldCatalogSeed,
+        royalBloodSetSeed to royalBloodCatalogSeed,
+        fistOfDivineSpeedSetSeed to fistOfDivineSpeedCatalogSeed,
+        legacyOfTheMasterSetSeed to legacyOfTheMasterCatalogSeed,
+        carryingOnHisWillSetSeed to carryingOnHisWillCatalogSeed,
+        azureSeasSevenSetSeed to azureSeasSevenCatalogSeed,
+        adventureOnKamisIslandSetSeed to adventureOnKamisIslandCatalogSeed,
+        timeOfBattleSetSeed to timeOfBattleCatalogSeed,
+        op02PrSetSeed to op02PrCatalogSeed,
+        op03PrSetSeed to op03PrCatalogSeed,
+        op04PrSetSeed to op04PrCatalogSeed,
+        op06PrSetSeed to op06PrCatalogSeed,
+        op07PrSetSeed to op07PrCatalogSeed,
+        op08PrSetSeed to op08PrCatalogSeed,
+        op10ReSetSeed to op10ReCatalogSeed,
+        op11ReSetSeed to op11ReCatalogSeed,
+        op12ReSetSeed to op12ReCatalogSeed,
+        op14ReSetSeed to op14ReCatalogSeed,
+        op15ReSetSeed to op15ReCatalogSeed,
+        op16ReSetSeed to op16ReCatalogSeed,
+        op05AnnSetSeed to op05AnnCatalogSeed,
+        op09AnnSetSeed to op09AnnCatalogSeed,
+        op13AnnSetSeed to op13AnnCatalogSeed,
+        opPromoSetSeed to opPromoCatalogSeed,
+        opRevisionSetSeed to opRevisionCatalogSeed,
+        opDemoSetSeed to opDemoCatalogSeed,
+        greatLegendSetSeed to greatLegendCatalogSeed,
+        battleOfOmniSetSeed to battleOfOmniCatalogSeed,
+        doubleDiamondSetSeed to doubleDiamondCatalogSeed,
+        nextAdventureDigimonSetSeed to nextAdventureDigimonCatalogSeed,
+        newAwakeningSetSeed to newAwakeningCatalogSeed,
+        digitalHazardSetSeed to digitalHazardCatalogSeed,
+        xRecordSetSeed to xRecordCatalogSeed,
+        xrosEncounterSetSeed to xrosEncounterCatalogSeed,
+        draconicRoarSetSeed to draconicRoarCatalogSeed,
+        dimensionalPhaseSetSeed to dimensionalPhaseCatalogSeed,
+        acrossTimeSetSeed to acrossTimeCatalogSeed,
+        versusRoyalKnightsSetSeed to versusRoyalKnightsCatalogSeed,
+        blastAceSetSeed to blastAceCatalogSeed,
+        animalColosseumSetSeed to animalColosseumCatalogSeed,
+        exceedApocalypseSetSeed to exceedApocalypseCatalogSeed,
+        beginningObserverSetSeed to beginningObserverCatalogSeed,
+        infernalAscensionSetSeed to infernalAscensionCatalogSeed,
+        secretCrisisSetSeed to secretCrisisCatalogSeed,
+        digimonLiberatorSetSeed to digimonLiberatorCatalogSeed,
+        chainOfLiberationSetSeed to chainOfLiberationCatalogSeed,
+        worldConvergenceSetSeed to worldConvergenceCatalogSeed,
+        versusMonstersSetSeed to versusMonstersCatalogSeed,
+        cyberEdenSetSeed to cyberEdenCatalogSeed,
+        sinisterOrderSetSeed to sinisterOrderCatalogSeed,
+        hackersSlumberSetSeed to hackersSlumberCatalogSeed,
+        timeStrangerSetSeed to timeStrangerCatalogSeed,
+        dawnOfLiberatorSetSeed to dawnOfLiberatorCatalogSeed,
+        dualRevolutionSetSeed to dualRevolutionCatalogSeed,
+        digitalWorldShambalaSetSeed to digitalWorldShambalaCatalogSeed,
+        timelessBondsSetSeed to timelessBondsCatalogSeed,
+        breakpointSetSeed to breakpointCatalogSeed,
+        generationsSetSeed to generationsCatalogSeed,
+        generationsRadiantSetSeed to generationsRadiantCatalogSeed,
+        fatesCollideSetSeed to fatesCollideCatalogSeed,
+        steamSiegeSetSeed to steamSiegeCatalogSeed,
+        xyEvolutionsSetSeed to xyEvolutionsCatalogSeed,
+        smBaseSetSetSeed to smBaseSetCatalogSeed,
+        guardiansRisingSetSeed to guardiansRisingCatalogSeed,
+        burningShadowsSetSeed to burningShadowsCatalogSeed,
+        shiningLegendsSetSeed to shiningLegendsCatalogSeed,
+        crimsonInvasionSetSeed to crimsonInvasionCatalogSeed,
+        ultraPrismSetSeed to ultraPrismCatalogSeed,
+        forbiddenLightSetSeed to forbiddenLightCatalogSeed,
+        celestialStormSetSeed to celestialStormCatalogSeed,
+        dragonMajestySetSeed to dragonMajestyCatalogSeed,
+lostThunderSetSeed to lostThunderCatalogSeed,
+        teamUpSetSeed to teamUpCatalogSeed,
+        unbrokenBondsSetSeed to unbrokenBondsCatalogSeed,
+        unifiedMindsSetSeed to unifiedMindsCatalogSeed,
+        hiddenFatesSetSeed to hiddenFatesCatalogSeed,
+        hiddenFatesShinyVaultSetSeed to hiddenFatesShinyVaultCatalogSeed,
+        cosmicEclipseSetSeed to cosmicEclipseCatalogSeed,
+        swshBaseSetSetSeed to swshBaseSetCatalogSeed,
+        rebelClashSetSeed to rebelClashCatalogSeed,
+        darknessAblazeSetSeed to darknessAblazeCatalogSeed,
+        championsPathSetSeed to championsPathCatalogSeed,
+        vividVoltageSetSeed to vividVoltageCatalogSeed,
+        shiningFatesSetSeed to shiningFatesCatalogSeed,
+        shiningFatesShinyVaultSetSeed to shiningFatesShinyVaultCatalogSeed,
+        battleStylesSetSeed to battleStylesCatalogSeed,
+        chillingReignSetSeed to chillingReignCatalogSeed,
+        evolvingSkiesSetSeed to evolvingSkiesCatalogSeed,
+        celebrationsSetSeed to celebrationsCatalogSeed,
+        celebrationsClassicCollectionSetSeed to celebrationsClassicCollectionCatalogSeed,
+        fusionStrikeSetSeed to fusionStrikeCatalogSeed,
+        brilliantStarsSetSeed to brilliantStarsCatalogSeed,
+        brilliantStarsTrainerGallerySetSeed to brilliantStarsTrainerGalleryCatalogSeed,
+        astralRadianceSetSeed to astralRadianceCatalogSeed,
+        astralRadianceTrainerGallerySetSeed to astralRadianceTrainerGalleryCatalogSeed,
+        pokemonGoSetSeed to pokemonGoCatalogSeed,
+        lostOriginSetSeed to lostOriginCatalogSeed,
+        lostOriginTrainerGallerySetSeed to lostOriginTrainerGalleryCatalogSeed,
+        silverTempestSetSeed to silverTempestCatalogSeed,
+        silverTempestTrainerGallerySetSeed to silverTempestTrainerGalleryCatalogSeed,
+        crownZenithSetSeed to crownZenithCatalogSeed,
+        crownZenithGalarianGallerySetSeed to crownZenithGalarianGalleryCatalogSeed,
+        svBaseSetSetSeed to svBaseSetCatalogSeed,
+        scarletVioletEnergiesSetSeed to scarletVioletEnergiesCatalogSeed,
+        paldeaEvolvedSetSeed to paldeaEvolvedCatalogSeed,
+        obsidianFlamesSetSeed to obsidianFlamesCatalogSeed,
+        sv151SetSeed to sv151CatalogSeed,
+        paradoxRiftSetSeed to paradoxRiftCatalogSeed,
+        paldeanFatesSetSeed to paldeanFatesCatalogSeed,
+        temporalForcesSetSeed to temporalForcesCatalogSeed,
+        twilightMasqueradeSetSeed to twilightMasqueradeCatalogSeed,
+        shroudedFableSetSeed to shroudedFableCatalogSeed,
+        stellarCrownSetSeed to stellarCrownCatalogSeed,
+        surgingSparksSetSeed to surgingSparksCatalogSeed,
+        prismaticEvolutionsSetSeed to prismaticEvolutionsCatalogSeed,
+        journeyTogetherSetSeed to journeyTogetherCatalogSeed,
+        destinedRivalsSetSeed to destinedRivalsCatalogSeed,
+        whiteFlareSetSeed to whiteFlareCatalogSeed,
+        blackBoltSetSeed to blackBoltCatalogSeed,
+        legendaryDragonDecks2020DateReprintSetSeed to legendaryDragonDecks2020DateReprintCatalogSeed,
+        breakersOfShadowSetSeed to breakersOfShadowCatalogSeed,
+        demoDeck2016SetSeed to demoDeck2016CatalogSeed,
+        structureDeckEmperorOfDarknessSetSeed to structureDeckEmperorOfDarknessCatalogSeed,
+        wingRaidersSetSeed to wingRaidersCatalogSeed,
+        yuGiOhZexalWorldDuelCarnivalPromosSetSeed to yuGiOhZexalWorldDuelCarnivalPromosCatalogSeed,
+        otsTournamentPack1SetSeed to otsTournamentPack1CatalogSeed,
+        premiumGoldInfiniteGoldSetSeed to premiumGoldInfiniteGoldCatalogSeed,
+        millenniumPackSetSeed to millenniumPackCatalogSeed,
+        shiningVictoriesSetSeed to shiningVictoriesCatalogSeed,
+        starterDeckYuyaSetSeed to starterDeckYuyaCatalogSeed,
+        structureDeckRiseOfTheTrueDragonsSetSeed to structureDeckRiseOfTheTrueDragonsCatalogSeed,
+        theDarkSideOfDimensionsMoviePackSetSeed to theDarkSideOfDimensionsMoviePackCatalogSeed,
+        otsTournamentPack2SetSeed to otsTournamentPack2CatalogSeed,
+        theDarkIllusionSetSeed to theDarkIllusionCatalogSeed,
+        dragonsOfLegendUnleashedSetSeed to dragonsOfLegendUnleashedCatalogSeed,
+        s2016MegaTinsMegaPackSetSeed to s2016MegaTinsMegaPackCatalogSeed,
+        s2016MegaTinsSetSeed to s2016MegaTinsCatalogSeed,
+        duelistPackRivalsOfThePharaohSetSeed to duelistPackRivalsOfThePharaohCatalogSeed,
+        legendaryDecksIiSetSeed to legendaryDecksIiCatalogSeed,
+        structureDeckYugiMutoSetSeed to structureDeckYugiMutoCatalogSeed,
+        structureDeckSetoKaibaSetSeed to structureDeckSetoKaibaCatalogSeed,
+        invasionVengeanceSetSeed to invasionVengeanceCatalogSeed,
+        otsTournamentPack3SetSeed to otsTournamentPack3CatalogSeed,
+        destinySoldiersSetSeed to destinySoldiersCatalogSeed,
+        theDarkSideOfDimensionsMoviePackGoldEditionSetSeed to theDarkSideOfDimensionsMoviePackGoldEditionCatalogSeed,
+        structureDeckPendulumDominationSetSeed to structureDeckPendulumDominationCatalogSeed,
+        ragingTempestSetSeed to ragingTempestCatalogSeed,
+        fusionEnforcersSetSeed to fusionEnforcersCatalogSeed,
+        starPackBattleRoyalSetSeed to starPackBattleRoyalCatalogSeed,
+        duelistSagaSetSeed to duelistSagaCatalogSeed,
+        yuGiOhArcVPromoCardsSetSeed to yuGiOhArcVPromoCardsCatalogSeed,
+        otsTournamentPack4SetSeed to otsTournamentPack4CatalogSeed,
+        structureDeckMachineReactorSetSeed to structureDeckMachineReactorCatalogSeed,
+        structureDeckDinosmashersFurySetSeed to structureDeckDinosmashersFuryCatalogSeed,
+        maximumCrisisSetSeed to maximumCrisisCatalogSeed,
+        duelistPackDimensionalGuardiansSetSeed to duelistPackDimensionalGuardiansCatalogSeed,
+        pendulumEvolutionSetSeed to pendulumEvolutionCatalogSeed,
+        battlesOfLegendLightsRevengeSetSeed to battlesOfLegendLightsRevengeCatalogSeed,
+        starterDeckLinkStrikeSetSeed to starterDeckLinkStrikeCatalogSeed,
+        codeOfTheDuelistSetSeed to codeOfTheDuelistCatalogSeed,
+        otsTournamentPack5SetSeed to otsTournamentPack5CatalogSeed,
+        s2017MegaTinsMegaPackSetSeed to s2017MegaTinsMegaPackCatalogSeed,
+        s2017MegaTinsSetSeed to s2017MegaTinsCatalogSeed,
+        legendaryDuelistsSetSeed to legendaryDuelistsCatalogSeed,
+        collectorsBoxesSetSeed to collectorsBoxesCatalogSeed,
+        legendaryDragonDecksSetSeed to legendaryDragonDecksCatalogSeed,
+        circuitBreakSetSeed to circuitBreakCatalogSeed,
+        structureDeckCyberseLinkSetSeed to structureDeckCyberseLinkCatalogSeed,
+        spiritWarriorsSetSeed to spiritWarriorsCatalogSeed,
+        legacyOfDarknessSetSeed to legacyOfDarknessCatalogSeed,
+        shonenJumpMagazinePromosSetSeed to shonenJumpMagazinePromosCatalogSeed,
+        darkBeginning1SetSeed to darkBeginning1CatalogSeed,
+        legendaryCollection2SetSeed to legendaryCollection2CatalogSeed,
+        otsTournamentPack6SetSeed to otsTournamentPack6CatalogSeed,
+        advancedDemoDeckExtraPackSetSeed to advancedDemoDeckExtraPackCatalogSeed,
+        structureDeckWaveOfLightSetSeed to structureDeckWaveOfLightCatalogSeed,
+        theLostArtPromotionSetSeed to theLostArtPromotionCatalogSeed,
+        extremeForceSetSeed to extremeForceCatalogSeed,
+        legendaryDuelistsAncientMillenniumSetSeed to legendaryDuelistsAncientMillenniumCatalogSeed,
+        legendaryCollectionKaibaSetSeed to legendaryCollectionKaibaCatalogSeed,
+        starPackVrainsSetSeed to starPackVrainsCatalogSeed,
+        otsTournamentPack7SetSeed to otsTournamentPack7CatalogSeed,
+        structureDeckLairOfDarknessSetSeed to structureDeckLairOfDarknessCatalogSeed,
+        flamesOfDestructionSetSeed to flamesOfDestructionCatalogSeed,
+        darkSaviorsSetSeed to darkSaviorsCatalogSeed,
+        battlesOfLegendRelentlessRevengeSetSeed to battlesOfLegendRelentlessRevengeCatalogSeed,
+        starterDeckCodebreakerSetSeed to starterDeckCodebreakerCatalogSeed,
+        cyberneticHorizonSetSeed to cyberneticHorizonCatalogSeed,
+        worldChampionshipJppCardsSetSeed to worldChampionshipJppCardsCatalogSeed,
+        structureDeckPowercodeLinkSetSeed to structureDeckPowercodeLinkCatalogSeed,
+        shadowsInValhallaSetSeed to shadowsInValhallaCatalogSeed,
+        otsTournamentPack8SetSeed to otsTournamentPack8CatalogSeed,
+        s2018MegaTinsSetSeed to s2018MegaTinsCatalogSeed,
+        s2018MegaTinsMegaPackSetSeed to s2018MegaTinsMegaPackCatalogSeed,
+        theDarkSideOfDimensionsMoviePackSpecialEditionSetSeed to theDarkSideOfDimensionsMoviePackSpecialEditionCatalogSeed,
+        legendaryDuelistsWhiteDragonAbyssSetSeed to legendaryDuelistsWhiteDragonAbyssCatalogSeed,
+        legendaryHeroDecksSetSeed to legendaryHeroDecksCatalogSeed,
+        soulFusionSetSeed to soulFusionCatalogSeed,
+        structureDeckZombieHordeSetSeed to structureDeckZombieHordeCatalogSeed,
+        adventCalendar2018SetSeed to adventCalendar2018CatalogSeed,
+        hiddenSummonersSetSeed to hiddenSummonersCatalogSeed,
+        otsTournamentPack9SetSeed to otsTournamentPack9CatalogSeed,
+        yuGiOhDayPromosSetSeed to yuGiOhDayPromosCatalogSeed,
+        legendaryDuelistsSistersOfTheRoseSetSeed to legendaryDuelistsSistersOfTheRoseCatalogSeed,
+        speedDuelDecksDuelistsOfTomorrowSetSeed to speedDuelDecksDuelistsOfTomorrowCatalogSeed,
+        speedDuelDecksDestinyMastersSetSeed to speedDuelDecksDestinyMastersCatalogSeed,
+        savageStrikeSetSeed to savageStrikeCatalogSeed,
+        structureDeckSoulburnerSetSeed to structureDeckSoulburnerCatalogSeed,
+        theInfinityChasersSetSeed to theInfinityChasersCatalogSeed,
+        speedDuelArenaOfLostSoulsSetSeed to speedDuelArenaOfLostSoulsCatalogSeed,
+        duelPowerSetSeed to duelPowerCatalogSeed,
+        speedDuelTournamentPack1SetSeed to speedDuelTournamentPack1CatalogSeed,
+        otsTournamentPack10SetSeed to otsTournamentPack10CatalogSeed,
+        structureDeckOrderOfTheSpellcastersSetSeed to structureDeckOrderOfTheSpellcastersCatalogSeed,
+        darkNeostormSetSeed to darkNeostormCatalogSeed,
+        speedDuelAttackFromTheDeepSetSeed to speedDuelAttackFromTheDeepCatalogSeed,
+        speedDuelDemoDeckSetSeed to speedDuelDemoDeckCatalogSeed,
+        battlesOfLegendHerosRevengeSetSeed to battlesOfLegendHerosRevengeCatalogSeed,
+        risingRampageSetSeed to risingRampageCatalogSeed,
+        speedDuelDecksUltimatePredatorsSetSeed to speedDuelDecksUltimatePredatorsCatalogSeed,
+        speedDuelScarsOfBattleSetSeed to speedDuelScarsOfBattleCatalogSeed,
+        eventPackSpeedDuelSetSeed to eventPackSpeedDuelCatalogSeed,
+        otsTournamentPack11SetSeed to otsTournamentPack11CatalogSeed,
+        structureDeckRokketRevoltSetSeed to structureDeckRokketRevoltCatalogSeed,
+        fistsOfTheGadgetsSetSeed to fistsOfTheGadgetsCatalogSeed,
+        s2019GoldSarcophagusTinMegaPackSetSeed to s2019GoldSarcophagusTinMegaPackCatalogSeed,
+        s2019GoldSarcophagusTinSetSeed to s2019GoldSarcophagusTinCatalogSeed,
+        legendaryDuelistsImmortalDestinySetSeed to legendaryDuelistsImmortalDestinyCatalogSeed,
+        adventCalendar2019SetSeed to adventCalendar2019CatalogSeed,
+        speedDuelTournamentPack2SetSeed to speedDuelTournamentPack2CatalogSeed,
+        duelDevastatorSetSeed to duelDevastatorCatalogSeed,
+        chaosImpactSetSeed to chaosImpactCatalogSeed,
+        mysticFightersSetSeed to mysticFightersCatalogSeed,
+        otsTournamentPack12SetSeed to otsTournamentPack12CatalogSeed,
+        speedDuelTrialsOfTheKingdomSetSeed to speedDuelTrialsOfTheKingdomCatalogSeed,
+        speedDuelDemoDeck2020SetSeed to speedDuelDemoDeck2020CatalogSeed,
+        legendaryDuelistsMagicalHeroSetSeed to legendaryDuelistsMagicalHeroCatalogSeed,
+        theDarkSideOfDimensionsMoviePackSecretEditionSetSeed to theDarkSideOfDimensionsMoviePackSecretEditionCatalogSeed,
+        ignitionAssaultSetSeed to ignitionAssaultCatalogSeed,
+        structureDeckShaddollShowdownSetSeed to structureDeckShaddollShowdownCatalogSeed,
+        duelOverloadSetSeed to duelOverloadCatalogSeed,
+        secretSlayersSetSeed to secretSlayersCatalogSeed,
+        structureDeckMechanizedMadnessSetSeed to structureDeckMechanizedMadnessCatalogSeed,
+        eternityCodeSetSeed to eternityCodeCatalogSeed,
+        speedDuelDecksTwistedNightmaresSetSeed to speedDuelDecksTwistedNightmaresCatalogSeed,
+        speedDuelDecksMatchOfTheMillenniumSetSeed to speedDuelDecksMatchOfTheMillenniumCatalogSeed,
+        otsTournamentPack13SetSeed to otsTournamentPack13CatalogSeed,
+        toonChaosSetSeed to toonChaosCatalogSeed,
+        legendaryDuelistsSeason1SetSeed to legendaryDuelistsSeason1CatalogSeed,
+        structureDeckSacredBeastsSetSeed to structureDeckSacredBeastsCatalogSeed,
+        battlesOfLegendArmageddonSetSeed to battlesOfLegendArmageddonCatalogSeed,
+        riseOfTheDuelistSetSeed to riseOfTheDuelistCatalogSeed,
+        s2020TinOfLostMemoriesSetSeed to s2020TinOfLostMemoriesCatalogSeed,
+        dragonsOfLegendTheCompleteSeriesSetSeed to dragonsOfLegendTheCompleteSeriesCatalogSeed,
+        miscellaneousPromotionalCardsSetSeed to miscellaneousPromotionalCardsCatalogSeed,
+        legendaryDuelistsRageOfRaSetSeed to legendaryDuelistsRageOfRaCatalogSeed,
+        otsTournamentPack14SetSeed to otsTournamentPack14CatalogSeed,
+        maximumGoldSetSeed to maximumGoldCatalogSeed,
+        phantomRageSetSeed to phantomRageCatalogSeed,
+        speedDuelBattleCityBoxSetSeed to speedDuelBattleCityBoxCatalogSeed,
+        structureDeckSpiritCharmersSetSeed to structureDeckSpiritCharmersCatalogSeed,
+        genesisImpactSetSeed to genesisImpactCatalogSeed,
+        legendaryDuelistsSeason2SetSeed to legendaryDuelistsSeason2CatalogSeed,
+        blazingVortexSetSeed to blazingVortexCatalogSeed,
+        otsTournamentPack15SetSeed to otsTournamentPack15CatalogSeed,
+        structureDeckFreezingChainsSetSeed to structureDeckFreezingChainsCatalogSeed,
+        ghostsFromThePastSetSeed to ghostsFromThePastCatalogSeed,
+        ancientGuardiansSetSeed to ancientGuardiansCatalogSeed,
+        lightningOverdriveSetSeed to lightningOverdriveCatalogSeed,
+        egyptianGodDeckSliferTheSkyDragonSetSeed to egyptianGodDeckSliferTheSkyDragonCatalogSeed,
+        egyptianGodDeckObeliskTheTormentorSetSeed to egyptianGodDeckObeliskTheTormentorCatalogSeed,
+        otsTournamentPack16SetSeed to otsTournamentPack16CatalogSeed,
+        kingOfGamesYugisLegendaryDecks2020DateReprintSetSeed to kingOfGamesYugisLegendaryDecks2020DateReprintCatalogSeed,
+        kingsCourtSetSeed to kingsCourtCatalogSeed,
+        dawnOfMajestySetSeed to dawnOfMajestyCatalogSeed,
+        s2021TinOfAncientBattlesSetSeed to s2021TinOfAncientBattlesCatalogSeed,
+        brothersOfLegendSetSeed to brothersOfLegendCatalogSeed,
+        structureDeckCyberStrikeSetSeed to structureDeckCyberStrikeCatalogSeed,
+        otsTournamentPack17SetSeed to otsTournamentPack17CatalogSeed,
+        burstOfDestinySetSeed to burstOfDestinyCatalogSeed,
+        legendaryDuelistsSynchroStormSetSeed to legendaryDuelistsSynchroStormCatalogSeed,
+        maximumGoldElDoradoSetSeed to maximumGoldElDoradoCatalogSeed,
+        theGrandCreatorsSetSeed to theGrandCreatorsCatalogSeed,
+        battleOfChaosSetSeed to battleOfChaosCatalogSeed,
+        otsTournamentPack18SetSeed to otsTournamentPack18CatalogSeed,
+        hiddenArsenalChapter1SetSeed to hiddenArsenalChapter1CatalogSeed,
+        speedDuelTournamentPack3SetSeed to speedDuelTournamentPack3CatalogSeed,
+        speedDuelGxDuelAcademyBoxSetSeed to speedDuelGxDuelAcademyBoxCatalogSeed,
+        structureDeckAlbazStrikeSetSeed to structureDeckAlbazStrikeCatalogSeed,
+        ghostsFromThePastThe2ndHauntingSetSeed to ghostsFromThePastThe2ndHauntingCatalogSeed,
+        dimensionForceSetSeed to dimensionForceCatalogSeed,
+        otsTournamentPack19SetSeed to otsTournamentPack19CatalogSeed,
+        legendaryDuelistsDuelsFromTheDeepSetSeed to legendaryDuelistsDuelsFromTheDeepCatalogSeed,
+        legendaryDuelistsSeason3SetSeed to legendaryDuelistsSeason3CatalogSeed,
+        powerOfTheElementsSetSeed to powerOfTheElementsCatalogSeed,
+        tacticalMastersSetSeed to tacticalMastersCatalogSeed,
+        s2022TinOfThePharaohsGodsSetSeed to s2022TinOfThePharaohsGodsCatalogSeed,
+        speedDuelTournamentPack4SetSeed to speedDuelTournamentPack4CatalogSeed,
+        structureDeckLegendOfTheCrystalBeastsSetSeed to structureDeckLegendOfTheCrystalBeastsCatalogSeed,
+        speedDuelGxMidtermParadoxSetSeed to speedDuelGxMidtermParadoxCatalogSeed,
+        darkwingBlastSetSeed to darkwingBlastCatalogSeed,
+        otsTournamentPack20SetSeed to otsTournamentPack20CatalogSeed,
+        magnificentMavensSetSeed to magnificentMavensCatalogSeed,
+        battlesOfLegendCrystalRevengeSetSeed to battlesOfLegendCrystalRevengeCatalogSeed,
+        structureDeckSagaOfBlueEyesWhiteDragon2020DateReprintSetSeed to structureDeckSagaOfBlueEyesWhiteDragon2020DateReprintCatalogSeed,
+        structureDeckDarkWorldSetSeed to structureDeckDarkWorldCatalogSeed,
+        amazingDefendersSetSeed to amazingDefendersCatalogSeed,
+        otsTournamentPack21SetSeed to otsTournamentPack21CatalogSeed,
+        photonHypernovaSetSeed to photonHypernovaCatalogSeed,
+        structureDeckBewareOfTraptrixSetSeed to structureDeckBewareOfTraptrixCatalogSeed,
+        speedDuelTournamentPack5SetSeed to speedDuelTournamentPack5CatalogSeed,
+        mazeOfMemoriesSetSeed to mazeOfMemoriesCatalogSeed,
+        speedDuelGxDuelistsOfShadowsSetSeed to speedDuelGxDuelistsOfShadowsCatalogSeed,
+        pharaohsServant25thAnniversaryEditionSetSeed to pharaohsServant25thAnniversaryEditionCatalogSeed,
+        legendaryCollection25thAnniversaryEditionSetSeed to legendaryCollection25thAnniversaryEditionCatalogSeed,
+        legendOfBlueEyesWhiteDragon25thAnniversaryEditionSetSeed to legendOfBlueEyesWhiteDragon25thAnniversaryEditionCatalogSeed,
+        spellRuler25thAnniversaryEditionSetSeed to spellRuler25thAnniversaryEditionCatalogSeed,
+        darkCrisis25thAnniversaryEditionSetSeed to darkCrisis25thAnniversaryEditionCatalogSeed,
+        invasionOfChaos25thAnniversaryEditionSetSeed to invasionOfChaos25thAnniversaryEditionCatalogSeed,
+        metalRaiders25thAnniversaryEditionSetSeed to metalRaiders25thAnniversaryEditionCatalogSeed,
+        cyberstormAccessSetSeed to cyberstormAccessCatalogSeed,
+        wildSurvivorsSetSeed to wildSurvivorsCatalogSeed,
+        battlesOfLegendMonstrousRevengeSetSeed to battlesOfLegendMonstrousRevengeCatalogSeed,
+        otsTournamentPack22SetSeed to otsTournamentPack22CatalogSeed,
+        duelistNexusSetSeed to duelistNexusCatalogSeed,
+        legendaryDuelistsSoulburningVolcanoSetSeed to legendaryDuelistsSoulburningVolcanoCatalogSeed,
+        speedDuelStreetsOfBattleCitySetSeed to speedDuelStreetsOfBattleCityCatalogSeed,
+        thePotCollectionSetSeed to thePotCollectionCatalogSeed,
+        speedDuelTournamentPack6SetSeed to speedDuelTournamentPack6CatalogSeed,
+        s25thAnniversaryTinDuelingHeroesSetSeed to s25thAnniversaryTinDuelingHeroesCatalogSeed,
+        s25thAnniversaryTinDuelingHeroesMegaPackSetSeed to s25thAnniversaryTinDuelingHeroesMegaPackCatalogSeed,
+        structureDeckTheCrimsonKingSetSeed to structureDeckTheCrimsonKingCatalogSeed,
+        ageOfOverlordSetSeed to ageOfOverlordCatalogSeed,
+        otsTournamentPack23SetSeed to otsTournamentPack23CatalogSeed,
+        s25thAnniversaryRarityCollectionSetSeed to s25thAnniversaryRarityCollectionCatalogSeed,
+        valiantSmashersSetSeed to valiantSmashersCatalogSeed,
+        structureDeckFireKingsSetSeed to structureDeckFireKingsCatalogSeed,
+        mazeOfMillenniaSetSeed to mazeOfMillenniaCatalogSeed,
+        s2PlayerStarterSetSetSeed to s2PlayerStarterSetCatalogSeed,
+        phantomNightmareSetSeed to phantomNightmareCatalogSeed,
+        otsTournamentPack24SetSeed to otsTournamentPack24CatalogSeed,
+        battlesOfLegendChapter1SetSeed to battlesOfLegendChapter1CatalogSeed,
+        legendaryDecksIi2020ReprintSetSeed to legendaryDecksIi2020ReprintCatalogSeed,
+        speedDuelGxMidtermDestructionSetSeed to speedDuelGxMidtermDestructionCatalogSeed,
+        s25thAnniversaryUltimateKaibaSetSetSeed to s25thAnniversaryUltimateKaibaSetCatalogSeed,
+        speedDuelTournamentPack7SetSeed to speedDuelTournamentPack7CatalogSeed,
+        legacyOfDestructionSetSeed to legacyOfDestructionCatalogSeed,
+        s25thAnniversaryRarityCollectionIiSetSeed to s25thAnniversaryRarityCollectionIiCatalogSeed,
+        structureDeckRealmOfLight2020DateReprintSetSeed to structureDeckRealmOfLight2020DateReprintCatalogSeed,
+        otsTournamentPack25SetSeed to otsTournamentPack25CatalogSeed,
+        battlesOfLegendTerminalRevengeSetSeed to battlesOfLegendTerminalRevengeCatalogSeed,
+        theInfiniteForbiddenSetSeed to theInfiniteForbiddenCatalogSeed,
+        lightOfDestruction2020DateReprintSetSeed to lightOfDestruction2020DateReprintCatalogSeed,
+        retroPack2020DateReprintSetSeed to retroPack2020DateReprintCatalogSeed,
+        s25thAnniversaryTinDuelingMirrorsSetSeed to s25thAnniversaryTinDuelingMirrorsCatalogSeed,
+        rageOfTheAbyssSetSeed to rageOfTheAbyssCatalogSeed,
+        otsTournamentPack26SetSeed to otsTournamentPack26CatalogSeed,
+        quarterCenturyBonanzaSetSeed to quarterCenturyBonanzaCatalogSeed,
+        crossoverBreakersSetSeed to crossoverBreakersCatalogSeed,
+        speedDuelBattleCityFinalsSetSeed to speedDuelBattleCityFinalsCatalogSeed,
+        supremeDarknessSetSeed to supremeDarknessCatalogSeed,
+        structureDeckBlueEyesWhiteDestinySetSeed to structureDeckBlueEyesWhiteDestinyCatalogSeed,
+        otsTournamentPack27SetSeed to otsTournamentPack27CatalogSeed,
+        earlyDaysCollectionPromotionalCardsSetSeed to earlyDaysCollectionPromotionalCardsCatalogSeed,
+        mazeOfTheMasterSetSeed to mazeOfTheMasterCatalogSeed,
+        quarterCenturyStampedeSetSeed to quarterCenturyStampedeCatalogSeed,
+        allianceInsightSetSeed to allianceInsightCatalogSeed,
+        yuGiOhChampionshipSeries2025PrizeCardsSetSeed to yuGiOhChampionshipSeries2025PrizeCardsCatalogSeed,
+        battlesOfLegendMonsterMayhemSetSeed to battlesOfLegendMonsterMayhemCatalogSeed,
+        otsTournamentPack28SetSeed to otsTournamentPack28CatalogSeed,
+        duelistsAdvanceSetSeed to duelistsAdvanceCatalogSeed,
+        justiceHuntersSetSeed to justiceHuntersCatalogSeed,
+        retroPack22020DateReprintSetSeed to retroPack22020DateReprintCatalogSeed,
+        limitedPackWorldChampionship2025SetSeed to limitedPackWorldChampionship2025CatalogSeed,
+        s2025MegaPackSetSeed to s2025MegaPackCatalogSeed,
+        doomOfDimensionsSetSeed to doomOfDimensionsCatalogSeed,
+        efootballCollaborationPromosSetSeed to efootballCollaborationPromosCatalogSeed,
+        legendaryCollectionKaiba2020DateReprintSetSeed to legendaryCollectionKaiba2020DateReprintCatalogSeed,
+        otsTournamentPack29SetSeed to otsTournamentPack29CatalogSeed,
+        theChroniclesDeckTheFallenAndTheVirtuousAllFoilEditionSetSeed to theChroniclesDeckTheFallenAndTheVirtuousAllFoilEditionCatalogSeed,
+        legendary5dsDecksSetSeed to legendary5dsDecksCatalogSeed,
+        phantomRevengeSetSeed to phantomRevengeCatalogSeed,
+        theChroniclesDeckSpiritCharmersAllFoilEditionSetSeed to theChroniclesDeckSpiritCharmersAllFoilEditionCatalogSeed,
+        burstProtocolSetSeed to burstProtocolCatalogSeed,
+        otsTournamentPack30SetSeed to otsTournamentPack30CatalogSeed,
+        mazeOfMuertosSetSeed to mazeOfMuertosCatalogSeed,
+        legendaryModernDecks2026SetSeed to legendaryModernDecks2026CatalogSeed,
+        rarityCollection5SetSeed to rarityCollection5CatalogSeed,
+        blazingDominionSetSeed to blazingDominionCatalogSeed,
+        battlesOfLegendGloriousGallerySetSeed to battlesOfLegendGloriousGalleryCatalogSeed,
+        chaosOriginsSetSeed to chaosOriginsCatalogSeed,
+        ultimateTournamentPack1SetSeed to ultimateTournamentPack1CatalogSeed,
+        d23PromosSetSeed to d23PromosCatalogSeed,
+        disneyLorcanaPromoCardsSetSeed to disneyLorcanaPromoCardsCatalogSeed,
+        theFirstChapterSetSeed to theFirstChapterCatalogSeed,
+        riseOfTheFloodbornSetSeed to riseOfTheFloodbornCatalogSeed,
+        disney100PromosSetSeed to disney100PromosCatalogSeed,
+        intoTheInklandsSetSeed to intoTheInklandsCatalogSeed,
+        ursulasReturnSetSeed to ursulasReturnCatalogSeed,
+        shimmeringSkiesSetSeed to shimmeringSkiesCatalogSeed,
+        azuriteSeaSetSeed to azuriteSeaCatalogSeed,
+        archaziasIslandSetSeed to archaziasIslandCatalogSeed,
+        reignOfJafarSetSeed to reignOfJafarCatalogSeed,
+        fabledSetSeed to fabledCatalogSeed,
+        whispersInTheWellSetSeed to whispersInTheWellCatalogSeed,
+        winterspellSetSeed to winterspellCatalogSeed,
+        wildsUnknownSetSeed to wildsUnknownCatalogSeed,
+        attackOfTheVineSetSeed to attackOfTheVineCatalogSeed,
+        oathOfTheGatewatchSetSeed to oathOfTheGatewatchCatalogSeed,
+        duelDecksBlessedVsCursedSetSeed to duelDecksBlessedVsCursedCatalogSeed,
+        shadowsOverInnistradSetSeed to shadowsOverInnistradCatalogSeed,
+        welcomeDeck2016SetSeed to welcomeDeck2016CatalogSeed,
+        eternalMastersSetSeed to eternalMastersCatalogSeed,
+        eldritchMoonSetSeed to eldritchMoonCatalogSeed,
+        wmcqPromoCardsSetSeed to wmcqPromoCardsCatalogSeed,
+        fromTheVaultLoreSetSeed to fromTheVaultLoreCatalogSeed,
+        conspiracyTakeTheCrownSetSeed to conspiracyTakeTheCrownCatalogSeed,
+        duelDecksNissaVsObNixilisSetSeed to duelDecksNissaVsObNixilisCatalogSeed,
+        masterpieceSeriesKaladeshInventionsSetSeed to masterpieceSeriesKaladeshInventionsCatalogSeed,
+        kaladeshSetSeed to kaladeshCatalogSeed,
+        commander2016SetSeed to commander2016CatalogSeed,
+        planechaseAnthologySetSeed to planechaseAnthologyCatalogSeed,
+        aetherRevoltSetSeed to aetherRevoltCatalogSeed,
+        modernMasters2017SetSeed to modernMasters2017CatalogSeed,
+        duelDecksMindVsMightSetSeed to duelDecksMindVsMightCatalogSeed,
+        welcomeDeck2017SetSeed to welcomeDeck2017CatalogSeed,
+        masterpieceSeriesAmonkhetInvocationsSetSeed to masterpieceSeriesAmonkhetInvocationsCatalogSeed,
+        openHousePromosSetSeed to openHousePromosCatalogSeed,
+        amonkhetSetSeed to amonkhetCatalogSeed,
+        commanderAnthologySetSeed to commanderAnthologyCatalogSeed,
+        archenemyNicolBolasSetSeed to archenemyNicolBolasCatalogSeed,
+        hourOfDevastationSetSeed to hourOfDevastationCatalogSeed,
+        commander2017SetSeed to commander2017CatalogSeed,
+        standardShowdownPromosSetSeed to standardShowdownPromosCatalogSeed,
+        ixalanSetSeed to ixalanCatalogSeed,
+        leaguePromosSetSeed to leaguePromosCatalogSeed,
+        giftBoxesAndPromosSetSeed to giftBoxesAndPromosCatalogSeed,
+        duelDecksMerfolkVsGoblinsSetSeed to duelDecksMerfolkVsGoblinsCatalogSeed,
+        iconicMastersSetSeed to iconicMastersCatalogSeed,
+        fromTheVaultTransformSetSeed to fromTheVaultTransformCatalogSeed,
+        explorersOfIxalanSetSeed to explorersOfIxalanCatalogSeed,
+        unstableSetSeed to unstableCatalogSeed,
+        rivalsOfIxalanSetSeed to rivalsOfIxalanCatalogSeed,
+        masters25SetSeed to masters25CatalogSeed,
+        duelDecksElvesVsInventorsSetSeed to duelDecksElvesVsInventorsCatalogSeed,
+        dominariaSetSeed to dominariaCatalogSeed,
+        battlebondSetSeed to battlebondCatalogSeed,
+        commanderAnthologyVolumeIiSetSeed to commanderAnthologyVolumeIiCatalogSeed,
+        signatureSpellbookJaceSetSeed to signatureSpellbookJaceCatalogSeed,
+        globalSeriesJiangYangguAndMuYanlingSetSeed to globalSeriesJiangYangguAndMuYanlingCatalogSeed,
+        coreSet2019SetSeed to coreSet2019CatalogSeed,
+        commander2018SetSeed to commander2018CatalogSeed,
+        mythicEditionGuildsOfRavnicaSetSeed to mythicEditionGuildsOfRavnicaCatalogSeed,
+        guildsOfRavnicaSetSeed to guildsOfRavnicaCatalogSeed,
+        guildsOfRavnicaGuildKitsSetSeed to guildsOfRavnicaGuildKitsCatalogSeed,
+        magicGameNightSetSeed to magicGameNightCatalogSeed,
+        magicfestCardsSetSeed to magicfestCardsCatalogSeed,
+        ultimateMastersBoxToppersSetSeed to ultimateMastersBoxToppersCatalogSeed,
+        ultimateMastersSetSeed to ultimateMastersCatalogSeed,
+        mythicEditionRavnicaAllegianceSetSeed to mythicEditionRavnicaAllegianceCatalogSeed,
+        ravnicaAllegianceSetSeed to ravnicaAllegianceCatalogSeed,
+        ravnicaAllegianceGuildKitsSetSeed to ravnicaAllegianceGuildKitsCatalogSeed,
+        mythicEditionWarOfTheSparkSetSeed to mythicEditionWarOfTheSparkCatalogSeed,
+        warOfTheSparkSetSeed to warOfTheSparkCatalogSeed,
+        planeswalkerEventPromosSetSeed to planeswalkerEventPromosCatalogSeed,
+        modernHorizonsSetSeed to modernHorizonsCatalogSeed,
+        artSeriesModernHorizonsSetSeed to artSeriesModernHorizonsCatalogSeed,
+        signatureSpellbookGideonSetSeed to signatureSpellbookGideonCatalogSeed,
+        promoPackCoreSet2020SetSeed to promoPackCoreSet2020CatalogSeed,
+        coreSet2020SetSeed to coreSet2020CatalogSeed,
+        commander2019SetSeed to commander2019CatalogSeed,
+        throneOfEldraineSetSeed to throneOfEldraineCatalogSeed,
+        promoPackThroneOfEldraineSetSeed to promoPackThroneOfEldraineCatalogSeed,
+        poniesTheGallopingSetSeed to poniesTheGallopingCatalogSeed,
+        magicGameNight2019SetSeed to magicGameNight2019CatalogSeed,
+        secretLairDropSeriesSetSeed to secretLairDropSeriesCatalogSeed,
+        promoPackTherosBeyondDeathSetSeed to promoPackTherosBeyondDeathCatalogSeed,
+        therosBeyondDeathSetSeed to therosBeyondDeathCatalogSeed,
+        unsanctionedSetSeed to unsanctionedCatalogSeed,
+        commander2020SetSeed to commander2020CatalogSeed,
+        ikoriaLairOfBehemothsSetSeed to ikoriaLairOfBehemothsCatalogSeed,
+        promoPackIkoriaSetSeed to promoPackIkoriaCatalogSeed,
+        secretLairSeriesSetSeed to secretLairSeriesCatalogSeed,
+        signatureSpellbookChandraSetSeed to signatureSpellbookChandraCatalogSeed,
+        promoPackCoreSet2021SetSeed to promoPackCoreSet2021CatalogSeed,
+        coreSet2021SetSeed to coreSet2021CatalogSeed,
+        jumpstartSetSeed to jumpstartCatalogSeed,
+        doubleMastersSetSeed to doubleMastersCatalogSeed,
+        zendikarRisingExpeditionsSetSeed to zendikarRisingExpeditionsCatalogSeed,
+        zendikarRisingSetSeed to zendikarRisingCatalogSeed,
+        theListReprintsSetSeed to theListReprintsCatalogSeed,
+        artSeriesZendikarRisingSetSeed to artSeriesZendikarRisingCatalogSeed,
+        promoPackZendikarRisingSetSeed to promoPackZendikarRisingCatalogSeed,
+        commanderZendikarRisingSetSeed to commanderZendikarRisingCatalogSeed,
+        commanderLegendsSetSeed to commanderLegendsCatalogSeed,
+        commanderCollectionGreenSetSeed to commanderCollectionGreenCatalogSeed,
+        commanderKaldheimSetSeed to commanderKaldheimCatalogSeed,
+        kaldheimSetSeed to kaldheimCatalogSeed,
+        artSeriesKaldheimSetSeed to artSeriesKaldheimCatalogSeed,
+        promoPackKaldheimSetSeed to promoPackKaldheimCatalogSeed,
+        timeSpiralRemasteredSetSeed to timeSpiralRemasteredCatalogSeed,
+        promoPackStrixhavenSetSeed to promoPackStrixhavenCatalogSeed,
+        commander2021SetSeed to commander2021CatalogSeed,
+        strixhavenMysticalArchivesSetSeed to strixhavenMysticalArchivesCatalogSeed,
+        strixhavenMysticalArchiveSetSeed to strixhavenMysticalArchiveCatalogSeed,
+        artSeriesStrixhavenSetSeed to artSeriesStrixhavenCatalogSeed,
+        strixhavenSchoolOfMagesSetSeed to strixhavenSchoolOfMagesCatalogSeed,
+        modernHorizons2SetSeed to modernHorizons2CatalogSeed,
+        artSeriesModernHorizons2SetSeed to artSeriesModernHorizons2CatalogSeed,
+        artSeriesAdventuresInTheForgottenRealmsSetSeed to artSeriesAdventuresInTheForgottenRealmsCatalogSeed,
+        commanderAdventuresInTheForgottenRealmsSetSeed to commanderAdventuresInTheForgottenRealmsCatalogSeed,
+        promoPackAdventuresInTheForgottenRealmsSetSeed to promoPackAdventuresInTheForgottenRealmsCatalogSeed,
+        adventuresInTheForgottenRealmsSetSeed to adventuresInTheForgottenRealmsCatalogSeed,
+        afrAmpersandPromosSetSeed to afrAmpersandPromosCatalogSeed,
+        commanderInnistradMidnightHuntSetSeed to commanderInnistradMidnightHuntCatalogSeed,
+        innistradMidnightHuntSetSeed to innistradMidnightHuntCatalogSeed,
+        artSeriesInnistradMidnightHuntSetSeed to artSeriesInnistradMidnightHuntCatalogSeed,
+        promoPackInnistradMidnightHuntSetSeed to promoPackInnistradMidnightHuntCatalogSeed,
+        artSeriesInnistradCrimsonVowSetSeed to artSeriesInnistradCrimsonVowCatalogSeed,
+        playPromosSetSeed to playPromosCatalogSeed,
+        commanderInnistradCrimsonVowSetSeed to commanderInnistradCrimsonVowCatalogSeed,
+        innistradCrimsonVowSetSeed to innistradCrimsonVowCatalogSeed,
+        commanderCollectionBlackSetSeed to commanderCollectionBlackCatalogSeed,
+        innistradDoubleFeatureSetSeed to innistradDoubleFeatureCatalogSeed,
+        promoPackKamigawaNeonDynastySetSeed to promoPackKamigawaNeonDynastyCatalogSeed,
+        artSeriesKamigawaNeonDynastySetSeed to artSeriesKamigawaNeonDynastyCatalogSeed,
+        kamigawaNeonDynastySetSeed to kamigawaNeonDynastyCatalogSeed,
+        commanderKamigawaNeonDynastySetSeed to commanderKamigawaNeonDynastyCatalogSeed,
+        slxCardsSetSeed to slxCardsCatalogSeed,
+        artSeriesStreetsOfNewCapennaSetSeed to artSeriesStreetsOfNewCapennaCatalogSeed,
+        commanderStreetsOfNewCapennaSetSeed to commanderStreetsOfNewCapennaCatalogSeed,
+        streetsOfNewCapennaSetSeed to streetsOfNewCapennaCatalogSeed,
+        promoPackStreetsOfNewCapennaSetSeed to promoPackStreetsOfNewCapennaCatalogSeed,
+        artSeriesCommanderLegendsBattleForBaldursGateSetSeed to artSeriesCommanderLegendsBattleForBaldursGateCatalogSeed,
+        commanderLegendsBattleForBaldursGateSetSeed to commanderLegendsBattleForBaldursGateCatalogSeed,
+        doubleMasters2022SetSeed to doubleMasters2022CatalogSeed,
+        unfinitySetSeed to unfinityCatalogSeed,
+        s30thAnniversaryPromosSetSeed to s30thAnniversaryPromosCatalogSeed,
+        promoPackDominariaUnitedSetSeed to promoPackDominariaUnitedCatalogSeed,
+        artSeriesDominariaUnitedSetSeed to artSeriesDominariaUnitedCatalogSeed,
+        dominariaUnitedSetSeed to dominariaUnitedCatalogSeed,
+        commanderDominariaUnitedSetSeed to commanderDominariaUnitedCatalogSeed,
+        universesBeyondWarhammer40000SetSeed to universesBeyondWarhammer40000CatalogSeed,
+        magicGameNightFreeForAllSetSeed to magicGameNightFreeForAllCatalogSeed,
+        artSeriesTheBrothersWarSetSeed to artSeriesTheBrothersWarCatalogSeed,
+        promoPackTheBrothersWarSetSeed to promoPackTheBrothersWarCatalogSeed,
+        universesBeyondTransformersSetSeed to universesBeyondTransformersCatalogSeed,
+        commanderTheBrothersWarSetSeed to commanderTheBrothersWarCatalogSeed,
+        theBrothersWarRetroFrameArtifactsSetSeed to theBrothersWarRetroFrameArtifactsCatalogSeed,
+        theBrothersWarSetSeed to theBrothersWarCatalogSeed,
+        s30thAnniversaryEditionSetSeed to s30thAnniversaryEditionCatalogSeed,
+        secretLairCountdownKitSetSeed to secretLairCountdownKitCatalogSeed,
+        jumpstart2022SetSeed to jumpstart2022CatalogSeed,
+        starterCommanderDecksSetSeed to starterCommanderDecksCatalogSeed,
+        dominariaRemasteredSetSeed to dominariaRemasteredCatalogSeed,
+        commanderPhyrexiaAllWillBeOneSetSeed to commanderPhyrexiaAllWillBeOneCatalogSeed,
+        phyrexiaAllWillBeOneSetSeed to phyrexiaAllWillBeOneCatalogSeed,
+        artSeriesPhyrexiaAllWillBeOneSetSeed to artSeriesPhyrexiaAllWillBeOneCatalogSeed,
+        promoPackPhyrexiaAllWillBeOneSetSeed to promoPackPhyrexiaAllWillBeOneCatalogSeed,
+        secretLairShowdownSetSeed to secretLairShowdownCatalogSeed,
+        marchOfTheMachineSetSeed to marchOfTheMachineCatalogSeed,
+        artSeriesMarchOfTheMachineSetSeed to artSeriesMarchOfTheMachineCatalogSeed,
+        marchOfTheMachineMultiverseLegendsSetSeed to marchOfTheMachineMultiverseLegendsCatalogSeed,
+        promoPackMarchOfTheMachineSetSeed to promoPackMarchOfTheMachineCatalogSeed,
+        commanderMarchOfTheMachineSetSeed to commanderMarchOfTheMachineCatalogSeed,
+        marchOfTheMachineTheAftermathSetSeed to marchOfTheMachineTheAftermathCatalogSeed,
+        universesBeyondTheLordOfTheRingsTalesOfMiddleEarthSetSeed to universesBeyondTheLordOfTheRingsTalesOfMiddleEarthCatalogSeed,
+        commanderTheLordOfTheRingsTalesOfMiddleEarthSetSeed to commanderTheLordOfTheRingsTalesOfMiddleEarthCatalogSeed,
+        artSeriesUniversesBeyondTheLordOfTheRingsTalesOfMiddleEarthSetSeed to artSeriesUniversesBeyondTheLordOfTheRingsTalesOfMiddleEarthCatalogSeed,
+        artSeriesCommanderMastersSetSeed to artSeriesCommanderMastersCatalogSeed,
+        commanderMastersSetSeed to commanderMastersCatalogSeed,
+        wildsOfEldraineEnchantingTalesSetSeed to wildsOfEldraineEnchantingTalesCatalogSeed,
+        commanderWildsOfEldraineSetSeed to commanderWildsOfEldraineCatalogSeed,
+        artSeriesWildsOfEldraineSetSeed to artSeriesWildsOfEldraineCatalogSeed,
+        wildsOfEldraineSetSeed to wildsOfEldraineCatalogSeed,
+        promoPackWildsOfEldraineSetSeed to promoPackWildsOfEldraineCatalogSeed,
+        universesBeyondDoctorWhoSetSeed to universesBeyondDoctorWhoCatalogSeed,
+        commanderTheLostCavernsOfIxalanSetSeed to commanderTheLostCavernsOfIxalanCatalogSeed,
+        universesBeyondJurassicWorldCollectionSetSeed to universesBeyondJurassicWorldCollectionCatalogSeed,
+        promoPackTheLostCavernsOfIxalanSetSeed to promoPackTheLostCavernsOfIxalanCatalogSeed,
+        specialGuestsSetSeed to specialGuestsCatalogSeed,
+        artSeriesTheLostCavernsOfIxalanSetSeed to artSeriesTheLostCavernsOfIxalanCatalogSeed,
+        theLostCavernsOfIxalanSetSeed to theLostCavernsOfIxalanCatalogSeed,
+        ravnicaRemasteredSetSeed to ravnicaRemasteredCatalogSeed,
+        promoPackMurdersAtKarlovManorSetSeed to promoPackMurdersAtKarlovManorCatalogSeed,
+        murdersAtKarlovManorSetSeed to murdersAtKarlovManorCatalogSeed,
+        artSeriesMurdersAtKarlovManorSetSeed to artSeriesMurdersAtKarlovManorCatalogSeed,
+        commanderMurdersAtKarlovManorSetSeed to commanderMurdersAtKarlovManorCatalogSeed,
+        ravnicaClueEditionSetSeed to ravnicaClueEditionCatalogSeed,
+        universesBeyondFalloutSetSeed to universesBeyondFalloutCatalogSeed,
+        outlawsOfThunderJunctionSetSeed to outlawsOfThunderJunctionCatalogSeed,
+        outlawsOfThunderJunctionBreakingNewsSetSeed to outlawsOfThunderJunctionBreakingNewsCatalogSeed,
+        promoPackOutlawsOfThunderJunctionSetSeed to promoPackOutlawsOfThunderJunctionCatalogSeed,
+        artSeriesOutlawsOfThunderJunctionSetSeed to artSeriesOutlawsOfThunderJunctionCatalogSeed,
+        outlawsOfThunderJunctionTheBigScoreSetSeed to outlawsOfThunderJunctionTheBigScoreCatalogSeed,
+        commanderOutlawsOfThunderJunctionSetSeed to commanderOutlawsOfThunderJunctionCatalogSeed,
+        modernHorizons3SetSeed to modernHorizons3CatalogSeed,
+        commanderModernHorizons3SetSeed to commanderModernHorizons3CatalogSeed,
+        artSeriesModernHorizons3SetSeed to artSeriesModernHorizons3CatalogSeed,
+        universesBeyondAssassinsCreedSetSeed to universesBeyondAssassinsCreedCatalogSeed,
+        artSeriesUniversesBeyondAssassinsCreedSetSeed to artSeriesUniversesBeyondAssassinsCreedCatalogSeed,
+        artSeriesBloomburrowSetSeed to artSeriesBloomburrowCatalogSeed,
+        promoPackBloomburrowSetSeed to promoPackBloomburrowCatalogSeed,
+        bloomburrowSetSeed to bloomburrowCatalogSeed,
+        commanderBloomburrowSetSeed to commanderBloomburrowCatalogSeed,
+        commanderDuskmournHouseOfHorrorSetSeed to commanderDuskmournHouseOfHorrorCatalogSeed,
+        promoPackDuskmournHouseOfHorrorSetSeed to promoPackDuskmournHouseOfHorrorCatalogSeed,
+        duskmournHouseOfHorrorSetSeed to duskmournHouseOfHorrorCatalogSeed,
+        artSeriesDuskmournHouseOfHorrorSetSeed to artSeriesDuskmournHouseOfHorrorCatalogSeed,
+        mysteryBooster2SetSeed to mysteryBooster2CatalogSeed,
+        foundationsSetSeed to foundationsCatalogSeed,
+        foundationsJumpstartSetSeed to foundationsJumpstartCatalogSeed,
+        commanderFoundationsSetSeed to commanderFoundationsCatalogSeed,
+        artSeriesFoundationsSetSeed to artSeriesFoundationsCatalogSeed,
+        innistradRemasteredSetSeed to innistradRemasteredCatalogSeed,
+        artSeriesInnistradRemasteredSetSeed to artSeriesInnistradRemasteredCatalogSeed,
+        artSeriesAetherdriftSetSeed to artSeriesAetherdriftCatalogSeed,
+        aetherdriftSetSeed to aetherdriftCatalogSeed,
+        commanderAetherdriftSetSeed to commanderAetherdriftCatalogSeed,
+        promoPackAetherdriftSetSeed to promoPackAetherdriftCatalogSeed,
+        artSeriesTarkirDragonstormSetSeed to artSeriesTarkirDragonstormCatalogSeed,
+        commanderTarkirDragonstormSetSeed to commanderTarkirDragonstormCatalogSeed,
+        promoPackTarkirDragonstormSetSeed to promoPackTarkirDragonstormCatalogSeed,
+        tarkirDragonstormSetSeed to tarkirDragonstormCatalogSeed,
+        commanderFinalFantasySetSeed to commanderFinalFantasyCatalogSeed,
+        artSeriesFinalFantasySetSeed to artSeriesFinalFantasyCatalogSeed,
+        finalFantasySetSeed to finalFantasyCatalogSeed,
+        finalFantasyThroughTheAgesSetSeed to finalFantasyThroughTheAgesCatalogSeed,
+        edgeOfEternitiesSetSeed to edgeOfEternitiesCatalogSeed,
+        artSeriesEdgeOfEternitiesSetSeed to artSeriesEdgeOfEternitiesCatalogSeed,
+        promoPackEdgeOfEternitiesSetSeed to promoPackEdgeOfEternitiesCatalogSeed,
+        commanderEdgeOfEternitiesSetSeed to commanderEdgeOfEternitiesCatalogSeed,
+        edgeOfEternitiesStellarSightsSetSeed to edgeOfEternitiesStellarSightsCatalogSeed,
+        marvelsSpiderManEternalLegalSetSeed to marvelsSpiderManEternalLegalCatalogSeed,
+        marvelsSpiderManSetSeed to marvelsSpiderManCatalogSeed,
+        marvelUniverseEternalLegalSetSeed to marvelUniverseEternalLegalCatalogSeed,
+        artSeriesMarvelsSpiderManSetSeed to artSeriesMarvelsSpiderManCatalogSeed,
+        avatarTheLastAirbenderSetSeed to avatarTheLastAirbenderCatalogSeed,
+        avatarTheLastAirbenderEternalLegalSetSeed to avatarTheLastAirbenderEternalLegalCatalogSeed,
+        artSeriesAvatarTheLastAirbenderSetSeed to artSeriesAvatarTheLastAirbenderCatalogSeed,
+        lorwynEclipsedSetSeed to lorwynEclipsedCatalogSeed,
+        promoPackLorwynEclipsedSetSeed to promoPackLorwynEclipsedCatalogSeed,
+        artSeriesLorwynEclipsedSetSeed to artSeriesLorwynEclipsedCatalogSeed,
+        commanderLorwynEclipsedSetSeed to commanderLorwynEclipsedCatalogSeed,
+        teenageMutantNinjaTurtlesSetSeed to teenageMutantNinjaTurtlesCatalogSeed,
+        commanderTeenageMutantNinjaTurtlesSetSeed to commanderTeenageMutantNinjaTurtlesCatalogSeed,
+        teenageMutantNinjaTurtlesSourceMaterialSetSeed to teenageMutantNinjaTurtlesSourceMaterialCatalogSeed,
+        teenageMutantNinjaTurtlesEternalLegalSetSeed to teenageMutantNinjaTurtlesEternalLegalCatalogSeed,
+        artSeriesTeenageMutantNinjaTurtlesSetSeed to artSeriesTeenageMutantNinjaTurtlesCatalogSeed,
+        artSeriesSecretsOfStrixhavenSetSeed to artSeriesSecretsOfStrixhavenCatalogSeed,
+        promoPackSecretsOfStrixhavenSetSeed to promoPackSecretsOfStrixhavenCatalogSeed,
+        commanderSecretsOfStrixhavenSetSeed to commanderSecretsOfStrixhavenCatalogSeed,
+        secretsOfStrixhavenSetSeed to secretsOfStrixhavenCatalogSeed,
+        secretsOfStrixhavenMysticalArchiveSetSeed to secretsOfStrixhavenMysticalArchiveCatalogSeed,
+        commanderMarvelSuperHeroesSetSeed to commanderMarvelSuperHeroesCatalogSeed,
+        marvelSuperHeroesSetSeed to marvelSuperHeroesCatalogSeed,
+        artSeriesMarvelSuperHeroesSetSeed to artSeriesMarvelSuperHeroesCatalogSeed,
+        originsSetSeed to originsCatalogSeed,
+        originsProvingGroundsSetSeed to originsProvingGroundsCatalogSeed,
+        riftboundPromotionalCardsSetSeed to riftboundPromotionalCardsCatalogSeed,
+        riftboundOrganizedPlayPromotionalCardsSetSeed to riftboundOrganizedPlayPromotionalCardsCatalogSeed,
+        riftboundJudgePromotionalCardsSetSeed to riftboundJudgePromotionalCardsCatalogSeed,
+        spiritforgedSetSeed to spiritforgedCatalogSeed,
+        unleashedSetSeed to unleashedCatalogSeed,
+        vendettaSetSeed to vendettaCatalogSeed,
+        // Gundam Card Game (09.08., Nutzer-Vorgabe) - siehe Import-Kommentar
+        // oben. Cyberpunk TCG (ebenfalls Nutzer-Vorgabe 09.08.) taucht
+        // absichtlich NICHT in dieser Liste auf: das Spiel erscheint laut
+        // Ankuendigung erst im September 2026, es gibt aktuell schlicht noch
+        // keine echten Kartendaten dazu (kein API/Scan-Katalog verfuegbar).
+        // Das Spiel selbst ist trotzdem ueberall sonst registriert (TCG_ORDER,
+        // Akzentfarbe, Button/Hintergrund-Platzhalter, siehe App.kt) - man
+        // kann also jetzt schon zu "Cyberpunk" wechseln und Binder/Wantsliste/
+        // Deck/Vault/Eigenes-Foto nutzen, nur der Katalog-Browse-Bildschirm
+        // zeigt bis zum Release keine Sets ("Sets folgen"). Sobald nach dem
+        // Release echte Kartendaten verfuegbar sind, hier nachziehen und
+        // CATALOG_SEED_VERSION erneut hochzaehlen.
+        // Naruto Kayou NA (18.08., siehe NarutoKayou*Catalog.kt)
+        narutoKayouNrsa01SetSeed to narutoKayouNrsa01CatalogSeed,
+        narutoKayouNrsa02SetSeed to narutoKayouNrsa02CatalogSeed,
+        narutoKayouNrsa03SetSeed to narutoKayouNrsa03CatalogSeed,
+        narutoKayouNrea01SetSeed to narutoKayouNrea01CatalogSeed,
+        narutoKayouNrea02SetSeed to narutoKayouNrea02CatalogSeed,
+        narutoKayouNrccnaSetSeed to narutoKayouNrccnaCatalogSeed,
+        narutoKayouPromoSetSeed to narutoKayouPromoCatalogSeed,
+        gundamEb01SetSeed to gundamEb01CatalogSeed,
+        gundamExbSetSeed to gundamExbCatalogSeed,
+        gundamExbpSetSeed to gundamExbpCatalogSeed,
+        gundamExrSetSeed to gundamExrCatalogSeed,
+        gundamExrpSetSeed to gundamExrpCatalogSeed,
+        gundamGd01SetSeed to gundamGd01CatalogSeed,
+        gundamGd02SetSeed to gundamGd02CatalogSeed,
+        gundamGd03SetSeed to gundamGd03CatalogSeed,
+        gundamGd04SetSeed to gundamGd04CatalogSeed,
+        gundamGd05SetSeed to gundamGd05CatalogSeed,
+        gundamRSetSeed to gundamRCatalogSeed,
+        gundamRpSetSeed to gundamRpCatalogSeed,
+        gundamSc01SetSeed to gundamSc01CatalogSeed,
+        gundamSt01SetSeed to gundamSt01CatalogSeed,
+        gundamSt02SetSeed to gundamSt02CatalogSeed,
+        gundamSt03SetSeed to gundamSt03CatalogSeed,
+        gundamSt04SetSeed to gundamSt04CatalogSeed,
+        gundamSt05SetSeed to gundamSt05CatalogSeed,
+        gundamSt06SetSeed to gundamSt06CatalogSeed,
+        gundamSt07SetSeed to gundamSt07CatalogSeed,
+        gundamSt08SetSeed to gundamSt08CatalogSeed,
+        gundamSt09SetSeed to gundamSt09CatalogSeed,
+        gundamSt10SetSeed to gundamSt10CatalogSeed,
+        gundamTSetSeed to gundamTCatalogSeed,
+        opusIiSetSeed to opusIiCatalogSeed,
+        opusISetSeed to opusICatalogSeed,
+        ffPromoCardsSetSeed to ffPromoCardsCatalogSeed,
+        opusIiiSetSeed to opusIiiCatalogSeed,
+        opusIvSetSeed to opusIvCatalogSeed,
+        opusVSetSeed to opusVCatalogSeed,
+        opusViSetSeed to opusViCatalogSeed,
+        deckExclusiveCardsSetSeed to deckExclusiveCardsCatalogSeed,
+        opusViiSetSeed to opusViiCatalogSeed,
+        opusViiiSetSeed to opusViiiCatalogSeed,
+        opusIxSetSeed to opusIxCatalogSeed,
+        opusXSetSeed to opusXCatalogSeed,
+        opusXiSetSeed to opusXiCatalogSeed,
+        opusXiiSetSeed to opusXiiCatalogSeed,
+        bossDeckChaosSetSeed to bossDeckChaosCatalogSeed,
+        opusXiiiCrystalRadianceSetSeed to opusXiiiCrystalRadianceCatalogSeed,
+        opusXivCrystalAbyssSetSeed to opusXivCrystalAbyssCatalogSeed,
+        crystalDominionSetSeed to crystalDominionCatalogSeed,
+        emissariesOfLightSetSeed to emissariesOfLightCatalogSeed,
+        rebellionsCallSetSeed to rebellionsCallCatalogSeed,
+        resurgenceOfPowerSetSeed to resurgenceOfPowerCatalogSeed,
+        bossDeckFinalFantasyViiSetSeed to bossDeckFinalFantasyViiCatalogSeed,
+        fromNightmaresSetSeed to fromNightmaresCatalogSeed,
+        dawnOfHeroesSetSeed to dawnOfHeroesCatalogSeed,
+        beyondDestinySetSeed to beyondDestinyCatalogSeed,
+        hiddenHopeSetSeed to hiddenHopeCatalogSeed,
+        hiddenTrialsSetSeed to hiddenTrialsCatalogSeed,
+        hiddenLegendsSetSeed to hiddenLegendsCatalogSeed,
+        legacyCollectionSetSeed to legacyCollectionCatalogSeed,
+        tearsOfThePlanetSetSeed to tearsOfThePlanetCatalogSeed,
+        gunslingerInTheAbyssSetSeed to gunslingerInTheAbyssCatalogSeed,
+        worldChampionDecks2024SetSeed to worldChampionDecks2024CatalogSeed,
+        starterSet2025SetSeed to starterSet2025CatalogSeed,
+        journeyOfDiscoverySetSeed to journeyOfDiscoveryCatalogSeed,
+        dreamlikeOceansSetSeed to dreamlikeOceansCatalogSeed,
+        welcomeDeckIraSetSeed to welcomeDeckIraCatalogSeed,
+        fleshAndBloodPromoCardsSetSeed to fleshAndBloodPromoCardsCatalogSeed,
+        heroDeckDorintheaSetSeed to heroDeckDorintheaCatalogSeed,
+        heroDeckKatsuSetSeed to heroDeckKatsuCatalogSeed,
+        heroDeckRhinarSetSeed to heroDeckRhinarCatalogSeed,
+        heroDeckBravoSetSeed to heroDeckBravoCatalogSeed,
+        welcomeToRatheSetSeed to welcomeToRatheCatalogSeed,
+        arcaneRisingSetSeed to arcaneRisingCatalogSeed,
+        crucibleOfWarSetSeed to crucibleOfWarCatalogSeed,
+        monarchSetSeed to monarchCatalogSeed,
+        blitzDeckMonarchLeviaSetSeed to blitzDeckMonarchLeviaCatalogSeed,
+        blitzDeckMonarchChaneSetSeed to blitzDeckMonarchChaneCatalogSeed,
+        blitzDeckMonarchBoltynSetSeed to blitzDeckMonarchBoltynCatalogSeed,
+        blitzDeckMonarchPrismSetSeed to blitzDeckMonarchPrismCatalogSeed,
+        blitzDeckTalesOfAriaBriarSetSeed to blitzDeckTalesOfAriaBriarCatalogSeed,
+        blitzDeckTalesOfAriaOldhimSetSeed to blitzDeckTalesOfAriaOldhimCatalogSeed,
+        blitzDeckTalesOfAriaLexiSetSeed to blitzDeckTalesOfAriaLexiCatalogSeed,
+        talesOfAriaSetSeed to talesOfAriaCatalogSeed,
+        everfestSetSeed to everfestCatalogSeed,
+        historyPackVol1SetSeed to historyPackVol1CatalogSeed,
+        classicBattlesRhinarVsDorintheaSetSeed to classicBattlesRhinarVsDorintheaCatalogSeed,
+        blitzDeckUprisingDromaiSetSeed to blitzDeckUprisingDromaiCatalogSeed,
+        blitzDeckUprisingFaiSetSeed to blitzDeckUprisingFaiCatalogSeed,
+        uprisingSetSeed to uprisingCatalogSeed,
+        dynastySetSeed to dynastyCatalogSeed,
+        blitzDeckOutsidersUzuriSetSeed to blitzDeckOutsidersUzuriCatalogSeed,
+        blitzDeckOutsidersRiptideSetSeed to blitzDeckOutsidersRiptideCatalogSeed,
+        blitzDeckOutsidersKatsuSetSeed to blitzDeckOutsidersKatsuCatalogSeed,
+        blitzDeckOutsidersBenjiSetSeed to blitzDeckOutsidersBenjiCatalogSeed,
+        blitzDeckOutsidersAzaleaSetSeed to blitzDeckOutsidersAzaleaCatalogSeed,
+        blitzDeckOutsidersArakniSetSeed to blitzDeckOutsidersArakniCatalogSeed,
+        outsidersSetSeed to outsidersCatalogSeed,
+        historicPack1BlitzDeckViseraiSetSeed to historicPack1BlitzDeckViseraiCatalogSeed,
+        historicPack1BlitzDeckRhinarSetSeed to historicPack1BlitzDeckRhinarCatalogSeed,
+        historicPack1BlitzDeckKanoSetSeed to historicPack1BlitzDeckKanoCatalogSeed,
+        historicPack1BlitzDeckDorintheaSetSeed to historicPack1BlitzDeckDorintheaCatalogSeed,
+        historicPack1BlitzDeckDashSetSeed to historicPack1BlitzDeckDashCatalogSeed,
+        historicPack1BlitzDeckBravoSetSeed to historicPack1BlitzDeckBravoCatalogSeed,
+        duskTillDawnSetSeed to duskTillDawnCatalogSeed,
+        roundTheTableTccxlssSetSeed to roundTheTableTccxlssCatalogSeed,
+        brightLightsSetSeed to brightLightsCatalogSeed,
+        blitzDeckHeavyHittersVictorSetSeed to blitzDeckHeavyHittersVictorCatalogSeed,
+        blitzDeckHeavyHittersOlympiaSetSeed to blitzDeckHeavyHittersOlympiaCatalogSeed,
+        blitzDeckHeavyHittersBetsySetSeed to blitzDeckHeavyHittersBetsyCatalogSeed,
+        blitzDeckHeavyHittersRhinarSetSeed to blitzDeckHeavyHittersRhinarCatalogSeed,
+        blitzDeckHeavyHittersKayoSetSeed to blitzDeckHeavyHittersKayoCatalogSeed,
+        blitzDeckHeavyHittersKassaiSetSeed to blitzDeckHeavyHittersKassaiCatalogSeed,
+        heavyHittersSetSeed to heavyHittersCatalogSeed,
+        armoryDeckKayoSetSeed to armoryDeckKayoCatalogSeed,
+        blitzDeckPartTheMistveilZenSetSeed to blitzDeckPartTheMistveilZenCatalogSeed,
+        blitzDeckPartTheMistveilNuuSetSeed to blitzDeckPartTheMistveilNuuCatalogSeed,
+        blitzDeckPartTheMistveilEnigmaSetSeed to blitzDeckPartTheMistveilEnigmaCatalogSeed,
+        partTheMistveilSetSeed to partTheMistveilCatalogSeed,
+        armoryDeckBoltynSetSeed to armoryDeckBoltynCatalogSeed,
+        armoryDeckAzaleaSetSeed to armoryDeckAzaleaCatalogSeed,
+        s1stStrikeSetSeed to s1stStrikeCatalogSeed,
+        blitzDeckRosettaVerdanceSetSeed to blitzDeckRosettaVerdanceCatalogSeed,
+        blitzDeckRosettaOscilioSetSeed to blitzDeckRosettaOscilioCatalogSeed,
+        blitzDeckRosettaAuroraSetSeed to blitzDeckRosettaAuroraCatalogSeed,
+        blitzDeckRosettaFlorianSetSeed to blitzDeckRosettaFlorianCatalogSeed,
+        rosettaSetSeed to rosettaCatalogSeed,
+        armoryDeckDashSetSeed to armoryDeckDashCatalogSeed,
+        armoryDeckJarlVetreidiSetSeed to armoryDeckJarlVetreidiCatalogSeed,
+        blitzDeckTheHuntedCindraSetSeed to blitzDeckTheHuntedCindraCatalogSeed,
+        blitzDeckTheHuntedArakniWebOfDeceitSetSeed to blitzDeckTheHuntedArakniWebOfDeceitCatalogSeed,
+        blitzDeckTheHuntedFangSetSeed to blitzDeckTheHuntedFangCatalogSeed,
+        blitzDeckTheHuntedArakniSetSeed to blitzDeckTheHuntedArakniCatalogSeed,
+        theHuntedSetSeed to theHuntedCatalogSeed,
+        gemPack1SetSeed to gemPack1CatalogSeed,
+        armoryDeckAuroraSetSeed to armoryDeckAuroraCatalogSeed,
+        armoryDeckMaxxNitroSetSeed to armoryDeckMaxxNitroCatalogSeed,
+        armoryDeckGravyBonesSetSeed to armoryDeckGravyBonesCatalogSeed,
+        gemPack2SetSeed to gemPack2CatalogSeed,
+        highSeasSetSeed to highSeasCatalogSeed,
+        armoryDeckIraSetSeed to armoryDeckIraCatalogSeed,
+        armoryDeckLegendsPrismSetSeed to armoryDeckLegendsPrismCatalogSeed,
+        armoryDeckLegendsViseraiSetSeed to armoryDeckLegendsViseraiCatalogSeed,
+        welcomeDeckBravoSetSeed to welcomeDeckBravoCatalogSeed,
+        masteryPackGuardianSetSeed to masteryPackGuardianCatalogSeed,
+        smashPalaceSetSeed to smashPalaceCatalogSeed,
+        armoryDeckPleiadesSetSeed to armoryDeckPleiadesCatalogSeed,
+        superSlamSetSeed to superSlamCatalogSeed,
+        gemPack3SetSeed to gemPack3CatalogSeed,
+        armoryDeckRhinarSetSeed to armoryDeckRhinarCatalogSeed,
+        armoryDeckArakniSetSeed to armoryDeckArakniCatalogSeed,
+        compendiumOfRatheAntiquityPackSetSeed to compendiumOfRatheAntiquityPackCatalogSeed,
+        compendiumOfRatheSetSeed to compendiumOfRatheCatalogSeed,
+        silverAgeChapter2SetSeed to silverAgeChapter2CatalogSeed,
+        silverAgeChapter1SetSeed to silverAgeChapter1CatalogSeed,
+        gemPack4SetSeed to gemPack4CatalogSeed,
+        armoryDeckOriginsHalaSetSeed to armoryDeckOriginsHalaCatalogSeed,
+        masteryPackWarriorSetSeed to masteryPackWarriorCatalogSeed,
+        armoryDeckZyggySetSeed to armoryDeckZyggyCatalogSeed,
+        gemPack5SetSeed to gemPack5CatalogSeed,
+        silverAgeChapter3SetSeed to silverAgeChapter3CatalogSeed,
+        omensOfTheThirdAgeSetSeed to omensOfTheThirdAgeCatalogSeed,
+    )
+
+    // Alle bekannten Vault-Kataloge (versiegelte Produkte) je Spiel gebündelt
+    private val allSealedCatalogs: List<SealedCatalogSeed> =
+        starterDecksCatalogSeed + onePieceStarterDecksCatalogSeed + digimonStarterDecksCatalogSeed +
+        onePieceSpecialSealedCatalogSeed + digimonSpecialSealedCatalogSeed + pokemonEliteTrainerBoxesCatalogSeed +
+        boosterBoxesCatalogSeed + yugiohBoosterBoxesCatalogSeed + yugiohStructureDecksCatalogSeed +
+        pokemonBoosterBoxesCatalogSeed + onePieceBoosterBoxesCatalogSeed + digimonBoosterBoxesCatalogSeed +
+        pokemonBattleDecksCatalogSeed + lorcanaBoosterBoxesCatalogSeed + lorcanaStarterDecksCatalogSeed +
+        mtgBoosterBoxesCatalogSeed + mtgSetBoostersCatalogSeed + mtgCollectorBoostersCatalogSeed + mtgCommanderDecksCatalogSeed +
+        riftboundSealedCatalogSeed + finalFantasySealedCatalogSeed + fleshAndBloodSealedCatalogSeed +
+        starWarsUnlimitedSealedCatalogSeed + alteredSealedCatalogSeed
+
+    // Baut den lokalen Kartenkatalog beim ersten Start auf (idempotent, egal ob
+    // Neuinstallation oder Update von einer älteren Version); ergänzt auch neu
+    // hinzugekommene Sets, wenn ältere Installationen nur ältere Sets kennen.
+    // Für bereits gesäte Sets werden die Preise trotzdem bei jedem Start aus
+    // den Seed-Daten nachgezogen (INSERT OR IGNORE würde sie sonst nie
+    // aktualisieren) - so kommen z.B. nachträglich ergänzte Marktpreise auch
+    // bei Installationen an, die die Sets schon vorher hatten.
+    // Versionswächter (03.08., Nutzer-Fund "APP startet spürbar langsam") -
+    // ensureCatalogSeeded()/ensureSealedCatalogSeeded() liefen bisher bei
+    // JEDEM App-Start komplett durch, inklusive einer einzelnen
+    // updateCatalogPrice()-UPDATE-Anweisung PRO KARTE über den kompletten,
+    // längst vollständig gesäten Katalog (Stand 03.08.: >135.000 Karten) -
+    // reine Verschwendung, wenn sich die gebündelten Katalogdaten seit dem
+    // letzten Start gar nicht geändert haben (der Normalfall: praktisch
+    // jeder Start außer direkt nach einem App-Update mit neuen/korrigierten
+    // Katalogdaten). CATALOG_SEED_VERSION/SEALED_CATALOG_SEED_VERSION werden
+    // nur bei einer inhaltlichen Änderung an allSets/allSealedCatalogs (neue
+    // Karten, korrigierte Preise) hochgezählt - stimmt die gespeicherte
+    // Version schon überein, ist der komplette Durchlauf ein einziger,
+    // günstiger SELECT statt zehntausender UPDATEs. Gleiches Prinzip wie
+    // PRAGMA user_version fürs Schema, nur für den Inhalt der gebündelten
+    // Seed-Daten statt der Tabellenstruktur. Zwei getrennte Settings/
+    // Konstanten statt einer gemeinsamen, damit beide Funktionen weiterhin
+    // unabhängig voneinander aufrufbar bleiben (siehe Aufrufer in App.kt/
+    // server/Main.kt) und sich nicht gegenseitig fälschlich als "erledigt"
+    // markieren.
+    // Leert den kompletten Kartenbestand (alle Accounts, alle Spiele) -
+    // Konten selbst und App-Einstellungen bleiben unberührt, siehe
+    // Kommentare bei den reset*-Queries in Portfolio.sq. Aufgerufen einmalig
+    // beim Übergang auf CATALOG_SEED_VERSION 4 (siehe ensureCatalogSeeded()).
+    private fun resetAllCollections() {
+        dbQueries.transaction {
+            dbQueries.resetAllDeckCards()
+            dbQueries.resetAllDecks()
+            dbQueries.resetAllBinderItems()
+            dbQueries.resetAllBinders()
+            dbQueries.resetAllWishlistItems()
+            dbQueries.resetAllWishlists()
+            dbQueries.resetAllPortfolioItems()
+        }
+    }
+
+    // onProgress (07.08., Nutzer-Fund "Splash zeigt nichts an, man denkt die
+    // App ist kaputt") - der einmalige Nachzug-Lauf bei einem
+    // CATALOG_SEED_VERSION-Sprung kann über 850 Sets/160.000+ Karten dauern,
+    // lief bisher aber komplett stumm im Hintergrund. App.kt zeigt damit auf
+    // dem Startbild jetzt "X von Y Sets", statt dass die Splash einfach
+    // unbestimmt hängt. Optionaler Parameter (kein Zwang für andere Aufrufer
+    // wie server/Main.kt, dem an einem UI-Fortschritt nicht gelegen ist).
+    fun ensureCatalogSeeded(onProgress: ((current: Int, total: Int) -> Unit)? = null) {
+        val storedVersion = getSetting(CATALOG_SEED_VERSION_KEY)
+        if (storedVersion == CATALOG_SEED_VERSION.toString()) return
+        // Globaler Bestands-Reset (06.08., Katalog-API-Umstieg) - läuft
+        // genau beim Übergang auf Version 4, nicht bei jedem weiteren
+        // Versionssprung danach (siehe Kommentar bei CATALOG_SEED_VERSION).
+        // Auf einer frischen Installation (storedVersion == null) ist die
+        // Sammlung ohnehin leer, der Reset dort ein günstiges No-Op.
+        if ((storedVersion?.toIntOrNull() ?: 0) < 4) {
+            resetAllCollections()
+        }
+        // Bugfix (04.08., Nutzer-Fund "YuGiOh komplett leer, auch nach
+        // Neuinstallation") - vorher lief die GESAMTE Seed-Liste (854 Sets,
+        // >160.000 Karten über alle Spiele) in EINER einzigen Transaktion.
+        // Scheiterte auch nur EIN Set (egal aus welchem Grund - Speicher,
+        // ein einzelner fehlerhafter Wert, ein Plattform-Limit bei so einer
+        // riesigen Transaktion), rollte die KOMPLETTE Transaktion zurück -
+        // alle vorher erfolgreich verarbeiteten Sets wären mit verschwunden,
+        // und der Fehler eines einzelnen Sets hätte den Rest unsichtbar
+        // gemacht. Jetzt: ein Set = eine eigene Transaktion, siehe
+        // seedSet() - schlägt eines fehl, bleiben alle anderen trotzdem
+        // erhalten, und welches Set genau scheitert, ist eingrenzbar.
+        val totalSets = allSets.size
+        allSets.forEachIndexed { index, (set, cards) ->
+            // Ein scheiterndes Set darf nicht verhindern, dass alle SPÄTEREN
+            // Sets in der Liste trotzdem verarbeitet werden (siehe
+            // Kommentar oben) - daher zusätzlich pro Set abgefangen statt
+            // die Ausnahme einfach durchzureichen
+            runCatching { seedSet(set, cards) }
+            onProgress?.invoke(index + 1, totalSets)
+        }
+        setSetting(CATALOG_SEED_VERSION_KEY, CATALOG_SEED_VERSION.toString())
+    }
+
+    private fun seedSet(set: CardSetSeed, cards: List<CatalogCardSeed>) {
+        dbQueries.transaction {
+            val existingCount = dbQueries.catalogCountForSet(set.id).executeAsOne()
+            if (existingCount > 0) {
+                // Bugfix (02.08., Nutzer-Fund "vom Bildwechsel fehlt jede
+                // Spur"): ein bereits gesätes Set bekam bisher NIE neu zur
+                // Seed-Liste hinzugekommene Karten nachgetragen (z.B.
+                // nachträglich ergänzte Alternate-Art-Varianten wie
+                // FB03-001-AA) - nur die Preise wurden aktualisiert.
+                // Bugfix (13.08., Nutzer-Fund "POR 036/088 immer noch nicht
+                // gefunden, auch nach cleanem Rebuild") - die Größenprüfung
+                // (cards.size > existingCount) davor lief NUR an, wenn die
+                // Seed-Liste GEWACHSEN ist. War ein Set aus irgendeinem Grund
+                // (z.B. ein auf einem früheren Gerätestand unvollständig
+                // gebliebener Seed-Durchlauf, dessen CATALOG_SEED_VERSION
+                // seitdem zufällig nicht mehr geändert wurde) mit WENIGER als
+                // der aktuellen Kartenzahl, aber trotzdem >0 Karten
+                // "stecken geblieben", wäre die Lücke NIE mehr nachgetragen
+                // worden - jeder künftige App-Start hätte denselben
+                // (falschen) existingCount gesehen und die Prüfung wieder
+                // übersprungen. INSERT OR IGNORE macht den Einfügeversuch für
+                // längst vorhandene Karten ohnehin zu einem günstigen No-Op,
+                // die Größenprüfung als Vorbedingung bringt also nichts außer
+                // genau diesem Risiko - deshalb jetzt immer versucht.
+                cards.forEach { card ->
+                    dbQueries.insertCatalogCard(
+                        id = card.id,
+                        setId = card.setId,
+                        number = card.number,
+                        name = card.name,
+                        variant = card.variant,
+                        rarity = card.rarity,
+                        imageUrl = card.imageUrl,
+                        marketPriceUsd = card.marketPriceUsd,
+                        cardmarketId = card.cardmarketId
+                    )
+                }
+                cards.forEach { card ->
+                    dbQueries.updateCatalogSeedFields(
+                        number = card.number,
+                        name = card.name,
+                        variant = card.variant,
+                        rarity = card.rarity,
+                        imageUrl = card.imageUrl,
+                        marketPriceUsd = card.marketPriceUsd,
+                        // SQLDelight kann den COALESCE(?, cardmarketId)-Parameter nicht
+                        // benennen (kein direkter Spalten-Bezug) - generierter Name ist
+                        // schlicht "value", siehe PortfolioQueries.kt.
+                        value = card.cardmarketId,
+                        id = card.id
+                    )
+                }
+                // totalCards nachziehen (09.08.) - siehe Kommentar bei
+                // updateCardSetTotalCards in Portfolio.sq
+                dbQueries.updateCardSetTotalCards(set.totalCards, set.id)
+                return@transaction
+            }
+
+            dbQueries.insertCardSet(
+                id = set.id,
+                name = set.name,
+                game = set.game,
+                totalCards = set.totalCards
+            )
+            cards.forEach { card ->
+                dbQueries.insertCatalogCard(
+                    id = card.id,
+                    setId = card.setId,
+                    number = card.number,
+                    name = card.name,
+                    variant = card.variant,
+                    rarity = card.rarity,
+                    imageUrl = card.imageUrl,
+                    marketPriceUsd = card.marketPriceUsd,
+                    cardmarketId = card.cardmarketId
+                )
+            }
+        }
+    }
+
+    // Einmalige Reparatur (31.07.): 18 One-Piece-Promo-/Vorabendcheck-Sets
+    // trugen wegen eines Tippfehlers "One Piece" (mit Leerzeichen) statt dem
+    // überall sonst benutzten "OnePiece" als game-Wert - dadurch fielen sie
+    // z.B. beim Katalog-Browsen nach Spiel UND beim Cardmarket-Preisabgleich
+    // (siehe applyCardmarketCardPrices()) unter den Tisch. ensureCatalogSeeded()
+    // aktualisiert bei bereits gesäten Sets nur Kartenpreise, nie
+    // CardSet.game - daher dieser separate, idempotente Reparatur-Schritt
+    // (No-Op, sobald einmal gelaufen).
+    fun ensureOnePieceGameNameFixed() {
+        dbQueries.updateCardSetGame("OnePiece", "One Piece")
+    }
+
+    // Analog zu ensureCatalogSeeded(), aber für den Vault-Katalog (Starter
+    // Decks etc.) - idempotent pro Spiel, damit spätere Ergänzungen (weitere
+    // Produktarten, weitere TCGs) bestehende Installationen sauber nachziehen
+    // Prüft (und ergänzt/aktualisiert) pro EINTRAG statt pro Spiel - sealed
+    // Produkte kommen anders als Kartensets immer wieder in kleinen Schüben
+    // dazu (z.B. erst Starter Decks, Monate später Booster Boxen fürs
+    // gleiche Spiel). Ein Check auf Spiel-Ebene ("hat DBFW schon irgendwas?")
+    // hätte neue Einträge für ein bereits gesätes Spiel für immer übersprungen
+    // - insertSealedCatalogEntry ist ohnehin INSERT OR IGNORE, also für
+    // längst vorhandene Einträge ein günstiges No-Op.
+    fun ensureSealedCatalogSeeded() {
+        if (getSetting(SEALED_CATALOG_SEED_VERSION_KEY) == SEALED_CATALOG_SEED_VERSION.toString()) return
+        dbQueries.transaction {
+            allSealedCatalogs.forEach { entry ->
+                dbQueries.insertSealedCatalogEntry(
+                    id = entry.id,
+                    name = entry.name,
+                    category = entry.category,
+                    game = entry.game,
+                    imageUrl = entry.imageUrl,
+                    marketPriceUsd = entry.marketPriceUsd
+                )
+                dbQueries.updateSealedCatalogPrice(marketPriceUsd = entry.marketPriceUsd, id = entry.id)
+            }
+        }
+        setSetting(SEALED_CATALOG_SEED_VERSION_KEY, SEALED_CATALOG_SEED_VERSION.toString())
+    }
+
+    // Alle Sets (mit ihrem "game"-Feld) - für die Spiel-Filterung in der UI,
+    // da CardCatalogEntity/SelectSetProgress selbst kein game-Feld tragen
+    fun getCardSets(): List<CardSet> {
+        return dbQueries.selectAllCardSets().executeAsList()
+    }
+
+    fun getCatalogForSet(setId: String): List<CardCatalogEntity> {
+        return dbQueries.selectCatalogForSet(setId).executeAsList()
+    }
+
+    // Namenssuche im Katalog eines TCG (26.07.) - für den "Karte hinzufügen"-
+    // Button auf der Weboberfläche (siehe Main.kt/searchCatalog in Portfolio.sq)
+    fun searchCatalog(game: String, query: String): List<SearchCatalog> {
+        return dbQueries.searchCatalog(game, query).executeAsList()
+    }
+
+    // Kompletter Katalog über alle Sets hinweg (für die Suche beim Hinzufügen)
+    fun getAllCatalog(): List<CardCatalogEntity> {
+        return allSets.flatMap { (set, _) -> dbQueries.selectCatalogForSet(set.id).executeAsList() }
+    }
+
+    // Cardmarket-Preisabgleich (28.07., verfeinert nach Nutzer-Vorgabe
+    // "match any card name you can match, take the cheapest if more than
+    // one", DANN nochmal erweitert: "we can use all of the prices - show
+    // the other prices under 'Marktpreis Special Card #1/#2', let the user
+    // decide") - reine Zuordnungs-/Schreiblogik, synchron wie der Rest des
+    // Repositories; Download/Netzwerk passiert separat in
+    // CardmarketPriceSync.kt (Netzwerk-IO gehört nicht in dieses rein
+    // DB-fokussierte Repository, siehe SyncClient.kt für dasselbe
+    // Trennungsprinzip beim Server-Sync).
+    //
+    // Zuordnung über den in den Cardmarket-Namen eingebetteten Kartencode
+    // (z.B. "(FB05-010)"). Cardmarket unterscheidet Kartenvarianten (Normal,
+    // Alternate Art, Release Event, Reprint, ...) textuell NICHT, führt aber
+    // pro Code oft mehrere Produkte (verschiedene Druckläufe/Varianten) mit
+    // teils sehr unterschiedlichen Preisen. STATT nur den vermeintlich
+    // richtigen Preis zu speichern, werden ALLE gefundenen Preise für einen
+    // Code (aufsteigend sortiert) in marketPriceEurOptions abgelegt - jede
+    // unserer Katalogzeilen mit diesem Code bekommt dieselbe Optionsliste.
+    // Der AKTIVE Preis (marketPriceEur) ergibt sich per Default aus der
+    // Position der Zeile innerhalb ihrer eigenen Geschwister-Zeilen (nach
+    // bekanntem USD-Alt-Preis aufsteigend sortiert: Normal ist praktisch
+    // immer am günstigsten, Alternate Art am teuersten) - dieselbe Logik wie
+    // zuvor, nur dass jetzt zusätzlich die vollständige Liste sichtbar
+    // bleibt. Eine bereits getroffene manuelle Nutzer-Auswahl
+    // (marketPriceEurSelectedIndex) übersteht einen erneuten Abgleich
+    // unverändert (Position im - ggf. neuen - Array, nicht der eingefrorene
+    // Preis, damit sich der Wert mit dem Markt mitbewegt). Verifiziert an
+    // mehreren echten Beispielen (siehe CONCEPT.md): das Preis-Verhältnis
+    // zwischen Normal und Alternate Art bei uns spiegelt sich zuverlässig in
+    // Cardmarkts Preisen für denselben Code wider. Rarity (Common/
+    // Uncommon/...) hilft hier NICHT als zusätzliches Zuordnungsmerkmal -
+    // Cardmarkets öffentliche Dateien enthalten keine Rarity-Angabe, gegen
+    // die man abgleichen könnte.
+    // Ausgeweitet (30./31.07.) von nur DBFW auf alle TCGs. Der "Join-Key",
+    // über den Cardmarket-Preise unseren Katalogzeilen zugeordnet werden,
+    // ist je nach Spiel entweder der eingebettete Kartencode (DBFW,
+    // OnePiece, Digimon, FinalFantasy - siehe extractCardmarketMatchKey())
+    // oder, wo Cardmarket keinen Code im Namen führt (MTG, Pokemon, YuGiOh,
+    // Riftbound, Lorcana, FleshAndBlood), der bereinigte Kartenname. Beides
+    // an echten Downloads verifiziert (siehe CONCEPT.md für alle
+    // Trefferquoten) - Code-basiert ist deutlich zuverlässiger (98-100%,
+    // eindeutig pro Set+Nummer) als Name-basiert (55-97%, bei oft
+    // nachgedruckten Karten mit Namensgleichheit über viele Sets hinweg
+    // zwangsläufig ungenauer). Nutzer-Entscheidung: trotzdem für alle
+    // TCGs einbauen, da die manuelle "Special Card #N"-Auswahl (siehe oben)
+    // eine falsche Automatik-Zuordnung jederzeit korrigierbar macht.
+    fun applyCardmarketCardPrices(
+        game: String,
+        priceGuide: CardmarketPriceGuideFile,
+        products: CardmarketProductCatalogFile
+    ): CardmarketSyncResult {
+        val priceByProductId = priceGuide.priceGuides.associateBy { it.idProduct }
+
+        val pricesByKey = mutableMapOf<String, MutableList<Double>>()
+        for (p in products.products) {
+            val key = extractCardmarketMatchKey(game, p.name) ?: continue
+            val price = priceByProductId[p.idProduct] ?: continue
+            val eur = price.trend?.takeIf { it > 0 }
+                ?: price.avg?.takeIf { it > 0 }
+                ?: price.low?.takeIf { it > 0 }
+                ?: continue
+            pricesByKey.getOrPut(key) { mutableListOf() }.add(eur)
+        }
+        pricesByKey.values.forEach { it.sort() }
+
+        val ourCards = dbQueries.selectCatalogForGame(game).executeAsList()
+
+        // Manuelle Zuordnungen (04.08., Nutzer-Vorgabe "der User sieht nach
+        // und wählt aus und ordnet zu und die App merkt sich das") - für
+        // Karten, die der Nutzer bereits einmal manuell einer Cardmarket-
+        // Produkt-id zugeordnet hat, wird der Preis DIREKT über diese id
+        // geholt statt über den Name-/Code-Abgleich unten geraten. Diese
+        // Karten werden danach aus der automatischen Zuordnung
+        // ausgeschlossen, damit die manuelle Wahl nicht überschrieben wird.
+        val manualMappings = dbQueries.selectCardmarketManualMappingsForGame(game).executeAsList()
+        val manualCardIds = manualMappings.map { it.cardId }.toSet()
+        var manualMatched = 0
+        dbQueries.transaction {
+            manualMappings.forEach { mapping ->
+                val row = ourCards.find { it.id == mapping.cardId } ?: return@forEach
+                val price = priceByProductId[mapping.cardmarketProductId]
+                val eur = price?.trend?.takeIf { it > 0 }
+                    ?: price?.avg?.takeIf { it > 0 }
+                    ?: price?.low?.takeIf { it > 0 }
+                dbQueries.updateCatalogEurOptionsAndPrice(encodeCardmarketOptions(listOfNotNull(eur)), eur, row.id)
+                if (eur != null) manualMatched++
+            }
+        }
+
+        // Direkter ID-Abgleich (06.08.) - Karten mit bekannter cardmarketId
+        // (bisher nur MTG, via Scryfall) bekommen ihren Preis EXAKT über
+        // Cardmarkets eigene Produkt-id statt über den unten folgenden
+        // Namens-/Code-Fuzzy-Match - zuverlässiger, vor allem bei Karten,
+        // deren bereinigter Name mit einer anderen Variante kollidiert.
+        // Nimmt sich ihre Karten aus der Namens-Zuordnung heraus (idMatchedIds),
+        // damit dieselbe Karte nicht doppelt (und ggf. widersprüchlich)
+        // zugeordnet wird.
+        val idMatchedIds = mutableSetOf<String>()
+        var idMatched = 0
+        dbQueries.transaction {
+            ourCards
+                .filter { it.id !in manualCardIds && it.cardmarketId != null }
+                .forEach { row ->
+                    val price = priceByProductId[row.cardmarketId] ?: return@forEach
+                    val eur = price.trend?.takeIf { it > 0 }
+                        ?: price.avg?.takeIf { it > 0 }
+                        ?: price.low?.takeIf { it > 0 }
+                    dbQueries.updateCatalogEurOptionsAndPrice(encodeCardmarketOptions(listOfNotNull(eur)), eur, row.id)
+                    idMatchedIds += row.id
+                    if (eur != null) idMatched++
+                }
+        }
+
+        val rowsByKey = ourCards
+            .filter { it.id !in manualCardIds && it.id !in idMatchedIds }
+            .mapNotNull { row ->
+                val key = ourCatalogMatchKeyCandidates(game, row.number, row.name).firstOrNull { it in pricesByKey }
+                key?.let { it to row }
+            }
+            .groupBy({ it.first }, { it.second })
+
+        var matched = manualMatched + idMatched
+        dbQueries.transaction {
+            rowsByKey.forEach { (key, rows) ->
+                val cmPrices = pricesByKey[key] ?: return@forEach
+                val optionsJson = encodeCardmarketOptions(cmPrices)
+                val sortedRows = rows.sortedBy { it.marketPriceUsd ?: 0.0 }
+                sortedRows.forEachIndexed { rank, row ->
+                    val selectedIndex = row.marketPriceEurSelectedIndex
+                        ?.toInt()
+                        ?.takeIf { it in cmPrices.indices }
+                    val effectiveIndex = selectedIndex ?: rank.takeIf { it in cmPrices.indices }
+                    val effectivePrice = effectiveIndex?.let { cmPrices[it] }
+                    dbQueries.updateCatalogEurOptionsAndPrice(optionsJson, effectivePrice, row.id)
+                    if (effectivePrice != null) matched++
+                }
+            }
+        }
+        return CardmarketSyncResult(matched, ourCards.size - matched, pricesByKey.size)
+    }
+
+    // ---------- Manuelle Cardmarket-Zuordnung (04.08.) ----------
+
+    fun setCardmarketManualMapping(cardId: String, cardmarketProductId: Long, cardmarketProductName: String) {
+        dbQueries.upsertCardmarketManualMapping(cardId, cardmarketProductId, cardmarketProductName, currentTimeMillis())
+    }
+
+    fun removeCardmarketManualMapping(cardId: String) {
+        dbQueries.deleteCardmarketManualMapping(cardId)
+    }
+
+    fun getCardmarketManualMapping(cardId: String): CardmarketManualMapping? =
+        dbQueries.selectCardmarketManualMappingForCard(cardId).executeAsOneOrNull()
+
+    fun getCardmarketManualMappingsForGame(game: String): List<CardmarketManualMapping> =
+        dbQueries.selectCardmarketManualMappingsForGame(game).executeAsList()
+
+    // Besessene Katalogkarten ohne Preis (04.08., Werteübersicht "X Karten
+    // ohne Preis") - Grundlage für die manuelle Zuordnungs-Übersicht
+    fun getOwnedCatalogCardsWithoutPrice(game: String, accountId: Long): List<CardCatalogEntity> =
+        dbQueries.selectOwnedCatalogCardsWithoutPrice(game, accountId).executeAsList()
+
+    // Für den Server (04.08., Web-Oberfläche der manuellen Cardmarket-
+    // Zuordnung) - App/Kotlin-Multiplatform-Seite lädt den vollen Katalog
+    // ohnehin schon komplett, hier auf dem Server bewusst gezielt EINE
+    // Karte statt des gesamten Katalogs
+    fun getCatalogCard(cardId: String): CardCatalogEntity? =
+        dbQueries.selectCatalogCardById(cardId).executeAsOneOrNull()
+
+    // Für den Server (12.08., "Aus dem Set durchstöbern"-Feature) -
+    // findSetExpansionId()/browseCardmarketProductsInSet() in
+    // CardmarketPriceSync.kt brauchen den vollen Katalog eines Spiels, um
+    // eine bereits bepreiste Schwesterkarte im selben Set zu finden.
+    fun getCatalogForGame(game: String): List<CardCatalogEntity> =
+        dbQueries.selectCatalogForGame(game).executeAsList()
+
+    fun getGameForCard(cardId: String): String? =
+        dbQueries.selectGameForCard(cardId).executeAsOneOrNull()
+
+    // Cardmarket-EUR-Preise für Sealed-Produkte (03.08., Nutzer-Fund "ich
+    // meine da stehen immer noch alte USD-Preise") - Name-basierter Abgleich
+    // für alle Spiele (siehe cleanSealedProductName() in CardmarketPriceSync.kt).
+    // Bugfix (11.08., Nutzer-Vorgabe "können wir das dann so wie bei den
+    // Karten machen die garnicht zu geordnet sind oder von denen es mehrere
+    // Preise gibt") - der bereinigte Name ist entgegen der ursprünglichen
+    // Annahme NICHT immer eindeutig (z.B. "Standard"/"Foil"-Editionen
+    // desselben Produkts können auf denselben Schlüssel bereinigen); bisher
+    // gewann dabei stillschweigend die ZUERST gefundene Notierung, die
+    // anderen gingen verloren. Jetzt exakt dasselbe Muster wie bei
+    // applyCardmarketCardPrices(): ALLE gefundenen Preise pro Schlüssel als
+    // Optionen speichern (marketPriceEurOptions), Vorrang für manuelle
+    // Zuordnungen (siehe SealedCardmarketManualMapping/
+    // setSealedCardmarketManualMapping()), Rückfall auf die günstigste
+    // Option per Default, außer der Nutzer hat bereits manuell eine
+    // bestimmte Option gewählt (marketPriceEurSelectedIndex).
+    fun applyCardmarketSealedPrices(
+        game: String,
+        priceGuide: CardmarketPriceGuideFile,
+        products: CardmarketProductCatalogFile
+    ): CardmarketSyncResult {
+        val priceByProductId = priceGuide.priceGuides.associateBy { it.idProduct }
+
+        val pricesByKey = mutableMapOf<String, MutableList<Double>>()
+        for (p in products.products) {
+            if (!isRelevantSealedProduct(game, p.name)) continue
+            val key = cleanSealedProductName(p.name).takeIf { it.isNotBlank() } ?: continue
+            val price = priceByProductId[p.idProduct] ?: continue
+            val eur = price.trend?.takeIf { it > 0 }
+                ?: price.avg?.takeIf { it > 0 }
+                ?: price.low?.takeIf { it > 0 }
+                ?: continue
+            pricesByKey.getOrPut(key) { mutableListOf() }.add(eur)
+        }
+        pricesByKey.values.forEach { it.sort() }
+
+        val ourEntries = dbQueries.selectSealedCatalog().executeAsList().filter { it.game == game }
+
+        val manualMappings = dbQueries.selectSealedCardmarketManualMappingsForGame(game).executeAsList()
+        val manualSealedIds = manualMappings.map { it.sealedId }.toSet()
+        var manualMatched = 0
+        dbQueries.transaction {
+            manualMappings.forEach { mapping ->
+                val entry = ourEntries.find { it.id == mapping.sealedId } ?: return@forEach
+                val price = priceByProductId[mapping.cardmarketProductId]
+                val eur = price?.trend?.takeIf { it > 0 }
+                    ?: price?.avg?.takeIf { it > 0 }
+                    ?: price?.low?.takeIf { it > 0 }
+                dbQueries.updateSealedCatalogEurOptionsAndPrice(encodeCardmarketOptions(listOfNotNull(eur)), eur, entry.id)
+                if (eur != null) manualMatched++
+            }
+        }
+
+        var matched = manualMatched
+        dbQueries.transaction {
+            ourEntries.filter { it.id !in manualSealedIds }.forEach { entry ->
+                val cmPrices = pricesByKey[cleanSealedProductName(entry.name)] ?: return@forEach
+                val optionsJson = encodeCardmarketOptions(cmPrices)
+                val selectedIndex = entry.marketPriceEurSelectedIndex?.toInt()?.takeIf { it in cmPrices.indices }
+                val effectivePrice = cmPrices[selectedIndex ?: 0]
+                dbQueries.updateSealedCatalogEurOptionsAndPrice(optionsJson, effectivePrice, entry.id)
+                matched++
+            }
+        }
+        return CardmarketSyncResult(matched, ourEntries.size - matched, pricesByKey.size)
+    }
+
+    // ---------- Manuelle Cardmarket-Zuordnung für Sealed-Produkte (11.08.) ----------
+    // Pendant zu den Karten-Funktionen weiter oben (setCardmarketManualMapping()
+    // etc.), siehe dortige Kommentare für die Begründung.
+
+    fun setSealedCardmarketManualMapping(sealedId: String, cardmarketProductId: Long, cardmarketProductName: String) {
+        dbQueries.upsertSealedCardmarketManualMapping(sealedId, cardmarketProductId, cardmarketProductName, currentTimeMillis())
+    }
+
+    fun removeSealedCardmarketManualMapping(sealedId: String) {
+        dbQueries.deleteSealedCardmarketManualMapping(sealedId)
+    }
+
+    fun getSealedCardmarketManualMapping(sealedId: String): SealedCardmarketManualMapping? =
+        dbQueries.selectSealedCardmarketManualMappingForSealed(sealedId).executeAsOneOrNull()
+
+    fun getSealedCardmarketManualMappingsForGame(game: String): List<SealedCardmarketManualMapping> =
+        dbQueries.selectSealedCardmarketManualMappingsForGame(game).executeAsList()
+
+    // Besessene Sealed-Produkte ohne Preis (11.08., Werteübersicht-Pendant zu
+    // getOwnedCatalogCardsWithoutPrice())
+    fun getOwnedSealedProductsWithoutPrice(game: String, accountId: Long): List<SealedCatalogEntity> =
+        dbQueries.selectOwnedSealedCatalogWithoutPrice(game, accountId).executeAsList()
+
+    fun getSealedCatalogEntry(sealedId: String): SealedCatalogEntity? =
+        dbQueries.selectSealedCatalogById(sealedId).executeAsOneOrNull()
+
+    // Manuelle Auswahl unter mehreren Cardmarket-Notierungen (11.08.), Pendant
+    // zu selectCardmarketPriceOption()/clearCardmarketPriceSelection().
+    fun selectSealedCardmarketPriceOption(sealedId: String, index: Int) {
+        val entry = dbQueries.selectSealedCatalogById(sealedId).executeAsOneOrNull() ?: return
+        val options = decodeCardmarketOptions(entry.marketPriceEurOptions)
+        if (index !in options.indices) return
+        dbQueries.updateSealedCatalogEurSelection(index.toLong(), currentTimeMillis(), options[index], sealedId)
+    }
+
+    fun clearSealedCardmarketPriceSelection(sealedId: String) {
+        val entry = dbQueries.selectSealedCatalogById(sealedId).executeAsOneOrNull() ?: return
+        val options = decodeCardmarketOptions(entry.marketPriceEurOptions)
+        dbQueries.updateSealedCatalogEurSelection(null, currentTimeMillis(), options.firstOrNull(), sealedId)
+    }
+
+    // Pokémon-Deckbau-Regel-Metadaten (02.08.) - siehe PokemonCardRulesSync.kt
+    // für die Herkunft der Daten/das Namens-Matching. Matched innerhalb EINES
+    // Sets über die (von führenden Nullen/"/total" befreite) Kartennummer -
+    // best-effort wie beim Cardmarket-Abgleich, nicht zugeordnete Karten
+    // bleiben einfach NULL statt geraten zu werden.
+    data class PokemonRulesSyncResult(val matched: Int, val unmatched: Int)
+
+    fun applyPokemonRuleMetadata(setId: String, ruleCards: List<PokemonRuleCard>): PokemonRulesSyncResult {
+        val byNumber = ruleCards.groupBy { stripNumberForRulesMatch(it.number) }
+        val ourCards = dbQueries.selectCatalogForSet(setId).executeAsList()
+        var matched = 0
+        dbQueries.transaction {
+            ourCards.forEach { row ->
+                val ruleCard = byNumber[stripNumberForRulesMatch(row.number)]?.firstOrNull() ?: return@forEach
+                val subtypesJson = backupJson.encodeToString(ruleCard.subtypes)
+                val legalStandard = ruleCard.legalities?.standard?.let { if (it == "Legal") 1L else 0L }
+                val legalExpanded = ruleCard.legalities?.expanded?.let { if (it == "Legal") 1L else 0L }
+                dbQueries.updateCatalogRuleMetadata(ruleCard.supertype, subtypesJson, legalStandard, legalExpanded, row.id)
+                matched++
+            }
+        }
+        return PokemonRulesSyncResult(matched, ourCards.size - matched)
+    }
+
+    // DBFW-Deckbau-Regel-Metadaten (03.08.) - siehe DbfwCardRulesSync.kt für
+    // die Herkunft der Daten. Anders als bei Pokémon EIN globaler Abgleich
+    // über die Kartennummer statt pro Set (siehe dortigen Kommentar) -
+    // iteriert trotzdem pro DBFW-Set (dieselbe Katalog-Abfrage wie bei
+    // Pokémon wiederverwendet), um keine weitere SQL-Abfrage einzuführen.
+    data class DbfwRulesSyncResult(val matched: Int, val unmatched: Int)
+
+    fun applyDbfwRuleMetadata(ruleCards: Map<String, DbfwRuleCard>): DbfwRulesSyncResult {
+        val dbfwSetIds = getCardSets().filter { it.game == "DBFW" }.map { it.id }
+        var matched = 0
+        var total = 0
+        dbQueries.transaction {
+            dbfwSetIds.forEach { setId ->
+                dbQueries.selectCatalogForSet(setId).executeAsList().forEach { row ->
+                    total++
+                    val ruleCard = ruleCards[row.number] ?: return@forEach
+                    val colorList = if (ruleCard.color.isNullOrBlank() || ruleCard.color == "-") {
+                        emptyList()
+                    } else {
+                        listOf(ruleCard.color)
+                    }
+                    dbQueries.updateCatalogRuleMetadata(ruleCard.cardType, backupJson.encodeToString(colorList), null, null, row.id)
+                    matched++
+                }
+            }
+        }
+        return DbfwRulesSyncResult(matched, total - matched)
+    }
+
+    // Public statt private (analog decodeCardmarketOptions) - App/Server
+    // brauchen ruleSubtypes für die Anzeige/Regelprüfung
+    fun decodeRuleSubtypes(json: String?): List<String> {
+        if (json.isNullOrBlank()) return emptyList()
+        return runCatching { backupJson.decodeFromString<List<String>>(json) }.getOrDefault(emptyList())
+    }
+
+    private fun encodeCardmarketOptions(options: List<Double>): String =
+        backupJson.encodeToString(options)
+
+    // Public statt private, damit Server/App den JSON-kodierten Optionen-
+    // Text aus CardCatalogEntity.marketPriceEurOptions auch außerhalb der
+    // Repository (z.B. für eine REST-Antwort) decodieren können, ohne die
+    // Logik zu duplizieren.
+    fun decodeCardmarketOptions(json: String?): List<Double> {
+        if (json.isNullOrBlank()) return emptyList()
+        return runCatching { backupJson.decodeFromString<List<Double>>(json) }.getOrDefault(emptyList())
+    }
+
+    // Manuelle Auswahl (28.07., Nutzer-Vorgabe "let the user decide") -
+    // welche der mehreren Cardmarket-Notierungen für diesen Kartencode zur
+    // eigenen physischen Karte gehört. Bleibt über künftige tägliche
+    // Preisabgleiche hinweg erhalten (siehe applyCardmarketCardPrices()) und
+    // wird über den App<->Server-Sync abgeglichen (siehe SyncModels.kt) -
+    // anders als die rohen Cardmarket-Daten selbst ist das echte Nutzer-
+    // Angabe, kein unabhängig neu ladbarer Referenzwert.
+    fun selectCardmarketPriceOption(cardId: String, index: Int) {
+        val card = dbQueries.selectCatalogCardById(cardId).executeAsOneOrNull() ?: return
+        val options = decodeCardmarketOptions(card.marketPriceEurOptions)
+        if (index !in options.indices) return
+        dbQueries.updateCatalogEurSelection(index.toLong(), currentTimeMillis(), options[index], cardId)
+    }
+
+    // Zurück zur automatischen Zuordnung - der nächste tägliche Abgleich
+    // berechnet den positionsbasierten Standardwert neu; bis dahin fällt der
+    // aktive Preis auf die günstigste bekannte Option zurück.
+    fun clearCardmarketPriceSelection(cardId: String) {
+        val card = dbQueries.selectCatalogCardById(cardId).executeAsOneOrNull() ?: return
+        val options = decodeCardmarketOptions(card.marketPriceEurOptions)
+        dbQueries.updateCatalogEurSelection(null, currentTimeMillis(), options.firstOrNull(), cardId)
+    }
+
+    fun getSetProgress(accountId: Long): List<SelectSetProgress> {
+        return dbQueries.selectSetProgress(accountId).executeAsList()
+    }
+
+    fun getAllCards(accountId: Long): List<SelectAll> {
+        return dbQueries.selectAll(accountId).executeAsList()
+    }
+
+    // Wie getAllCards, aber mit TCG-Namen (game) - für den Server/die
+    // Weboberfläche, siehe selectAllWithGame in Portfolio.sq
+    fun getAllCardsWithGame(accountId: Long): List<SelectAllWithGame> {
+        return dbQueries.selectAllWithGame(accountId).executeAsList()
+    }
+
+    // Besitzt man die Karte (gleiche cardId + gleicher Holo-Status) schon, wird
+    // die Anzahl auf dem bestehenden Eintrag draufgerechnet statt eine zweite,
+    // identisch aussehende Zeile anzulegen (betrifft v.a. den Kamera-Scan, wo
+    // dieselbe Karte leicht mehrfach fotografiert wird)
+    // Für den Massenimport (siehe App.kt Review-Screen "In Sammlung
+    // übernehmen"): alle Karten in EINER Transaktion statt vieler einzelner
+    // addCard()-Aufrufe - schneller bei größeren Stapeln (z.B. 18+ Karten aus
+    // einem Kamera-Massenimport) und wichtiger: alles-oder-nichts. Ohne das
+    // wäre bei N einzelnen Aufrufen ein Fehler mittendrin ein inkonsistenter
+    // Zwischenzustand (manche Karten drin, manche nicht), und eine nicht
+    // abgefangene Exception in der Aufrufer-Coroutine könnte die App
+    // mitreißen (siehe try/catch dort)
+    data class CardToAdd(
+        val name: String,
+        val price: Double,
+        val quantity: Long,
+        val isHolo: Boolean,
+        val imageUrl: String? = null,
+        val cardId: String? = null
+    )
+
+    fun addCards(accountId: Long, items: List<CardToAdd>) {
+        dbQueries.transaction {
+            items.forEach { item ->
+                addCardInternal(accountId, item.name, item.price, item.quantity, item.isHolo, item.imageUrl, item.cardId)
+            }
+        }
+    }
+
+    fun addCard(
+        accountId: Long,
+        name: String,
+        price: Double,
+        quantity: Long,
+        isHolo: Boolean,
+        imageUrl: String? = null,
+        cardId: String? = null
+    ) = addCardInternal(accountId, name, price, quantity, isHolo, imageUrl, cardId)
+
+    private fun addCardInternal(
+        accountId: Long,
+        name: String,
+        price: Double,
+        quantity: Long,
+        isHolo: Boolean,
+        imageUrl: String? = null,
+        cardId: String? = null
+    ) {
+        val holoValue = if (isHolo) 1L else 0L
+        val existing = cardId?.let { dbQueries.selectByCardIdAndHolo(it, holoValue, accountId).executeAsOneOrNull() }
+        if (existing != null) {
+            dbQueries.updateItem(
+                quantity = existing.quantity + quantity,
+                isHolo = holoValue,
+                purchasePrice = existing.purchasePrice,
+                updatedAt = currentTimeMillis(),
+                id = existing.id
+            )
+        } else {
+            dbQueries.insertItem(
+                name = name,
+                purchasePrice = price,
+                quantity = quantity,
+                isHolo = holoValue,
+                imageUrl = imageUrl,
+                cardId = cardId,
+                updatedAt = currentTimeMillis(),
+                accountId = accountId
+            )
+        }
+    }
+
+    // Binder-Optik (25.08., Nutzer-Vorgabe "Binder als Bild") - Farbe +
+    // optionales Cover-Foto, bewusst ohne Sync (siehe Spalten-Kommentar in
+    // Portfolio.sq). null = zurück auf Standard (Akzentfarbe/kein Foto).
+    fun setBinderColor(id: Long, colorHex: String?) = dbQueries.updateBinderColor(colorHex, id)
+    fun setBinderCoverImage(id: Long, path: String?) = dbQueries.updateBinderCoverImage(path, id)
+
+    // Sealed-Wantsliste (25.08., Nutzer-Vorgabe) - siehe Tabellen-Kommentar
+    // in Portfolio.sq. Eine Liste pro TCG, Einträge zeigen live den
+    // Cardmarket-Preis ihres Katalogeintrags.
+    fun getSealedWishlist(game: String, accountId: Long) =
+        dbQueries.selectSealedWishlistForGame(game, accountId).executeAsList()
+
+    fun addSealedWishlistItem(game: String, catalogId: String, accountId: Long) {
+        dbQueries.insertSealedWishlistItem(game, catalogId, currentTimeMillis(), accountId)
+    }
+
+    fun removeSealedWishlistItem(id: Long) = dbQueries.deleteSealedWishlistItem(id)
+
+    // null = Alarm entfernen
+    fun setSealedWishlistAlarm(id: Long, priceEur: Double?) =
+        dbQueries.updateSealedWishlistAlarm(priceEur, id)
+
+    // Alle Einträge (über alle TCGs), deren Alarm-Schwelle der aktuelle
+    // Cardmarket-Preis erreicht/unterschritten hat - für die Meldung beim
+    // App-Start nach dem täglichen Preisabgleich
+    fun getTriggeredSealedAlarms(accountId: Long) =
+        dbQueries.selectTriggeredSealedAlarms(accountId).executeAsList()
+
+    // Eigener Preis für Sealed-Produkte (20.08., Nutzer-Vorgabe "genau so
+    // wie bei Karten") - gleiche Semantik wie setCustomPrice() darunter
+    fun setSealedCustomPrice(id: Long, priceEur: Double?, inTotal: Boolean, inGameTotal: Boolean) {
+        dbQueries.updateSealedCustomPrice(
+            customPriceEur = priceEur,
+            customPriceInTotal = if (inTotal) 1L else 0L,
+            customPriceInGameTotal = if (inGameTotal) 1L else 0L,
+            updatedAt = currentTimeMillis(),
+            id = id
+        )
+    }
+
+    // Eigener Preis (18.08., Nutzer-Vorgabe) - null löscht den Eintrag.
+    // Semantik der Schalter: siehe Spalten-Kommentar in Portfolio.sq.
+    fun setCustomPrice(id: Long, priceEur: Double?, inTotal: Boolean, inGameTotal: Boolean) {
+        dbQueries.updateCustomPrice(
+            customPriceEur = priceEur,
+            customPriceInTotal = if (inTotal) 1L else 0L,
+            customPriceInGameTotal = if (inGameTotal) 1L else 0L,
+            updatedAt = currentTimeMillis(),
+            id = id
+        )
+    }
+
+    // Holo-Stil je Karte (18.08.) - null = zurück auf die globale Einstellung
+    fun setCardHoloStyle(id: Long, style: String?) {
+        dbQueries.updateHoloStyle(holoStyle = style, updatedAt = currentTimeMillis(), id = id)
+    }
+
+    fun updateCard(id: Long, quantity: Long, isHolo: Boolean, purchasePrice: Double) {
+        val holoValue = if (isHolo) 1L else 0L
+        val now = currentTimeMillis()
+        // isHolo ist Teil der Sync-Identität (siehe cardKey) - ändert sich der
+        // Holo-Status, muss die ALTE Identität als gelöscht vermerkt werden,
+        // sonst würde der Sync die Karte auf anderen Geräten künftig doppelt
+        // führen (alte + neue Holo-Variante nebeneinander) statt sie zu ersetzen
+        val existing = dbQueries.selectItemById(id).executeAsOneOrNull()
+        if (existing != null && existing.isHolo != holoValue) {
+            dbQueries.insertDeletionLog("card", cardKey(existing.cardId, existing.isHolo, existing.name), now, existing.accountId)
+        }
+        dbQueries.updateItem(
+            quantity = quantity,
+            isHolo = holoValue,
+            purchasePrice = purchasePrice,
+            updatedAt = now,
+            id = id
+        )
+    }
+
+    // Wechselt, welche Katalogkarte (Art-Variante, z.B. Normal -> Alternate
+    // Art) eine besessene Karte repräsentiert (31.07., Nutzer-Vorgabe: "wenn
+    // man einen anderen Preis wählt, kann man auch das Bild ändern - Standard
+    // bleibt aber mit auswählbar"). Bewusst UNABHÄNGIG von der Cardmarket-
+    // Preisauswahl (selectCardmarketPriceOption()) - Preis-Optionen und
+    // eigene Art-Varianten sind nicht immer 1:1 (z.B. 4 Cardmarket-Preise,
+    // aber nur 2 eigene Katalogzeilen), die Zuordnung bleibt deshalb
+    // Handarbeit statt "Preis #N wählt automatisch Bild #N".
+    // cardId ist Teil der Sync-Identität (siehe cardKey()) - wie bei
+    // updateCard()/isHolo muss die ALTE Identität als gelöscht vermerkt
+    // werden, sonst führt der Sync alte UND neue Variante künftig doppelt
+    // statt sie zu ersetzen. Identifiziert die Zeile bewusst über
+    // cardId+isHolo statt einer numerischen id, damit Server/Web denselben
+    // Aufruf nutzen können, ohne die reine DB-id über die REST-Schnittstelle
+    // preisgeben zu müssen.
+    fun changeCardVariant(accountId: Long, cardId: String, isHolo: Boolean, newCardId: String) {
+        if (cardId == newCardId) return
+        val holoValue = if (isHolo) 1L else 0L
+        val existing = dbQueries.selectByCardIdAndHolo(cardId, holoValue, accountId).executeAsOneOrNull() ?: return
+        val now = currentTimeMillis()
+        dbQueries.insertDeletionLog("card", cardKey(existing.cardId, existing.isHolo, existing.name), now, accountId)
+        dbQueries.updateItemCardId(newCardId, now, existing.id)
+        // Binder-Slots mit derselben Karte ziehen den Varianten-Wechsel nach
+        // (04.08., Nutzer-Fund) - BinderItemEntity kennt kein isHolo, daher
+        // reicht der Abgleich über cardId allein
+        // Bugfix (11.08., Nutzer-Fund "Art-Style ändert sich noch immer nicht
+        // im Binder") - das reine UPDATE unten schreibt die cardId lokal um,
+        // hinterlässt aber KEINEN Löschvermerk für die ALTE
+        // binderItemKey-Identität (cardId+name, siehe importAccountBundle()).
+        // Der Server hält deshalb weiter eine Zeile mit der alten cardId, die
+        // performSync() (wird direkt nach jedem Varianten-Wechsel aufgerufen,
+        // siehe App.kt) als "neuen, unbekannten" Eintrag interpretiert und
+        // erneut reinholt - dadurch sprang das Binder-Bild kurz nach der
+        // Änderung wieder auf die alte Art zurück. Jede betroffene Zeile
+        // bekommt deshalb JETZT explizit einen Löschvermerk für ihre alte
+        // Identität, bevor die cardId umgeschrieben wird - exakt dasselbe
+        // Muster wie bei cardKey() oben für die Karte selbst.
+        dbQueries.selectBinderItemsByCardIdForAccount(cardId, accountId).executeAsList().forEach { row ->
+            dbQueries.insertDeletionLog("binderItem", "${row.binderUid}|${binderItemKey(cardId, row.name)}", now, accountId)
+        }
+        dbQueries.updateBinderItemsCardId(newCardId, cardId, accountId)
+        // Preisauswahl mitnehmen (12.08., Nutzer-Fund "nach Bildwechsel muss
+        // man den Preis nochmal auswählen, als würde die App es sich nicht
+        // merken") - marketPriceEurSelectedIndex hängt an der Katalog-cardId,
+        // nicht am besessenen Exemplar. Wechselt die Karte auf eine andere
+        // Katalog-cardId (z.B. eine Alternate-Art-Variante), hat DIE ihre
+        // eigene, meist noch unangetastete Auswahl (Index 0/Standard) - der
+        // zuvor manuell gewählte Preis wirkte dadurch "vergessen". Fix: den
+        // EUR-WERT (nicht den Index - die Optionslisten können pro
+        // Katalogeintrag unterschiedlich lang/sortiert sein) in der neuen
+        // Optionsliste wiederfinden und dort erneut auswählen.
+        val oldCatalogCard = dbQueries.selectCatalogCardById(cardId).executeAsOneOrNull()
+        val oldSelectedIndex = oldCatalogCard?.marketPriceEurSelectedIndex
+        if (oldSelectedIndex != null) {
+            val oldValue = decodeCardmarketOptions(oldCatalogCard.marketPriceEurOptions).getOrNull(oldSelectedIndex.toInt())
+            if (oldValue != null) {
+                val newOptions = decodeCardmarketOptions(dbQueries.selectCatalogCardById(newCardId).executeAsOneOrNull()?.marketPriceEurOptions)
+                val matchIndex = newOptions.indexOfFirst { kotlin.math.abs(it - oldValue) < 0.001 }
+                if (matchIndex >= 0) {
+                    selectCardmarketPriceOption(newCardId, matchIndex)
+                }
+            }
+        }
+    }
+
+    // Trägt zusätzlich einen Löschvermerk ein (siehe DeletionLog/Migration 9) -
+    // NUR für den Server-Sync relevant, das Backup-Export/-Import-Feature
+    // ignoriert das bewusst weiterhin komplett (siehe dort). Ohne diesen
+    // Vermerk würde ein anderes Gerät die gelöschte Karte beim nächsten Sync
+    // einfach wieder einfügen, weil "nicht da" für sich genommen nicht von
+    // "wurde absichtlich gelöscht" zu unterscheiden ist.
+    fun deleteCard(id: Long) {
+        val item = dbQueries.selectItemById(id).executeAsOneOrNull()
+        dbQueries.deleteItem(id)
+        if (item != null) {
+            dbQueries.insertDeletionLog("card", cardKey(item.cardId, item.isHolo, item.name), currentTimeMillis(), item.accountId)
+        }
+    }
+
+    // Mehrfach-Löschen (03.08., Nutzer-Vorgabe "wir haben garkeine
+    // Massenauswahl" auf der Weboberfläche) - einfache Schleife statt einer
+    // eigenen SQL-IN-Abfrage, analog zu deleteDecks()/deleteBinders() oben
+    fun deleteCards(ids: List<Long>) {
+        dbQueries.transaction {
+            ids.forEach { deleteCard(it) }
+        }
+    }
+
+    fun getSetting(key: String): String? {
+        return dbQueries.getSetting(key).executeAsOneOrNull()
+    }
+
+    // Bild-Proxy-Validierung (17.08.) - nur URLs, die wirklich im eigenen
+    // Karten- oder Sealed-Katalog stehen, dürfen über /images/proxy geladen
+    // werden (siehe server/Main.kt). Schutz gegen Missbrauch als offener Proxy.
+    fun isKnownImageUrl(url: String): Boolean {
+        return dbQueries.countCatalogImageUrl(url).executeAsOne() > 0 ||
+            dbQueries.countSealedCatalogImageUrl(url).executeAsOne() > 0
+    }
+
+    // Bild-URLs aller besessenen Karten/Sealed-Produkte über alle Accounts
+    // (17.08., persistenter Bild-Cache des Servers - siehe Prefetch in
+    // server/Main.kt). Nur echte https-Quellen, keine local:-Eigenfotos.
+    fun getOwnedImageUrls(): List<String> {
+        val cardUrls = dbQueries.selectOwnedCardImageUrls().executeAsList()
+        val sealedUrls = dbQueries.selectOwnedSealedImageUrls().executeAsList().filterNotNull()
+        return (cardUrls + sealedUrls).filter { it.startsWith("https://") }.distinct()
+    }
+
+    fun setSetting(key: String, value: String) {
+        dbQueries.setSetting(key, value)
+    }
+
+    // Vault: fertig gekaufte/versiegelte Produkte (Starter Decks, Booster Boxen, ...).
+    // Normalerweise über catalogId mit dem Vault-Katalog verknüpft (siehe
+    // ensureSealedCatalogSeeded), catalogId bleibt nur bei frei eingetragenen
+    // Produkten leer.
+    fun getSealedProducts(accountId: Long): List<SealedProductEntity> {
+        return dbQueries.selectAllSealedProducts(accountId).executeAsList()
+    }
+
+    // Wie getSealedProducts(), aber mit dem Marktpreis aus dem verknüpften
+    // Katalogeintrag gejoint - für die Werteübersicht im Vault
+    fun getSealedProductsWithPrice(accountId: Long): List<com.tcgportfolio.companion.db.SelectSealedProductsWithPrice> {
+        return dbQueries.selectSealedProductsWithPrice(accountId).executeAsList()
+    }
+
+    fun getSealedCatalog(): List<SealedCatalogEntity> {
+        return dbQueries.selectSealedCatalog().executeAsList()
+    }
+
+    // Besitzt man das Produkt (gleiche catalogId + gleicher Sealed-Status) schon,
+    // wird die Anzahl auf dem bestehenden Eintrag draufgerechnet statt eine
+    // zweite, identisch aussehende Zeile anzulegen - analog zu addCard()
+    fun addSealedProduct(
+        accountId: Long,
+        name: String,
+        category: String,
+        game: String,
+        quantity: Long,
+        isSealed: Boolean,
+        purchasePrice: Double,
+        imageUrl: String? = null,
+        catalogId: String? = null
+    ) {
+        val sealedValue = if (isSealed) 1L else 0L
+        val existing = catalogId?.let { dbQueries.selectByCatalogIdAndSealed(it, sealedValue, accountId).executeAsOneOrNull() }
+        if (existing != null) {
+            dbQueries.updateSealedProduct(
+                name = existing.name,
+                category = existing.category,
+                quantity = existing.quantity + quantity,
+                isSealed = sealedValue,
+                purchasePrice = existing.purchasePrice,
+                imageUrl = existing.imageUrl,
+                updatedAt = currentTimeMillis(),
+                id = existing.id
+            )
+        } else {
+            dbQueries.insertSealedProduct(
+                name = name,
+                category = category,
+                game = game,
+                quantity = quantity,
+                isSealed = sealedValue,
+                purchasePrice = purchasePrice,
+                imageUrl = imageUrl,
+                catalogId = catalogId,
+                updatedAt = currentTimeMillis(),
+                accountId = accountId,
+                customPriceEur = null,
+                customPriceInTotal = 1L,
+                customPriceInGameTotal = 1L
+            )
+        }
+    }
+
+    fun updateSealedProduct(
+        id: Long,
+        name: String,
+        category: String,
+        quantity: Long,
+        isSealed: Boolean,
+        purchasePrice: Double,
+        imageUrl: String?
+    ) {
+        val sealedValue = if (isSealed) 1L else 0L
+        val now = currentTimeMillis()
+        // name/category/isSealed sind bei Freitext-Produkten (kein catalogId)
+        // Teil der Sync-Identität (siehe sealedKey) - ändert sich einer davon
+        // (v.a. der Sealed/Opened-Status), muss die ALTE Identität als
+        // gelöscht vermerkt werden, sonst würde der Sync das Produkt auf
+        // anderen Geräten künftig doppelt führen statt zu ersetzen
+        val existing = dbQueries.selectSealedProductById(id).executeAsOneOrNull()
+        if (existing != null) {
+            val oldKey = sealedKey(existing.catalogId, existing.isSealed, existing.name, existing.category, existing.game)
+            val newKey = sealedKey(existing.catalogId, sealedValue, name, category, existing.game)
+            if (oldKey != newKey) {
+                dbQueries.insertDeletionLog("sealed", oldKey, now, existing.accountId)
+            }
+        }
+        dbQueries.updateSealedProduct(
+            name = name,
+            category = category,
+            quantity = quantity,
+            isSealed = sealedValue,
+            purchasePrice = purchasePrice,
+            imageUrl = imageUrl,
+            updatedAt = now,
+            id = id
+        )
+    }
+
+    fun getSealedProductById(id: Long): SealedProductEntity? =
+        dbQueries.selectSealedProductById(id).executeAsOneOrNull()
+
+    // Eigenes Foto für Sealed-/Vault-Produkte (12.08., Nutzer-Vorgabe "fehlt
+    // noch bei Vault Produkten") - siehe Kommentar bei
+    // updateSealedProductImageUrl in Portfolio.sq, warum das ohne
+    // Sync-Identitäts-Behandlung auskommt.
+    fun setSealedProductImageUrl(id: Long, imageUrl: String?) {
+        dbQueries.updateSealedProductImageUrl(imageUrl, currentTimeMillis(), id)
+    }
+
+    // Siehe deleteCard() - derselbe Löschvermerk-Mechanismus, nur für Sealed-Produkte
+    fun deleteSealedProduct(id: Long) {
+        val item = dbQueries.selectSealedProductById(id).executeAsOneOrNull()
+        dbQueries.deleteSealedProduct(id)
+        if (item != null) {
+            dbQueries.insertDeletionLog(
+                "sealed",
+                sealedKey(item.catalogId, item.isSealed, item.name, item.category, item.game),
+                currentTimeMillis(),
+                item.accountId
+            )
+        }
+    }
+
+    // --- Wunschlisten (27.07., Nutzer-Vorgabe; ab 28.07. Teil des Server-
+    // Syncs, siehe exportSyncData()/importSyncData() unten) ---
+    // Bewusst komplett getrennt von PortfolioItemEntity/addCard() - Karten
+    // hier sind ausdrücklich NICHT im Bestand und dürfen nie in Sammlung/
+    // Statistiken auftauchen.
+
+    private val idChars = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+    // Stabile, geräteübergreifende Identität einer Liste - siehe Kommentar
+    // bei WishlistEntity in Portfolio.sq. Kein echtes UUID nötig (kein
+    // kollisionsfreier Anspruch über Millionen Einträge), Zeitstempel +
+    // Zufallsteil reicht für diesen Nutzungsumfang deutlich aus.
+    private fun generateWishlistUid(): String =
+        "wl-" + currentTimeMillis() + "-" + (1..12).map { idChars.random() }.joinToString("")
+
+    // Identität einer Karte INNERHALB einer Liste (für den Sync-Abgleich,
+    // analog zu cardKey() bei der echten Sammlung) - cardId, falls vorhanden,
+    // sonst der Name als Ersatz
+    private fun wishlistItemKey(cardId: String?, name: String): String =
+        if (cardId != null) "id|$cardId" else "name|$name"
+
+    // Listen, die vor Einführung der uid-Spalte (28.07.) angelegt wurden,
+    // bei Bedarf einmalig nachrüsten - analog zu ensureCatalogSeeded(), beim
+    // App-/Server-Start aufgerufen
+    fun ensureWishlistUidsBackfilled() {
+        val missing = dbQueries.selectWishlistsMissingUid().executeAsList()
+        if (missing.isEmpty()) return
+        dbQueries.transaction {
+            missing.forEach { w -> dbQueries.updateWishlistUid(generateWishlistUid(), w.id) }
+        }
+    }
+
+    fun getWishlistsForGame(accountId: Long, game: String): List<WishlistEntity> {
+        return dbQueries.selectWishlistsForGame(game, accountId).executeAsList()
+    }
+
+    // Alle Einträge aller Listen eines TCGs auf einmal - die UI gruppiert
+    // selbst nach wishlistId, analog zu getAllCardsWithGame()
+    fun getWishlistItemsForGame(accountId: Long, game: String): List<SelectWishlistItemsForGame> {
+        return dbQueries.selectWishlistItemsForGame(game, accountId).executeAsList()
+    }
+
+    fun addWishlist(accountId: Long, name: String, game: String): Long {
+        return dbQueries.transactionWithResult {
+            dbQueries.insertWishlist(name, game, currentTimeMillis(), generateWishlistUid(), accountId)
+            dbQueries.lastInsertRowId().executeAsOne()
+        }
+    }
+
+    // Trägt zusätzlich einen Löschvermerk ein (siehe DeletionLog/Migration 9,
+    // analog zu deleteCard()) - NUR relevant für den Server-Sync, damit eine
+    // hier gelöschte Liste beim nächsten Sync nicht von der Gegenseite wieder
+    // hereingetragen wird
+    fun deleteWishlist(id: Long) {
+        val wishlist = dbQueries.selectWishlistById(id).executeAsOneOrNull()
+        dbQueries.transaction {
+            dbQueries.deleteWishlistItemsForWishlist(id)
+            dbQueries.deleteWishlist(id)
+            if (wishlist != null && wishlist.uid.isNotEmpty()) {
+                dbQueries.insertDeletionLog("wishlist", wishlist.uid, currentTimeMillis(), wishlist.accountId)
+            }
+        }
+    }
+
+    fun deleteWishlists(ids: List<Long>) {
+        dbQueries.transaction {
+            ids.forEach { id ->
+                val wishlist = dbQueries.selectWishlistById(id).executeAsOneOrNull()
+                dbQueries.deleteWishlistItemsForWishlist(id)
+                dbQueries.deleteWishlist(id)
+                if (wishlist != null && wishlist.uid.isNotEmpty()) {
+                    dbQueries.insertDeletionLog("wishlist", wishlist.uid, currentTimeMillis(), wishlist.accountId)
+                }
+            }
+        }
+    }
+
+    // Offline-Pinnen (19.08.): Bild-URLs aller Karten einer Wunschliste,
+    // fürs Vorladen in den persistenten Bild-Cache (OwnedImageCache)
+    fun getWishlistItemImageUrls(wishlistId: Long): List<String> =
+        dbQueries.selectWishlistItemsForWishlist(wishlistId).executeAsList().mapNotNull { it.imageUrl }
+
+    data class WishlistCardToAdd(val cardId: String?, val name: String, val imageUrl: String?)
+
+    // Überspringt Karten, die in dieser Liste schon stehen (gleiche cardId),
+    // statt Dubletten anzulegen - man wählt beim erneuten Durchstöbern leicht
+    // wieder dieselbe Karte mit aus
+    fun addWishlistItems(wishlistId: Long, items: List<WishlistCardToAdd>) {
+        dbQueries.transaction {
+            items.forEach { item ->
+                val existing = item.cardId?.let {
+                    dbQueries.selectByWishlistAndCardId(wishlistId, it).executeAsOneOrNull()
+                }
+                if (existing == null) {
+                    dbQueries.insertWishlistItem(wishlistId, item.cardId, item.name, item.imageUrl, currentTimeMillis())
+                }
+            }
+        }
+    }
+
+    // Löschvermerk analog zu deleteWishlist(), aber auf Karten-Ebene: Schlüssel
+    // ist "<Listen-uid>|<Karten-Schlüssel>", damit sich das Entfernen EINER
+    // Karte fortpflanzt, ohne gleich die ganze Liste zu betreffen
+    fun deleteWishlistItems(ids: List<Long>) {
+        dbQueries.transaction {
+            ids.forEach { id ->
+                val item = dbQueries.selectWishlistItemById(id).executeAsOneOrNull()
+                dbQueries.deleteWishlistItem(id)
+                if (item != null) {
+                    val wishlist = dbQueries.selectWishlistById(item.wishlistId).executeAsOneOrNull()
+                    if (wishlist != null && wishlist.uid.isNotEmpty()) {
+                        val key = wishlistItemKey(item.cardId, item.name)
+                        dbQueries.insertDeletionLog("wishlistItem", "${wishlist.uid}|$key", currentTimeMillis(), wishlist.accountId)
+                    }
+                }
+            }
+        }
+    }
+
+    // --- Binder (31.07., Nutzer-Vorgabe; von Anfang an Teil des Server-Syncs,
+    // siehe exportSyncData()/importSyncData() unten) ---
+    // Strukturell identisch zu den Wunschlisten-Funktionen oben, siehe
+    // Kommentar bei BinderEntity in Portfolio.sq für den semantischen
+    // Unterschied (Organisation der ECHTEN Sammlung statt einer separaten
+    // "nicht besessen"-Kategorie).
+
+    private fun generateBinderUid(): String =
+        "bd-" + currentTimeMillis() + "-" + (1..12).map { idChars.random() }.joinToString("")
+
+    private fun binderItemKey(cardId: String?, name: String): String =
+        if (cardId != null) "id|$cardId" else "name|$name"
+
+    fun getBindersForGame(accountId: Long, game: String): List<BinderEntity> {
+        return dbQueries.selectBindersForGame(game, accountId).executeAsList()
+    }
+
+    // Alle Einträge aller Binder eines TCGs auf einmal - die UI gruppiert
+    // selbst nach binderId, analog zu getWishlistItemsForGame()
+    fun getBinderItemsForGame(accountId: Long, game: String): List<SelectBinderItemsForGame> {
+        return dbQueries.selectBinderItemsForGame(game, accountId).executeAsList()
+    }
+
+    // pageSize (31.07., Nutzer-Vorgabe) - 9, 12 oder 16, wird beim Anlegen
+    // festgelegt (siehe Kommentar bei BinderEntity in Portfolio.sq) und
+    // absichtlich NICHT validiert/eingeschränkt hier - die UI bietet nur
+    // diese drei Werte an, ein zusätzlicher Check wäre doppelte Buchhaltung
+    fun addBinder(accountId: Long, name: String, game: String, pageSize: Long = 9): Long {
+        return dbQueries.transactionWithResult {
+            dbQueries.insertBinder(name, game, currentTimeMillis(), generateBinderUid(), pageSize, accountId)
+            dbQueries.lastInsertRowId().executeAsOne()
+        }
+    }
+
+    // Umbenennen (03.08., Nutzer-Vorgabe "wenn man Binder gedrückt hält muss
+    // man sie nicht nur löschen sondern auch umbenennen können") - siehe
+    // Kommentar bei BinderEntity/nameUpdatedAt in Portfolio.sq für den
+    // Sync-Abgleich
+    fun renameBinder(id: Long, name: String) {
+        dbQueries.updateBinderName(name, currentTimeMillis(), id)
+    }
+
+    // Wunschlisten-Umbenennen (19.08., Nutzer-Vorgabe) - gleiche
+    // LWW-Mechanik wie renameBinder, siehe nameUpdatedAt in Portfolio.sq
+    fun renameWishlist(id: Long, name: String) {
+        dbQueries.updateWishlistName(name, currentTimeMillis(), id)
+    }
+
+    // Kopien-Aufteilen im Binder (19.08., Nutzer-Vorgabe "wenn man das
+    // anklickt, dann kommen die mehrfachen einfach direkt dahinter im
+    // Binder und verschieben die nachfolgenden Karten"): legt count
+    // zusätzliche Zeilen DERSELBEN Karte direkt hinter deren niedrigster
+    // Position an und schiebt alles dahinter entsprechend weiter. Bewusst
+    // an addBinderItems' Dubletten-Schutz VORBEI (der bleibt für alle
+    // normalen Hinzufügen-Flüsse unverändert). Bekannte Einschränkung:
+    // der Sync-Abgleich schlüsselt Binder-Karten über (cardId, name) -
+    // aufgeteilte Kopien erreichen andere Geräte deshalb (noch) nicht,
+    // lokal inkl. Backup sind sie voll persistent.
+    fun splitBinderCopies(binderId: Long, cardId: String, count: Int) {
+        if (count <= 0) return
+        dbQueries.transaction {
+            val rows = dbQueries.selectBinderItemsForBinderAndCard(binderId, cardId).executeAsList()
+            val main = rows.firstOrNull() ?: return@transaction
+            val now = currentTimeMillis()
+            dbQueries.shiftBinderItemPositionsFrom(count.toLong(), now, binderId, main.position + 1)
+            repeat(count) { i ->
+                dbQueries.insertBinderItem(binderId, cardId, main.name, main.imageUrl, now, main.position + 1 + i, now)
+            }
+        }
+    }
+
+    fun deleteBinder(id: Long) {
+        val binder = dbQueries.selectBinderById(id).executeAsOneOrNull()
+        dbQueries.transaction {
+            dbQueries.deleteBinderItemsForBinder(id)
+            dbQueries.deleteBinder(id)
+            if (binder != null && binder.uid.isNotEmpty()) {
+                dbQueries.insertDeletionLog("binder", binder.uid, currentTimeMillis(), binder.accountId)
+            }
+        }
+    }
+
+    fun deleteBinders(ids: List<Long>) {
+        dbQueries.transaction {
+            ids.forEach { id ->
+                val binder = dbQueries.selectBinderById(id).executeAsOneOrNull()
+                dbQueries.deleteBinderItemsForBinder(id)
+                dbQueries.deleteBinder(id)
+                if (binder != null && binder.uid.isNotEmpty()) {
+                    dbQueries.insertDeletionLog("binder", binder.uid, currentTimeMillis(), binder.accountId)
+                }
+            }
+        }
+    }
+
+    data class BinderCardToAdd(val cardId: String?, val name: String, val imageUrl: String?)
+
+    // Überspringt Karten, die in diesem Binder schon liegen (gleiche cardId),
+    // statt Dubletten anzulegen - u.a. wichtig für den Hinzufügen-Fluss der
+    // echten Sammlung (App.kt/Main.kt), der beim erneuten Hinzufügen derselben
+    // Karte anstandslos nochmal denselben Binder mitschicken darf. Neue
+    // Karten werden hinten angehängt (nächste freie Position) - der Nutzer
+    // ordnet sie danach bei Bedarf per Kartentausch so an, wie sie im echten
+    // Binder liegen (siehe swapBinderItemPositions()).
+    fun addBinderItems(binderId: Long, items: List<BinderCardToAdd>) {
+        dbQueries.transaction {
+            var nextPosition = dbQueries.selectMaxBinderItemPosition(binderId).executeAsOne() + 1
+            items.forEach { item ->
+                val existing = item.cardId?.let {
+                    dbQueries.selectByBinderAndCardId(binderId, it).executeAsOneOrNull()
+                }
+                if (existing == null) {
+                    dbQueries.insertBinderItem(binderId, item.cardId, item.name, item.imageUrl, currentTimeMillis(), nextPosition, 0L)
+                    nextPosition++
+                }
+            }
+        }
+    }
+
+    // Tauscht die Plätze zweier Karten im selben Binder (31.07., Nutzer-
+    // Vorgabe "die einzelnen Kartenplätze beim Binder auch ändern können,
+    // damit man die Realität abbilden kann") - eigener Zeitstempel
+    // (positionUpdatedAt) statt addedAt, damit der Sync-Abgleich eine reine
+    // Positionsänderung von einem echten Neu-Hinzufügen unterscheiden kann
+    // (siehe Kommentar bei BinderItemEntity in Portfolio.sq).
+    fun swapBinderItemPositions(itemId1: Long, itemId2: Long) {
+        dbQueries.transaction {
+            val item1 = dbQueries.selectBinderItemById(itemId1).executeAsOneOrNull() ?: return@transaction
+            val item2 = dbQueries.selectBinderItemById(itemId2).executeAsOneOrNull() ?: return@transaction
+            val now = currentTimeMillis()
+            dbQueries.updateBinderItemPosition(item2.position, now, item1.id)
+            dbQueries.updateBinderItemPosition(item1.position, now, item2.id)
+        }
+    }
+
+    // Verschiebt eine Karte auf einen LEEREN Platz (kein Tausch nötig, da dort
+    // keine andere Karte liegt) - Ergänzung zu swapBinderItemPositions() für
+    // den Fall, dass der Nutzer eine Karte auf eine bisher freie Stelle
+    // seiner Binder-Seite legen will.
+    fun moveBinderItemToPosition(itemId: Long, newPosition: Long) {
+        dbQueries.updateBinderItemPosition(newPosition, currentTimeMillis(), itemId)
+    }
+
+    // Leere Seite einfügen (08.08., Nutzer-Vorgabe "auch mittendrin, z.B. auf
+    // Seite 3 eine neue Seite einfügen die dann Seite 4 wird") - schiebt alle
+    // Karten ab genau dieser Seite um eine ganze Seitengröße nach hinten,
+    // macht dadurch eine komplett leere Seite an der gewünschten Stelle frei.
+    fun insertBinderPage(binderId: Long, atPage: Int, pageSize: Long) {
+        val fromPosition = atPage.toLong() * pageSize
+        dbQueries.shiftBinderItemPositionsFrom(pageSize, currentTimeMillis(), binderId, fromPosition)
+    }
+
+    // Doppeltipp-Verschiebung (09.08., Nutzer-Vorgabe "Doppeltipp auf eine
+    // Karte verschiebt sie und alle folgenden Karten um eine Tasche weiter,
+    // erzeugt dadurch eine Lücke davor") - dieselbe Verschiebe-Query wie
+    // insertBinderPage() oben, nur um genau eine Tasche statt einer ganzen
+    // Seite.
+    fun shiftBinderItemsForward(binderId: Long, atPosition: Long) {
+        dbQueries.shiftBinderItemPositionsFrom(1L, currentTimeMillis(), binderId, atPosition)
+    }
+
+    // Eigenes Foto (09.08., Nutzer-Vorgabe "wenn es kein Bild zu einer Karte
+    // gibt, kann man selbst ein Foto einfügen") - siehe Kommentar bei
+    // CustomCardPhotoEntity in Portfolio.sq. Je Katalogkarte statt je
+    // besessener Kopie, wirkt dadurch automatisch überall (Sammlung, Binder,
+    // Wantsliste, Deck), sobald die jeweilige selectXxxForGame-Query neu
+    // gelesen wird.
+    fun setCustomCardPhoto(cardId: String, imageUrl: String) {
+        dbQueries.upsertCustomCardPhoto(cardId, imageUrl, currentTimeMillis())
+    }
+
+    fun clearCustomCardPhoto(cardId: String) {
+        dbQueries.deleteCustomCardPhoto(cardId)
+    }
+
+    // Nur fürs Web-Upload gebraucht (10.08., Feature-Parität App <-> Web) -
+    // liefert die aktuell gesetzte URL, damit der Server beim Ersetzen/
+    // Löschen die alte Datei mit aufräumen kann (siehe /api/customPhoto/*
+    // in Main.kt). Die App selbst braucht das nicht, dort läuft alles über
+    // die COALESCE-Joins in den select...ForGame-Queries.
+    fun getCustomCardPhotoUrl(cardId: String): String? =
+        dbQueries.selectCustomCardPhoto(cardId).executeAsOneOrNull()?.imageUrl
+
+    fun deleteBinderItems(ids: List<Long>) {
+        dbQueries.transaction {
+            ids.forEach { id ->
+                val item = dbQueries.selectBinderItemById(id).executeAsOneOrNull()
+                dbQueries.deleteBinderItem(id)
+                if (item != null) {
+                    val binder = dbQueries.selectBinderById(item.binderId).executeAsOneOrNull()
+                    if (binder != null && binder.uid.isNotEmpty()) {
+                        val key = binderItemKey(item.cardId, item.name)
+                        dbQueries.insertDeletionLog("binderItem", "${binder.uid}|$key", currentTimeMillis(), binder.accountId)
+                    }
+                }
+            }
+        }
+    }
+
+    // --- Decks (02.08., Nutzer-Vorgabe Phase 3 Deckbuilding) ---
+    // Strukturell an Binder/Wishlist angelehnt (uid als Sync-Identität,
+    // Löschprotokoll), aber eigenständig: keine Steckplätze, dafür eine
+    // Menge pro Karte (bis zu 4 bei Pokémon), siehe Kommentar bei
+    // DeckEntity/DeckCardEntity in Portfolio.sq.
+
+    private fun generateDeckUid(): String =
+        "dk-" + currentTimeMillis() + "-" + (1..12).map { idChars.random() }.joinToString("")
+
+    fun getDecksForGame(accountId: Long, game: String): List<DeckEntity> =
+        dbQueries.selectDecksForGame(game, accountId).executeAsList()
+
+    // Abo-System Phase 1 (04.08.) - siehe Kommentar bei gamesWithAnyData in
+    // Portfolio.sq
+    fun gamesWithAnyData(accountId: Long): Set<String> =
+        dbQueries.gamesWithAnyData(accountId, accountId, accountId, accountId, accountId)
+            .executeAsList()
+            .toSet()
+
+    fun getDeckCards(deckId: Long): List<SelectDeckCardsForDeck> =
+        dbQueries.selectDeckCardsForDeck(deckId).executeAsList()
+
+    fun addDeck(accountId: Long, name: String, game: String): Long {
+        return dbQueries.transactionWithResult {
+            dbQueries.insertDeck(name, game, currentTimeMillis(), generateDeckUid(), accountId)
+            dbQueries.lastInsertRowId().executeAsOne()
+        }
+    }
+
+    fun deleteDeck(id: Long) {
+        val deck = dbQueries.selectDeckById(id).executeAsOneOrNull()
+        dbQueries.transaction {
+            dbQueries.deleteDeckCardsForDeck(id)
+            dbQueries.deleteDeck(id)
+            if (deck != null && deck.uid.isNotEmpty()) {
+                dbQueries.insertDeletionLog("deck", deck.uid, currentTimeMillis(), deck.accountId)
+            }
+        }
+    }
+
+    fun deleteDecks(ids: List<Long>) {
+        dbQueries.transaction {
+            ids.forEach { id ->
+                val deck = dbQueries.selectDeckById(id).executeAsOneOrNull()
+                dbQueries.deleteDeckCardsForDeck(id)
+                dbQueries.deleteDeck(id)
+                if (deck != null && deck.uid.isNotEmpty()) {
+                    dbQueries.insertDeletionLog("deck", deck.uid, currentTimeMillis(), deck.accountId)
+                }
+            }
+        }
+    }
+
+    // Fügt eine Karte zum Deck hinzu bzw. erhöht die Menge, falls schon drin -
+    // analog zu addCardInternal() bei der echten Sammlung. Wird im
+    // Scan-Kontrollbildschirm im Deck-Kontext pro gescannter Karte
+    // aufgerufen (jede erkannte Kopie zählt +1), siehe App.kt.
+    fun addCardToDeck(deckId: Long, cardId: String, quantity: Long = 1) {
+        val existing = dbQueries.selectByDeckAndCardId(deckId, cardId).executeAsOneOrNull()
+        if (existing != null) {
+            dbQueries.updateDeckCardQuantity(existing.quantity + quantity, currentTimeMillis(), existing.id)
+        } else {
+            dbQueries.insertDeckCard(deckId, cardId, quantity, currentTimeMillis())
+        }
+    }
+
+    fun setDeckCardQuantity(deckCardId: Long, quantity: Long) {
+        if (quantity <= 0) {
+            removeDeckCard(deckCardId)
+        } else {
+            dbQueries.updateDeckCardQuantity(quantity, currentTimeMillis(), deckCardId)
+        }
+    }
+
+    fun removeDeckCard(id: Long) {
+        val item = dbQueries.selectDeckCardById(id).executeAsOneOrNull()
+        dbQueries.deleteDeckCard(id)
+        if (item != null) {
+            val deck = dbQueries.selectDeckById(item.deckId).executeAsOneOrNull()
+            if (deck != null && deck.uid.isNotEmpty()) {
+                dbQueries.insertDeletionLog("deckCard", "${deck.uid}|${item.cardId}", currentTimeMillis(), deck.accountId)
+            }
+        }
+    }
+
+    // Regelprüfung (02.08./03.08.) - aktuell für Pokémon und DBFW implementiert
+    // (siehe CONCEPT.md), andere Spiele liefern null (kein Fehler, einfach
+    // "keine Prüfung verfügbar", die UI zeigt dann nichts statt einer
+    // falschen "alles ok"-Aussage)
+    fun validateDeck(deckId: Long, game: String): DeckRuleCheckResult? {
+        if (game != "Pokemon" && game != "DBFW") return null
+        val cards = getDeckCards(deckId).map {
+            DeckRuleCheckCard(
+                cardId = it.cardId,
+                name = it.name,
+                quantity = it.quantity,
+                supertype = it.ruleSupertype,
+                subtypes = decodeRuleSubtypes(it.ruleSubtypes),
+                number = it.number
+            )
+        }
+        return when (game) {
+            "Pokemon" -> checkPokemonDeckRules(cards)
+            "DBFW" -> checkDbfwDeckRules(cards)
+            else -> null
+        }
+    }
+
+    // --- Export/Import (Backup, solange es noch keinen Sync-Server gibt) ---
+    //
+    // Abgleich-Prinzip: vorhandene lokale Einträge werden NIE durch den Import
+    // verändert oder gelöscht - importiert wird nur, was lokal fehlt. Wurde
+    // etwas gelöscht und steht noch in einem alten Backup, kommt es beim
+    // Import bewusst wieder zurück (kein Tombstone-Mechanismus mehr).
+    fun exportData(accountId: Long): String {
+        val payload = BackupPayload(
+            exportedAt = currentTimeMillis(),
+            cards = dbQueries.selectAll(accountId).executeAsList().map {
+                ExportedCard(
+                    cardId = it.cardId,
+                    isHolo = it.isHolo,
+                    name = it.name,
+                    quantity = it.quantity,
+                    purchasePrice = it.purchasePrice,
+                    imageUrl = it.imageUrl
+                )
+            },
+            sealedProducts = dbQueries.selectAllSealedProducts(accountId).executeAsList().map {
+                ExportedSealedProduct(
+                    catalogId = it.catalogId,
+                    isSealed = it.isSealed,
+                    name = it.name,
+                    category = it.category,
+                    game = it.game,
+                    quantity = it.quantity,
+                    purchasePrice = it.purchasePrice,
+                    imageUrl = it.imageUrl,
+                    customPriceEur = it.customPriceEur,
+                    customPriceInTotal = it.customPriceInTotal,
+                    customPriceInGameTotal = it.customPriceInGameTotal
+                )
+            }
+        )
+        return backupJson.encodeToString(BackupPayload.serializer(), payload)
+    }
+
+    data class ImportSummary(val cardsAdded: Int, val sealedAdded: Int)
+
+    // Katalog-verknüpfte Einträge (cardId/catalogId gesetzt) werden darüber
+    // identifiziert - Freitext-Einträge (kein Katalog-Link, siehe VaultScreen
+    // "Nicht dabei? Eigenes Produkt eintragen") brauchen einen Ersatzschlüssel
+    // aus Name+Merkmalen, sonst würde derselbe Freitext-Eintrag bei jedem
+    // erneuten Import (v.a. beim wiederholten Server-Sync, siehe SyncClient.kt)
+    // immer wieder neu eingefügt statt ignoriert - gefunden beim Testen der
+    // Sync-Funktion (2026-07-23), zuvor unbemerkt, da ein doppelter Backup-
+    // Restore der gleichen Datei ein seltener Sonderfall war
+    private fun cardKey(cardId: String?, isHolo: Long, name: String): String =
+        if (cardId != null) "id|$cardId|$isHolo" else "name|$name|$isHolo"
+
+    private fun sealedKey(catalogId: String?, isSealed: Long, name: String, category: String, game: String): String =
+        if (catalogId != null) "id|$catalogId|$isSealed" else "name|$name|$category|$game|$isSealed"
+
+    fun importData(accountId: Long, json: String): ImportSummary {
+        val payload = backupJson.decodeFromString(BackupPayload.serializer(), json)
+        var cardsAdded = 0
+        var sealedAdded = 0
+
+        dbQueries.transaction {
+            val existingCardKeys = dbQueries.selectAll(accountId).executeAsList()
+                .map { cardKey(it.cardId, it.isHolo, it.name) }
+                .toSet()
+            val existingSealedKeys = dbQueries.selectAllSealedProducts(accountId).executeAsList()
+                .map { sealedKey(it.catalogId, it.isSealed, it.name, it.category, it.game) }
+                .toSet()
+            val addedCardKeys = mutableSetOf<String>()
+            val addedSealedKeys = mutableSetOf<String>()
+
+            payload.cards.forEach { c ->
+                val key = cardKey(c.cardId, c.isHolo, c.name)
+                if (key in existingCardKeys || key in addedCardKeys) return@forEach
+                addedCardKeys += key
+                // updatedAt = jetzt (nicht der Zeitpunkt aus der Backup-Datei) -
+                // ein wiederhergestellter Eintrag gilt als gerade eben neu
+                // entstanden, damit er beim nächsten Server-Sync eine ältere,
+                // längst propagierte Löschung korrekt überholt (siehe
+                // importSyncData/DeletionLog) statt sofort wieder gelöscht zu werden
+                dbQueries.insertItem(
+                    name = c.name,
+                    purchasePrice = c.purchasePrice,
+                    quantity = c.quantity,
+                    isHolo = c.isHolo,
+                    imageUrl = c.imageUrl,
+                    cardId = c.cardId,
+                    updatedAt = currentTimeMillis(),
+                    accountId = accountId
+                )
+                cardsAdded++
+            }
+
+            payload.sealedProducts.forEach { s ->
+                val key = sealedKey(s.catalogId, s.isSealed, s.name, s.category, s.game)
+                if (key in existingSealedKeys || key in addedSealedKeys) return@forEach
+                addedSealedKeys += key
+                dbQueries.insertSealedProduct(
+                    name = s.name,
+                    category = s.category,
+                    game = s.game,
+                    quantity = s.quantity,
+                    isSealed = s.isSealed,
+                    purchasePrice = s.purchasePrice,
+                    imageUrl = s.imageUrl,
+                    catalogId = s.catalogId,
+                    accountId = accountId,
+                    updatedAt = currentTimeMillis(),
+                    customPriceEur = s.customPriceEur,
+                    customPriceInTotal = s.customPriceInTotal,
+                    customPriceInGameTotal = s.customPriceInGameTotal
+                )
+                sealedAdded++
+            }
+        }
+
+        return ImportSummary(cardsAdded, sealedAdded)
+    }
+
+    // --- Accounts (02.08., Nutzer-Vorgabe Mandantenfähigkeit) ---
+    // Siehe CONCEPT.md "Mandantenfähigkeit / Mehrere Accounts" für die volle
+    // Spezifikation. AccountEntity ist strukturell ein Sync-Objekt wie
+    // Binder/Wishlist (uid als stabile Identität), siehe SyncAccount.
+
+    private fun generateAccountUid(): String =
+        "acc-" + currentTimeMillis() + "-" + (1..12).map { idChars.random() }.joinToString("")
+
+    private fun generatePinSalt(): String =
+        (1..16).map { idChars.random() }.joinToString("")
+
+    // Reines Kotlin statt java.security.MessageDigest - data ist commonMain
+    // und muss auch für iOS kompilieren, ein plattformspezifisches
+    // expect/actual wäre für den Zweck hier unnötiger Aufwand: eine
+    // vierstellige PIN hat ohnehin nur 10000 mögliche Werte (Nutzer-Vorgabe
+    // "muss nicht mal ein richtiges Passwort sein", siehe CONCEPT.md "weiche
+    // Sperre") - ein simpler, deterministischer FNV-1a-Hash über Salt+PIN
+    // reicht für "Geschwister öffnet nicht aus Versehen den falschen
+    // Account" völlig aus, keine echte kryptographische Härtung nötig.
+    private fun hashPin(pin: String, salt: String): String {
+        var hash = 0xcbf29ce484222325UL
+        for (c in "$salt:$pin") {
+            hash = hash xor c.code.toULong()
+            hash *= 0x100000001b3UL
+        }
+        return hash.toString(16)
+    }
+
+    // Accounts, die vor Einführung der uid-Spalte angelegt wurden (praktisch
+    // nie, AccountEntity hat von Anfang an eine uid) - analog zu
+    // ensureWishlistUidsBackfilled(), für Robustheit trotzdem vorhanden.
+    fun ensureAccountUidsBackfilled() {
+        val missing = dbQueries.selectAccountsMissingUid().executeAsList()
+        if (missing.isEmpty()) return
+        dbQueries.transaction {
+            missing.forEach { a -> dbQueries.updateAccountUid(generateAccountUid(), a.id) }
+        }
+    }
+
+    // Sorgt dafür, dass IMMER mindestens ein Account existiert (02.08.) - bei
+    // einer NAGELNEUEN Datenbank (Schema.create(), siehe
+    // DatabaseDriverFactory) entsteht die Bootstrap-Account-Zeile aus
+    // 17.sqm NICHT: create() baut direkt die finale Tabellenstruktur auf,
+    // ohne die historischen INSERT-Anweisungen aus Migrationsdateien
+    // nachzuspielen (die laufen nur beim echten migrate() eines
+    // bestehenden, älteren Datenbankstands). Ohne dieses Sicherheitsnetz
+    // gäbe es auf einer frischen Installation gar keinen Account, obwohl
+    // PortfolioItemEntity & Co. bereits accountId DEFAULT 1 erwarten.
+    fun ensureDefaultAccountExists() {
+        if (dbQueries.selectAllAccounts().executeAsList().isNotEmpty()) return
+        val now = currentTimeMillis()
+        dbQueries.insertAccount(generateAccountUid(), "Standard", null, null, now, now)
+    }
+
+    fun getAccounts(): List<AccountEntity> = dbQueries.selectAllAccounts().executeAsList()
+
+    fun getAccountById(id: Long): AccountEntity? = dbQueries.selectAccountById(id).executeAsOneOrNull()
+
+    // "Andocken" eines lokalen Platzhalter-Accounts an einen bereits
+    // bestehenden Server-Account (10.08., Nutzer-Fund "auf einem zweiten
+    // Handy synct sich ein neuer Geister-Account statt sich mit dem
+    // bestehenden zu verbinden") - siehe Kommentar bei
+    // SyncClient.fetchServerAccounts()/AccountResponse.uid in server/Main.kt
+    // fürs komplette Bild. Übernimmt NUR die uid (die eigentliche Sync-
+    // Identität) und setzt updatedAt bewusst auf 0 zurück - Name/PIN werden
+    // dadurch beim allernächsten echten Sync automatisch vom Server
+    // übernommen (LWW in importSyncData() s.o.), statt dass der frische
+    // lokale "Standard"-Name wegen seines aktuelleren Zeitstempels fälschlich
+    // gewinnt. Nur sinnvoll VOR dem ersten echten Sync mit diesem Server -
+    // hat der lokale Account bereits eigene Karten, werden die beim nächsten
+    // Sync ganz normal in den (jetzt gemeinsamen) Account gemerged.
+    fun adoptAccountIdentity(localAccountId: Long, remoteUid: String) {
+        dbQueries.updateAccountUid(remoteUid, localAccountId)
+        val existing = dbQueries.selectAccountById(localAccountId).executeAsOneOrNull() ?: return
+        dbQueries.updateAccount(existing.name, existing.pinHash, existing.pinSalt, 0L, localAccountId)
+    }
+
+    // Einstellungen -> "Account hinzufügen" (Nutzer-Vorgabe) - pin = null
+    // bedeutet kein PIN-Schutz.
+    fun addAccount(name: String, pin: String? = null): Long {
+        val salt = pin?.let { generatePinSalt() }
+        val hash = if (pin != null && salt != null) hashPin(pin, salt) else null
+        val now = currentTimeMillis()
+        return dbQueries.transactionWithResult {
+            dbQueries.insertAccount(generateAccountUid(), name, hash, salt, now, now)
+            dbQueries.lastInsertRowId().executeAsOne()
+        }
+    }
+
+    fun renameAccount(id: Long, name: String) {
+        val existing = dbQueries.selectAccountById(id).executeAsOneOrNull() ?: return
+        dbQueries.updateAccount(name, existing.pinHash, existing.pinSalt, currentTimeMillis(), id)
+    }
+
+    // pin = null entfernt den PIN-Schutz wieder
+    fun setAccountPin(id: Long, pin: String?) {
+        val existing = dbQueries.selectAccountById(id).executeAsOneOrNull() ?: return
+        val salt = pin?.let { generatePinSalt() }
+        val hash = if (pin != null && salt != null) hashPin(pin, salt) else null
+        dbQueries.updateAccount(existing.name, hash, salt, currentTimeMillis(), id)
+    }
+
+    fun verifyAccountPin(id: Long, pin: String): Boolean {
+        val account = dbQueries.selectAccountById(id).executeAsOneOrNull() ?: return false
+        val hash = account.pinHash ?: return true
+        val salt = account.pinSalt ?: return true
+        return hashPin(pin, salt) == hash
+    }
+
+    // Kaskadierendes Löschen (02.08., Nutzer-Vorgabe "von Anfang an mit
+    // einbauen", nicht erst später) - trägt zusätzlich einen geräteweiten
+    // Löschvermerk ein, damit das Verschwinden über Sync propagiert (siehe
+    // selectAccountDeletionLog()/exportSyncData()/importSyncData() unten).
+    fun deleteAccount(id: Long) {
+        val account = dbQueries.selectAccountById(id).executeAsOneOrNull() ?: return
+        dbQueries.transaction {
+            dbQueries.deleteWishlistItemsForAccount(id)
+            dbQueries.deleteSealedWishlistItemsForAccount(id)
+            dbQueries.deleteWishlistsForAccount(id)
+            dbQueries.deleteBinderItemsForAccount(id)
+            dbQueries.deleteBindersForAccount(id)
+            dbQueries.deleteDeckCardsForAccount(id)
+            dbQueries.deleteDecksForAccount(id)
+            dbQueries.deleteItemsForAccount(id)
+            dbQueries.deleteSealedProductsForAccount(id)
+            dbQueries.deleteDeletionLogForAccount(id)
+            dbQueries.deleteAccount(id)
+            if (account.uid.isNotEmpty()) {
+                dbQueries.insertDeletionLog("account", account.uid, currentTimeMillis(), id)
+            }
+        }
+    }
+
+    // --- Server-Sync (Phase 1e) ---
+    //
+    // Bewusst GETRENNT vom Backup-Export/-Import oben: Sync braucht Löschungen,
+    // die sich fortpflanzen (siehe DeletionLog/Migration 9+10), Backup-Restore
+    // braucht das Gegenteil (eine alte Sicherung soll gelöschte Karten wieder
+    // zurückbringen können) - dasselbe Format für beides zu nutzen würde sich
+    // gegenseitig widersprechen. Abgleichsregel pro Schlüssel: das jeweils
+    // NEUERE Ereignis gewinnt (Löschzeitpunkt vs. updatedAt des Eintrags) -
+    // eine Karte, die per Backup-Restore gerade eben wiederhergestellt wurde,
+    // ist dadurch automatisch neuer als eine alte, längst propagierte Löschung
+    // und überlebt den nächsten Sync korrekt.
+    //
+    // Mandantenfähigkeit (02.08.) - ein Sync-Lauf verarbeitet laut Nutzer-
+    // Vorgabe IMMER ALLE lokal bekannten Accounts auf einmal, unabhängig
+    // davon, welcher gerade aktiv ist ("egal welcher Account sich anmeldet,
+    // es müssen beide Accounts gesynced werden"). Die komplette bisherige
+    // Merge-Logik (unverändert in ihrer LWW-Konfliktauflösung) ist dafür in
+    // exportAccountBundle()/importAccountBundle() gewandert und wird von
+    // exportSyncData()/importSyncData() je Account aufgerufen.
+    private val syncJson = Json { ignoreUnknownKeys = true }
+
+    data class SyncImportSummary(
+        val cardsAdded: Int,
+        val sealedAdded: Int,
+        val cardsDeleted: Int,
+        val sealedDeleted: Int,
+        val cardsUpdated: Int,
+        val sealedUpdated: Int,
+        val wishlistsAdded: Int = 0,
+        val wishlistItemsAdded: Int = 0,
+        val wishlistsDeleted: Int = 0,
+        val wishlistItemsDeleted: Int = 0,
+        val bindersAdded: Int = 0,
+        val binderItemsAdded: Int = 0,
+        val bindersDeleted: Int = 0,
+        val binderItemsDeleted: Int = 0,
+        val binderItemsUpdated: Int = 0,
+        // Binder-Umbenennen (03.08., Nutzer-Vorgabe) - echter Update-Fall wie
+        // binderItemsUpdated (Position), nur auf Binder-Ebene statt Karten-Ebene
+        val bindersUpdated: Int = 0,
+        val accountsAdded: Int = 0,
+        val accountsUpdated: Int = 0,
+        val accountsDeleted: Int = 0,
+        val decksAdded: Int = 0,
+        val deckCardsAdded: Int = 0,
+        val decksDeleted: Int = 0,
+        val deckCardsDeleted: Int = 0,
+        val deckCardsUpdated: Int = 0
+    )
+
+    private data class AccountMergeCounts(
+        val cardsAdded: Int = 0, val sealedAdded: Int = 0, val cardsDeleted: Int = 0, val sealedDeleted: Int = 0,
+        val cardsUpdated: Int = 0, val sealedUpdated: Int = 0,
+        val wishlistsAdded: Int = 0, val wishlistItemsAdded: Int = 0, val wishlistsDeleted: Int = 0, val wishlistItemsDeleted: Int = 0,
+        val bindersAdded: Int = 0, val binderItemsAdded: Int = 0, val bindersDeleted: Int = 0, val binderItemsDeleted: Int = 0,
+        val binderItemsUpdated: Int = 0, val bindersUpdated: Int = 0,
+        val decksAdded: Int = 0, val deckCardsAdded: Int = 0, val decksDeleted: Int = 0, val deckCardsDeleted: Int = 0,
+        val deckCardsUpdated: Int = 0
+    )
+
+    // Baut das komplette Sync-Datenpaket EINES Accounts - genau der Körper
+    // des früheren exportSyncData(), nur account-gescoped.
+    private fun exportAccountBundle(account: AccountEntity): SyncAccount {
+        val wishlistItemsByListId = dbQueries.selectAllWishlistItemsRawForAccount(account.id).executeAsList()
+            .groupBy { it.wishlistId }
+        val binderItemsByBinderId = dbQueries.selectAllBinderItemsRawForAccount(account.id).executeAsList()
+            .groupBy { it.binderId }
+        val deckCardsByDeckId = dbQueries.selectAllDeckCardsRawForAccount(account.id).executeAsList()
+            .groupBy { it.deckId }
+        return SyncAccount(
+            uid = account.uid,
+            name = account.name,
+            pinHash = account.pinHash,
+            pinSalt = account.pinSalt,
+            updatedAt = account.updatedAt,
+            cards = dbQueries.selectAll(account.id).executeAsList().map {
+                SyncCard(
+                    cardId = it.cardId,
+                    isHolo = it.isHolo,
+                    name = it.name,
+                    quantity = it.quantity,
+                    purchasePrice = it.purchasePrice,
+                    imageUrl = it.imageUrl,
+                    updatedAt = it.updatedAt,
+                    customPriceEur = it.customPriceEur,
+                    customPriceInTotal = it.customPriceInTotal,
+                    customPriceInGameTotal = it.customPriceInGameTotal,
+                    holoStyle = it.holoStyle
+                )
+            },
+            sealedProducts = dbQueries.selectAllSealedProducts(account.id).executeAsList().map {
+                SyncSealedProduct(
+                    catalogId = it.catalogId,
+                    isSealed = it.isSealed,
+                    name = it.name,
+                    category = it.category,
+                    game = it.game,
+                    quantity = it.quantity,
+                    purchasePrice = it.purchasePrice,
+                    imageUrl = it.imageUrl,
+                    updatedAt = it.updatedAt,
+                    customPriceEur = it.customPriceEur,
+                    customPriceInTotal = it.customPriceInTotal,
+                    customPriceInGameTotal = it.customPriceInGameTotal
+                )
+            },
+            deletedCardKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "card" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            deletedSealedKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "sealed" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            wishlists = dbQueries.selectAllWishlists(account.id).executeAsList()
+                .filter { it.uid.isNotEmpty() } // noch nicht nachgerüstete Zeilen ignorieren, siehe ensureWishlistUidsBackfilled()
+                .map { w ->
+                    SyncWishlist(
+                        uid = w.uid,
+                        name = w.name,
+                        game = w.game,
+                        createdAt = w.createdAt,
+                        nameUpdatedAt = w.nameUpdatedAt,
+                        items = (wishlistItemsByListId[w.id] ?: emptyList()).map { i ->
+                            SyncWishlistItem(cardId = i.cardId, name = i.name, imageUrl = i.imageUrl, addedAt = i.addedAt)
+                        }
+                    )
+                },
+            deletedWishlistKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "wishlist" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            deletedWishlistItemKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "wishlistItem" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            binders = dbQueries.selectAllBinders(account.id).executeAsList()
+                .filter { it.uid.isNotEmpty() }
+                .map { b ->
+                    SyncBinder(
+                        uid = b.uid,
+                        name = b.name,
+                        game = b.game,
+                        createdAt = b.createdAt,
+                        pageSize = b.pageSize.toInt(),
+                        nameUpdatedAt = b.nameUpdatedAt,
+                        items = (binderItemsByBinderId[b.id] ?: emptyList()).map { i ->
+                            SyncBinderItem(
+                                cardId = i.cardId,
+                                name = i.name,
+                                imageUrl = i.imageUrl,
+                                addedAt = i.addedAt,
+                                position = i.position.toInt(),
+                                positionUpdatedAt = i.positionUpdatedAt
+                            )
+                        }
+                    )
+                },
+            deletedBinderKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "binder" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            deletedBinderItemKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "binderItem" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            decks = dbQueries.selectAllDecks(account.id).executeAsList()
+                .filter { it.uid.isNotEmpty() }
+                .map { d ->
+                    SyncDeck(
+                        uid = d.uid,
+                        name = d.name,
+                        game = d.game,
+                        createdAt = d.createdAt,
+                        cards = (deckCardsByDeckId[d.id] ?: emptyList()).map { c ->
+                            SyncDeckCard(cardId = c.cardId, quantity = c.quantity, addedAt = c.addedAt)
+                        }
+                    )
+                },
+            deletedDeckKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "deck" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            deletedDeckCardKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "deckCard" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) }
+        )
+    }
+
+    fun exportSyncData(): String {
+        val accounts = dbQueries.selectAllAccounts().executeAsList().filter { it.uid.isNotEmpty() }
+        val payload = SyncPayload(
+            exportedAt = currentTimeMillis(),
+            marketFactor = getSetting("marketFactor")?.toFloatOrNull(),
+            marketFactorUpdatedAt = getSetting("marketFactorUpdatedAt")?.toLongOrNull(),
+            // marketPriceEurSelectedIndex ist wegen des "IS NOT NULL" in der
+            // WHERE-Klausel von selectCatalogCardsWithPriceSelection() hier
+            // bereits nicht-nullbar (SQLDelight leitet das automatisch ab) -
+            // nur selectedAt braucht noch einen echten Null-Check
+            cardmarketPriceSelections = dbQueries.selectCatalogCardsWithPriceSelection().executeAsList().mapNotNull { c ->
+                val at = c.marketPriceEurSelectedAt ?: return@mapNotNull null
+                SyncCardmarketPriceSelection(catalogCardId = c.id, selectedIndex = c.marketPriceEurSelectedIndex.toInt(), selectedAt = at)
+            },
+            sealedCardmarketPriceSelections = dbQueries.selectSealedCatalogWithPriceSelection().executeAsList().mapNotNull { s ->
+                val at = s.marketPriceEurSelectedAt ?: return@mapNotNull null
+                SyncSealedCardmarketPriceSelection(sealedCatalogId = s.id, selectedIndex = s.marketPriceEurSelectedIndex.toInt(), selectedAt = at)
+            },
+            accounts = accounts.map { exportAccountBundle(it) },
+            deletedAccountKeys = dbQueries.selectAccountDeletionLog().executeAsList()
+                .map { SyncDeletion(it.itemKey, it.deletedAt) }
+        )
+        return syncJson.encodeToString(SyncPayload.serializer(), payload)
+    }
+
+    // Führt die komplette bisherige Karten-/Sealed-/Wunschlisten-/Binder-
+    // Merge-Logik für EINEN (bereits aufgelösten lokalen) Account aus - genau
+    // der bisherige Transaktionskörper von importSyncData(), nur
+    // account-gescoped und als Baustein für den äußeren Account-Loop.
+    // MUSS innerhalb einer laufenden Transaktion aufgerufen werden.
+    private fun importAccountBundle(localAccountId: Long, bundle: SyncAccount): AccountMergeCounts {
+        var cardsAdded = 0
+        var sealedAdded = 0
+        var cardsDeleted = 0
+        var sealedDeleted = 0
+        var cardsUpdated = 0
+        var sealedUpdated = 0
+        var wishlistsAdded = 0
+        var wishlistItemsAdded = 0
+        var wishlistsDeleted = 0
+        var wishlistItemsDeleted = 0
+        var bindersAdded = 0
+        var binderItemsAdded = 0
+        var bindersDeleted = 0
+        var binderItemsDeleted = 0
+        var binderItemsUpdated = 0
+        var bindersUpdated = 0
+        var decksAdded = 0
+        var deckCardsAdded = 0
+        var decksDeleted = 0
+        var deckCardsDeleted = 0
+        var deckCardsUpdated = 0
+
+        // ---------- Karten ----------
+        val localCards = dbQueries.selectAll(localAccountId).executeAsList()
+            .associateBy { cardKey(it.cardId, it.isHolo, it.name) }
+        val localCardDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "card" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+
+        // Kombinierte "wann zuletzt gelöscht"-Sicht aus lokalem Stand +
+        // eingehendem Payload - erst danach wird entschieden, wer gewinnt
+        val cardDeletionTimestamps = localCardDeletions.toMutableMap()
+        bundle.deletedCardKeys.forEach { d ->
+            cardDeletionTimestamps[d.itemKey] = maxOf(cardDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        val presentCardKeys = localCards.keys.toMutableSet()
+
+        cardDeletionTimestamps.forEach { (key, delAt) ->
+            val local = localCards[key]
+            if (local != null && delAt >= local.updatedAt) {
+                dbQueries.deleteItem(local.id)
+                presentCardKeys -= key
+                cardsDeleted++
+            }
+            if ((localCardDeletions[key] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("card", key, delAt, localAccountId)
+            }
+        }
+
+        bundle.cards.forEach { c ->
+            val key = cardKey(c.cardId, c.isHolo, c.name)
+            val delAt = cardDeletionTimestamps[key]
+            if (delAt != null && delAt >= c.updatedAt) return@forEach // Löschung ist neuer/gleich alt -> bleibt weg
+            val local = localCards[key]
+            // "key in presentCardKeys" statt nur "local == null" prüfen:
+            // local ist ein Schnappschuss von VOR der Löschungs-Runde oben -
+            // wurde genau diese Zeile dort bereits gelöscht (z.B. weil eine
+            // gleichzeitig mitgeschickte, ältere Löschung eine noch ältere
+            // lokale Version traf), wäre local trotzdem noch nicht null,
+            // zeigt aber auf eine nicht mehr existierende id. Ohne diese
+            // Prüfung würde ein Update ins Leere laufen (0 betroffene
+            // Zeilen) statt die Karte per Insert neu anzulegen
+            if (key in presentCardKeys && local != null) {
+                // Update-Fall: Eintrag existiert auf beiden Seiten, aber die
+                // eingehende Version ist neuer (z.B. Menge/Preis geändert) -
+                // isHolo selbst bleibt gleich, da es Teil von "key" ist
+                if (c.updatedAt > local.updatedAt) {
+                    dbQueries.updateItem(
+                        quantity = c.quantity,
+                        isHolo = c.isHolo,
+                        purchasePrice = c.purchasePrice,
+                        updatedAt = c.updatedAt,
+                        id = local.id
+                    )
+                    // Eigener Preis (18.08.) - gehört zum selben
+                    // Last-Write-Wins-Paket wie Menge/Kaufpreis
+                    dbQueries.updateCustomPrice(
+                        customPriceEur = c.customPriceEur,
+                        customPriceInTotal = c.customPriceInTotal,
+                        customPriceInGameTotal = c.customPriceInGameTotal,
+                        updatedAt = c.updatedAt,
+                        id = local.id
+                    )
+                    dbQueries.updateHoloStyle(holoStyle = c.holoStyle, updatedAt = c.updatedAt, id = local.id)
+                    cardsUpdated++
+                }
+                // sonst: lokaler Stand ist mindestens genauso aktuell -> nichts tun
+            } else {
+                dbQueries.insertItem(
+                    name = c.name,
+                    purchasePrice = c.purchasePrice,
+                    quantity = c.quantity,
+                    isHolo = c.isHolo,
+                    imageUrl = c.imageUrl,
+                    cardId = c.cardId,
+                    updatedAt = c.updatedAt,
+                    accountId = localAccountId
+                )
+                // Eigener Preis (18.08.) - insertItem bleibt schlank (viele
+                // Aufrufer), die Zusatzfelder kommen per Folge-Update auf die
+                // frisch eingefügte Zeile
+                if (c.holoStyle != null) {
+                    dbQueries.updateHoloStyle(holoStyle = c.holoStyle, updatedAt = c.updatedAt, id = dbQueries.lastInsertRowId().executeAsOne())
+                }
+                if (c.customPriceEur != null || c.customPriceInTotal != 1L || c.customPriceInGameTotal != 1L) {
+                    dbQueries.updateCustomPrice(
+                        customPriceEur = c.customPriceEur,
+                        customPriceInTotal = c.customPriceInTotal,
+                        customPriceInGameTotal = c.customPriceInGameTotal,
+                        updatedAt = c.updatedAt,
+                        id = dbQueries.lastInsertRowId().executeAsOne()
+                    )
+                }
+                presentCardKeys += key
+                cardsAdded++
+            }
+        }
+
+        // ---------- Sealed-Produkte (analog) ----------
+        val localSealed = dbQueries.selectAllSealedProducts(localAccountId).executeAsList()
+            .associateBy { sealedKey(it.catalogId, it.isSealed, it.name, it.category, it.game) }
+        val localSealedDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "sealed" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+
+        val sealedDeletionTimestamps = localSealedDeletions.toMutableMap()
+        bundle.deletedSealedKeys.forEach { d ->
+            sealedDeletionTimestamps[d.itemKey] = maxOf(sealedDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        val presentSealedKeys = localSealed.keys.toMutableSet()
+
+        sealedDeletionTimestamps.forEach { (key, delAt) ->
+            val local = localSealed[key]
+            if (local != null && delAt >= local.updatedAt) {
+                dbQueries.deleteSealedProduct(local.id)
+                presentSealedKeys -= key
+                sealedDeleted++
+            }
+            if ((localSealedDeletions[key] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("sealed", key, delAt, localAccountId)
+            }
+        }
+
+        bundle.sealedProducts.forEach { s ->
+            val key = sealedKey(s.catalogId, s.isSealed, s.name, s.category, s.game)
+            val delAt = sealedDeletionTimestamps[key]
+            if (delAt != null && delAt >= s.updatedAt) return@forEach
+            val local = localSealed[key]
+            if (key in presentSealedKeys && local != null) {
+                if (s.updatedAt > local.updatedAt) {
+                    dbQueries.updateSealedProduct(
+                        name = s.name,
+                        category = s.category,
+                        quantity = s.quantity,
+                        isSealed = s.isSealed,
+                        purchasePrice = s.purchasePrice,
+                        imageUrl = s.imageUrl,
+                        updatedAt = s.updatedAt,
+                        id = local.id
+                    )
+                    // Eigener Preis (20.08.) wandert im selben LWW-Zug mit -
+                    // updateSealedProduct kennt die Spalten bewusst nicht
+                    // (schmalere, ältere Signatur)
+                    dbQueries.updateSealedCustomPrice(
+                        customPriceEur = s.customPriceEur,
+                        customPriceInTotal = s.customPriceInTotal,
+                        customPriceInGameTotal = s.customPriceInGameTotal,
+                        updatedAt = s.updatedAt,
+                        id = local.id
+                    )
+                    sealedUpdated++
+                }
+            } else {
+                dbQueries.insertSealedProduct(
+                    name = s.name,
+                    category = s.category,
+                    game = s.game,
+                    quantity = s.quantity,
+                    isSealed = s.isSealed,
+                    purchasePrice = s.purchasePrice,
+                    imageUrl = s.imageUrl,
+                    catalogId = s.catalogId,
+                    updatedAt = s.updatedAt,
+                    accountId = localAccountId,
+                    customPriceEur = s.customPriceEur,
+                    customPriceInTotal = s.customPriceInTotal,
+                    customPriceInGameTotal = s.customPriceInGameTotal
+                )
+                presentSealedKeys += key
+                sealedAdded++
+            }
+        }
+
+        // ---------- Wunschlisten (28.07.) ----------
+        // Zweistufig: erst die Listen selbst (Identität = uid), dann je
+        // Liste ihre Karten (Identität = cardId/Name, siehe
+        // wishlistItemKey()) - siehe Kommentar bei SyncWishlist.
+        val localWishlists = dbQueries.selectAllWishlists(localAccountId).executeAsList()
+            .filter { it.uid.isNotEmpty() }
+        val localWishlistByUid = localWishlists.associateBy { it.uid }.toMutableMap()
+        val localItemsByWishlistId = dbQueries.selectAllWishlistItemsRawForAccount(localAccountId).executeAsList()
+            .groupBy { it.wishlistId }
+
+        val localWishlistDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "wishlist" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val wishlistDeletionTimestamps = localWishlistDeletions.toMutableMap()
+        bundle.deletedWishlistKeys.forEach { d ->
+            wishlistDeletionTimestamps[d.itemKey] = maxOf(wishlistDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        val localWishlistItemDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "wishlistItem" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val wishlistItemDeletionTimestamps = localWishlistItemDeletions.toMutableMap()
+        bundle.deletedWishlistItemKeys.forEach { d ->
+            wishlistItemDeletionTimestamps[d.itemKey] = maxOf(wishlistItemDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        // Löschungen anwenden (ganze Listen) - createdAt übernimmt hier die
+        // Rolle von updatedAt: Listen werden nie umbenannt, "existiert seit"
+        // reicht als Vergleichswert gegen den Löschzeitpunkt
+        wishlistDeletionTimestamps.forEach { (uid, delAt) ->
+            val local = localWishlistByUid[uid]
+            if (local != null && delAt >= local.createdAt) {
+                dbQueries.deleteWishlistItemsForWishlist(local.id)
+                dbQueries.deleteWishlist(local.id)
+                localWishlistByUid.remove(uid)
+                wishlistsDeleted++
+            }
+            if ((localWishlistDeletions[uid] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("wishlist", uid, delAt, localAccountId)
+            }
+        }
+
+        // Löschungen anwenden (einzelne Karten) - nur relevant für Listen,
+        // die nicht gerade oben komplett gelöscht wurden
+        wishlistItemDeletionTimestamps.forEach { (fullKey, delAt) ->
+            val sepIndex = fullKey.indexOf('|')
+            if (sepIndex < 0) return@forEach
+            val uid = fullKey.substring(0, sepIndex)
+            val local = localWishlistByUid[uid]
+            if (local != null) {
+                val match = (localItemsByWishlistId[local.id] ?: emptyList())
+                    .find { "$uid|${wishlistItemKey(it.cardId, it.name)}" == fullKey }
+                if (match != null && delAt >= match.addedAt) {
+                    dbQueries.deleteWishlistItem(match.id)
+                    wishlistItemsDeleted++
+                }
+            }
+            if ((localWishlistItemDeletions[fullKey] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("wishlistItem", fullKey, delAt, localAccountId)
+            }
+        }
+
+        bundle.wishlists.forEach { w ->
+            val listDelAt = wishlistDeletionTimestamps[w.uid]
+            if (listDelAt != null && listDelAt >= w.createdAt) return@forEach
+
+            val existingLocal = localWishlistByUid[w.uid]
+            val localId: Long
+            val existingKeys: MutableSet<String>
+            if (existingLocal == null) {
+                dbQueries.insertWishlist(w.name, w.game, w.createdAt, w.uid, localAccountId)
+                localId = dbQueries.lastInsertRowId().executeAsOne()
+                wishlistsAdded++
+                existingKeys = mutableSetOf()
+            } else {
+                localId = existingLocal.id
+                existingKeys = (localItemsByWishlistId[localId] ?: emptyList())
+                    .map { wishlistItemKey(it.cardId, it.name) }.toMutableSet()
+                // Umbenennen (19.08.) - jüngerer nameUpdatedAt gewinnt,
+                // exakt wie beim Binder weiter unten
+                if (w.nameUpdatedAt > existingLocal.nameUpdatedAt) {
+                    dbQueries.updateWishlistName(w.name, w.nameUpdatedAt, localId)
+                }
+            }
+
+            w.items.forEach { item ->
+                val key = wishlistItemKey(item.cardId, item.name)
+                val fullKey = "${w.uid}|$key"
+                val itemDelAt = wishlistItemDeletionTimestamps[fullKey]
+                if (itemDelAt != null && itemDelAt >= item.addedAt) return@forEach
+                if (key in existingKeys) return@forEach
+                dbQueries.insertWishlistItem(localId, item.cardId, item.name, item.imageUrl, item.addedAt)
+                existingKeys += key
+                wishlistItemsAdded++
+            }
+        }
+
+        // ---------- Binder (31.07.) ----------
+        // Zweistufig, identisch zum Wunschlisten-Merge oben (Identität =
+        // uid bzw. cardId/Name je Binder) - siehe Kommentar bei SyncBinder.
+        val localBinders = dbQueries.selectAllBinders(localAccountId).executeAsList()
+            .filter { it.uid.isNotEmpty() }
+        val localBinderByUid = localBinders.associateBy { it.uid }.toMutableMap()
+        val localItemsByBinderId = dbQueries.selectAllBinderItemsRawForAccount(localAccountId).executeAsList()
+            .groupBy { it.binderId }
+
+        val localBinderDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "binder" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val binderDeletionTimestamps = localBinderDeletions.toMutableMap()
+        bundle.deletedBinderKeys.forEach { d ->
+            binderDeletionTimestamps[d.itemKey] = maxOf(binderDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        val localBinderItemDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "binderItem" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val binderItemDeletionTimestamps = localBinderItemDeletions.toMutableMap()
+        bundle.deletedBinderItemKeys.forEach { d ->
+            binderItemDeletionTimestamps[d.itemKey] = maxOf(binderItemDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        binderDeletionTimestamps.forEach { (uid, delAt) ->
+            val local = localBinderByUid[uid]
+            if (local != null && delAt >= local.createdAt) {
+                dbQueries.deleteBinderItemsForBinder(local.id)
+                dbQueries.deleteBinder(local.id)
+                localBinderByUid.remove(uid)
+                bindersDeleted++
+            }
+            if ((localBinderDeletions[uid] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("binder", uid, delAt, localAccountId)
+            }
+        }
+
+        binderItemDeletionTimestamps.forEach { (fullKey, delAt) ->
+            val sepIndex = fullKey.indexOf('|')
+            if (sepIndex < 0) return@forEach
+            val uid = fullKey.substring(0, sepIndex)
+            val local = localBinderByUid[uid]
+            if (local != null) {
+                val match = (localItemsByBinderId[local.id] ?: emptyList())
+                    .find { "$uid|${binderItemKey(it.cardId, it.name)}" == fullKey }
+                if (match != null && delAt >= match.addedAt) {
+                    dbQueries.deleteBinderItem(match.id)
+                    binderItemsDeleted++
+                }
+            }
+            if ((localBinderItemDeletions[fullKey] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("binderItem", fullKey, delAt, localAccountId)
+            }
+        }
+
+        bundle.binders.forEach { b ->
+            val listDelAt = binderDeletionTimestamps[b.uid]
+            if (listDelAt != null && listDelAt >= b.createdAt) return@forEach
+
+            val existingLocal = localBinderByUid[b.uid]
+            val localId: Long
+            // Schlüssel -> lokale Zeile (statt nur ein Set von Schlüsseln wie
+            // bei Wishlist) - für Binder-Karten gibt es mit position/
+            // positionUpdatedAt einen echten Update-Fall, dafür muss die
+            // lokale Zeile (v.a. ihre id) erreichbar bleiben, siehe unten.
+            val existingByKey: MutableMap<String, BinderItemEntity>
+            if (existingLocal == null) {
+                dbQueries.insertBinder(b.name, b.game, b.createdAt, b.uid, b.pageSize.toLong(), localAccountId)
+                localId = dbQueries.lastInsertRowId().executeAsOne()
+                bindersAdded++
+                existingByKey = mutableMapOf()
+            } else {
+                localId = existingLocal.id
+                existingByKey = (localItemsByBinderId[localId] ?: emptyList())
+                    .associateByTo(mutableMapOf()) { binderItemKey(it.cardId, it.name) }
+                // Umbenennen (03.08., Nutzer-Vorgabe) - echter Update-Fall wie
+                // die Kartenposition (siehe unten), nur auf Binder-Ebene:
+                // jüngerer nameUpdatedAt-Zeitstempel gewinnt
+                if (b.nameUpdatedAt > existingLocal.nameUpdatedAt) {
+                    dbQueries.updateBinderName(b.name, b.nameUpdatedAt, localId)
+                    bindersUpdated++
+                }
+            }
+
+            b.items.forEach { item ->
+                val key = binderItemKey(item.cardId, item.name)
+                val fullKey = "${b.uid}|$key"
+                val itemDelAt = binderItemDeletionTimestamps[fullKey]
+                if (itemDelAt != null && itemDelAt >= item.addedAt) return@forEach
+                val existingItem = existingByKey[key]
+                if (existingItem != null) {
+                    // Update-Fall (31.07., Binder-Seiten) - nur die Position
+                    // kann sich nachträglich ändern (Kartentausch), alles
+                    // andere an einem Binder-Eintrag ist unveränderlich
+                    if (item.positionUpdatedAt > existingItem.positionUpdatedAt) {
+                        dbQueries.updateBinderItemPosition(item.position.toLong(), item.positionUpdatedAt, existingItem.id)
+                        binderItemsUpdated++
+                    }
+                    return@forEach
+                }
+                dbQueries.insertBinderItem(
+                    localId, item.cardId, item.name, item.imageUrl, item.addedAt,
+                    item.position.toLong(), item.positionUpdatedAt
+                )
+                binderItemsAdded++
+            }
+        }
+
+        // ---------- Decks (02.08.) ----------
+        // Zweistufig, identisch zum Binder-Merge oben - eine Mengenänderung
+        // ist hier der "Update"-Fall (statt einer Positionsänderung), siehe
+        // Kommentar bei SyncDeckCard.
+        val localDecks = dbQueries.selectAllDecks(localAccountId).executeAsList()
+            .filter { it.uid.isNotEmpty() }
+        val localDeckByUid = localDecks.associateBy { it.uid }.toMutableMap()
+        val localCardsByDeckId = dbQueries.selectAllDeckCardsRawForAccount(localAccountId).executeAsList()
+            .groupBy { it.deckId }
+
+        val localDeckDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "deck" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val deckDeletionTimestamps = localDeckDeletions.toMutableMap()
+        bundle.deletedDeckKeys.forEach { d ->
+            deckDeletionTimestamps[d.itemKey] = maxOf(deckDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        val localDeckCardDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "deckCard" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val deckCardDeletionTimestamps = localDeckCardDeletions.toMutableMap()
+        bundle.deletedDeckCardKeys.forEach { d ->
+            deckCardDeletionTimestamps[d.itemKey] = maxOf(deckCardDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+
+        deckDeletionTimestamps.forEach { (uid, delAt) ->
+            val local = localDeckByUid[uid]
+            if (local != null && delAt >= local.createdAt) {
+                dbQueries.deleteDeckCardsForDeck(local.id)
+                dbQueries.deleteDeck(local.id)
+                localDeckByUid.remove(uid)
+                decksDeleted++
+            }
+            if ((localDeckDeletions[uid] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("deck", uid, delAt, localAccountId)
+            }
+        }
+
+        deckCardDeletionTimestamps.forEach { (fullKey, delAt) ->
+            val sepIndex = fullKey.indexOf('|')
+            if (sepIndex < 0) return@forEach
+            val uid = fullKey.substring(0, sepIndex)
+            val cardId = fullKey.substring(sepIndex + 1)
+            val local = localDeckByUid[uid]
+            if (local != null) {
+                val match = (localCardsByDeckId[local.id] ?: emptyList()).find { it.cardId == cardId }
+                if (match != null && delAt >= match.addedAt) {
+                    dbQueries.deleteDeckCard(match.id)
+                    deckCardsDeleted++
+                }
+            }
+            if ((localDeckCardDeletions[fullKey] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("deckCard", fullKey, delAt, localAccountId)
+            }
+        }
+
+        bundle.decks.forEach { d ->
+            val deckDelAt = deckDeletionTimestamps[d.uid]
+            if (deckDelAt != null && deckDelAt >= d.createdAt) return@forEach
+
+            val existingLocal = localDeckByUid[d.uid]
+            val localId: Long
+            val existingByCardId: MutableMap<String, DeckCardEntity>
+            if (existingLocal == null) {
+                dbQueries.insertDeck(d.name, d.game, d.createdAt, d.uid, localAccountId)
+                localId = dbQueries.lastInsertRowId().executeAsOne()
+                decksAdded++
+                existingByCardId = mutableMapOf()
+            } else {
+                localId = existingLocal.id
+                existingByCardId = (localCardsByDeckId[localId] ?: emptyList())
+                    .associateByTo(mutableMapOf()) { it.cardId }
+            }
+
+            d.cards.forEach { card ->
+                val fullKey = "${d.uid}|${card.cardId}"
+                val cardDelAt = deckCardDeletionTimestamps[fullKey]
+                if (cardDelAt != null && cardDelAt >= card.addedAt) return@forEach
+                val existingCard = existingByCardId[card.cardId]
+                if (existingCard != null) {
+                    // Update-Fall (Mengenänderung) - siehe Kommentar bei SyncDeckCard
+                    if (card.addedAt > existingCard.addedAt) {
+                        dbQueries.updateDeckCardQuantity(card.quantity, card.addedAt, existingCard.id)
+                        deckCardsUpdated++
+                    }
+                    return@forEach
+                }
+                dbQueries.insertDeckCard(localId, card.cardId, card.quantity, card.addedAt)
+                deckCardsAdded++
+            }
+        }
+
+        return AccountMergeCounts(
+            cardsAdded, sealedAdded, cardsDeleted, sealedDeleted, cardsUpdated, sealedUpdated,
+            wishlistsAdded, wishlistItemsAdded, wishlistsDeleted, wishlistItemsDeleted,
+            bindersAdded, binderItemsAdded, bindersDeleted, binderItemsDeleted, binderItemsUpdated, bindersUpdated,
+            decksAdded, deckCardsAdded, decksDeleted, deckCardsDeleted, deckCardsUpdated
+        )
+    }
+
+    fun importSyncData(json: String): SyncImportSummary {
+        val payload = syncJson.decodeFromString(SyncPayload.serializer(), json)
+        var totals = AccountMergeCounts()
+        var accountsAdded = 0
+        var accountsUpdated = 0
+        var accountsDeleted = 0
+
+        dbQueries.transaction {
+            // ---------- Accounts (02.08.) ----------
+            // Muss VOR den eigentlichen Datenbündeln laufen, damit für jeden
+            // ankommenden Account eine lokale id existiert, auf die
+            // importAccountBundle() schreiben kann - inklusive neu
+            // angelegter Accounts, die es hier vorher noch gar nicht gab
+            // (Nutzer-Vorgabe: "wenn Account 2 in der App angelegt wird, soll
+            // er zum Server gesynced werden und dort existieren").
+            val localAccountByUid = dbQueries.selectAllAccounts().executeAsList()
+                .filter { it.uid.isNotEmpty() }
+                .associateBy { it.uid }
+                .toMutableMap()
+
+            val localAccountDeletions = dbQueries.selectAccountDeletionLog().executeAsList()
+                .groupBy { it.itemKey }
+                .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+            val accountDeletionTimestamps = localAccountDeletions.toMutableMap()
+            payload.deletedAccountKeys.forEach { d ->
+                accountDeletionTimestamps[d.itemKey] = maxOf(accountDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+            }
+
+            accountDeletionTimestamps.forEach { (uid, delAt) ->
+                val local = localAccountByUid[uid]
+                if (local != null && delAt >= local.updatedAt) {
+                    dbQueries.deleteWishlistItemsForAccount(local.id)
+                    dbQueries.deleteWishlistsForAccount(local.id)
+                    dbQueries.deleteBinderItemsForAccount(local.id)
+                    dbQueries.deleteBindersForAccount(local.id)
+                    dbQueries.deleteItemsForAccount(local.id)
+                    dbQueries.deleteSealedProductsForAccount(local.id)
+                    dbQueries.deleteDeletionLogForAccount(local.id)
+                    dbQueries.deleteAccount(local.id)
+                    localAccountByUid.remove(uid)
+                    accountsDeleted++
+                }
+                if ((localAccountDeletions[uid] ?: -1L) < delAt) {
+                    dbQueries.insertDeletionLog("account", uid, delAt, local?.id ?: 0L)
+                }
+            }
+
+            val resolvedAccountIds = mutableMapOf<String, Long>()
+            payload.accounts.forEach { a ->
+                val accDelAt = accountDeletionTimestamps[a.uid]
+                if (accDelAt != null && accDelAt >= a.updatedAt) return@forEach // gerade gelöscht, nicht wiederbeleben
+
+                val existingLocal = localAccountByUid[a.uid]
+                if (existingLocal == null) {
+                    dbQueries.insertAccount(a.uid, a.name, a.pinHash, a.pinSalt, a.updatedAt, a.updatedAt)
+                    val newId = dbQueries.lastInsertRowId().executeAsOne()
+                    resolvedAccountIds[a.uid] = newId
+                    accountsAdded++
+                } else {
+                    resolvedAccountIds[a.uid] = existingLocal.id
+                    // LWW wie bei allen anderen Feldern - nur übernehmen, wenn
+                    // die eingehende Version wirklich neuer ist (Umbenennen/
+                    // PIN-Änderung sind die einzigen "Update"-Fälle bei Accounts)
+                    if (a.updatedAt > existingLocal.updatedAt) {
+                        dbQueries.updateAccount(a.name, a.pinHash, a.pinSalt, a.updatedAt, existingLocal.id)
+                        accountsUpdated++
+                    }
+                }
+            }
+
+            // ---------- Je Account die komplette bisherige Merge-Logik ----------
+            payload.accounts.forEach { bundle ->
+                val localAccountId = resolvedAccountIds[bundle.uid] ?: return@forEach
+                val counts = importAccountBundle(localAccountId, bundle)
+                totals = AccountMergeCounts(
+                    totals.cardsAdded + counts.cardsAdded,
+                    totals.sealedAdded + counts.sealedAdded,
+                    totals.cardsDeleted + counts.cardsDeleted,
+                    totals.sealedDeleted + counts.sealedDeleted,
+                    totals.cardsUpdated + counts.cardsUpdated,
+                    totals.sealedUpdated + counts.sealedUpdated,
+                    totals.wishlistsAdded + counts.wishlistsAdded,
+                    totals.wishlistItemsAdded + counts.wishlistItemsAdded,
+                    totals.wishlistsDeleted + counts.wishlistsDeleted,
+                    totals.wishlistItemsDeleted + counts.wishlistItemsDeleted,
+                    totals.bindersAdded + counts.bindersAdded,
+                    totals.binderItemsAdded + counts.binderItemsAdded,
+                    totals.bindersDeleted + counts.bindersDeleted,
+                    totals.binderItemsDeleted + counts.binderItemsDeleted,
+                    totals.binderItemsUpdated + counts.binderItemsUpdated,
+                    totals.bindersUpdated + counts.bindersUpdated,
+                    totals.decksAdded + counts.decksAdded,
+                    totals.deckCardsAdded + counts.deckCardsAdded,
+                    totals.decksDeleted + counts.decksDeleted,
+                    totals.deckCardsDeleted + counts.deckCardsDeleted,
+                    totals.deckCardsUpdated + counts.deckCardsUpdated
+                )
+            }
+        }
+
+        // Cardmarket-Preisauswahl (28.07.) - reine Nutzer-Angabe, LWW wie der
+        // Umrechnungsfaktor unten. Die rohen Cardmarket-Optionen selbst
+        // bleiben lokal unangetastet (unabhängig pro Seite geladen, siehe
+        // CardmarketPriceSync.kt) - übernommen wird nur, WELCHER Index aktiv
+        // sein soll, falls die eingehende Angabe neuer ist. Liegt der Index
+        // gerade außerhalb der lokalen Optionsliste (z.B. weil die Gegenseite
+        // mehr Cardmarket-Treffer für diesen Code hatte), wird Auswahl/
+        // Zeitstempel trotzdem übernommen - der aktive Preis fällt bis zum
+        // nächsten eigenen Preisabgleich auf "keiner" zurück, statt etwas
+        // Falsches zu zeigen. Bewusst weiterhin geräteweit statt pro Account,
+        // siehe Kommentar bei SyncPayload.cardmarketPriceSelections.
+        payload.cardmarketPriceSelections.forEach { sel ->
+            val localCard = dbQueries.selectCatalogCardById(sel.catalogCardId).executeAsOneOrNull() ?: return@forEach
+            val localSelectedAt = localCard.marketPriceEurSelectedAt ?: -1L
+            if (sel.selectedAt > localSelectedAt) {
+                val options = decodeCardmarketOptions(localCard.marketPriceEurOptions)
+                val effectivePrice = options.getOrNull(sel.selectedIndex)
+                dbQueries.updateCatalogEurSelection(sel.selectedIndex.toLong(), sel.selectedAt, effectivePrice, sel.catalogCardId)
+            }
+        }
+
+        // Sealed-Pendant (11.08.) - exakt dasselbe Prinzip wie oben, siehe
+        // Kommentar bei SyncPayload.sealedCardmarketPriceSelections.
+        payload.sealedCardmarketPriceSelections.forEach { sel ->
+            val localEntry = dbQueries.selectSealedCatalogById(sel.sealedCatalogId).executeAsOneOrNull() ?: return@forEach
+            val localSelectedAt = localEntry.marketPriceEurSelectedAt ?: -1L
+            if (sel.selectedAt > localSelectedAt) {
+                val options = decodeCardmarketOptions(localEntry.marketPriceEurOptions)
+                val effectivePrice = options.getOrNull(sel.selectedIndex)
+                dbQueries.updateSealedCatalogEurSelection(sel.selectedIndex.toLong(), sel.selectedAt, effectivePrice, sel.sealedCatalogId)
+            }
+        }
+
+        // Umrechnungsfaktor (26.07.) - außerhalb der Transaktion, ist nur ein
+        // einzelner Settings-Wert, kein Konflikt mit den Karten-/Sealed-
+        // Operationen oben. Jüngerer Zeitstempel gewinnt, exakt dasselbe
+        // Prinzip wie bei den Lösch-/Update-Zeitstempeln oben - macht App und
+        // Server (Weboberfläche) nach dem Sync konsistent, statt dass
+        // dieselben Karten je nach Ort unterschiedliche EUR-Werte zeigen.
+        if (payload.marketFactor != null && payload.marketFactorUpdatedAt != null) {
+            val localUpdatedAt = getSetting("marketFactorUpdatedAt")?.toLongOrNull() ?: -1L
+            if (payload.marketFactorUpdatedAt > localUpdatedAt) {
+                setSetting("marketFactor", payload.marketFactor.toString())
+                setSetting("marketFactorUpdatedAt", payload.marketFactorUpdatedAt.toString())
+            }
+        }
+
+        return SyncImportSummary(
+            totals.cardsAdded, totals.sealedAdded, totals.cardsDeleted, totals.sealedDeleted,
+            totals.cardsUpdated, totals.sealedUpdated,
+            totals.wishlistsAdded, totals.wishlistItemsAdded, totals.wishlistsDeleted, totals.wishlistItemsDeleted,
+            totals.bindersAdded, totals.binderItemsAdded, totals.bindersDeleted, totals.binderItemsDeleted,
+            totals.binderItemsUpdated, totals.bindersUpdated,
+            accountsAdded, accountsUpdated, accountsDeleted,
+            totals.decksAdded, totals.deckCardsAdded, totals.decksDeleted, totals.deckCardsDeleted, totals.deckCardsUpdated
+        )
+    }
+}

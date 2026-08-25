@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val heroDeckDorintheaSetSeed = CardSetSeed(id = "6400025", name = "Hero Deck: Dorinthea", game = "FleshAndBlood", totalCards = 30)
+
+val heroDeckDorintheaCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400025-TEA001", "6400025", "TEA001", "Dorinthea Ironsong", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA.width-450.png", null),
+    CatalogCardSeed("6400025-TEA002", "6400025", "TEA002", "Dorinthea", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/TEA2.width-450.png", null),
+    CatalogCardSeed("6400025-TEA003", "6400025", "TEA003", "Dawnblade", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA3.width-450.png", null),
+    CatalogCardSeed("6400025-TEA004", "6400025", "TEA004", "Hope Merchant's Hood", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA4.width-450.png", null),
+    CatalogCardSeed("6400025-TEA005", "6400025", "TEA005", "Ironrot Plate", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA5.width-450.png", null),
+    CatalogCardSeed("6400025-TEA006", "6400025", "TEA006", "Ironrot Gauntlet", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA6.width-450.png", null),
+    CatalogCardSeed("6400025-TEA007", "6400025", "TEA007", "Refraction Bolters", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA7.width-450.png", null),
+    CatalogCardSeed("6400025-TEA008", "6400025", "TEA008", "Biting Blade (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA8.width-450.png", 1.1),
+    CatalogCardSeed("6400025-TEA009", "6400025", "TEA009", "Stroke of Foresight (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA9.width-450.png", 0.66),
+    CatalogCardSeed("6400025-TEA010", "6400025", "TEA010", "Overpower (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/TEA10.width-450.png", null),
+    CatalogCardSeed("6400025-TEA011", "6400025", "TEA011", "Steelblade Shunt (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/TEA11.width-450.png", 1.99),
+    CatalogCardSeed("6400025-TEA012", "6400025", "TEA012", "Driving Blade (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA12.width-450.png", null),
+    CatalogCardSeed("6400025-TEA013", "6400025", "TEA013", "Nature's Path Pilgrimage (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA13.width-450.png", null),
+    CatalogCardSeed("6400025-TEA014", "6400025", "TEA014", "Sharpen Steel (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA14.width-450.png", 2.96),
+    CatalogCardSeed("6400025-TEA015", "6400025", "TEA015", "Wounding Blow (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA15.width-450.png", null),
+    CatalogCardSeed("6400025-TEA016", "6400025", "TEA016", "Razor Reflex (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA16.width-450.png", 1.4),
+    CatalogCardSeed("6400025-TEA017", "6400025", "TEA017", "Stroke of Foresight (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA17.width-450.png", null),
+    CatalogCardSeed("6400025-TEA018", "6400025", "TEA018", "Warrior's Valor (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/TEA18.width-450.png", null),
+    CatalogCardSeed("6400025-TEA019", "6400025", "TEA019", "Springboard Somersault", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA19.width-450.png", null),
+    CatalogCardSeed("6400025-TEA020", "6400025", "TEA020", "Biting Blade (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA20.width-450.png", 0.25),
+    CatalogCardSeed("6400025-TEA021", "6400025", "TEA021", "Ironsong Response (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA21.width-450.png", null),
+    CatalogCardSeed("6400025-TEA022", "6400025", "TEA022", "Driving Blade (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA22.width-450.png", null),
+    CatalogCardSeed("6400025-TEA023", "6400025", "TEA023", "Nature's Path Pilgrimage (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA23.width-450.png", null),
+    CatalogCardSeed("6400025-TEA024", "6400025", "TEA024", "Sharpen Steel (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA24.width-450.png", 0.52),
+    CatalogCardSeed("6400025-TEA025", "6400025", "TEA025", "Warrior's Valor (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/TEA25.width-450.png", 0.96),
+    CatalogCardSeed("6400025-TEA026", "6400025", "TEA026", "Flock of the Feather Walkers (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA26.width-450.png", 1.62),
+    CatalogCardSeed("6400025-TEA027", "6400025", "TEA027", "Scour the Battlescape (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/TEA27.width-450.png", null),
+    CatalogCardSeed("6400025-TEA028", "6400025", "TEA028", "Energy Potion", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/TEA28.width-450.png", 2.13),
+    CatalogCardSeed("6400025-TEA029", "6400025", "TEA029", "Sigil of Solace (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/TEA29.width-450.png", null),
+    CatalogCardSeed("6400025-TEA030", "6400025", "TEA030", "Quicken", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/TEA30.width-450.png", null),
+)

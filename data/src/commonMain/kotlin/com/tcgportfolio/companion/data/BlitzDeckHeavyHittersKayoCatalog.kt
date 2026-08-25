@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckHeavyHittersKayoSetSeed = CardSetSeed(id = "6400067", name = "Blitz Deck: Heavy Hitters - Kayo", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckHeavyHittersKayoCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400067-KYO001", "6400067", "KYO001", "Kayo, Armed and Dangerous", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO001.png", 2.76),
+    CatalogCardSeed("6400067-KYO002", "6400067", "KYO002", "Mini Meataxe", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO002.png", null),
+    CatalogCardSeed("6400067-KYO003", "6400067", "KYO003", "Knucklehead", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO003.png", null),
+    CatalogCardSeed("6400067-KYO004", "6400067", "KYO004", "Raw Meat", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO004.png", 0.15),
+    CatalogCardSeed("6400067-KYO005", "6400067", "KYO005", "Gauntlet of Might", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO005.png", 0.18),
+    CatalogCardSeed("6400067-KYO006", "6400067", "KYO006", "Flat Trackers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO006.png", 0.15),
+    CatalogCardSeed("6400067-KYO007", "6400067", "KYO007", "Agile Windup (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO007.png", 1.66),
+    CatalogCardSeed("6400067-KYO008", "6400067", "KYO008", "Bare Fangs (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO008.png", 0.23),
+    CatalogCardSeed("6400067-KYO009", "6400067", "KYO009", "Down But Not Out", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO009.png", 2.0),
+    CatalogCardSeed("6400067-KYO010", "6400067", "KYO010", "Rally the Rearguard (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO010.png", null),
+    CatalogCardSeed("6400067-KYO011", "6400067", "KYO011", "Rising Power (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO011.png", 0.15),
+    CatalogCardSeed("6400067-KYO012", "6400067", "KYO012", "Wild Ride (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO012.png", 0.15),
+    CatalogCardSeed("6400067-KYO013", "6400067", "KYO013", "Lead with Power (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO013.png", null),
+    CatalogCardSeed("6400067-KYO014", "6400067", "KYO014", "Lead with Speed (Red) (KYO014)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO014.png", null),
+    CatalogCardSeed("6400067-KYO015", "6400067", "KYO015", "Run into Trouble", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO015.png", null),
+    CatalogCardSeed("6400067-KYO016", "6400067", "KYO016", "Agile Windup (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO016.png", 10.11),
+    CatalogCardSeed("6400067-KYO017", "6400067", "KYO017", "Bare Fangs (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO017.png", null),
+    CatalogCardSeed("6400067-KYO018", "6400067", "KYO018", "Pack Call (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO018.png", 0.18),
+    CatalogCardSeed("6400067-KYO019", "6400067", "KYO019", "Rally the Rearguard (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO019.png", null),
+    CatalogCardSeed("6400067-KYO020", "6400067", "KYO020", "Rising Power (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO020.png", null),
+    CatalogCardSeed("6400067-KYO021", "6400067", "KYO021", "Wild Ride (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO021.png", 0.2),
+    CatalogCardSeed("6400067-KYO022", "6400067", "KYO022", "Agile Windup (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO022.png", 3.82),
+    CatalogCardSeed("6400067-KYO023", "6400067", "KYO023", "Mighty Windup (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO023.png", null),
+    CatalogCardSeed("6400067-KYO024", "6400067", "KYO024", "Pack Call (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO024.png", null),
+    CatalogCardSeed("6400067-KYO025", "6400067", "KYO025", "Lead with Power (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO025.png", 0.25),
+    CatalogCardSeed("6400067-KYO026", "6400067", "KYO026", "Lead with Speed (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO026.png", null),
+    CatalogCardSeed("6400067-KYO027", "6400067", "KYO027", "Agility", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO027.png", 2.0),
+    CatalogCardSeed("6400067-KYO028", "6400067", "KYO028", "Might", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO028.png", 1.5),
+    CatalogCardSeed("6400067-KYO029", "6400067", "KYO029", "Vigor", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KYO/EN/KYO029.png", 2.5),
+)

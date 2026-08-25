@@ -1,0 +1,19 @@
+CREATE TABLE CardSet (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    totalCards INTEGER NOT NULL
+);
+
+CREATE TABLE CardCatalogEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    setId TEXT NOT NULL,
+    number TEXT NOT NULL,
+    name TEXT NOT NULL,
+    variant TEXT NOT NULL DEFAULT 'Normal',
+    rarity TEXT NOT NULL,
+    imageUrl TEXT NOT NULL,
+    FOREIGN KEY (setId) REFERENCES CardSet(id)
+);
+
+ALTER TABLE PortfolioItemEntity ADD COLUMN cardId TEXT REFERENCES CardCatalogEntity(id);

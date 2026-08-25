@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val otsTournamentPack19SetSeed = CardSetSeed(id = "3600543", name = "OTS Tournament Pack 19", game = "YuGiOh", totalCards = 29)
+
+val otsTournamentPack19CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("3600543-OP19-EN001", "3600543", "OP19-EN001", "Fallen of Albaz", "Normal", "Ultimate Rare", "https://images.ygoprodeck.com/images/cards/68468459.jpg", 0.12),
+    CatalogCardSeed("3600543-OP19-EN002", "3600543", "OP19-EN002", "Water Enchantress of the Temple", "Normal", "Ultimate Rare", "https://images.ygoprodeck.com/images/cards/30680659.jpg", 0.6),
+    CatalogCardSeed("3600543-OP19-EN003", "3600543", "OP19-EN003", "Skill Drain", "Normal", "Ultimate Rare", "https://images.ygoprodeck.com/images/cards/82732705.jpg", 0.25),
+    CatalogCardSeed("3600543-OP19-EN004", "3600543", "OP19-EN004", "Caius the Shadow Monarch", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/9748752.jpg", 5.38),
+    CatalogCardSeed("3600543-OP19-EN005", "3600543", "OP19-EN005", "Trap Eater", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/13821299.jpg", 0.53),
+    CatalogCardSeed("3600543-OP19-EN006", "3600543", "OP19-EN006", "Pain Painter", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/21620076.jpg", 0.23),
+    CatalogCardSeed("3600543-OP19-EN007", "3600543", "OP19-EN007", "D/D Berfomet", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/19808608.jpg", 0.13),
+    CatalogCardSeed("3600543-OP19-EN008", "3600543", "OP19-EN008", "Performapal Odd-Eyes Dissolver", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/46136942.jpg", 0.1),
+    CatalogCardSeed("3600543-OP19-EN009", "3600543", "OP19-EN009", "D/D/D Flame King Genghis", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/74583607.jpg", 0.32),
+    CatalogCardSeed("3600543-OP19-EN010", "3600543", "OP19-EN010", "D/D/D Oracle King d'Arc", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/82956492.jpg", 0.18),
+    CatalogCardSeed("3600543-OP19-EN011", "3600543", "OP19-EN011", "Forbidden Chalice", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/25789292.jpg", 0.26),
+    CatalogCardSeed("3600543-OP19-EN012", "3600543", "OP19-EN012", "Hercules Beetle", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/52584282.jpg", 0.19),
+    CatalogCardSeed("3600543-OP19-EN013", "3600543", "OP19-EN013", "Kuwagata α", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/60802233.jpg", 0.14),
+    CatalogCardSeed("3600543-OP19-EN014", "3600543", "OP19-EN014", "Swamp Battleguard", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/40453765.jpg", 0.12),
+    CatalogCardSeed("3600543-OP19-EN015", "3600543", "OP19-EN015", "Lava Battleguard", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/20394040.jpg", 0.15),
+    CatalogCardSeed("3600543-OP19-EN016", "3600543", "OP19-EN016", "Night Assailant", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/16226786.jpg", 0.39),
+    CatalogCardSeed("3600543-OP19-EN017", "3600543", "OP19-EN017", "Gorz the Emissary of Darkness", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/44330098.jpg", 2.7),
+    CatalogCardSeed("3600543-OP19-EN018", "3600543", "OP19-EN018", "Lonefire Blossom", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/48686504.jpg", 0.08),
+    CatalogCardSeed("3600543-OP19-EN019", "3600543", "OP19-EN019", "Heroic Challenger - Thousand Blades", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/1833916.jpg", 0.12),
+    CatalogCardSeed("3600543-OP19-EN020", "3600543", "OP19-EN020", "Wisdom-Eye Magician", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/72714461.jpg", 0.35),
+    CatalogCardSeed("3600543-OP19-EN021", "3600543", "OP19-EN021", "Performapal Skullcrobat Joker", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/40318957.jpg", 0.19),
+    CatalogCardSeed("3600543-OP19-EN022", "3600543", "OP19-EN022", "Fairy Tail - Snow", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/55623480.jpg", 0.27),
+    CatalogCardSeed("3600543-OP19-EN023", "3600543", "OP19-EN023", "Destrudo the Lost Dragon's Frisson", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/5560911.jpg", 0.46),
+    CatalogCardSeed("3600543-OP19-EN024", "3600543", "OP19-EN024", "Heroic Champion - Excalibur", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/60645181.jpg", 0.34),
+    CatalogCardSeed("3600543-OP19-EN025", "3600543", "OP19-EN025", "Heroic Champion - Gandiva", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/48009503.jpg", 0.15),
+    CatalogCardSeed("3600543-OP19-EN026", "3600543", "OP19-EN026", "Symph Amplifire", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/75304793.jpg", 0.09),
+    CatalogCardSeed("3600543-OP19-EN027", "3600543", "OP19-EN027", "Red Reboot", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/23002292.jpg", 0.15),
+    CatalogCardSeed("3600543-OP19-EN028", "3600543", "OP19-EN028", "Slime Token", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/21770261.jpg", 0.72),
+    CatalogCardSeed("3600543-OP19-EN029", "3600543", "OP19-EN029", "Slime Token", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/21770261.jpg", 0.72),
+)

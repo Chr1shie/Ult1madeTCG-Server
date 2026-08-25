@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val welcomeDeck2017SetSeed = CardSetSeed(id = "w17", name = "Welcome Deck 2017", game = "MTG", totalCards = 30)
+
+val welcomeDeck2017CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("w17-1", "w17", "1", "Divine Verdict", "Promo", "C", "https://cards.scryfall.io/large/front/d/6/d6686a8d-9cf9-4787-9cf4-1aff8366f7ca.jpg?1783936552", 0.06, 297393),
+    CatalogCardSeed("w17-2", "w17", "2", "Glory Seeker", "Promo", "C", "https://cards.scryfall.io/large/front/2/b/2bd51dd3-ce49-41cf-85ef-a5a1428bc71b.jpg?1783936550", 0.05, 297394),
+    CatalogCardSeed("w17-3", "w17", "3", "Serra Angel", "Promo", "U", "https://cards.scryfall.io/large/front/3/5/350c41af-18e5-4ce8-b3b1-64baa85b1acb.jpg?1783936550", 0.23, 297395),
+    CatalogCardSeed("w17-4", "w17", "4", "Standing Troops", "Promo", "C", "https://cards.scryfall.io/large/front/7/5/75091277-99fe-428b-95bd-5cba9e0146ef.jpg?1783936550", 0.18, 297396),
+    CatalogCardSeed("w17-5", "w17", "5", "Stormfront Pegasus", "Promo", "U", "https://cards.scryfall.io/large/front/c/2/c2e03297-3124-4f83-98ef-772fa213a422.jpg?1783936550", 0.17, 297397),
+    CatalogCardSeed("w17-6", "w17", "6", "Victory's Herald", "Promo", "R", "https://cards.scryfall.io/large/front/9/c/9cd99e32-cbe4-44a7-82ef-7c2d86d6d013.jpg?1783936550", 0.33, 297398),
+    CatalogCardSeed("w17-7", "w17", "7", "Air Elemental", "Promo", "U", "https://cards.scryfall.io/large/front/d/8/d8ecd6f4-d48f-4427-9ca4-bf414283a583.jpg?1783936550", 0.04, 297399),
+    CatalogCardSeed("w17-8", "w17", "8", "Coral Merfolk", "Promo", "C", "https://cards.scryfall.io/large/front/6/3/63b2cdfe-31ef-43d7-b4ca-e2505d613244.jpg?1783936549", 0.27, 297400),
+    CatalogCardSeed("w17-9", "w17", "9", "Drag Under", "Promo", "C", "https://cards.scryfall.io/large/front/7/5/75eacac3-cba4-4c30-b1df-19fcc5f96076.jpg?1783936549", 0.07, 297401),
+    CatalogCardSeed("w17-10", "w17", "10", "Inspiration", "Promo", "C", "https://cards.scryfall.io/large/front/9/5/95233b5e-9401-4d6d-8ec4-959ca22270ff.jpg?1783936549", 0.11, 297402),
+    CatalogCardSeed("w17-11", "w17", "11", "Sleep Paralysis", "Promo", "C", "https://cards.scryfall.io/large/front/4/1/4177c849-f366-4435-9060-d8785f235388.jpg?1783936548", 0.06, 297403),
+    CatalogCardSeed("w17-12", "w17", "12", "Sphinx of Magosi", "Promo", "R", "https://cards.scryfall.io/large/front/a/2/a2b4f70d-e922-4ecb-9d5a-6253f7a7716c.jpg?1783936548", 0.17, 297404),
+    CatalogCardSeed("w17-13", "w17", "13", "Stealer of Secrets", "Promo", "C", "https://cards.scryfall.io/large/front/0/2/02acbe9b-fac7-4135-8318-5f3dc93a9e58.jpg?1783936547", 0.11, 297405),
+    CatalogCardSeed("w17-14", "w17", "14", "Tricks of the Trade", "Promo", "C", "https://cards.scryfall.io/large/front/f/7/f7860cf3-c3ea-4055-8c95-6d1c8d50e69d.jpg?1783936547", 0.26, 297406),
+    CatalogCardSeed("w17-15", "w17", "15", "Bloodhunter Bat", "Promo", "C", "https://cards.scryfall.io/large/front/3/d/3ded635c-ab7c-4bb4-a771-481c4d66381e.jpg?1783936547", 0.07, 297407),
+    CatalogCardSeed("w17-16", "w17", "16", "Certain Death", "Promo", "C", "https://cards.scryfall.io/large/front/a/6/a6f7a23a-0966-4060-8034-734df6f0f29f.jpg?1783936547", 0.14, 297408),
+    CatalogCardSeed("w17-17", "w17", "17", "Nightmare", "Promo", "R", "https://cards.scryfall.io/large/front/0/5/052022ff-795f-4f50-a45c-91cf8be9fbe9.jpg?1783936547", 0.26, 297409),
+    CatalogCardSeed("w17-18", "w17", "18", "Raise Dead", "Promo", "C", "https://cards.scryfall.io/large/front/4/9/4950c3c2-80c1-4447-ac38-cf40f76b9545.jpg?1783936546", 0.12, 297410),
+    CatalogCardSeed("w17-19", "w17", "19", "Sengir Vampire", "Promo", "U", "https://cards.scryfall.io/large/front/c/c/cc232770-2cbb-4fff-95d0-3acad5b79ae6.jpg?1783936547", 0.11, 297411),
+    CatalogCardSeed("w17-20", "w17", "20", "Untamed Hunger", "Promo", "C", "https://cards.scryfall.io/large/front/c/a/caccbba0-80b1-461c-b548-33d7f3a48342.jpg?1783936547", 0.32, 297412),
+    CatalogCardSeed("w17-21", "w17", "21", "Falkenrath Reaver", "Promo", "C", "https://cards.scryfall.io/large/front/d/7/d7b5913e-a103-4e4a-9281-8b88c1fb746e.jpg?1783936547", 0.05, 297413),
+    CatalogCardSeed("w17-22", "w17", "22", "Shivan Dragon", "Promo", "R", "https://cards.scryfall.io/large/front/2/1/2160284c-2ece-43ba-ab67-5c184f81fe0e.jpg?1783936546", 0.09, 297414),
+    CatalogCardSeed("w17-23", "w17", "23", "Thundering Giant", "Promo", "C", "https://cards.scryfall.io/large/front/d/d/ddbcc6e9-b5f4-4f20-9c15-b690b4f64304.jpg?1783936546", 0.08, 297415),
+    CatalogCardSeed("w17-24", "w17", "24", "Garruk's Horde", "Promo", "R", "https://cards.scryfall.io/large/front/9/b/9b501b60-e541-430e-b7e2-b51c287093db.jpg?1783936546", 0.19, 297416),
+    CatalogCardSeed("w17-25", "w17", "25", "Oakenform", "Promo", "C", "https://cards.scryfall.io/large/front/a/a/aae3e893-cc4c-46a2-882f-a3126ef39c57.jpg?1783936545", 0.24, 297417),
+    CatalogCardSeed("w17-26", "w17", "26", "Rabid Bite", "Promo", "C", "https://cards.scryfall.io/large/front/f/9/f97a0098-baa4-4ccf-a0da-fb57e7848024.jpg?1783936543", 0.15, 297418),
+    CatalogCardSeed("w17-27", "w17", "27", "Rootwalla", "Promo", "C", "https://cards.scryfall.io/large/front/f/5/f5177a97-cf3b-4a82-adc4-14835152880d.jpg?1783936544", 0.02, 297419),
+    CatalogCardSeed("w17-28", "w17", "28", "Stalking Tiger", "Promo", "C", "https://cards.scryfall.io/large/front/2/0/2048b66a-586f-49ad-bd2b-7fce1eb45ce6.jpg?1783936543", 0.1, 297420),
+    CatalogCardSeed("w17-29", "w17", "29", "Stampeding Rhino", "Promo", "C", "https://cards.scryfall.io/large/front/c/d/cd02ae80-4af6-4da1-ba3b-b56068c49785.jpg?1783936542", 0.04, 297421),
+    CatalogCardSeed("w17-30", "w17", "30", "Wing Snare", "Promo", "U", "https://cards.scryfall.io/large/front/a/5/a58e1c71-b0e1-4c03-97cc-330e3ef94e52.jpg?1783936542", 0.04, 297422),
+)

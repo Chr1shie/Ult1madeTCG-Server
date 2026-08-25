@@ -1,0 +1,4 @@
+-- Binder-Optik (25.08., Nutzer-Vorgabe) - siehe Spalten-Kommentar in
+-- Portfolio.sq (Farbe + optionales Cover-Foto, ohne Sync).
+ALTER TABLE BinderEntity ADD COLUMN color TEXT;
+ALTER TABLE BinderEntity ADD COLUMN coverImageUrl TEXT;

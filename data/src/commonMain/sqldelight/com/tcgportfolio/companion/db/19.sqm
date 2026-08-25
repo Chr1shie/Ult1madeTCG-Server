@@ -1,0 +1,9 @@
+-- Cardmarket-EUR-Preise für Sealed-Produkte (03.08., Nutzer-Fund "ich meine
+-- da stehen immer noch die Alt-Quelle Preise") - bisher gab es nur marketPriceUsd
+-- (die Alt-Katalog-API/die Alt-Quelle) auf SealedCatalogEntity, anders als bei Einzelkarten
+-- (CardCatalogEntity.marketPriceEur seit 13.sqm). Siehe CardmarketPriceSync.kt
+-- für den Abgleich, bewusst OHNE die Options/Index-Komplexität der
+-- Einzelkarten (SealedCatalogEntity.marketPriceEurOptions/-SelectedIndex/
+-- -SelectedAt) - Sealed-Produktnamen sind praktisch immer eindeutig, ein
+-- einzelner EUR-Wert reicht.
+ALTER TABLE SealedCatalogEntity ADD COLUMN marketPriceEur REAL;

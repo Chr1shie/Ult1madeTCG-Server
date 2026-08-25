@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckHeavyHittersOlympiaSetSeed = CardSetSeed(id = "6400024", name = "Blitz Deck: Heavy Hitters - Olympia", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckHeavyHittersOlympiaCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400024-OLA001", "6400024", "OLA001", "Olympia", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA001.png", 3.88),
+    CatalogCardSeed("6400024-OLA002", "6400024", "OLA002", "Cintari Saber", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA002.png", null),
+    CatalogCardSeed("6400024-OLA003", "6400024", "OLA003", "Parry Blade", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA003.png", null),
+    CatalogCardSeed("6400024-OLA004", "6400024", "OLA004", "Prized Galea", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA004.png", 0.25),
+    CatalogCardSeed("6400024-OLA005", "6400024", "OLA005", "Vigor Girth", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA005.png", null),
+    CatalogCardSeed("6400024-OLA006", "6400024", "OLA006", "Beckon Applause", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA006.png", null),
+    CatalogCardSeed("6400024-OLA007", "6400024", "OLA007", "Flat Trackers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA007.png", 0.5),
+    CatalogCardSeed("6400024-OLA008", "6400024", "OLA008", "Rising Energy (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA008.png", null),
+    CatalogCardSeed("6400024-OLA009", "6400024", "OLA009", "Rising Speed (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA009.png", null),
+    CatalogCardSeed("6400024-OLA010", "6400024", "OLA010", "Wage Agility (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA010.png", 0.15),
+    CatalogCardSeed("6400024-OLA011", "6400024", "OLA011", "Wage Vigor (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA011.png", 0.22),
+    CatalogCardSeed("6400024-OLA012", "6400024", "OLA012", "Agile Engagement (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA012.png", null),
+    CatalogCardSeed("6400024-OLA013", "6400024", "OLA013", "Fatal Engagement (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA013.png", 0.3),
+    CatalogCardSeed("6400024-OLA014", "6400024", "OLA014", "Take the Upper Hand (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA014.png", 0.2),
+    CatalogCardSeed("6400024-OLA015", "6400024", "OLA015", "Edge Ahead (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA015.png", 1.8),
+    CatalogCardSeed("6400024-OLA016", "6400024", "OLA016", "Engaged Swiftblade (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA016.png", null),
+    CatalogCardSeed("6400024-OLA017", "6400024", "OLA017", "Hold 'em (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA017.png", 0.17),
+    CatalogCardSeed("6400024-OLA018", "6400024", "OLA018", "Lead with Speed (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA018.png", 0.25),
+    CatalogCardSeed("6400024-OLA019", "6400024", "OLA019", "Edge Ahead (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA019.png", 1.3),
+    CatalogCardSeed("6400024-OLA020", "6400024", "OLA020", "Lead with Speed (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA020.png", null),
+    CatalogCardSeed("6400024-OLA021", "6400024", "OLA021", "Wage Agility (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA021.png", null),
+    CatalogCardSeed("6400024-OLA022", "6400024", "OLA022", "Wage Vigor (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA022.png", null),
+    CatalogCardSeed("6400024-OLA023", "6400024", "OLA023", "Agile Engagement (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA023.png", null),
+    CatalogCardSeed("6400024-OLA024", "6400024", "OLA024", "Cut the Deck (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA024.png", 0.2),
+    CatalogCardSeed("6400024-OLA025", "6400024", "OLA025", "Edge Ahead (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA025.png", 0.96),
+    CatalogCardSeed("6400024-OLA026", "6400024", "OLA026", "Engaged Swiftblade (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA026.png", null),
+    CatalogCardSeed("6400024-OLA027", "6400024", "OLA027", "Hold 'em (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA027.png", 0.2),
+    CatalogCardSeed("6400024-OLA028", "6400024", "OLA028", "Agility // Gold", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA028.png", 1.5),
+    CatalogCardSeed("6400024-OLA029", "6400024", "OLA029", "Vigor // Gold", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA029.png", 1.5),
+    CatalogCardSeed("6400024-OLA030", "6400024", "OLA030", "Gold", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-OLA/EN/OLA030.png", 1.0),
+)

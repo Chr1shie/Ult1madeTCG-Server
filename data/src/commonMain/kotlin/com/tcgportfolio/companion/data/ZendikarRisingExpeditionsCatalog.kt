@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val zendikarRisingExpeditionsSetSeed = CardSetSeed(id = "zne", name = "Zendikar Rising Expeditions", game = "MTG", totalCards = 30)
+
+val zendikarRisingExpeditionsCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("zne-1", "zne", "1", "Flooded Strand", "Normal", "M", "https://cards.scryfall.io/large/front/a/c/acc4115b-4bbb-4bb7-81c6-466130982a9c.jpg?1783929437", 34.82, 494749),
+    CatalogCardSeed("zne-2", "zne", "2", "Polluted Delta", "Normal", "M", "https://cards.scryfall.io/large/front/d/0/d052d99b-b1ca-44da-8460-c022d041d665.jpg?1783929436", 44.04, 494894),
+    CatalogCardSeed("zne-3", "zne", "3", "Bloodstained Mire", "Normal", "M", "https://cards.scryfall.io/large/front/e/d/ed7bcbf1-9045-4810-93fa-9918c45856ca.jpg?1783929436", 36.61, 494899),
+    CatalogCardSeed("zne-4", "zne", "4", "Wooded Foothills", "Normal", "M", "https://cards.scryfall.io/large/front/1/0/1066a94a-8e4f-4d77-820b-7a77a18116f0.jpg?1783929437", 33.5, 494904),
+    CatalogCardSeed("zne-5", "zne", "5", "Windswept Heath", "Normal", "M", "https://cards.scryfall.io/large/front/6/3/63c59228-c742-4abd-b4d7-9f7880190e95.jpg?1783929435", 29.1, 494909),
+    CatalogCardSeed("zne-6", "zne", "6", "Marsh Flats", "Normal", "M", "https://cards.scryfall.io/large/front/9/e/9e1e76a2-ec37-4fd8-8185-f98f675ff0cb.jpg?1783929435", 46.46, 494914),
+    CatalogCardSeed("zne-7", "zne", "7", "Scalding Tarn", "Normal", "M", "https://cards.scryfall.io/large/front/4/8/48f0a970-452a-405f-bd4d-ac4d2e89ab40.jpg?1783929435", 52.08, 494919),
+    CatalogCardSeed("zne-8", "zne", "8", "Verdant Catacombs", "Normal", "M", "https://cards.scryfall.io/large/front/e/f/efd97080-c5c7-47db-b605-8bdd06c2dd5a.jpg?1783929433", 54.72, 494924),
+    CatalogCardSeed("zne-9", "zne", "9", "Arid Mesa", "Normal", "M", "https://cards.scryfall.io/large/front/2/4/245e16ae-4514-42fa-b409-2c3ae084436c.jpg?1783929434", 47.96, 494929),
+    CatalogCardSeed("zne-10", "zne", "10", "Misty Rainforest", "Normal", "M", "https://cards.scryfall.io/large/front/6/d/6d14bd1a-068e-4338-8014-d5271cb2fe4d.jpg?1783929434", 54.45, 494934),
+    CatalogCardSeed("zne-11", "zne", "11", "Seachrome Coast", "Normal", "M", "https://cards.scryfall.io/large/front/f/d/fd8a9bf6-07c7-4dde-8c37-4bae64ca10ef.jpg?1783929434", 3.13, 495069),
+    CatalogCardSeed("zne-12", "zne", "12", "Darkslick Shores", "Normal", "M", "https://cards.scryfall.io/large/front/e/7/e703a4f0-6aaf-418a-8ef7-f4a0317b7a26.jpg?1783929432", 4.77, 495074),
+    CatalogCardSeed("zne-13", "zne", "13", "Blackcleave Cliffs", "Normal", "M", "https://cards.scryfall.io/large/front/f/4/f4b8308e-53c5-4c60-b692-1d096e475268.jpg?1783929431", 4.41, 495079),
+    CatalogCardSeed("zne-14", "zne", "14", "Copperline Gorge", "Normal", "M", "https://cards.scryfall.io/large/front/6/7/671486a5-4050-430c-8af4-58def77562ec.jpg?1783929431", 2.37, 494994),
+    CatalogCardSeed("zne-15", "zne", "15", "Razorverge Thicket", "Normal", "M", "https://cards.scryfall.io/large/front/d/5/d578981f-cda3-4ba4-bdc0-275a37386b84.jpg?1783929431", 3.01, 494999),
+    CatalogCardSeed("zne-16", "zne", "16", "Sea of Clouds", "Normal", "M", "https://cards.scryfall.io/large/front/b/2/b2471873-45e1-4a54-805c-84e65a00e29a.jpg?1783929432", 27.27, 494734),
+    CatalogCardSeed("zne-17", "zne", "17", "Morphic Pool", "Normal", "M", "https://cards.scryfall.io/large/front/b/e/be6604df-0888-420d-957e-93cf3d770a9e.jpg?1783929431", 31.44, 494939),
+    CatalogCardSeed("zne-18", "zne", "18", "Luxury Suite", "Normal", "M", "https://cards.scryfall.io/large/front/0/0/00e40c64-58fa-421e-9d01-93b0642f7d8b.jpg?1783929430", 36.18, 495084),
+    CatalogCardSeed("zne-19", "zne", "19", "Spire Garden", "Normal", "M", "https://cards.scryfall.io/large/front/5/8/58d8b7ee-4618-4ba9-b43f-2aa2bc9b1f82.jpg?1783929430", 18.89, 494739),
+    CatalogCardSeed("zne-20", "zne", "20", "Bountiful Promenade", "Normal", "M", "https://cards.scryfall.io/large/front/7/d/7d6ae82b-5764-4a8a-a60e-a781837414dd.jpg?1783929430", 21.88, 495089),
+    CatalogCardSeed("zne-21", "zne", "21", "Ancient Tomb", "Normal", "M", "https://cards.scryfall.io/large/front/8/8/880ffa23-ed71-4f39-aa66-0953a1f20fe9.jpg?1783929430", 142.28, 495004),
+    CatalogCardSeed("zne-22", "zne", "22", "Cavern of Souls", "Normal", "M", "https://cards.scryfall.io/large/front/5/2/5261e0f6-55bf-4d45-92ea-7acbab41162c.jpg?1783929429", 56.77, 494744),
+    CatalogCardSeed("zne-23", "zne", "23", "Celestial Colonnade", "Normal", "M", "https://cards.scryfall.io/large/front/2/4/24a76568-a2d4-41a6-88b8-fa5ed4093930.jpg?1783929429", 1.59, 495094),
+    CatalogCardSeed("zne-24", "zne", "24", "Creeping Tar Pit", "Normal", "M", "https://cards.scryfall.io/large/front/3/2/3272a554-8509-40b2-ac39-c906b1366275.jpg?1783929427", 2.01, 495099),
+    CatalogCardSeed("zne-25", "zne", "25", "Grove of the Burnwillows", "Normal", "M", "https://cards.scryfall.io/large/front/8/2/82fb5274-c11a-465b-b14f-8f35495482e4.jpg?1783929427", 9.22, 495104),
+    CatalogCardSeed("zne-26", "zne", "26", "Horizon Canopy", "Normal", "M", "https://cards.scryfall.io/large/front/6/9/69c53264-1cf7-4147-b553-4863f0dda08f.jpg?1783929427", 4.84, 495064),
+    CatalogCardSeed("zne-27", "zne", "27", "Prismatic Vista", "Normal", "M", "https://cards.scryfall.io/large/front/1/a/1ac01fff-4de6-4783-9489-4127e25bc641.jpg?1783929425", 45.03, 494754),
+    CatalogCardSeed("zne-28", "zne", "28", "Strip Mine", "Normal", "M", "https://cards.scryfall.io/large/front/e/8/e8f7a850-e049-48a0-95ac-afdac6e204e5.jpg?1783929425", 27.63, 495059),
+    CatalogCardSeed("zne-29", "zne", "29", "Valakut, the Molten Pinnacle", "Normal", "M", "https://cards.scryfall.io/large/front/c/2/c2d07eea-b165-4976-9088-d283ab7cfe72.jpg?1783929426", 26.08, 495054),
+    CatalogCardSeed("zne-30", "zne", "30", "Wasteland", "Normal", "M", "https://cards.scryfall.io/large/front/a/8/a81a49a0-995a-4311-894d-5cbfba59db14.jpg?1783929424", 30.62, 494759),
+)

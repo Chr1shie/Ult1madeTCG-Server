@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val lostOriginTrainerGallerySetSeed = CardSetSeed(id = "LORTG", name = "SWSH11: Lost Origin Trainer Gallery", game = "Pokemon", totalCards = 30)
+
+val lostOriginTrainerGalleryCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("LORTG-TG01/TG30", "LORTG", "TG01/TG30", "Parasect", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG01_hires.png", 4.3),
+    CatalogCardSeed("LORTG-TG02/TG30", "LORTG", "TG02/TG30", "Roserade", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG02_hires.png", 3.11),
+    CatalogCardSeed("LORTG-TG03/TG30", "LORTG", "TG03/TG30", "Charizard", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG03_hires.png", 28.72),
+    CatalogCardSeed("LORTG-TG04/TG30", "LORTG", "TG04/TG30", "Chandelure", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG04_hires.png", 4.93),
+    CatalogCardSeed("LORTG-TG05/TG30", "LORTG", "TG05/TG30", "Pikachu", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG05_hires.png", 57.45),
+    CatalogCardSeed("LORTG-TG06/TG30", "LORTG", "TG06/TG30", "Gengar", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG06_hires.png", 58.34),
+    CatalogCardSeed("LORTG-TG07/TG30", "LORTG", "TG07/TG30", "Banette", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG07_hires.png", 3.13),
+    CatalogCardSeed("LORTG-TG08/TG30", "LORTG", "TG08/TG30", "Hisuian Arcanine", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG08_hires.png", 5.37),
+    CatalogCardSeed("LORTG-TG09/TG30", "LORTG", "TG09/TG30", "Spiritomb", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG09_hires.png", 3.49),
+    CatalogCardSeed("LORTG-TG10/TG30", "LORTG", "TG10/TG30", "Snorlax", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG10_hires.png", 21.53),
+    CatalogCardSeed("LORTG-TG11/TG30", "LORTG", "TG11/TG30", "Castform", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG11_hires.png", 2.2),
+    CatalogCardSeed("LORTG-TG12/TG30", "LORTG", "TG12/TG30", "Orbeetle V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG12_hires.png", 5.9),
+    CatalogCardSeed("LORTG-TG13/TG30", "LORTG", "TG13/TG30", "Orbeetle VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG13_hires.png", 11.94),
+    CatalogCardSeed("LORTG-TG14/TG30", "LORTG", "TG14/TG30", "Centiskorch V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG14_hires.png", 4.92),
+    CatalogCardSeed("LORTG-TG15/TG30", "LORTG", "TG15/TG30", "Centiskorch VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG15_hires.png", 8.66),
+    CatalogCardSeed("LORTG-TG16/TG30", "LORTG", "TG16/TG30", "Pikachu V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG16_hires.png", 135.58),
+    CatalogCardSeed("LORTG-TG17/TG30", "LORTG", "TG17/TG30", "Pikachu VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG17_hires.png", 123.73),
+    CatalogCardSeed("LORTG-TG18/TG30", "LORTG", "TG18/TG30", "Enamorus V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG18_hires.png", 12.05),
+    CatalogCardSeed("LORTG-TG19/TG30", "LORTG", "TG19/TG30", "Gallade V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG19_hires.png", 10.98),
+    CatalogCardSeed("LORTG-TG20/TG30", "LORTG", "TG20/TG30", "Crobat V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG20_hires.png", 11.87),
+    CatalogCardSeed("LORTG-TG21/TG30", "LORTG", "TG21/TG30", "Eternatus V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG21_hires.png", 5.58),
+    CatalogCardSeed("LORTG-TG22/TG30", "LORTG", "TG22/TG30", "Eternatus VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG22_hires.png", 11.4),
+    CatalogCardSeed("LORTG-TG23/TG30", "LORTG", "TG23/TG30", "Adventurer's Discovery", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG23_hires.png", 3.74),
+    CatalogCardSeed("LORTG-TG24/TG30", "LORTG", "TG24/TG30", "Boss's Orders", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG24_hires.png", 9.96),
+    CatalogCardSeed("LORTG-TG25/TG30", "LORTG", "TG25/TG30", "Cook", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG25_hires.png", 3.48),
+    CatalogCardSeed("LORTG-TG26/TG30", "LORTG", "TG26/TG30", "Kabu", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG26_hires.png", 1.79),
+    CatalogCardSeed("LORTG-TG27/TG30", "LORTG", "TG27/TG30", "Nessa", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG27_hires.png", 12.67),
+    CatalogCardSeed("LORTG-TG28/TG30", "LORTG", "TG28/TG30", "Opal", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG28_hires.png", 2.04),
+    CatalogCardSeed("LORTG-TG29/TG30-SEC", "LORTG", "TG29/TG30", "Pikachu VMAX", "Secret", "Ultra Rare", "https://images.pokemontcg.io/swsh11tg/TG29_hires.png", 26.33),
+    CatalogCardSeed("LORTG-TG30/TG30-SEC", "LORTG", "TG30/TG30", "Mew VMAX", "Secret", "Secret Rare", "https://images.pokemontcg.io/swsh11tg/TG30_hires.png", 32.81),
+)

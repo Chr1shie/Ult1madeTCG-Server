@@ -1,0 +1,37 @@
+package com.tcgportfolio.companion.data
+
+val heroDeckRhinarSetSeed = CardSetSeed(id = "6400033", name = "Hero Deck: Rhinar", game = "FleshAndBlood", totalCards = 31)
+
+val heroDeckRhinarCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400033-RNR001", "6400033", "RNR001", "Rhinar, Reckless Rampage", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR.width-450.png", null),
+    CatalogCardSeed("6400033-RNR002", "6400033", "RNR002", "Rhinar", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/RNR2.width-450.png", null),
+    CatalogCardSeed("6400033-RNR003", "6400033", "RNR003", "Romping Club", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR3.width-450.png", null),
+    CatalogCardSeed("6400033-RNR004", "6400033", "RNR004", "Ironrot Helm", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR4.width-450.png", null),
+    CatalogCardSeed("6400033-RNR005", "6400033", "RNR005", "Barkbone Strapping", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR5.width-450.png", 2.08),
+    CatalogCardSeed("6400033-RNR006", "6400033", "RNR006", "Ironrot Gauntlet", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR6.width-450.png", null),
+    CatalogCardSeed("6400033-RNR007", "6400033", "RNR007", "Snapdragon Scalers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR7.width-450.png", null),
+    CatalogCardSeed("6400033-RNR008", "6400033", "RNR008", "Breakneck Battery (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR8.width-450.png", null),
+    CatalogCardSeed("6400033-RNR009", "6400033", "RNR009", "Pack Hunt (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR9.width-450.png", null),
+    CatalogCardSeed("6400033-RNR010", "6400033", "RNR010", "Savage Feast (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR10.width-450.png", 2.1),
+    CatalogCardSeed("6400033-RNR011", "6400033", "RNR011", "Savage Swing (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR11.width-450.png", null),
+    CatalogCardSeed("6400033-RNR012", "6400033", "RNR012", "Smash Instinct (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR12.width-450.png", null),
+    CatalogCardSeed("6400033-RNR013", "6400033", "RNR013", "Wrecker Romp (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR13.width-450.png", null),
+    CatalogCardSeed("6400033-RNR014", "6400033", "RNR014", "Awakening Bellow (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR14.width-450.png", null),
+    CatalogCardSeed("6400033-RNR015", "6400033", "RNR015", "Drone of Brutality (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR15.width-450.png", null),
+    CatalogCardSeed("6400033-RNR016", "6400033", "RNR016", "Savage Swing (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR16.width-450.png", null),
+    CatalogCardSeed("6400033-RNR017", "6400033", "RNR017", "Smash Instinct (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR17.width-450.png", null),
+    CatalogCardSeed("6400033-RNR018", "6400033", "RNR018", "Barraging Beatdown (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR18.width-450.png", null),
+    CatalogCardSeed("6400033-RNR019", "6400033", "RNR019", "Barraging Brawnhide (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR19.width-450.png", 0.01),
+    CatalogCardSeed("6400033-RNR020", "6400033", "RNR020", "Raging Onslaught (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR20.width-450.png", null),
+    CatalogCardSeed("6400033-RNR021", "6400033", "RNR021", "Wounded Bull (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR21.width-450.png", null),
+    CatalogCardSeed("6400033-RNR022", "6400033", "RNR022", "Springboard Somersault", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR22.width-450.png", 1.93),
+    CatalogCardSeed("6400033-RNR023", "6400033", "RNR023", "Wrecker Romp (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR23.width-450.png", 2.21),
+    CatalogCardSeed("6400033-RNR024", "6400033", "RNR024", "Awakening Bellow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR24.width-450.png", null),
+    CatalogCardSeed("6400033-RNR025", "6400033", "RNR025", "Barraging Beatdown (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR25.width-450.png", 2.04),
+    CatalogCardSeed("6400033-RNR026", "6400033", "RNR026", "Primeval Bellow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR26.width-450.png", 0.25),
+    CatalogCardSeed("6400033-RNR027", "6400033", "RNR027", "Flock of the Feather Walkers (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR27.width-450.png", 0.65),
+    CatalogCardSeed("6400033-RNR028", "6400033", "RNR028", "Scour the Battlescape (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR28.width-450.png", null),
+    CatalogCardSeed("6400033-RNR029", "6400033", "RNR029", "Timesnap Potion", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR29.width-450.png", 1.98),
+    CatalogCardSeed("6400033-RNR030", "6400033", "RNR030", "Sigil of Solace (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR30.width-450.png", null),
+    CatalogCardSeed("6400033-RNR031", "6400033", "RNR031", "Quicken", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/RNR31.width-450.png", 0.5),
+)

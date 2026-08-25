@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val astralRadianceTrainerGallerySetSeed = CardSetSeed(id = "ASRTG", name = "SWSH10: Astral Radiance Trainer Gallery", game = "Pokemon", totalCards = 29)
+
+val astralRadianceTrainerGalleryCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("ASRTG-TG01/TG30", "ASRTG", "TG01/TG30", "Abomasnow", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG01_hires.png", 2.67),
+    CatalogCardSeed("ASRTG-TG02/TG30", "ASRTG", "TG02/TG30", "Flapple", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG02_hires.png", 3.7),
+    CatalogCardSeed("ASRTG-TG03/TG30", "ASRTG", "TG03/TG30", "Kingdra", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG03_hires.png", 14.1),
+    CatalogCardSeed("ASRTG-TG04/TG30", "ASRTG", "TG04/TG30", "Frosmoth", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG04_hires.png", 4.25),
+    CatalogCardSeed("ASRTG-TG05/TG30", "ASRTG", "TG05/TG30", "Gardevoir", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG05_hires.png", 8.05),
+    CatalogCardSeed("ASRTG-TG06/TG30", "ASRTG", "TG06/TG30", "Wyrdeer", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG06_hires.png", 2.37),
+    CatalogCardSeed("ASRTG-TG07/TG30", "ASRTG", "TG07/TG30", "Falinks", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG07_hires.png", 4.91),
+    CatalogCardSeed("ASRTG-TG08/TG30", "ASRTG", "TG08/TG30", "Kleavor", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG08_hires.png", 2.78),
+    CatalogCardSeed("ASRTG-TG09/TG30", "ASRTG", "TG09/TG30", "Mightyena", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG09_hires.png", 4.72),
+    CatalogCardSeed("ASRTG-TG10/TG30", "ASRTG", "TG10/TG30", "Galarian Obstagoon", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG10_hires.png", 2.46),
+    CatalogCardSeed("ASRTG-TG11/TG30", "ASRTG", "TG11/TG30", "Bronzong", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG11_hires.png", 3.54),
+    CatalogCardSeed("ASRTG-TG12/TG30", "ASRTG", "TG12/TG30", "Hoothoot", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG12_hires.png", 8.85),
+    CatalogCardSeed("ASRTG-TG13/TG30", "ASRTG", "TG13/TG30", "Starmie V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG13_hires.png", 131.41),
+    CatalogCardSeed("ASRTG-TG14/TG30", "ASRTG", "TG14/TG30", "Ice Rider Calyrex V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG14_hires.png", 10.37),
+    CatalogCardSeed("ASRTG-TG15/TG30", "ASRTG", "TG15/TG30", "Ice Rider Calyrex VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG15_hires.png", 8.18),
+    CatalogCardSeed("ASRTG-TG16/TG30", "ASRTG", "TG16/TG30", "Galarian Articuno V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG16_hires.png", 20.6),
+    CatalogCardSeed("ASRTG-TG17/TG30", "ASRTG", "TG17/TG30", "Shadow Rider Calyrex V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG17_hires.png", 11.15),
+    CatalogCardSeed("ASRTG-TG18/TG30", "ASRTG", "TG18/TG30", "Shadow Rider Calyrex VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG18_hires.png", 11.53),
+    CatalogCardSeed("ASRTG-TG19/TG30", "ASRTG", "TG19/TG30", "Galarian Zapdos V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG19_hires.png", 13.94),
+    CatalogCardSeed("ASRTG-TG20/TG30", "ASRTG", "TG20/TG30", "Galarian Moltres V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG20_hires.png", 21.57),
+    CatalogCardSeed("ASRTG-TG21/TG30", "ASRTG", "TG21/TG30", "Zacian V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG21_hires.png", 22.38),
+    CatalogCardSeed("ASRTG-TG22/TG30", "ASRTG", "TG22/TG30", "Zamazenta V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG22_hires.png", 10.28),
+    CatalogCardSeed("ASRTG-TG23/TG30", "ASRTG", "TG23/TG30", "Garchomp V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG23_hires.png", 84.2),
+    CatalogCardSeed("ASRTG-TG25/TG30", "ASRTG", "TG25/TG30", "Bea", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG25_hires.png", 5.47),
+    CatalogCardSeed("ASRTG-TG26/TG30", "ASRTG", "TG26/TG30", "Melony", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG26_hires.png", 4.97),
+    CatalogCardSeed("ASRTG-TG27/TG30", "ASRTG", "TG27/TG30", "Milo", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG27_hires.png", 3.35),
+    CatalogCardSeed("ASRTG-TG28/TG30", "ASRTG", "TG28/TG30", "Piers", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh10tg/TG28_hires.png", 5.21),
+    CatalogCardSeed("ASRTG-TG29/TG30-SEC", "ASRTG", "TG29/TG30", "Ice Rider Calyrex VMAX", "Secret", "Secret Rare", "https://images.pokemontcg.io/swsh10tg/TG29_hires.png", 4.68),
+    CatalogCardSeed("ASRTG-TG30/TG30-SEC", "ASRTG", "TG30/TG30", "Shadow Rider Calyrex VMAX", "Secret", "Secret Rare", "https://images.pokemontcg.io/swsh10tg/TG30_hires.png", 5.26),
+)

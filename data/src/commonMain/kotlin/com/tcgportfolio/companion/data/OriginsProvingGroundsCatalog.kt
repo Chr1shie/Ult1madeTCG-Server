@@ -1,0 +1,30 @@
+package com.tcgportfolio.companion.data
+
+val originsProvingGroundsSetSeed = CardSetSeed(id = "500004", name = "Origins: Proving Grounds", game = "Riftbound", totalCards = 24)
+
+val originsProvingGroundsCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("500004-001/24", "500004", "001/24", "Annie - Fiery", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/532d75dc36a16eb5954253a77366fcceac7aec62-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-002/24", "500004", "002/24", "Firestorm", "Normal", "Uncommon", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/a7a34129e64f0296bf2da166c2b06ed156d568db-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-003/24", "500004", "003/24", "Incinerate", "Normal", "Common", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/46e4eaada1412f9b6c24751bdb3932c6a51e905f-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-004/24", "500004", "004/24", "Master Yi - Meditative", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/5508566c8f05f09492148faa803332a731095eb7-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-005/24", "500004", "005/24", "Zephyr Sage", "Normal", "Uncommon", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/7664b03bb107954195153d9f2f86c5d63682fa4b-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-006/24", "500004", "006/24", "Lux - Illuminated", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/a0d10edf30abb6fde21f5d386e9a7db3c1b0a098-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-007/24", "500004", "007/24", "Garen - Rugged", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/67c22dc29a7a28dabe0f169a7848c25bef1fbda4-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-008/24", "500004", "008/24", "Gentlemen's Duel", "Normal", "Common", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4568ab827fdcd42d6bb86b1c2de6182e286c9ee9-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-009/24", "500004", "009/24", "Master Yi - Honed", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0e16976cd6d7ee5a874be9351b428671990fbd25-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-010/24", "500004", "010/24", "Annie - Stubborn", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/44eb968cf0c54e75970588b69eef5c5f5ccc9b24-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-011/24", "500004", "011/24", "Flash", "Normal", "Common", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4d9cc1c13b75933e509e642213f13359350cd3f9-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-012/24", "500004", "012/24", "Blast of Power", "Normal", "Common", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/026f851a703601fce4142c0791e913377c170b47-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-013/24", "500004", "013/24", "Garen - Commander", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/cbf2c12d69a86566e4cda07050b2d4495e40187e-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-014/24", "500004", "014/24", "Lux - Crownguard", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/17d0793ad495727e67bb1c94ae0e11cd4705870f-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-015/24", "500004", "015/24", "Recruit the Vanguard", "Normal", "Uncommon", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/81d1c47459606f7b627778cce9b5f0e44d80f7fa-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-016/24", "500004", "016/24", "Vanguard Attendant", "Normal", "Common", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4ce467c1d51a65ab4fbae918dca38ae90b510844-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-017/24", "500004", "017/24", "Annie - Dark Child (Starter)", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/89963e1d1cffd69c620fb5d6b037f50d5c334463-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-018/24", "500004", "018/24", "Tibbers", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/74f8bc78573b33d9979b0e9c121b858d770a490c-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-019/24", "500004", "019/24", "Master Yi - Wuju Bladesman (Starter)", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/8231ced23eaf22ca3bf62ec8cb86b83a3e222da6-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-020/24", "500004", "020/24", "Highlander", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/18c0818cbbfdf26a1237b4f7703b1f035f47b014-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-021/24", "500004", "021/24", "Lux - Lady of Luminosity (Starter)", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/44885d811b70621b188d9813b2b10b5cff1b81e6-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-022/24", "500004", "022/24", "Final Spark", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4558a2dc1bb1f1b8a73ec0d82244654e84b12687-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-023/24", "500004", "023/24", "Garen - Might of Demacia (Starter)", "Normal", "Rare", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e7185deb46f17770802d06aeddfe3b929afff880-744x1039.png?accountingTag=RB", null),
+    CatalogCardSeed("500004-024/24", "500004", "024/24", "Decisive Strike", "Normal", "Epic", "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/986782271be078c184a8d1c196e375106459c6c5-744x1039.png?accountingTag=RB", null),
+)

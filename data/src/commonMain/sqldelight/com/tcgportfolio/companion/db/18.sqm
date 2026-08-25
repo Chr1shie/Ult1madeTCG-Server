@@ -1,0 +1,25 @@
+-- Deckbuilding (02.08., Nutzer-Vorgabe Phase 3) - siehe CONCEPT.md
+-- "Deckbuilding" für die volle Spezifikation. Regel-Metadaten zunächst nur
+-- für Pokémon befüllt (siehe PokemonCardRulesSync.kt), NULL für alle
+-- anderen Spiele.
+ALTER TABLE CardCatalogEntity ADD COLUMN ruleSupertype TEXT;
+ALTER TABLE CardCatalogEntity ADD COLUMN ruleSubtypes TEXT;
+ALTER TABLE CardCatalogEntity ADD COLUMN ruleLegalStandard INTEGER;
+ALTER TABLE CardCatalogEntity ADD COLUMN ruleLegalExpanded INTEGER;
+
+CREATE TABLE DeckEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    uid TEXT NOT NULL DEFAULT '',
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+);
+
+CREATE TABLE DeckCardEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    deckId INTEGER NOT NULL REFERENCES DeckEntity(id),
+    cardId TEXT NOT NULL REFERENCES CardCatalogEntity(id),
+    quantity INTEGER NOT NULL DEFAULT 1,
+    addedAt INTEGER NOT NULL
+);

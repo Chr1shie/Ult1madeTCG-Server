@@ -1,0 +1,13 @@
+CREATE TABLE CardTombstone (
+    cardId TEXT NOT NULL,
+    isHolo INTEGER NOT NULL,
+    deletedAt INTEGER NOT NULL,
+    PRIMARY KEY (cardId, isHolo)
+);
+
+CREATE TABLE SealedTombstone (
+    catalogId TEXT NOT NULL,
+    isSealed INTEGER NOT NULL,
+    deletedAt INTEGER NOT NULL,
+    PRIMARY KEY (catalogId, isSealed)
+);

@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val smashPalaceSetSeed = CardSetSeed(id = "6400049", name = "Smash Palace", game = "FleshAndBlood", totalCards = 32)
+
+val smashPalaceCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400049-SMP001", "6400049", "SMP001", "Bolfar, Bear Hands", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP001.webp", 1.53),
+    CatalogCardSeed("6400049-SMP002", "6400049", "SMP002", "Bravo, Flattering Showman", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP002.webp", 4.54),
+    CatalogCardSeed("6400049-SMP003", "6400049", "SMP003", "Fightmaster Kox", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP003.webp", 0.9),
+    CatalogCardSeed("6400049-SMP004", "6400049", "SMP004", "Groundbreaker Crix", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP004.webp", 1.23),
+    CatalogCardSeed("6400049-SMP005", "6400049", "SMP005", "Reya, the Unyielding", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP005.webp", 1.53),
+    CatalogCardSeed("6400049-SMP006", "6400049", "SMP006", "Victor Goldmane, Match Fixer", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP006.webp", 1.53),
+    CatalogCardSeed("6400049-SMP007", "6400049", "SMP007", "Air of a Comeback", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP007.webp", null),
+    CatalogCardSeed("6400049-SMP008", "6400049", "SMP008", "Benefactor of Bloodworth Goldmane", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP008.webp", null),
+    CatalogCardSeed("6400049-SMP009", "6400049", "SMP009", "Big Hits, Big Applause", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP009.webp", null),
+    CatalogCardSeed("6400049-SMP010", "6400049", "SMP010", "Code of Conduct: Kill or Be Killed", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP010.webp", null),
+    CatalogCardSeed("6400049-SMP011", "6400049", "SMP011", "Hit the Jackpot", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP011.webp", null),
+    CatalogCardSeed("6400049-SMP012", "6400049", "SMP012", "Random Events Unfold", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP012.webp", null),
+    CatalogCardSeed("6400049-SMP013", "6400049", "SMP013", "Visit the 'Winner Takes All'", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP013.webp", null),
+    CatalogCardSeed("6400049-SMP014", "6400049", "SMP014", "Bloodied Helm", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP014.webp", null),
+    CatalogCardSeed("6400049-SMP015", "6400049", "SMP015", "Bloodied Strapping", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP015.webp", null),
+    CatalogCardSeed("6400049-SMP016", "6400049", "SMP016", "Bloodied Gauntlet", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP016.webp", null),
+    CatalogCardSeed("6400049-SMP017", "6400049", "SMP017", "Bloodied Boots", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP017.webp", null),
+    CatalogCardSeed("6400049-SMP018", "6400049", "SMP018", "Bloodied Shield", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP018.webp", null),
+    CatalogCardSeed("6400049-SMP019", "6400049", "SMP019", "Arena Medic", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP019.webp", null),
+    CatalogCardSeed("6400049-SMP020", "6400049", "SMP020", "Crowd Roars Fight!", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP020.webp", null),
+    CatalogCardSeed("6400049-SMP021", "6400049", "SMP021", "Crushing Impact", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP021.webp", null),
+    CatalogCardSeed("6400049-SMP022", "6400049", "SMP022", "Didn't See That Coming", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP022.webp", null),
+    CatalogCardSeed("6400049-SMP023", "6400049", "SMP023", "Dominate the Competition", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP023.webp", null),
+    CatalogCardSeed("6400049-SMP024", "6400049", "SMP024", "Ezy Sqeez Bookie Syndicate", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP024.webp", null),
+    CatalogCardSeed("6400049-SMP025", "6400049", "SMP025", "Fight Night Prize Purse", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP025.webp", null),
+    CatalogCardSeed("6400049-SMP026", "6400049", "SMP026", "Ire of the Crowd", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP026.webp", null),
+    CatalogCardSeed("6400049-SMP027", "6400049", "SMP027", "Let Me Buy You a Drink", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP027.webp", null),
+    CatalogCardSeed("6400049-SMP028", "6400049", "SMP028", "Lion's Pounce", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP028.webp", null),
+    CatalogCardSeed("6400049-SMP029", "6400049", "SMP029", "Pick Yourself Up Off the Floor", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP029.webp", null),
+    CatalogCardSeed("6400049-SMP030", "6400049", "SMP030", "Rally the Underdog", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP030.webp", null),
+    CatalogCardSeed("6400049-SMP031", "6400049", "SMP031", "The Moat Exchange", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP031.webp", null),
+    CatalogCardSeed("6400049-SMP032", "6400049", "SMP032", "Tremor of Anticipation", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/SMP032.webp", null),
+)

@@ -1,0 +1,37 @@
+package com.tcgportfolio.companion.data
+
+val generationsRadiantSetSeed = CardSetSeed(id = "GENR", name = "Generations: Radiant Collection", game = "Pokemon", totalCards = 31)
+
+val generationsRadiantCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("GENR-RC1/RC32", "GENR", "RC1/RC32", "Chikorita", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC1/high.webp", 13.54),
+    CatalogCardSeed("GENR-RC10/RC32", "GENR", "RC10/RC32", "Dedenne", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC10/high.webp", 24.67),
+    CatalogCardSeed("GENR-RC11/RC32", "GENR", "RC11/RC32", "Wobbuffet", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC11/high.webp", 5.74),
+    CatalogCardSeed("GENR-RC12/RC32", "GENR", "RC12/RC32", "Gulpin", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC12/high.webp", 9.58),
+    CatalogCardSeed("GENR-RC13/RC32", "GENR", "RC13/RC32", "Jirachi", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC13/high.webp", 18.61),
+    CatalogCardSeed("GENR-RC14/RC32", "GENR", "RC14/RC32", "Espurr", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC14/high.webp", 25.1),
+    CatalogCardSeed("GENR-RC15/RC32", "GENR", "RC15/RC32", "Meowstic", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC15/high.webp", 9.61),
+    CatalogCardSeed("GENR-RC16/RC32", "GENR", "RC16/RC32", "Yveltal", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC16/high.webp", 5.0),
+    CatalogCardSeed("GENR-RC17/RC32", "GENR", "RC17/RC32", "Flabebe", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC17/high.webp", 6.61),
+    CatalogCardSeed("GENR-RC18/RC32", "GENR", "RC18/RC32", "Floette", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC18/high.webp", 5.2),
+    CatalogCardSeed("GENR-RC19/RC32", "GENR", "RC19/RC32", "Swirlix", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC19/high.webp", 17.29),
+    CatalogCardSeed("GENR-RC20/RC32", "GENR", "RC20/RC32", "Slurpuff", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC20/high.webp", 6.49),
+    CatalogCardSeed("GENR-RC21/RC32", "GENR", "RC21/RC32", "Sylveon EX", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC21/high.webp", 86.66),
+    CatalogCardSeed("GENR-RC22/RC32", "GENR", "RC22/RC32", "Diancie", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC22/high.webp", 4.89),
+    CatalogCardSeed("GENR-RC23/RC32", "GENR", "RC23/RC32", "Swablu", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC23/high.webp", 7.28),
+    CatalogCardSeed("GENR-RC24/RC32", "GENR", "RC24/RC32", "Altaria", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC24/high.webp", 22.29),
+    CatalogCardSeed("GENR-RC25/RC32", "GENR", "RC25/RC32", "Fletchling", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC25/high.webp", 5.51),
+    CatalogCardSeed("GENR-RC26/RC32", "GENR", "RC26/RC32", "Floral Crown", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC26/high.webp", 3.29),
+    CatalogCardSeed("GENR-RC27/RC32", "GENR", "RC27/RC32", "Wally", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC27/high.webp", 6.19),
+    CatalogCardSeed("GENR-RC28/RC32-FA", "GENR", "RC28/RC32", "Flareon EX", "Full Art", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC28/high.webp", 244.71),
+    CatalogCardSeed("GENR-RC29/RC32-FA", "GENR", "RC29/RC32", "Pikachu", "Full Art", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC29/high.webp", 166.42),
+    CatalogCardSeed("GENR-RC3/RC32", "GENR", "RC3/RC32", "Charmander", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC3/high.webp", 21.09),
+    CatalogCardSeed("GENR-RC30/RC32-FA", "GENR", "RC30/RC32", "Gardevoir EX", "Full Art", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC30/high.webp", 93.23),
+    CatalogCardSeed("GENR-RC31/RC32-FA", "GENR", "RC31/RC32", "M Gardevoir EX", "Full Art", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC31/high.webp", 119.37),
+    CatalogCardSeed("GENR-RC32/RC32-FA", "GENR", "RC32/RC32", "Sylveon EX", "Full Art", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC32/high.webp", 186.76),
+    CatalogCardSeed("GENR-RC4/RC32", "GENR", "RC4/RC32", "Charmeleon", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC4/high.webp", 17.93),
+    CatalogCardSeed("GENR-RC5/RC32", "GENR", "RC5/RC32", "Charizard", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC5/high.webp", 62.28),
+    CatalogCardSeed("GENR-RC6/RC32", "GENR", "RC6/RC32", "Flareon EX", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/xy/g1/RC6/high.webp", 83.72),
+    CatalogCardSeed("GENR-RC7/RC32", "GENR", "RC7/RC32", "Snorunt", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC7/high.webp", 8.09),
+    CatalogCardSeed("GENR-RC8/RC32", "GENR", "RC8/RC32", "Froslass", "Normal", "Uncommon", "https://assets.tcgdex.net/en/xy/g1/RC8/high.webp", 5.42),
+    CatalogCardSeed("GENR-RC9/RC32", "GENR", "RC9/RC32", "Raichu", "Normal", "Common", "https://assets.tcgdex.net/en/xy/g1/RC9/high.webp", 16.11),
+)

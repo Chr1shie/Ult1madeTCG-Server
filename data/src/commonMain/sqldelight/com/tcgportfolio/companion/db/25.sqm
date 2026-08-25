@@ -1,0 +1,7 @@
+-- Eigener Preis je Karte (18.08., Nutzer-Vorgabe "dass man einen eigenen
+-- Preis eingeben kann ... und ein Switch ob der Preis mit in die
+-- Gesamtwert-Statistik aufgenommen werden soll" + zweiter Switch "nur zum
+-- Gesamtwert des jeweiligen TCGs") - siehe Spalten-Kommentar in Portfolio.sq.
+ALTER TABLE PortfolioItemEntity ADD COLUMN customPriceEur REAL;
+ALTER TABLE PortfolioItemEntity ADD COLUMN customPriceInTotal INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE PortfolioItemEntity ADD COLUMN customPriceInGameTotal INTEGER NOT NULL DEFAULT 1;

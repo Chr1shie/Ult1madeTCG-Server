@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckHeavyHittersKassaiSetSeed = CardSetSeed(id = "6400016", name = "Blitz Deck: Heavy Hitters - Kassai", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckHeavyHittersKassaiCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400016-KSI001", "6400016", "KSI001", "Kassai", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI001.png", 2.27),
+    CatalogCardSeed("6400016-KSI002", "6400016", "KSI002", "Cintari Saber", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI002.png", 0.44),
+    CatalogCardSeed("6400016-KSI003", "6400016", "KSI003", "Hot Streak", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI003.png", 0.25),
+    CatalogCardSeed("6400016-KSI004", "6400016", "KSI004", "Hood of Red Sand", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI004.png", null),
+    CatalogCardSeed("6400016-KSI005", "6400016", "KSI005", "Vigor Girth", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI005.png", null),
+    CatalogCardSeed("6400016-KSI006", "6400016", "KSI006", "Beckon Applause", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI006.png", 0.15),
+    CatalogCardSeed("6400016-KSI007", "6400016", "KSI007", "Flat Trackers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI007.png", null),
+    CatalogCardSeed("6400016-KSI008", "6400016", "KSI008", "Performance Bonus (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI008.png", null),
+    CatalogCardSeed("6400016-KSI009", "6400016", "KSI009", "Rising Energy (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI009.png", null),
+    CatalogCardSeed("6400016-KSI010", "6400016", "KSI010", "Rising Speed (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI010.png", null),
+    CatalogCardSeed("6400016-KSI011", "6400016", "KSI011", "Trade In (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI011.png", null),
+    CatalogCardSeed("6400016-KSI012", "6400016", "KSI012", "Agile Engagement (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI012.png", null),
+    CatalogCardSeed("6400016-KSI013", "6400016", "KSI013", "Vigorous Engagement (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI013.png", null),
+    CatalogCardSeed("6400016-KSI014", "6400016", "KSI014", "Cut the Deck (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI014.png", 0.2),
+    CatalogCardSeed("6400016-KSI015", "6400016", "KSI015", "Draw Swords (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI015.png", 3.1),
+    CatalogCardSeed("6400016-KSI016", "6400016", "KSI016", "Lead with Speed (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI016.png", null),
+    CatalogCardSeed("6400016-KSI017", "6400016", "KSI017", "Take it on the Chin", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI017.png", 1.43),
+    CatalogCardSeed("6400016-KSI018", "6400016", "KSI018", "Trade In (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI018.png", null),
+    CatalogCardSeed("6400016-KSI019", "6400016", "KSI019", "Fatal Engagement (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI019.png", null),
+    CatalogCardSeed("6400016-KSI020", "6400016", "KSI020", "Draw Swords (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI020.png", 2.19),
+    CatalogCardSeed("6400016-KSI021", "6400016", "KSI021", "Engaged Swiftblade (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI021.png", null),
+    CatalogCardSeed("6400016-KSI022", "6400016", "KSI022", "Lead with Speed (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI022.png", 0.2),
+    CatalogCardSeed("6400016-KSI023", "6400016", "KSI023", "Agile Engagement (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI023.png", 0.1),
+    CatalogCardSeed("6400016-KSI024", "6400016", "KSI024", "Vigorous Engagement (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI024.png", null),
+    CatalogCardSeed("6400016-KSI025", "6400016", "KSI025", "Draw Swords (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI025.png", 1.47),
+    CatalogCardSeed("6400016-KSI026", "6400016", "KSI026", "Engaged Swiftblade (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI026.png", null),
+    CatalogCardSeed("6400016-KSI027", "6400016", "KSI027", "Goblet of Bloodrun Wine", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI027.png", 0.19),
+    CatalogCardSeed("6400016-KSI028", "6400016", "KSI028", "Agility", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI028.png", 4.33),
+    CatalogCardSeed("6400016-KSI029", "6400016", "KSI029", "Vigor", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI029.png", 3.0),
+    CatalogCardSeed("6400016-KSI030", "6400016", "KSI030", "Gold", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-KSI/EN/KSI030.png", null),
+)

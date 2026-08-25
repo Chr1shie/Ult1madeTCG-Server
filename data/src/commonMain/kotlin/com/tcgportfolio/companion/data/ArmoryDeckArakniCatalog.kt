@@ -1,0 +1,37 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckArakniSetSeed = CardSetSeed(id = "6400059", name = "Armory Deck: Arakni", game = "FleshAndBlood", totalCards = 31)
+
+val armoryDeckArakniCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400059-AAC001", "6400059", "AAC001", "Arakni, 5L!p3d 7hRu 7h3 cR4X (Extended Art)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC001.webp", 0.57),
+    CatalogCardSeed("6400059-AAC002", "6400059", "AAC002", "Hunter's Klaive", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC002.webp", 3.98),
+    CatalogCardSeed("6400059-AAC003", "6400059", "AAC003", "Spider's Bite", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC003.webp", 0.25),
+    CatalogCardSeed("6400059-AAC004", "6400059", "AAC004", "Prey Spotters", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC004-RF.webp", 8.9),
+    CatalogCardSeed("6400059-AAC005", "6400059", "AAC005", "Inverter's Nightcowl", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC005-RF.webp", 4.24),
+    CatalogCardSeed("6400059-AAC006", "6400059", "AAC006", "Rage Baiters", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC006-RF.webp", 5.95),
+    CatalogCardSeed("6400059-AAC007", "6400059", "AAC007", "Stalker's Steps", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC007-RF.webp", 13.21),
+    CatalogCardSeed("6400059-AAC008", "6400059", "AAC008", "Art of Desire: Body", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC008.webp", 1.47),
+    CatalogCardSeed("6400059-AAC009", "6400059", "AAC009", "Creep", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC009.webp", 1.63),
+    CatalogCardSeed("6400059-AAC010", "6400059", "AAC010", "Infect", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC010.webp", 0.15),
+    CatalogCardSeed("6400059-AAC011", "6400059", "AAC011", "Infiltrate", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC011.webp", 2.64),
+    CatalogCardSeed("6400059-AAC012", "6400059", "AAC012", "Mark of the Black Widow (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC012.webp", null),
+    CatalogCardSeed("6400059-AAC013", "6400059", "AAC013", "Mark of the Funnel Web (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC013.webp", 0.48),
+    CatalogCardSeed("6400059-AAC014", "6400059", "AAC014", "Meet Madness", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC014.webp", 3.94),
+    CatalogCardSeed("6400059-AAC015", "6400059", "AAC015", "Pick to Pieces", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC015.webp", null),
+    CatalogCardSeed("6400059-AAC016", "6400059", "AAC016", "Prowl", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC016.webp", null),
+    CatalogCardSeed("6400059-AAC017", "6400059", "AAC017", "Scuttle the Canal", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC017.webp", null),
+    CatalogCardSeed("6400059-AAC018", "6400059", "AAC018", "Undercover Acquisition", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC018.webp", 0.48),
+    CatalogCardSeed("6400059-AAC019", "6400059", "AAC019", "Razor's Edge", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC019.webp", 0.48),
+    CatalogCardSeed("6400059-AAC020", "6400059", "AAC020", "Spike with Bloodrot", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC020.webp", null),
+    CatalogCardSeed("6400059-AAC021", "6400059", "AAC021", "Stains of the Redback", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC021.webp", 0.25),
+    CatalogCardSeed("6400059-AAC022", "6400059", "AAC022", "Horrors of the Past", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC022.webp", 3.27),
+    CatalogCardSeed("6400059-AAC023", "6400059", "AAC023", "Shred (Yellow)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC023.webp", 1.19),
+    CatalogCardSeed("6400059-AAC024", "6400059", "AAC024", "Take Up the Mantle", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC024.webp", 1.41),
+    CatalogCardSeed("6400059-AAC025", "6400059", "AAC025", "Mark of the Black Widow (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC025.webp", null),
+    CatalogCardSeed("6400059-AAC026", "6400059", "AAC026", "Mark of the Funnel Web (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC026.webp", 0.15),
+    CatalogCardSeed("6400059-AAC027", "6400059", "AAC027", "Reaper's Call", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC027.webp", 0.35),
+    CatalogCardSeed("6400059-AAC028", "6400059", "AAC028", "Night's Embrace", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC028.webp", 3.1),
+    CatalogCardSeed("6400059-AAC029", "6400059", "AAC029", "Shred (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC029.webp", 0.38),
+    CatalogCardSeed("6400059-AAC030", "6400059", "AAC030", "Bloodrot Pox", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC030.webp", 0.55),
+    CatalogCardSeed("6400059-AAC031", "6400059", "AAC031", "Marked (Extended Art)", "Normal", "Basic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AAC031.webp", 0.97),
+)

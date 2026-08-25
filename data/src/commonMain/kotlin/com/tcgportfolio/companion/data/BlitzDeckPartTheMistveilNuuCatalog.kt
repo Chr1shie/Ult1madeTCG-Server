@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckPartTheMistveilNuuSetSeed = CardSetSeed(id = "6400078", name = "Blitz Deck: Part the Mistveil - Nuu", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckPartTheMistveilNuuCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400078-NUU001", "6400078", "NUU001", "Nuu", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/NUU001-RF.webp", null),
+    CatalogCardSeed("6400078-NUU002", "6400078", "NUU002", "Beckoning Mistblade", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU002.png", null),
+    CatalogCardSeed("6400078-NUU003", "6400078", "NUU003", "Aqua Seeing Shell", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU003.png", null),
+    CatalogCardSeed("6400078-NUU004", "6400078", "NUU004", "Koi Blessed Kimono", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU004.png", null),
+    CatalogCardSeed("6400078-NUU005", "6400078", "NUU005", "Arousing Wave", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU005.png", null),
+    CatalogCardSeed("6400078-NUU006", "6400078", "NUU006", "Undertow Stilettos", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU006.png", null),
+    CatalogCardSeed("6400078-NUU007", "6400078", "NUU007", "Art of Desire: Body", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU007.png", null),
+    CatalogCardSeed("6400078-NUU008", "6400078", "NUU008", "Bonds of Memory", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU008.png", null),
+    CatalogCardSeed("6400078-NUU009", "6400078", "NUU009", "Desires of Flesh", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU009.png", null),
+    CatalogCardSeed("6400078-NUU010", "6400078", "NUU010", "Double Trouble", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU010.png", null),
+    CatalogCardSeed("6400078-NUU011", "6400078", "NUU011", "Impulsive Desire", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU011.png", null),
+    CatalogCardSeed("6400078-NUU012", "6400078", "NUU012", "Mind's Desire", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU012.png", null),
+    CatalogCardSeed("6400078-NUU013", "6400078", "NUU013", "Hiss", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU013.png", null),
+    CatalogCardSeed("6400078-NUU014", "6400078", "NUU014", "Venomous Bite", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU014.png", null),
+    CatalogCardSeed("6400078-NUU015", "6400078", "NUU015", "Hiss", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU015.png", null),
+    CatalogCardSeed("6400078-NUU016", "6400078", "NUU016", "Bonds of Attraction", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU016.png", null),
+    CatalogCardSeed("6400078-NUU017", "6400078", "NUU017", "Bonds of Memory", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU017.png", null),
+    CatalogCardSeed("6400078-NUU018", "6400078", "NUU018", "Deep Blue Sea", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU018.png", null),
+    CatalogCardSeed("6400078-NUU019", "6400078", "NUU019", "Desires of Flesh", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU019.png", null),
+    CatalogCardSeed("6400078-NUU020", "6400078", "NUU020", "Gravekeeping", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU020.png", null),
+    CatalogCardSeed("6400078-NUU021", "6400078", "NUU021", "Impulsive Desire", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU021.png", null),
+    CatalogCardSeed("6400078-NUU022", "6400078", "NUU022", "Mind's Desire", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU022.png", null),
+    CatalogCardSeed("6400078-NUU023", "6400078", "NUU023", "Rising Tide", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU023.png", null),
+    CatalogCardSeed("6400078-NUU024", "6400078", "NUU024", "Hiss", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU024.png", null),
+    CatalogCardSeed("6400078-NUU025", "6400078", "NUU025", "Tide Chakra", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU025.png", null),
+    CatalogCardSeed("6400078-NUU026", "6400078", "NUU026", "Inner Chi", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU026_BACK.png", null),
+    CatalogCardSeed("6400078-NUU027", "6400078", "NUU027", "Inner Chi", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU027_BACK.png", null),
+    CatalogCardSeed("6400078-NUU028", "6400078", "NUU028", "Fang Strike", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU028.png", null),
+    CatalogCardSeed("6400078-NUU029", "6400078", "NUU029", "Slither", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2024-MST-NUU/EN/NUU029.png", null),
+)

@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val silverTempestTrainerGallerySetSeed = CardSetSeed(id = "SITTG", name = "SWSH12: Silver Tempest Trainer Gallery", game = "Pokemon", totalCards = 30)
+
+val silverTempestTrainerGalleryCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("SITTG-TG01/TG30", "SITTG", "TG01/TG30", "Braixen", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG01_hires.png", 6.14),
+    CatalogCardSeed("SITTG-TG02/TG30", "SITTG", "TG02/TG30", "Milotic", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG02_hires.png", 9.77),
+    CatalogCardSeed("SITTG-TG03/TG30", "SITTG", "TG03/TG30", "Flaaffy", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG03_hires.png", 6.15),
+    CatalogCardSeed("SITTG-TG04/TG30", "SITTG", "TG04/TG30", "Jynx", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG04_hires.png", 3.13),
+    CatalogCardSeed("SITTG-TG05/TG30", "SITTG", "TG05/TG30", "Gardevoir", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG05_hires.png", 8.88),
+    CatalogCardSeed("SITTG-TG06/TG30", "SITTG", "TG06/TG30", "Malamar", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG06_hires.png", 1.49),
+    CatalogCardSeed("SITTG-TG07/TG30", "SITTG", "TG07/TG30", "Rockruff", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG07_hires.png", 6.12),
+    CatalogCardSeed("SITTG-TG08/TG30", "SITTG", "TG08/TG30", "Passimian", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG08_hires.png", 1.56),
+    CatalogCardSeed("SITTG-TG09/TG30", "SITTG", "TG09/TG30", "Druddigon", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG09_hires.png", 4.71),
+    CatalogCardSeed("SITTG-TG10/TG30", "SITTG", "TG10/TG30", "Smeargle", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG10_hires.png", 5.02),
+    CatalogCardSeed("SITTG-TG11/TG30", "SITTG", "TG11/TG30", "Altaria", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG11_hires.png", 6.71),
+    CatalogCardSeed("SITTG-TG12/TG30", "SITTG", "TG12/TG30", "Kricketune V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG12_hires.png", 5.14),
+    CatalogCardSeed("SITTG-TG13/TG30", "SITTG", "TG13/TG30", "Serperior V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG13_hires.png", 24.77),
+    CatalogCardSeed("SITTG-TG14/TG30", "SITTG", "TG14/TG30", "Blaziken V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG14_hires.png", 36.98),
+    CatalogCardSeed("SITTG-TG15/TG30", "SITTG", "TG15/TG30", "Blaziken VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG15_hires.png", 38.88),
+    CatalogCardSeed("SITTG-TG16/TG30", "SITTG", "TG16/TG30", "Zeraora V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG16_hires.png", 12.9),
+    CatalogCardSeed("SITTG-TG17/TG30", "SITTG", "TG17/TG30", "Mawile V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG17_hires.png", 13.84),
+    CatalogCardSeed("SITTG-TG18/TG30", "SITTG", "TG18/TG30", "Corviknight V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG18_hires.png", 15.88),
+    CatalogCardSeed("SITTG-TG19/TG30", "SITTG", "TG19/TG30", "Corviknight VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG19_hires.png", 9.6),
+    CatalogCardSeed("SITTG-TG20/TG30", "SITTG", "TG20/TG30", "Rayquaza VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG20_hires.png", 216.97),
+    CatalogCardSeed("SITTG-TG21/TG30", "SITTG", "TG21/TG30", "Duraludon VMAX", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG21_hires.png", 13.08),
+    CatalogCardSeed("SITTG-TG22/TG30", "SITTG", "TG22/TG30", "Blissey V", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG22_hires.png", 21.69),
+    CatalogCardSeed("SITTG-TG23/TG30", "SITTG", "TG23/TG30", "Friends in Galar", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG23_hires.png", 9.93),
+    CatalogCardSeed("SITTG-TG24/TG30", "SITTG", "TG24/TG30", "Gordie", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG24_hires.png", 1.75),
+    CatalogCardSeed("SITTG-TG25/TG30", "SITTG", "TG25/TG30", "Judge", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG25_hires.png", 7.85),
+    CatalogCardSeed("SITTG-TG26/TG30", "SITTG", "TG26/TG30", "Professor Burnet", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG26_hires.png", 4.89),
+    CatalogCardSeed("SITTG-TG27/TG30", "SITTG", "TG27/TG30", "Raihan", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG27_hires.png", 3.29),
+    CatalogCardSeed("SITTG-TG28/TG30", "SITTG", "TG28/TG30", "Sordward & Shielbert", "Normal", "Ultra Rare", "https://images.pokemontcg.io/swsh12tg/TG28_hires.png", 1.85),
+    CatalogCardSeed("SITTG-TG29/TG30-SEC", "SITTG", "TG29/TG30", "Rayquaza VMAX", "Secret", "Secret Rare", "https://images.pokemontcg.io/swsh12tg/TG29_hires.png", 42.02),
+    CatalogCardSeed("SITTG-TG30/TG30-SEC", "SITTG", "TG30/TG30", "Duraludon VMAX", "Secret", "Secret Rare", "https://images.pokemontcg.io/swsh12tg/TG30_hires.png", 3.49),
+)

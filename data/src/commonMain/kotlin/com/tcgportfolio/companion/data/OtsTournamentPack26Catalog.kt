@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val otsTournamentPack26SetSeed = CardSetSeed(id = "3600304", name = "OTS Tournament Pack 26", game = "YuGiOh", totalCards = 29)
+
+val otsTournamentPack26CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("3600304-OP26-EN001", "3600304", "OP26-EN001", "Diabellstar the Black Witch", "Normal", "Ultimate Rare", "https://images.ygoprodeck.com/images/cards/72270339.jpg", 1.56),
+    CatalogCardSeed("3600304-OP26-EN002", "3600304", "OP26-EN002", "Lo, the Prayers of the Voiceless Voice", "Normal", "Ultimate Rare", "https://images.ygoprodeck.com/images/cards/25801745.jpg", 1.3),
+    CatalogCardSeed("3600304-OP26-EN003", "3600304", "OP26-EN003", "Phantom of Yubel", "Normal", "Ultimate Rare", "https://images.ygoprodeck.com/images/cards/80453041.jpg", 10.11),
+    CatalogCardSeed("3600304-OP26-EN004", "3600304", "OP26-EN004", "Absolute King Back Jack", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/60990740.jpg", 0.12),
+    CatalogCardSeed("3600304-OP26-EN005", "3600304", "OP26-EN005", "Ancient Gear Frame", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/1278431.jpg", 0.48),
+    CatalogCardSeed("3600304-OP26-EN006", "3600304", "OP26-EN006", "Lantern Shark", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/70156946.jpg", 0.24),
+    CatalogCardSeed("3600304-OP26-EN007", "3600304", "OP26-EN007", "Buzzsaw Shark", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/7150545.jpg", 0.12),
+    CatalogCardSeed("3600304-OP26-EN008", "3600304", "OP26-EN008", "Samurai Destroyer", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/40509732.jpg", 0.41),
+    CatalogCardSeed("3600304-OP26-EN009", "3600304", "OP26-EN009", "Moon of the Closed Heaven", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/71818935.jpg", 0.22),
+    CatalogCardSeed("3600304-OP26-EN010", "3600304", "OP26-EN010", "Chicken Game", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/67616300.jpg", 1.09),
+    CatalogCardSeed("3600304-OP26-EN011", "3600304", "OP26-EN011", "Ostinato", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/9113513.jpg", 0.1),
+    CatalogCardSeed("3600304-OP26-EN012", "3600304", "OP26-EN012", "Sangen Summoning", "Normal", "Super Rare", "https://images.ygoprodeck.com/images/cards/30336082.jpg", 0.13),
+    CatalogCardSeed("3600304-OP26-EN013", "3600304", "OP26-EN013", "Fire Sorcerer", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/27132350.jpg", 0.09),
+    CatalogCardSeed("3600304-OP26-EN014", "3600304", "OP26-EN014", "Flyfang", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/11954712.jpg", 0.09),
+    CatalogCardSeed("3600304-OP26-EN015", "3600304", "OP26-EN015", "Mermail Abyssmegalo", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/21954587.jpg", 0.14),
+    CatalogCardSeed("3600304-OP26-EN016", "3600304", "OP26-EN016", "Shopina the Melodious Maestra", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/5908650.jpg", 0.23),
+    CatalogCardSeed("3600304-OP26-EN017", "3600304", "OP26-EN017", "Right-Hand Shark", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/11845050.jpg", 0.12),
+    CatalogCardSeed("3600304-OP26-EN018", "3600304", "OP26-EN018", "Left-Hand Shark", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/47840168.jpg", 0.07),
+    CatalogCardSeed("3600304-OP26-EN019", "3600304", "OP26-EN019", "Thor, Lord of the Aesir", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/30604579.jpg", 0.12),
+    CatalogCardSeed("3600304-OP26-EN020", "3600304", "OP26-EN020", "Loki, Lord of the Aesir", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/67098114.jpg", 0.15),
+    CatalogCardSeed("3600304-OP26-EN021", "3600304", "OP26-EN021", "Odin, Father of the Aesir", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/93483212.jpg", 0.16),
+    CatalogCardSeed("3600304-OP26-EN022", "3600304", "OP26-EN022", "Legendary Six Samurai - Shi En", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/29981921.jpg", 0.27),
+    CatalogCardSeed("3600304-OP26-EN023", "3600304", "OP26-EN023", "Odd-Eyes Meteorburst Dragon", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/80696379.jpg", 0.15),
+    CatalogCardSeed("3600304-OP26-EN024", "3600304", "OP26-EN024", "Valiant Shark Lancer", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/23672629.jpg", 0.19),
+    CatalogCardSeed("3600304-OP26-EN025", "3600304", "OP26-EN025", "Shien's Smoke Signal", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/54031490.jpg", 0.31),
+    CatalogCardSeed("3600304-OP26-EN026", "3600304", "OP26-EN026", "Metalmorph", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/68540059.jpg", 0.14),
+    CatalogCardSeed("3600304-OP26-EN027", "3600304", "OP26-EN027", "Deck Devastation Virus", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/35027493.jpg", 0.2),
+    CatalogCardSeed("3600304-OP26-EN028", "3600304", "OP26-EN028", "Eradicator Epidemic Virus", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/54974237.jpg", 0.21),
+    CatalogCardSeed("3600304-OP26-EN029", "3600304", "OP26-EN029", "Full Force Virus", "Normal", "Common", "https://images.ygoprodeck.com/images/cards/4931121.jpg", 0.18),
+)

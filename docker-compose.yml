@@ -1,0 +1,33 @@
+services:
+  ult1made-server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: ult1made-tcg-server
+    restart: unless-stopped
+    # host-Networking, damit die mDNS/Bonjour-Ankündigung (Server-Erkennung im
+    # LAN, siehe CONCEPT.md) tatsächlich außerhalb des Containers sichtbar
+    # ist - normales Bridge-Networking blockiert Multicast-Pakete meist, mDNS
+    # käme dann nie im restlichen Heimnetz an. Macht auch eine "ports"-
+    # Zuordnung überflüssig, der Container teilt sich direkt die Netzwerk-
+    # schnittstelle des Hosts.
+    # Nur unter Linux verfügbar (klassische Docker-Server-Umgebung). Auf
+    # Docker Desktop (Mac/Windows) müsste stattdessen ein "ports"-Mapping
+    # verwendet werden - mDNS würde dort dann aber nicht über den Container
+    # hinaus sichtbar sein, nur die manuelle IP-Eingabe in der App bliebe nutzbar.
+    network_mode: host
+    environment:
+      - PORT=8080
+      - DB_PATH=/data/portfolio.db
+      # Beide Bild-Verzeichnisse ins persistente Volume (17.08.) - ohne
+      # explizite Pfade landen sie im vergänglichen Container-Dateisystem
+      # und wären bei jedem "docker compose build" wieder weg. Für
+      # customPhotos war das bis hierher ein echter, unbemerkter Datenverlust-
+      # Kandidat (eigene Fotos!), der Bild-Cache wäre nur ärgerlich.
+      - CUSTOM_PHOTOS_DIR=/data/customPhotos
+      - IMAGE_CACHE_DIR=/data/imageCache
+    volumes:
+      - ult1made-data:/data
+
+volumes:
+  ult1made-data:

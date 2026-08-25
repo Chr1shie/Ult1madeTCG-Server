@@ -1,0 +1,17 @@
+# Docker-Build-Kontext klein halten (17.08., Nutzer-Beschwerde "Rebuild
+# dauert echt lange") - ohne diese Datei wanderten bei JEDEM Build ~3,8 GB
+# in den Docker-Daemon (2,8 GB shared/build, 117 MB .git, ...), bevor
+# überhaupt kompiliert wurde. Der Server-Build braucht nur Quellcode +
+# Gradle-Wrapper; alle Build-Ausgaben entstehen ohnehin frisch im Container.
+.git
+.gradle
+.kotlin
+**/build
+iosApp
+*.log
+.DS_Store
+local.properties
+# Laufzeitdaten eines evtl. lokal gestarteten Servers - gehören nie ins Image
+customPhotos
+imageCache
+*.db

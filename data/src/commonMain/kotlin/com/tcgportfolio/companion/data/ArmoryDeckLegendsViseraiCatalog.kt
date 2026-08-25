@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckLegendsViseraiSetSeed = CardSetSeed(id = "6400044", name = "Armory Deck: Legends Viserai", game = "FleshAndBlood", totalCards = 30)
+
+val armoryDeckLegendsViseraiCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400044-AVS001", "6400044", "AVS001", "Viserai, Rune Blood", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/AVS001.webp", null),
+    CatalogCardSeed("6400044-AVS002", "6400044", "AVS002", "Nebula Blade", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS002.webp", 0.25),
+    CatalogCardSeed("6400044-AVS003", "6400044", "AVS003", "Helm of the Arknight", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS003.webp", 30.59),
+    CatalogCardSeed("6400044-AVS004", "6400044", "AVS004", "Bloodsheath Skeleta", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS004.webp", 4.0),
+    CatalogCardSeed("6400044-AVS005", "6400044", "AVS005", "Vexing Quillhand", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS005.webp", 20.54),
+    CatalogCardSeed("6400044-AVS006", "6400044", "AVS006", "Sutcliffe's Suede Hides", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS006.webp", 0.69),
+    CatalogCardSeed("6400044-AVS007", "6400044", "AVS007", "Amplify the Arknight (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS007.webp", null),
+    CatalogCardSeed("6400044-AVS008", "6400044", "AVS008", "Arknight Ascendancy (Red)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS008.webp", 4.0),
+    CatalogCardSeed("6400044-AVS009", "6400044", "AVS009", "Drawn to the Dark Dimension (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS009.webp", 0.99),
+    CatalogCardSeed("6400044-AVS010", "6400044", "AVS010", "Hocus Pocus (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS010.webp", 0.99),
+    CatalogCardSeed("6400044-AVS011", "6400044", "AVS011", "Rune Flash (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS011.webp", null),
+    CatalogCardSeed("6400044-AVS012", "6400044", "AVS012", "Runerager Swarm (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS012.webp", null),
+    CatalogCardSeed("6400044-AVS013", "6400044", "AVS013", "Condemn to Slaughter (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS013.webp", 0.69),
+    CatalogCardSeed("6400044-AVS014", "6400044", "AVS014", "Deadwood Dirge (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS014.webp", 0.49),
+    CatalogCardSeed("6400044-AVS015", "6400044", "AVS015", "Malefic Incantation (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS015.webp", 6.73),
+    CatalogCardSeed("6400044-AVS016", "6400044", "AVS016", "Mordred Tide (Red)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS016.webp", 4.39),
+    CatalogCardSeed("6400044-AVS017", "6400044", "AVS017", "Read the Runes (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS017.webp", 0.5),
+    CatalogCardSeed("6400044-AVS018", "6400044", "AVS018", "Revel in Runeblood (Red)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS018.webp", 9.61),
+    CatalogCardSeed("6400044-AVS019", "6400044", "AVS019", "Sonata Arcanix (Red)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS019.webp", 4.63),
+    CatalogCardSeed("6400044-AVS020", "6400044", "AVS020", "Ninth Blade of the Blood Oath (Yellow)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS020.webp", 2.57),
+    CatalogCardSeed("6400044-AVS021", "6400044", "AVS021", "Runerager Swarm (Yellow)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS021.webp", null),
+    CatalogCardSeed("6400044-AVS022", "6400044", "AVS022", "Malefic Incantation (Yellow)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS022.webp", 5.0),
+    CatalogCardSeed("6400044-AVS023", "6400044", "AVS023", "Amplify the Arknight (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS023.webp", null),
+    CatalogCardSeed("6400044-AVS024", "6400044", "AVS024", "Rune Flash (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS024.webp", 0.99),
+    CatalogCardSeed("6400044-AVS025", "6400044", "AVS025", "Runerager Swarm (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS025.webp", 1.0),
+    CatalogCardSeed("6400044-AVS026", "6400044", "AVS026", "Become the Arknight (Blue)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS026.webp", null),
+    CatalogCardSeed("6400044-AVS027", "6400044", "AVS027", "Mauvrion Skies (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS027.webp", null),
+    CatalogCardSeed("6400044-AVS028", "6400044", "AVS028", "Sigil of the Arknight (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS028.webp", 0.5),
+    CatalogCardSeed("6400044-AVS029", "6400044", "AVS029", "Tome of the Arknight (Blue)", "Normal", "Super Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS029.webp", null),
+    CatalogCardSeed("6400044-AVS030", "6400044", "AVS030", "Runechant", "Normal", "Basic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AVS030.webp", 1.0),
+)

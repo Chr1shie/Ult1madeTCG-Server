@@ -1,0 +1,8 @@
+-- Eigenes Foto (09.08., Nutzer-Vorgabe "wenn es kein Bild zu einer Karte
+-- gibt, kann man selbst ein Foto einfügen") - siehe Kommentar bei
+-- CustomCardPhotoEntity in Portfolio.sq.
+CREATE TABLE CustomCardPhotoEntity (
+    cardId TEXT NOT NULL PRIMARY KEY REFERENCES CardCatalogEntity(id),
+    imageUrl TEXT NOT NULL,
+    updatedAt INTEGER NOT NULL
+);

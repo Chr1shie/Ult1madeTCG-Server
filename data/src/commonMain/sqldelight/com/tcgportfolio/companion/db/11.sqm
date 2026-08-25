@@ -1,0 +1,19 @@
+-- Wunschlisten (27.07., Nutzer-Vorgabe) - siehe Kommentar bei WishlistEntity
+-- in Portfolio.sq. Bewusst zwei neue Tabellen statt Spalten an bestehenden
+-- Tabellen, da eine Wunschliste eine eigene 1:n-Struktur braucht (mehrere
+-- Karten pro Liste, mehrere Listen pro TCG).
+CREATE TABLE WishlistEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+CREATE TABLE WishlistItemEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    wishlistId INTEGER NOT NULL REFERENCES WishlistEntity(id),
+    cardId TEXT REFERENCES CardCatalogEntity(id),
+    name TEXT NOT NULL,
+    imageUrl TEXT,
+    addedAt INTEGER NOT NULL
+);

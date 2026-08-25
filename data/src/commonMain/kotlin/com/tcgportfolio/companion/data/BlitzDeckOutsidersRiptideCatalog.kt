@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckOutsidersRiptideSetSeed = CardSetSeed(id = "6400045", name = "Blitz Deck: Outsiders - Riptide", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckOutsidersRiptideCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400045-RIP001", "6400045", "RIP001", "Riptide", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP001.png", 1.0),
+    CatalogCardSeed("6400045-RIP002", "6400045", "RIP002", "Barbed Castaway", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP002.png", 0.25),
+    CatalogCardSeed("6400045-RIP003", "6400045", "RIP003", "Driftwood Quiver", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP003.png", 0.25),
+    CatalogCardSeed("6400045-RIP004", "6400045", "RIP004", "Mask of Malicious Manifestations", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP004.png", null),
+    CatalogCardSeed("6400045-RIP005", "6400045", "RIP005", "Threadbare Tunic", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP005.png", null),
+    CatalogCardSeed("6400045-RIP006", "6400045", "RIP006", "Toxic Tips", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP006.png", 0.4),
+    CatalogCardSeed("6400045-RIP007", "6400045", "RIP007", "Ironrot Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP007.png", null),
+    CatalogCardSeed("6400045-RIP008", "6400045", "RIP008", "Bloodrot Trap (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP008.png", 0.3),
+    CatalogCardSeed("6400045-RIP009", "6400045", "RIP009", "Frailty Trap (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP009.png", 0.49),
+    CatalogCardSeed("6400045-RIP010", "6400045", "RIP010", "Inertia Trap (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP010.png", 0.45),
+    CatalogCardSeed("6400045-RIP011", "6400045", "RIP011", "Boulder Trap (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP011.png", 0.25),
+    CatalogCardSeed("6400045-RIP012", "6400045", "RIP012", "Pendulum Trap (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP012.png", null),
+    CatalogCardSeed("6400045-RIP013", "6400045", "RIP013", "Tarpit Trap (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP013.png", 0.66),
+    CatalogCardSeed("6400045-RIP014", "6400045", "RIP014", "Falcon Wing (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP014.png", 0.41),
+    CatalogCardSeed("6400045-RIP015", "6400045", "RIP015", "Hemorrhage Bore (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP015.png", 0.2),
+    CatalogCardSeed("6400045-RIP016", "6400045", "RIP016", "Murkmire Grapnel (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP016.png", null),
+    CatalogCardSeed("6400045-RIP017", "6400045", "RIP017", "Salvage Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP017.png", null),
+    CatalogCardSeed("6400045-RIP018", "6400045", "RIP018", "Searing Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP018.png", 0.25),
+    CatalogCardSeed("6400045-RIP019", "6400045", "RIP019", "Sedation Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP019.png", 0.25),
+    CatalogCardSeed("6400045-RIP020", "6400045", "RIP020", "Withering Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP020.png", 0.25),
+    CatalogCardSeed("6400045-RIP021", "6400045", "RIP021", "Ravenous Rabble (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP021.png", 0.25),
+    CatalogCardSeed("6400045-RIP022", "6400045", "RIP022", "Increase the Tension (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP022.png", 0.2),
+    CatalogCardSeed("6400045-RIP023", "6400045", "RIP023", "Scout the Periphery (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP023.png", 0.24),
+    CatalogCardSeed("6400045-RIP024", "6400045", "RIP024", "Falcon Wing (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP024.png", null),
+    CatalogCardSeed("6400045-RIP025", "6400045", "RIP025", "Infecting Shot (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP025.png", null),
+    CatalogCardSeed("6400045-RIP026", "6400045", "RIP026", "Murkmire Grapnel (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP026.png", null),
+    CatalogCardSeed("6400045-RIP027", "6400045", "RIP027", "Scout the Periphery (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP027.png", null),
+    CatalogCardSeed("6400045-RIP028", "6400045", "RIP028", "Bloodrot Pox", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP028.png", 0.49),
+    CatalogCardSeed("6400045-RIP029", "6400045", "RIP029", "Frailty", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP029.png", 0.7),
+    CatalogCardSeed("6400045-RIP030", "6400045", "RIP030", "Inertia", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-RIP/EN/RIP030.png", 1.0),
+)

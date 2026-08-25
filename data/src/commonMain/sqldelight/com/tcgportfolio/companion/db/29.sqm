@@ -1,0 +1,10 @@
+-- Sealed-Wantsliste mit Preis-Alarm (25.08., Nutzer-Vorgabe) - siehe
+-- Tabellen-Kommentar in Portfolio.sq.
+CREATE TABLE SealedWishlistItemEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    game TEXT NOT NULL,
+    catalogId TEXT NOT NULL,
+    priceAlarmEur REAL,
+    createdAt INTEGER NOT NULL,
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+);

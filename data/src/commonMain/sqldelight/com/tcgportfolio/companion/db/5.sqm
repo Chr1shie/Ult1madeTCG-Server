@@ -1,0 +1,9 @@
+CREATE TABLE SealedCatalogEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    game TEXT NOT NULL,
+    imageUrl TEXT
+);
+
+ALTER TABLE SealedProductEntity ADD COLUMN catalogId TEXT REFERENCES SealedCatalogEntity(id);

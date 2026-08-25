@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val universesBeyondTransformersSetSeed = CardSetSeed(id = "bot", name = "Transformers", game = "MTG", totalCards = 29)
+
+val universesBeyondTransformersCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("bot-1", "bot", "1", "Prowl, Stoic Strategist // Prowl, Pursuit Vehicle", "Promo", "M", "https://cards.scryfall.io/large/front/f/0/f0a3dc50-a5c4-4073-8fec-2f68544bc2a1.jpg?1783919909", 1.4, 678541),
+    CatalogCardSeed("bot-2", "bot", "2", "Ratchet, Field Medic // Ratchet, Rescue Racer", "Promo", "M", "https://cards.scryfall.io/large/front/c/2/c23a2d6b-43c2-4756-94c7-207cc344f0a7.jpg?1783919907", 3.11, 678544),
+    CatalogCardSeed("bot-3", "bot", "3", "Jetfire, Ingenious Scientist // Jetfire, Air Guardian", "Promo", "M", "https://cards.scryfall.io/large/front/6/b/6bf61883-2343-4a9f-9a34-99326a8827ad.jpg?1783919910", 0.95, 678545),
+    CatalogCardSeed("bot-4", "bot", "4", "Blitzwing, Cruel Tormentor // Blitzwing, Adaptive Assailant", "Promo", "M", "https://cards.scryfall.io/large/front/d/2/d20738d2-a159-4e3e-be7a-561a121bd447.jpg?1783919907", 1.82, 678548),
+    CatalogCardSeed("bot-5", "bot", "5", "Starscream, Power Hungry // Starscream, Seeker Leader", "Promo", "M", "https://cards.scryfall.io/large/front/8/2/8234ea77-9ed6-4f3e-acc2-f52fb7003ed2.jpg?1783919906", 4.15, 678549),
+    CatalogCardSeed("bot-6", "bot", "6", "Slicer, Hired Muscle // Slicer, High-Speed Antagonist", "Promo", "M", "https://cards.scryfall.io/large/front/9/d/9d9a9350-4734-4cc1-986d-467e6715199f.jpg?1783919908", 8.95, 678552),
+    CatalogCardSeed("bot-7", "bot", "7", "Arcee, Sharpshooter // Arcee, Acrobatic Coupe", "Promo", "M", "https://cards.scryfall.io/large/front/2/1/21462db4-7739-4853-845f-0c2aa38fd2a6.jpg?1783919906", 0.83, 678553),
+    CatalogCardSeed("bot-8", "bot", "8", "Blaster, Combat DJ // Blaster, Morale Booster", "Promo", "M", "https://cards.scryfall.io/large/front/b/2/b2f8d457-ca4d-4b7d-83ed-17c2ba11ec0e.jpg?1783919903", 0.99, 678554),
+    CatalogCardSeed("bot-9", "bot", "9", "Cyclonus, the Saboteur // Cyclonus, Cybertronian Fighter", "Promo", "M", "https://cards.scryfall.io/large/front/2/d/2d3bb50a-2892-4e28-aa70-ab8d0fcdcc73.jpg?1783919905", 0.97, 678557),
+    CatalogCardSeed("bot-10", "bot", "10", "Flamewar, Brash Veteran // Flamewar, Streetwise Operative", "Promo", "M", "https://cards.scryfall.io/large/front/8/7/876d9732-9201-4327-8748-7c87ec55453f.jpg?1783919904", 0.76, 678558),
+    CatalogCardSeed("bot-11", "bot", "11", "Goldbug, Humanity's Ally // Goldbug, Scrappy Scout", "Promo", "M", "https://cards.scryfall.io/large/front/8/e/8e4a8db9-ef57-4ea0-952c-1e5d343fb5d9.jpg?1783919904", 1.19, 678560),
+    CatalogCardSeed("bot-12", "bot", "12", "Megatron, Tyrant // Megatron, Destructive Force", "Promo", "M", "https://cards.scryfall.io/large/front/a/c/ac6ded62-7bf2-476f-ad8e-020da6327c6b.jpg?1783919902", 1.84, 678562),
+    CatalogCardSeed("bot-13", "bot", "13", "Optimus Prime, Hero // Optimus Prime, Autobot Leader", "Promo", "M", "https://cards.scryfall.io/large/front/f/0/f04ed2cc-aae1-400b-9cc5-5d4e3e3dd714.jpg?1783919902", 3.51, 678564),
+    CatalogCardSeed("bot-14", "bot", "14", "Soundwave, Sonic Spy // Soundwave, Superior Captain", "Promo", "M", "https://cards.scryfall.io/large/front/8/7/8733cd6f-37e1-4e3a-bb25-7a238f04657e.jpg?1783919896", 2.1, 678566),
+    CatalogCardSeed("bot-15", "bot", "15", "Ultra Magnus, Tactician // Ultra Magnus, Armored Carrier", "Promo", "M", "https://cards.scryfall.io/large/front/6/8/687695ad-d212-4da4-a326-ce9876afdda2.jpg?1783919895", 0.83, 678568),
+    CatalogCardSeed("bot-16", "bot", "16", "Prowl, Stoic Strategist // Prowl, Pursuit Vehicle", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/7/7/770dea30-cef4-476a-beec-7a7fa967d07b.jpg?1783919896", 7.42, 678542),
+    CatalogCardSeed("bot-17", "bot", "17", "Ratchet, Field Medic // Ratchet, Rescue Racer", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/6/1/619e0c3a-14aa-43dc-bc55-dc97e3d7ccb4.jpg?1783919895", 15.18, 678543),
+    CatalogCardSeed("bot-18", "bot", "18", "Jetfire, Ingenious Scientist // Jetfire, Air Guardian", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/f/4/f4362cd5-5b6a-457f-8d73-71dff9f76335.jpg?1783919894", 7.31, 678546),
+    CatalogCardSeed("bot-19", "bot", "19", "Blitzwing, Cruel Tormentor // Blitzwing, Adaptive Assailant", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/3/e/3ea597a5-0057-4328-9f6e-a446cde91ece.jpg?1783919892", 10.65, 678547),
+    CatalogCardSeed("bot-20", "bot", "20", "Starscream, Power Hungry // Starscream, Seeker Leader", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/9/0/90fa398b-f2f7-474f-a840-244238a67c31.jpg?1783919893", 21.81, 678550),
+    CatalogCardSeed("bot-21", "bot", "21", "Slicer, Hired Muscle // Slicer, High-Speed Antagonist", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/a/3/a35108d8-f6c5-4474-9049-64fd7e3b1310.jpg?1783919892", 32.62, 678551),
+    CatalogCardSeed("bot-22", "bot", "22", "Blaster, Combat DJ // Blaster, Morale Booster", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/5/a/5aacffa9-ee64-4451-9519-10c5f3e5aa86.jpg?1783919893", 5.54, 678555),
+    CatalogCardSeed("bot-23", "bot", "23", "Cyclonus, the Saboteur // Cyclonus, Cybertronian Fighter", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/e/7/e703b74f-9105-42b3-b38c-8f38da840f0c.jpg?1783919891", 7.06, 678556),
+    CatalogCardSeed("bot-24", "bot", "24", "Flamewar, Brash Veteran // Flamewar, Streetwise Operative", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/2/9/292e1d00-435e-404b-b10e-0fae965651e9.jpg?1783919890", 8.99, 678559),
+    CatalogCardSeed("bot-25", "bot", "25", "Goldbug, Humanity's Ally // Goldbug, Scrappy Scout", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/6/7/67a29ad8-2cca-4dab-ac71-d3b0b2489d79.jpg?1783919890", 7.15, 678561),
+    CatalogCardSeed("bot-26", "bot", "26", "Megatron, Tyrant // Megatron, Destructive Force", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/1/9/19385c88-9af3-4931-8dfc-6e51a5c5f816.jpg?1783919891", 21.3, 678563),
+    CatalogCardSeed("bot-27", "bot", "27", "Optimus Prime, Hero // Optimus Prime, Autobot Leader", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/8/f/8fc5a3d7-4d5f-4e02-9d00-b9cf5e5cd269.jpg?1783919890", 30.65, 678565),
+    CatalogCardSeed("bot-28", "bot", "28", "Soundwave, Sonic Spy // Soundwave, Superior Captain", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/3/c/3c24f9cb-2451-4651-826b-a1cd645af502.jpg?1783919889", 16.92, 678567),
+    CatalogCardSeed("bot-29", "bot", "29", "Ultra Magnus, Tactician // Ultra Magnus, Armored Carrier", "Borderless Full Art Promo", "M", "https://cards.scryfall.io/large/front/7/3/73ac68c0-0830-4343-863b-adde0f1b8b61.jpg?1783919889", 8.16, 678569),
+)

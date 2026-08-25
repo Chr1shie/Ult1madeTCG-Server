@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val heroDeckBravoSetSeed = CardSetSeed(id = "6400053", name = "Hero Deck: Bravo", game = "FleshAndBlood", totalCards = 29)
+
+val heroDeckBravoCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400053-BVO001", "6400053", "BVO001", "Bravo, Showstopper", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO.width-450.png", null),
+    CatalogCardSeed("6400053-BVO002", "6400053", "BVO002", "Bravo", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/BVO2.width-450.png", null),
+    CatalogCardSeed("6400053-BVO003", "6400053", "BVO003", "Anothos", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO3.width-450.png", null),
+    CatalogCardSeed("6400053-BVO004", "6400053", "BVO004", "Helm of Isen's Peak", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO4.width-450.png", 0.68),
+    CatalogCardSeed("6400053-BVO005", "6400053", "BVO005", "Ironrot Plate", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO5.width-450.png", null),
+    CatalogCardSeed("6400053-BVO006", "6400053", "BVO006", "Goliath Gauntlet", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO6.width-450.png", 2.71),
+    CatalogCardSeed("6400053-BVO007", "6400053", "BVO007", "Ironrot Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO7.width-450.png", null),
+    CatalogCardSeed("6400053-BVO008", "6400053", "BVO008", "Buckling Blow (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO8.width-450.png", 0.28),
+    CatalogCardSeed("6400053-BVO009", "6400053", "BVO009", "Cartilage Crush (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO9.width-450.png", null),
+    CatalogCardSeed("6400053-BVO010", "6400053", "BVO010", "Debilitate (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO10.width-450.png", null),
+    CatalogCardSeed("6400053-BVO011", "6400053", "BVO011", "Disable (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO11.width-450.png", 1.99),
+    CatalogCardSeed("6400053-BVO012", "6400053", "BVO012", "Emerging Power (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO12.width-450.png", null),
+    CatalogCardSeed("6400053-BVO013", "6400053", "BVO013", "Debilitate (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO13.width-450.png", null),
+    CatalogCardSeed("6400053-BVO014", "6400053", "BVO014", "Emerging Power (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO14.width-450.png", null),
+    CatalogCardSeed("6400053-BVO015", "6400053", "BVO015", "Springboard Somersault", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO15.width-450.png", 0.51),
+    CatalogCardSeed("6400053-BVO016", "6400053", "BVO016", "Buckling Blow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO16.width-450.png", null),
+    CatalogCardSeed("6400053-BVO017", "6400053", "BVO017", "Cartilage Crush (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO17.width-450.png", null),
+    CatalogCardSeed("6400053-BVO018", "6400053", "BVO018", "Crush Confidence (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO18.width-450.png", null),
+    CatalogCardSeed("6400053-BVO019", "6400053", "BVO019", "Disable (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO19.width-450.png", null),
+    CatalogCardSeed("6400053-BVO020", "6400053", "BVO020", "Staunch Response (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO20.width-450.png", 1.03),
+    CatalogCardSeed("6400053-BVO021", "6400053", "BVO021", "Blessing of Deliverance (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO21.width-450.png", null),
+    CatalogCardSeed("6400053-BVO022", "6400053", "BVO022", "Stonewall Confidence (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO22.width-450.png", null),
+    CatalogCardSeed("6400053-BVO023", "6400053", "BVO023", "Barraging Brawnhide (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO23.width-450.png", null),
+    CatalogCardSeed("6400053-BVO024", "6400053", "BVO024", "Raging Onslaught (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO24.width-450.png", 0.5),
+    CatalogCardSeed("6400053-BVO025", "6400053", "BVO025", "Drone of Brutality (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO25.width-450.png", null),
+    CatalogCardSeed("6400053-BVO026", "6400053", "BVO026", "Wounded Bull (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO26.width-450.png", null),
+    CatalogCardSeed("6400053-BVO027", "6400053", "BVO027", "Pummel (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO27.width-450.png", 0.5),
+    CatalogCardSeed("6400053-BVO028", "6400053", "BVO028", "Potion of Strength", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BVO28.width-450.png", 0.6),
+    CatalogCardSeed("6400053-BVO029", "6400053", "BVO029", "Sloggism (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BVO29.width-450.png", 0.25),
+)

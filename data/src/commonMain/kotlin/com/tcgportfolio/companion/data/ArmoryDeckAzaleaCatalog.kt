@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckAzaleaSetSeed = CardSetSeed(id = "6400066", name = "Armory Deck: Azalea", game = "FleshAndBlood", totalCards = 32)
+
+val armoryDeckAzaleaCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400066-AAZ001", "6400066", "AAZ001", "Azalea, Ace in the Hole", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ001.png", 0.53),
+    CatalogCardSeed("6400066-AAZ002", "6400066", "AAZ002", "Death Dealer", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ002.png", 0.52),
+    CatalogCardSeed("6400066-AAZ003", "6400066", "AAZ003", "Crow's Nest", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ003.png", 0.25),
+    CatalogCardSeed("6400066-AAZ004", "6400066", "AAZ004", "Target Totalizer", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ004.png", 0.61),
+    CatalogCardSeed("6400066-AAZ005-HiddenAgenda", "6400066", "AAZ005", "Hidden Agenda", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ005.png", 0.92),
+    CatalogCardSeed("6400066-AAZ005-HiddenAgendaPurple", "6400066", "AAZ005", "Hidden Agenda (Purple)", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ005.png", 44.28),
+    CatalogCardSeed("6400066-AAZ006", "6400066", "AAZ006", "Sharp Shooters", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ006.png", 8.21),
+    CatalogCardSeed("6400066-AAZ007", "6400066", "AAZ007", "Flight Path", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ007.png", 1.02),
+    CatalogCardSeed("6400066-AAZ008", "6400066", "AAZ008", "Barbed Undertow", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ008.png", 0.77),
+    CatalogCardSeed("6400066-AAZ009", "6400066", "AAZ009", "Bolt'n' Shot (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ009.png", 1.27),
+    CatalogCardSeed("6400066-AAZ010", "6400066", "AAZ010", "Drill Shot (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ010.png", 0.75),
+    CatalogCardSeed("6400066-AAZ011", "6400066", "AAZ011", "Infecting Shot (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ011.png", 0.26),
+    CatalogCardSeed("6400066-AAZ012", "6400066", "AAZ012", "Ravenous Rabble (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ012.png", 0.25),
+    CatalogCardSeed("6400066-AAZ013", "6400066", "AAZ013", "Red in the Ledger", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ013.png", 0.99),
+    CatalogCardSeed("6400066-AAZ014", "6400066", "AAZ014", "Sedation Shot", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ014.png", 0.35),
+    CatalogCardSeed("6400066-AAZ015", "6400066", "AAZ015", "Sleep Dart", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ015.png", 0.27),
+    CatalogCardSeed("6400066-AAZ016", "6400066", "AAZ016", "Stone Rain", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ016.png", 7.36),
+    CatalogCardSeed("6400066-AAZ017", "6400066", "AAZ017", "Lace with Bloodrot", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ017.png", 0.81),
+    CatalogCardSeed("6400066-AAZ018", "6400066", "AAZ018", "Lace with Frailty", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ018.png", 0.33),
+    CatalogCardSeed("6400066-AAZ019", "6400066", "AAZ019", "Lace with Inertia", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ019.png", 0.29),
+    CatalogCardSeed("6400066-AAZ020", "6400066", "AAZ020", "Point the Tip", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ020.png", 0.3),
+    CatalogCardSeed("6400066-AAZ021", "6400066", "AAZ021", "Read the Glide Path (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ021.png", 0.25),
+    CatalogCardSeed("6400066-AAZ022", "6400066", "AAZ022", "Scout the Periphery", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ022.png", 0.24),
+    CatalogCardSeed("6400066-AAZ023", "6400066", "AAZ023", "Spire Sniping (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ023.png", null),
+    CatalogCardSeed("6400066-AAZ024", "6400066", "AAZ024", "Line It Up", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ024.png", 6.58),
+    CatalogCardSeed("6400066-AAZ025", "6400066", "AAZ025", "Read the Glide Path (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ025.png", 0.24),
+    CatalogCardSeed("6400066-AAZ026", "6400066", "AAZ026", "Memorial Ground", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ026.png", 0.36),
+    CatalogCardSeed("6400066-AAZ027", "6400066", "AAZ027", "Infecting Shot (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ027.png", 0.25),
+    CatalogCardSeed("6400066-AAZ028", "6400066", "AAZ028", "Spire Sniping (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ028.png", 0.31),
+    CatalogCardSeed("6400066-AAZ029", "6400066", "AAZ029", "Nock the Deathwhistle", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ029.png", 0.22),
+    CatalogCardSeed("6400066-AAZ030 // AAZ031", "6400066", "AAZ030 // AAZ031", "Bloodrot Pox // Frailty", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ030.png", 1.05),
+    CatalogCardSeed("6400066-AAZ030 // AAZ032", "6400066", "AAZ030 // AAZ032", "Bloodrot Pox // Inertia", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2024-ARMORY-AAZ/EN/AAZ030.png", 1.01),
+)

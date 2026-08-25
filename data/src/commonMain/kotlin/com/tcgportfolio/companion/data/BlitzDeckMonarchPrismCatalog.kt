@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckMonarchPrismSetSeed = CardSetSeed(id = "6400081", name = "Blitz Deck: Monarch - Prism", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckMonarchPrismCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400081-PSM001", "6400081", "PSM001", "Prism", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM001.width-450.png", 0.15),
+    CatalogCardSeed("6400081-PSM002", "6400081", "PSM002", "The Librarian", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/media/images/PSM002_The_Librarian.width-10000.png", 0.61),
+    CatalogCardSeed("6400081-PSM003", "6400081", "PSM003", "Iris of Reality", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM003.width-450.png", 2.53),
+    CatalogCardSeed("6400081-PSM004", "6400081", "PSM004", "Halo of Illumination", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM004.width-450.png", 0.25),
+    CatalogCardSeed("6400081-PSM005", "6400081", "PSM005", "Heartened Cross Strap", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM005.width-450.png", null),
+    CatalogCardSeed("6400081-PSM006", "6400081", "PSM006", "Dream Weavers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM006.width-450.png", 0.22),
+    CatalogCardSeed("6400081-PSM007", "6400081", "PSM007", "Spell Fray Leggings", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM007.width-450.png", 0.22),
+    CatalogCardSeed("6400081-PSM008", "6400081", "PSM008", "Herald of Judgment", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM008.width-450.png", 1.18),
+    CatalogCardSeed("6400081-PSM009", "6400081", "PSM009", "Herald of Protection (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM009.width-450.png", 0.25),
+    CatalogCardSeed("6400081-PSM010", "6400081", "PSM010", "Herald of Ravages (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM010.width-450.png", null),
+    CatalogCardSeed("6400081-PSM011", "6400081", "PSM011", "Herald of Rebirth (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM011.width-450.png", null),
+    CatalogCardSeed("6400081-PSM012", "6400081", "PSM012", "Herald of Tenacity (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM012.width-450.png", 0.21),
+    CatalogCardSeed("6400081-PSM013", "6400081", "PSM013", "Wartune Herald (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM013.width-450.png", 0.2),
+    CatalogCardSeed("6400081-PSM014", "6400081", "PSM014", "Merciful Retribution", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM014.width-450.png", 0.59),
+    CatalogCardSeed("6400081-PSM015", "6400081", "PSM015", "Ode to Wrath", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM015.width-450.png", 0.45),
+    CatalogCardSeed("6400081-PSM016", "6400081", "PSM016", "Herald of Protection (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM016.width-450.png", 0.16),
+    CatalogCardSeed("6400081-PSM017", "6400081", "PSM017", "Herald of Ravages (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM017.width-450.png", 0.16),
+    CatalogCardSeed("6400081-PSM018", "6400081", "PSM018", "Herald of Rebirth (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM018.width-450.png", null),
+    CatalogCardSeed("6400081-PSM019", "6400081", "PSM019", "Herald of Tenacity (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM019.width-450.png", 0.15),
+    CatalogCardSeed("6400081-PSM020", "6400081", "PSM020", "Wartune Herald (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM020.width-450.png", 0.15),
+    CatalogCardSeed("6400081-PSM021", "6400081", "PSM021", "Illuminate (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM021.width-450.png", 0.24),
+    CatalogCardSeed("6400081-PSM022", "6400081", "PSM022", "Seek Enlightenment (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM022.width-450.png", null),
+    CatalogCardSeed("6400081-PSM023", "6400081", "PSM023", "Rising Solartide (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM023.width-450.png", null),
+    CatalogCardSeed("6400081-PSM024", "6400081", "PSM024", "Illuminate (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM024.width-450.png", null),
+    CatalogCardSeed("6400081-PSM025", "6400081", "PSM025", "Phantasmify (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM025.width-450.png", 0.15),
+    CatalogCardSeed("6400081-PSM026", "6400081", "PSM026", "Prismatic Shield (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/PSM026.width-450.png", null),
+    CatalogCardSeed("6400081-PSM027", "6400081", "PSM027", "Enigma Chimera (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM027.width-450.png", null),
+    CatalogCardSeed("6400081-PSM028", "6400081", "PSM028", "Enigma Chimera (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM028.width-450.png", 0.14),
+    CatalogCardSeed("6400081-PSM029", "6400081", "PSM029", "Spears of Surreality (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/PSM029.width-450.png", 0.2),
+    CatalogCardSeed("6400081-PSM030", "6400081", "PSM030", "Spectral Shield", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/PSM030.width-450.png", 0.22),
+)

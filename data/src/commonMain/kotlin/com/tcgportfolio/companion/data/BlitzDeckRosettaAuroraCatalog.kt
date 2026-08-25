@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckRosettaAuroraSetSeed = CardSetSeed(id = "6400047", name = "Blitz Deck: Rosetta - Aurora", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckRosettaAuroraCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400047-ARA001", "6400047", "ARA001", "Aurora", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA001.png", 2.93),
+    CatalogCardSeed("6400047-ARA002", "6400047", "ARA002", "Star Fall", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA002.png", 0.3),
+    CatalogCardSeed("6400047-ARA003", "6400047", "ARA003", "Flash of Brilliance", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA003.png", 0.15),
+    CatalogCardSeed("6400047-ARA004", "6400047", "ARA004", "Bloodtorn Bodice", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA004.png", 0.25),
+    CatalogCardSeed("6400047-ARA005", "6400047", "ARA005", "Runehold Release", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA005.png", 0.2),
+    CatalogCardSeed("6400047-ARA006", "6400047", "ARA006", "Runaways", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA006.png", null),
+    CatalogCardSeed("6400047-ARA007", "6400047", "ARA007", "Blast to Oblivion (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA007.png", 0.22),
+    CatalogCardSeed("6400047-ARA008", "6400047", "ARA008", "Flittering Charge (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA008.png", 0.27),
+    CatalogCardSeed("6400047-ARA009", "6400047", "ARA009", "Fry (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA009.png", 0.25),
+    CatalogCardSeed("6400047-ARA010", "6400047", "ARA010", "Heaven's Claws (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA010.png", null),
+    CatalogCardSeed("6400047-ARA011", "6400047", "ARA011", "Hit the High Notes (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA011.png", 0.76),
+    CatalogCardSeed("6400047-ARA012", "6400047", "ARA012", "Lightning Form (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA012.png", 0.18),
+    CatalogCardSeed("6400047-ARA013", "6400047", "ARA013", "Lightning Surge (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA013.png", null),
+    CatalogCardSeed("6400047-ARA014", "6400047", "ARA014", "Meat and Greet (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA014.png", 0.15),
+    CatalogCardSeed("6400047-ARA015", "6400047", "ARA015", "Runerager Swarm (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA015.png", 0.15),
+    CatalogCardSeed("6400047-ARA016", "6400047", "ARA016", "Second Strike (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA016.png", 0.56),
+    CatalogCardSeed("6400047-ARA017", "6400047", "ARA017", "Burn Up // Shock", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA017.png", 0.24),
+    CatalogCardSeed("6400047-ARA018", "6400047", "ARA018", "Electrostatic Discharge (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA018.png", 0.18),
+    CatalogCardSeed("6400047-ARA019", "6400047", "ARA019", "Hit the High Notes (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA019.png", null),
+    CatalogCardSeed("6400047-ARA020", "6400047", "ARA020", "Heaven's Claws (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA020.png", 0.15),
+    CatalogCardSeed("6400047-ARA021", "6400047", "ARA021", "Hit the High Notes (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA021.png", 1.26),
+    CatalogCardSeed("6400047-ARA022", "6400047", "ARA022", "Hocus Pocus (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA022.png", 0.1),
+    CatalogCardSeed("6400047-ARA023", "6400047", "ARA023", "Trip the Light Fantastic (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA023.png", 0.2),
+    CatalogCardSeed("6400047-ARA024", "6400047", "ARA024", "Electrostatic Discharge (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA024.png", null),
+    CatalogCardSeed("6400047-ARA025", "6400047", "ARA025", "Sigil of Deadwood", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA025.png", 0.1),
+    CatalogCardSeed("6400047-ARA026", "6400047", "ARA026", "Sigil of Lightning", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA026.png", 0.1),
+    CatalogCardSeed("6400047-ARA027", "6400047", "ARA027", "Embodiment of Lightning", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA027.png", null),
+    CatalogCardSeed("6400047-ARA028", "6400047", "ARA028", "Runechant", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA028.png", null),
+    CatalogCardSeed("6400047-ARA029", "6400047", "ARA029", "Sanctuary of Aria", "Normal", "None", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-ARA/EN/ARA029.png", null),
+)

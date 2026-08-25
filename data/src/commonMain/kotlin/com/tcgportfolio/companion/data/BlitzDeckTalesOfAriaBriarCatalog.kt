@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckTalesOfAriaBriarSetSeed = CardSetSeed(id = "6400073", name = "Blitz Deck: Tales of Aria - Briar", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckTalesOfAriaBriarCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400073-BRI001", "6400073", "BRI001", "Briar", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BRI001.width-450.png", 0.57),
+    CatalogCardSeed("6400073-BRI002 // BRI003", "6400073", "BRI002 // BRI003", "Embodiment of Lightning // Embodiment of Earth", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/BRI002.width-450.png", 0.74),
+    CatalogCardSeed("6400073-BRI004", "6400073", "BRI004", "Rosetta Thorn", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI004.width-450.png", 4.09),
+    CatalogCardSeed("6400073-BRI005", "6400073", "BRI005", "Plume of Evergrowth", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI005.width-450.png", 0.95),
+    CatalogCardSeed("6400073-BRI006", "6400073", "BRI006", "Heartened Cross Strap", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI006.width-450.png", null),
+    CatalogCardSeed("6400073-BRI007", "6400073", "BRI007", "Ironrot Gauntlet", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI007.width-450.png", null),
+    CatalogCardSeed("6400073-BRI008", "6400073", "BRI008", "Sutcliffe's Suede Hides", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI008.width-450.png", 0.54),
+    CatalogCardSeed("6400073-BRI009", "6400073", "BRI009", "Explosive Growth (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BRI009.width-450.png", null),
+    CatalogCardSeed("6400073-BRI010", "6400073", "BRI010", "Rites of Replenishment (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI010.width-450.png", 0.15),
+    CatalogCardSeed("6400073-BRI011", "6400073", "BRI011", "Stir the Wildwood (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRi0111.width-450.png", null),
+    CatalogCardSeed("6400073-BRI012", "6400073", "BRI012", "Bramble Spark (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI012.width-450.png", 0.31),
+    CatalogCardSeed("6400073-BRI013", "6400073", "BRI013", "Stir the Wildwood (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI013.width-450.png", null),
+    CatalogCardSeed("6400073-BRI014", "6400073", "BRI014", "Rites of Replenishment (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI014.width-450.png", 0.15),
+    CatalogCardSeed("6400073-BRI015", "6400073", "BRI015", "Bramble Spark (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI015.width-450.png", null),
+    CatalogCardSeed("6400073-BRI016", "6400073", "BRI016", "Entwine Earth (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI016.width-450.png", 0.49),
+    CatalogCardSeed("6400073-BRI017", "6400073", "BRI017", "Burgeoning (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI017.width-450.png", null),
+    CatalogCardSeed("6400073-BRI018", "6400073", "BRI018", "Evergreen (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BRI018.width-450.png", 0.9),
+    CatalogCardSeed("6400073-BRI019", "6400073", "BRI019", "Earthlore Surge (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI019.width-450.png", 0.27),
+    CatalogCardSeed("6400073-BRI020", "6400073", "BRI020", "Sow Tomorrow (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI020.width-450.png", null),
+    CatalogCardSeed("6400073-BRI021", "6400073", "BRI021", "Weave Earth (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BRI021.width-450.png", 0.3),
+    CatalogCardSeed("6400073-BRI022", "6400073", "BRI022", "Autumn's Touch (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI022.width-450.png", 0.15),
+    CatalogCardSeed("6400073-BRI023", "6400073", "BRI023", "Summerwood Shelter (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BRI023.width-450.png", null),
+    CatalogCardSeed("6400073-BRI024", "6400073", "BRI024", "Earthlore Surge (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI024.width-450.png", 0.21),
+    CatalogCardSeed("6400073-BRI025", "6400073", "BRI025", "Sow Tomorrow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI025.width-450.png", 2.88),
+    CatalogCardSeed("6400073-BRI026", "6400073", "BRI026", "Amulet of Earth", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI026.width-450.png", null),
+    CatalogCardSeed("6400073-BRI027", "6400073", "BRI027", "Rites of Lightning (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2021-ELE-BRI/BRI027.png", 0.5),
+    CatalogCardSeed("6400073-BRI028", "6400073", "BRI028", "Entwine Lightning (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI028.width-450.png", 0.6),
+    CatalogCardSeed("6400073-BRI029", "6400073", "BRI029", "Lightning Surge (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI029.width-450.png", null),
+    CatalogCardSeed("6400073-BRI030", "6400073", "BRI030", "Electrify (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/BRI030.width-450.png", 0.15),
+    CatalogCardSeed("6400073-BRI031", "6400073", "BRI031", "Flash (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/BRI031.width-450.png", null),
+)

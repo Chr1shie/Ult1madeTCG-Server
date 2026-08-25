@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckHeavyHittersRhinarSetSeed = CardSetSeed(id = "6400022", name = "Blitz Deck: Heavy Hitters - Rhinar", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckHeavyHittersRhinarCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400022-RNR001", "6400022", "RNR001", "Rhinar", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR.width-450.png", 1.75),
+    CatalogCardSeed("6400022-RNR002", "6400022", "RNR002", "Ball Breaker", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR2.width-450.png", null),
+    CatalogCardSeed("6400022-RNR003", "6400022", "RNR003", "Mandible Claw", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR3.width-450.png", 0.25),
+    CatalogCardSeed("6400022-RNR004", "6400022", "RNR004", "Monstrous Veil", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR4.width-450.png", 0.25),
+    CatalogCardSeed("6400022-RNR005", "6400022", "RNR005", "Raw Meat", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR5.width-450.png", null),
+    CatalogCardSeed("6400022-RNR006", "6400022", "RNR006", "Gauntlet of Might", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR6.width-450.png", null),
+    CatalogCardSeed("6400022-RNR007", "6400022", "RNR007", "Flat Trackers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR7.width-450.png", null),
+    CatalogCardSeed("6400022-RNR008", "6400022", "RNR008", "Agile Windup (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR8.width-450.png", 0.49),
+    CatalogCardSeed("6400022-RNR009", "6400022", "RNR009", "Assault and Battery (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR9.width-450.png", null),
+    CatalogCardSeed("6400022-RNR010", "6400022", "RNR010", "Bare Fangs (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR10.width-450.png", null),
+    CatalogCardSeed("6400022-RNR011", "6400022", "RNR011", "Beast Mode (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR11.width-450.png", null),
+    CatalogCardSeed("6400022-RNR012", "6400022", "RNR012", "Mighty Windup (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR12.width-450.png", null),
+    CatalogCardSeed("6400022-RNR013", "6400022", "RNR013", "Pack Hunt (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR13.width-450.png", null),
+    CatalogCardSeed("6400022-RNR014", "6400022", "RNR014", "Pound Town (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR14.width-450.png", null),
+    CatalogCardSeed("6400022-RNR015", "6400022", "RNR015", "Rawhide Rumble (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR15.width-450.png", null),
+    CatalogCardSeed("6400022-RNR016", "6400022", "RNR016", "Bonebreaker Bellow (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR16.width-450.png", 0.96),
+    CatalogCardSeed("6400022-RNR017", "6400022", "RNR017", "Agile Windup (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR17.width-450.png", 1.98),
+    CatalogCardSeed("6400022-RNR018", "6400022", "RNR018", "Mighty Windup (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR18.width-450.png", 0.25),
+    CatalogCardSeed("6400022-RNR019", "6400022", "RNR019", "Pack Call (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/RNR19.width-450.png", 0.25),
+    CatalogCardSeed("6400022-RNR020", "6400022", "RNR020", "Bonebreaker Bellow (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR20.width-450.png", 1.45),
+    CatalogCardSeed("6400022-RNR021", "6400022", "RNR021", "Assault and Battery (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR21.width-450.png", 0.25),
+    CatalogCardSeed("6400022-RNR022", "6400022", "RNR022", "Pack Hunt (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR22.width-450.png", null),
+    CatalogCardSeed("6400022-RNR023", "6400022", "RNR023", "Pound Town (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR23.width-450.png", null),
+    CatalogCardSeed("6400022-RNR024", "6400022", "RNR024", "Bonebreaker Bellow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR24.width-450.png", 0.89),
+    CatalogCardSeed("6400022-RNR025", "6400022", "RNR025", "Lead with Power (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR25.width-450.png", null),
+    CatalogCardSeed("6400022-RNR026", "6400022", "RNR026", "Lead with Speed (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR26.width-450.png", 0.25),
+    CatalogCardSeed("6400022-RNR027", "6400022", "RNR027", "Smashback Alehorn", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/RNR27.width-450.png", 0.2),
+    CatalogCardSeed("6400022-RNR028", "6400022", "RNR028", "Might", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/RNR28.width-450.png", null),
+    CatalogCardSeed("6400022-RNR029", "6400022", "RNR029", "Agility", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/RNR29.width-450.png", null),
+)

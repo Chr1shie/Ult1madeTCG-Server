@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckZyggySetSeed = CardSetSeed(id = "6400091", name = "Armory Deck: Zyggy", game = "FleshAndBlood", totalCards = 30)
+
+val armoryDeckZyggyCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400091-AZS001", "6400091", "AZS001", "Zyggy Starlight", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS001-RF.webp", 4.79),
+    CatalogCardSeed("6400091-AZS002", "6400091", "AZS002", "Aphrodias", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS002-RF.webp", 4.0),
+    CatalogCardSeed("6400091-AZS003", "6400091", "AZS003", "Starfield Veil", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS003-RF.webp", null),
+    CatalogCardSeed("6400091-AZS004", "6400091", "AZS004", "Starfield Carapace", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS004-RF.webp", null),
+    CatalogCardSeed("6400091-AZS005", "6400091", "AZS005", "Starfield Touch", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS005-RF.webp", null),
+    CatalogCardSeed("6400091-AZS006", "6400091", "AZS006", "Blitz Kicks", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS006-RF.webp", 2.52),
+    CatalogCardSeed("6400091-AZS007", "6400091", "AZS007", "Blink Of An Eye (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS007.webp", null),
+    CatalogCardSeed("6400091-AZS008", "6400091", "AZS008", "Ebbing Arcstride (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS008.webp", null),
+    CatalogCardSeed("6400091-AZS009", "6400091", "AZS009", "Flowing Stormstrike (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS009.webp", 3.99),
+    CatalogCardSeed("6400091-AZS010", "6400091", "AZS010", "Miraging Metamorph (Red)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS010.webp", 12.81),
+    CatalogCardSeed("6400091-AZS011", "6400091", "AZS011", "Polarus Pulse Ray (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS011.webp", 3.95),
+    CatalogCardSeed("6400091-AZS012", "6400091", "AZS012", "Scattering Conflux (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS012.webp", 3.25),
+    CatalogCardSeed("6400091-AZS013", "6400091", "AZS013", "Shattering Flowtide (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS013.webp", null),
+    CatalogCardSeed("6400091-AZS014", "6400091", "AZS014", "Shattering Stardust (Red)", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS014.webp", 4.45),
+    CatalogCardSeed("6400091-AZS015", "6400091", "AZS015", "Auric Shards (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS015.webp", null),
+    CatalogCardSeed("6400091-AZS016", "6400091", "AZS016", "Corrosive Space Dust (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS016.webp", null),
+    CatalogCardSeed("6400091-AZS017", "6400091", "AZS017", "Stardust Spike", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS017.webp", 6.6),
+    CatalogCardSeed("6400091-AZS018", "6400091", "AZS018", "Circular Flowtide (Yellow)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS018.webp", 0.31),
+    CatalogCardSeed("6400091-AZS019", "6400091", "AZS019", "Elliptical Conflux (Yellow)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS019.webp", 0.33),
+    CatalogCardSeed("6400091-AZS020", "6400091", "AZS020", "Clear Conscience (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS020.webp", null),
+    CatalogCardSeed("6400091-AZS021", "6400091", "AZS021", "Cosmic Duality (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS021.webp", null),
+    CatalogCardSeed("6400091-AZS022", "6400091", "AZS022", "Ebbing Arcstride (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS022.webp", null),
+    CatalogCardSeed("6400091-AZS023", "6400091", "AZS023", "Shattering Flowtide (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS023.webp", null),
+    CatalogCardSeed("6400091-AZS024", "6400091", "AZS024", "Pierce Reality (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS024.webp", 0.2),
+    CatalogCardSeed("6400091-AZS025", "6400091", "AZS025", "Blur Reality (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS025.webp", 2.77),
+    CatalogCardSeed("6400091-AZS026", "6400091", "AZS026", "Crackle From Afar (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS026.webp", null),
+    CatalogCardSeed("6400091-AZS027", "6400091", "AZS027", "Fleeing Starbreeze (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS027.webp", null),
+    CatalogCardSeed("6400091-AZS028", "6400091", "AZS028", "Sigil Of Astral Flow (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS028.webp", 0.2),
+    CatalogCardSeed("6400091-AZS029", "6400091", "AZS029", "Embodiment Of Lightning", "Normal", "Basic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS029.webp", null),
+    CatalogCardSeed("6400091-AZS031", "6400091", "AZS031", "Ponder", "Normal", "Basic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/AZS031.webp", 1.0),
+)

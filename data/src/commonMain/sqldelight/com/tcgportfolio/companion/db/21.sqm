@@ -1,0 +1,8 @@
+-- Manuelle Cardmarket-Zuordnung (04.08., Nutzer-Vorgabe) - siehe Kommentar
+-- bei CardmarketManualMapping in Portfolio.sq.
+CREATE TABLE CardmarketManualMapping (
+    cardId TEXT NOT NULL PRIMARY KEY REFERENCES CardCatalogEntity(id),
+    cardmarketProductId INTEGER NOT NULL,
+    cardmarketProductName TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);

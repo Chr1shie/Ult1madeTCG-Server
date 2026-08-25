@@ -1,0 +1,1 @@
+ALTER TABLE PortfolioItemEntity ADD COLUMN imageUrl TEXT;

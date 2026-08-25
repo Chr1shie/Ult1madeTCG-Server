@@ -1,0 +1,16 @@
+-- Löschprotokoll NUR für die Server-Sync-Funktion (nicht für Backup-Export/
+-- -Import - das bestehende Backup-Feature hat bewusst KEINEN Tombstone-
+-- Mechanismus, siehe Migration 7/8: eine alte Sicherung soll gelöschte Karten
+-- absichtlich zurückbringen können. Sync ist das Gegenteil - eine Löschung
+-- soll sich auf andere Geräte/den Server fortpflanzen, nicht rückgängig
+-- gemacht werden, sobald wieder synchronisiert wird. Deshalb ein eigener,
+-- vom Backup-Format komplett getrennter Mechanismus.
+-- itemKey nutzt dasselbe Schema wie cardKey()/sealedKey() in
+-- PortfolioRepository.kt (deckt auch Freitext-Einträge ohne Katalog-Link ab,
+-- anders als die alten, bereits entfernten Tombstone-Tabellen).
+CREATE TABLE DeletionLog (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    itemType TEXT NOT NULL,
+    itemKey TEXT NOT NULL,
+    deletedAt INTEGER NOT NULL
+);

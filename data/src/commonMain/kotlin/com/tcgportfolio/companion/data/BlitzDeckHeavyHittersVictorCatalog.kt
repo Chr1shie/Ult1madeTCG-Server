@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckHeavyHittersVictorSetSeed = CardSetSeed(id = "6400038", name = "Blitz Deck: Heavy Hitters - Victor", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckHeavyHittersVictorCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400038-VIC001", "6400038", "VIC001", "Victor Goldmane", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC001.png", 0.64),
+    CatalogCardSeed("6400038-VIC002", "6400038", "VIC002", "Miller's Grindstone", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC002.png", 0.38),
+    CatalogCardSeed("6400038-VIC003", "6400038", "VIC003", "Stonewall Impasse", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC003.png", 0.2),
+    CatalogCardSeed("6400038-VIC004", "6400038", "VIC004", "Golden Glare", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC004.png", 0.15),
+    CatalogCardSeed("6400038-VIC005", "6400038", "VIC005", "Vigor Girth", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC005.png", null),
+    CatalogCardSeed("6400038-VIC006", "6400038", "VIC006", "Gauntlet of Might", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC006.png", 0.25),
+    CatalogCardSeed("6400038-VIC007", "6400038", "VIC007", "Stand Ground", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC007.png", 0.15),
+    CatalogCardSeed("6400038-VIC008", "6400038", "VIC008", "Command Respect (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC008.png", null),
+    CatalogCardSeed("6400038-VIC009", "6400038", "VIC009", "Concuss (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC009.png", 0.15),
+    CatalogCardSeed("6400038-VIC010", "6400038", "VIC010", "Rally the Rearguard (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC010.png", null),
+    CatalogCardSeed("6400038-VIC011", "6400038", "VIC011", "Thunk (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC011.png", 0.45),
+    CatalogCardSeed("6400038-VIC012", "6400038", "VIC012", "Test of Might", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC012.png", 0.25),
+    CatalogCardSeed("6400038-VIC013", "6400038", "VIC013", "Test of Strength", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC013.png", 0.32),
+    CatalogCardSeed("6400038-VIC014", "6400038", "VIC014", "Test of Vigor", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC014.png", 0.15),
+    CatalogCardSeed("6400038-VIC015", "6400038", "VIC015", "Mighty Windup (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC015.png", 0.25),
+    CatalogCardSeed("6400038-VIC016", "6400038", "VIC016", "Performance Bonus (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC016.png", null),
+    CatalogCardSeed("6400038-VIC017", "6400038", "VIC017", "Rally the Rearguard (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC017.png", null),
+    CatalogCardSeed("6400038-VIC018", "6400038", "VIC018", "Thunk (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC018.png", 1.0),
+    CatalogCardSeed("6400038-VIC019", "6400038", "VIC019", "Wallop (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC019.png", null),
+    CatalogCardSeed("6400038-VIC020", "6400038", "VIC020", "Clash of Might (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC020.png", 0.27),
+    CatalogCardSeed("6400038-VIC021", "6400038", "VIC021", "Clash of Vigor (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC021.png", 0.6),
+    CatalogCardSeed("6400038-VIC022", "6400038", "VIC022", "Command Respect (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC022.png", null),
+    CatalogCardSeed("6400038-VIC023", "6400038", "VIC023", "Concuss (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC023.png", 0.15),
+    CatalogCardSeed("6400038-VIC024", "6400038", "VIC024", "Mighty Windup (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC024.png", 0.18),
+    CatalogCardSeed("6400038-VIC025", "6400038", "VIC025", "Thunk (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC025.png", 4.25),
+    CatalogCardSeed("6400038-VIC026", "6400038", "VIC026", "Wallop (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC026.png", 0.25),
+    CatalogCardSeed("6400038-VIC027", "6400038", "VIC027", "Performance Bonus (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC027.png", null),
+    CatalogCardSeed("6400038-VIC028", "6400038", "VIC028", "Might", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC028.png", null),
+    CatalogCardSeed("6400038-VIC029", "6400038", "VIC029", "Vigor", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC029.png", 1.5),
+    CatalogCardSeed("6400038-VIC030", "6400038", "VIC030", "Gold", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-HVY-VIC/EN/VIC030.png", null),
+)

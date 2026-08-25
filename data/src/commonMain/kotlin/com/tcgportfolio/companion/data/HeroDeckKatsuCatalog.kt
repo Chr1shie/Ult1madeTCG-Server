@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val heroDeckKatsuSetSeed = CardSetSeed(id = "6400070", name = "Hero Deck: Katsu", game = "FleshAndBlood", totalCards = 30)
+
+val heroDeckKatsuCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400070-KSU001", "6400070", "KSU001", "Katsu, the Wanderer", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU.width-450.png", 19.99),
+    CatalogCardSeed("6400070-KSU002", "6400070", "KSU002", "Katsu", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/KSU2.width-450.png", null),
+    CatalogCardSeed("6400070-KSU003", "6400070", "KSU003", "Harmonized Kodachi", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU3.width-450.png", 2.88),
+    CatalogCardSeed("6400070-KSU004", "6400070", "KSU004", "Harmonized Kodachi (Reverse)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU4.width-450.png", 5.75),
+    CatalogCardSeed("6400070-KSU005", "6400070", "KSU005", "Ironrot Helm", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU5.width-450.png", null),
+    CatalogCardSeed("6400070-KSU006", "6400070", "KSU006", "Heartened Cross Strap", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU6.width-450.png", null),
+    CatalogCardSeed("6400070-KSU007", "6400070", "KSU007", "Breaking Scales", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU7.width-450.png", null),
+    CatalogCardSeed("6400070-KSU008", "6400070", "KSU008", "Ironrot Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU8.width-450.png", null),
+    CatalogCardSeed("6400070-KSU009", "6400070", "KSU009", "Blackout Kick (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/KSU9.width-450.png", 1.86),
+    CatalogCardSeed("6400070-KSU010", "6400070", "KSU010", "Fluster Fist (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/KSU10.width-450.png", null),
+    CatalogCardSeed("6400070-KSU011", "6400070", "KSU011", "Head Jab (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU11.width-450.png", 1.55),
+    CatalogCardSeed("6400070-KSU012", "6400070", "KSU012", "Leg Tap (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU12.width-450.png", 0.38),
+    CatalogCardSeed("6400070-KSU013", "6400070", "KSU013", "Open the Center (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU13.width-450.png", null),
+    CatalogCardSeed("6400070-KSU014", "6400070", "KSU014", "Rising Knee Thrust (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU14.width-450.png", null),
+    CatalogCardSeed("6400070-KSU015", "6400070", "KSU015", "Surging Strike (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU15.width-450.png", null),
+    CatalogCardSeed("6400070-KSU016", "6400070", "KSU016", "Whelming Gustwave (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU16.width-450.png", null),
+    CatalogCardSeed("6400070-KSU017", "6400070", "KSU017", "Scar for a Scar (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU17.width-450.png", null),
+    CatalogCardSeed("6400070-KSU018", "6400070", "KSU018", "Leg Tap (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU18.width-450.png", null),
+    CatalogCardSeed("6400070-KSU019", "6400070", "KSU019", "Rising Knee Thrust (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU19.width-450.png", null),
+    CatalogCardSeed("6400070-KSU020", "6400070", "KSU020", "Surging Strike (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU20.width-450.png", null),
+    CatalogCardSeed("6400070-KSU021", "6400070", "KSU021", "Springboard Somersault", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU21.width-450.png", null),
+    CatalogCardSeed("6400070-KSU022", "6400070", "KSU022", "Fluster Fist (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/KSU22.width-450.png", 0.99),
+    CatalogCardSeed("6400070-KSU023", "6400070", "KSU023", "Head Jab (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU23.width-450.png", null),
+    CatalogCardSeed("6400070-KSU024", "6400070", "KSU024", "Whelming Gustwave (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU24.width-450.png", null),
+    CatalogCardSeed("6400070-KSU025", "6400070", "KSU025", "Flic Flak (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/KSU25.width-450.png", null),
+    CatalogCardSeed("6400070-KSU026", "6400070", "KSU026", "Scour the Battlescape (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU26.width-450.png", null),
+    CatalogCardSeed("6400070-KSU027", "6400070", "KSU027", "Wounding Blow (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU27.width-450.png", null),
+    CatalogCardSeed("6400070-KSU028", "6400070", "KSU028", "Lunging Press", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/KSU28.width-450.png", null),
+    CatalogCardSeed("6400070-KSU029", "6400070", "KSU029", "Energy Potion", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/KSU29.width-450.png", 1.5),
+    CatalogCardSeed("6400070-KSU030", "6400070", "KSU030", "Sigil of Solace (Blue)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/KSU30.width-450.png", null),
+)

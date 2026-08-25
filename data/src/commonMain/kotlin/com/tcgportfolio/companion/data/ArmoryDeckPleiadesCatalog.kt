@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckPleiadesSetSeed = CardSetSeed(id = "6400089", name = "Armory Deck: Pleiades", game = "FleshAndBlood", totalCards = 32)
+
+val armoryDeckPleiadesCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400089-APS001", "6400089", "APS001", "Pleiades, Superstar", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS001.webp", 0.8),
+    CatalogCardSeed("6400089-APS002", "6400089", "APS002", "Pleiades", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS002.webp", 0.32),
+    CatalogCardSeed("6400089-APS003", "6400089", "APS003", "Moment Maker", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS003-RF.webp", 0.52),
+    CatalogCardSeed("6400089-APS004", "6400089", "APS004", "Tiara of Suspense", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS004-RF.webp", 0.63),
+    CatalogCardSeed("6400089-APS005", "6400089", "APS005", "Virtuoso Bodice", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS005-RF.webp", 0.41),
+    CatalogCardSeed("6400089-APS006", "6400089", "APS006", "Attention Grabbers", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS006-RF.webp", 2.21),
+    CatalogCardSeed("6400089-APS007", "6400089", "APS007", "Boots to the Boards", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS007-RF.webp", 2.74),
+    CatalogCardSeed("6400089-APS008", "6400089", "APS008", "Boulder Drop (Red)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS008.webp", 8.26),
+    CatalogCardSeed("6400089-APS009", "6400089", "APS009", "Fault Line", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS009.webp", 0.56),
+    CatalogCardSeed("6400089-APS010", "6400089", "APS010", "Spinal Crush", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS010.webp", 1.87),
+    CatalogCardSeed("6400089-APS011", "6400089", "APS011", "Act of Glory (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS011.webp", 0.1),
+    CatalogCardSeed("6400089-APS012", "6400089", "APS012", "Edge of Their Seats (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS012.webp", 0.11),
+    CatalogCardSeed("6400089-APS013", "6400089", "APS013", "Tension in the Air (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS013.webp", 0.1),
+    CatalogCardSeed("6400089-APS014", "6400089", "APS014", "Thespian Charm", "Normal", "Super Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS014.webp", 0.41),
+    CatalogCardSeed("6400089-APS015", "6400089", "APS015", "Never Give Up", "Normal", "Super Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS015.webp", 0.26),
+    CatalogCardSeed("6400089-APS016", "6400089", "APS016", "Boulder Drop (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS016.webp", 1.85),
+    CatalogCardSeed("6400089-APS017", "6400089", "APS017", "Comeback Kid (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS017.webp", 0.65),
+    CatalogCardSeed("6400089-APS018", "6400089", "APS018", "Macho Grande (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS018.webp", 0.21),
+    CatalogCardSeed("6400089-APS019", "6400089", "APS019", "Standing Ovation", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS019.webp", 0.36),
+    CatalogCardSeed("6400089-APS020", "6400089", "APS020", "Uplifting Performance", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS020.webp", 0.19),
+    CatalogCardSeed("6400089-APS021", "6400089", "APS021", "Tear Asunder", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS021.webp", 4.4),
+    CatalogCardSeed("6400089-APS022", "6400089", "APS022", "Act of Glory (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS022.webp", 0.34),
+    CatalogCardSeed("6400089-APS023", "6400089", "APS023", "Edge of Their Seats (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS023.webp", 0.15),
+    CatalogCardSeed("6400089-APS024", "6400089", "APS024", "Superstar", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS024.webp", 2.13),
+    CatalogCardSeed("6400089-APS025", "6400089", "APS025", "Tension in the Air (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS025.webp", 0.1),
+    CatalogCardSeed("6400089-APS026", "6400089", "APS026", "The Suspense is Killing Me", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS026.webp", 0.44),
+    CatalogCardSeed("6400089-APS027", "6400089", "APS027", "To Be Continued...", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS027.webp", 0.41),
+    CatalogCardSeed("6400089-APS028-UponaPedestal", "6400089", "APS028", "Up on a Pedestal", "Normal", "Super Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS028.webp", 1.75),
+    CatalogCardSeed("6400089-APS028-WhatHappensNext", "6400089", "APS028", "What Happens Next?", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS028.webp", 0.25),
+    CatalogCardSeed("6400089-APS030", "6400089", "APS030", "Turning Point", "Normal", "Super Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS030.webp", 0.29),
+    CatalogCardSeed("6400089-APS031", "6400089", "APS031", "Confidence", "Normal", "Basic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS031.webp", 3.17),
+    CatalogCardSeed("6400089-APS032", "6400089", "APS032", "Toughness", "Normal", "Basic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/APS032.webp", 4.55),
+)

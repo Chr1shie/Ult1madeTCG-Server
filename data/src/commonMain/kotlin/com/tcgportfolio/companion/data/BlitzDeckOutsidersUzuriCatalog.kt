@@ -1,0 +1,37 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckOutsidersUzuriSetSeed = CardSetSeed(id = "6400062", name = "Blitz Deck: Outsiders - Uzuri", game = "FleshAndBlood", totalCards = 31)
+
+val blitzDeckOutsidersUzuriCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400062-UZU001", "6400062", "UZU001", "Uzuri", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU001.png", null),
+    CatalogCardSeed("6400062-UZU002", "6400062", "UZU002", "Spider's Bite", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU002.png", 0.3),
+    CatalogCardSeed("6400062-UZU003", "6400062", "UZU003", "Mask of Shifting Perspectives", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU003.png", null),
+    CatalogCardSeed("6400062-UZU004", "6400062", "UZU004", "Quelling Robe", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU004.png", null),
+    CatalogCardSeed("6400062-UZU005", "6400062", "UZU005", "Fisticuffs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU005.png", null),
+    CatalogCardSeed("6400062-UZU006", "6400062", "UZU006", "Ironhide Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU006.png", 0.2),
+    CatalogCardSeed("6400062-UZU007", "6400062", "UZU007", "Sneak Attack (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU007.png", 0.2),
+    CatalogCardSeed("6400062-UZU008", "6400062", "UZU008", "Death Touch (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU008.png", 0.3),
+    CatalogCardSeed("6400062-UZU009", "6400062", "UZU009", "Cut Down to Size (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU009.png", 0.2),
+    CatalogCardSeed("6400062-UZU010", "6400062", "UZU010", "Demolition Crew (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU010.png", 0.2),
+    CatalogCardSeed("6400062-UZU011", "6400062", "UZU011", "Destructive Deliberation (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU011.png", null),
+    CatalogCardSeed("6400062-UZU012", "6400062", "UZU012", "Humble (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU012.png", 1.97),
+    CatalogCardSeed("6400062-UZU013", "6400062", "UZU013", "Infect (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU013.png", 0.2),
+    CatalogCardSeed("6400062-UZU014", "6400062", "UZU014", "Isolate (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU014.png", 0.2),
+    CatalogCardSeed("6400062-UZU015", "6400062", "UZU015", "Sedate (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU015.png", null),
+    CatalogCardSeed("6400062-UZU016", "6400062", "UZU016", "Peace of Mind (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU016.png", 0.2),
+    CatalogCardSeed("6400062-UZU017", "6400062", "UZU017", "Infect (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU017.png", null),
+    CatalogCardSeed("6400062-UZU018", "6400062", "UZU018", "Isolate (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU018.png", 0.2),
+    CatalogCardSeed("6400062-UZU019", "6400062", "UZU019", "Sedate (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU019.png", null),
+    CatalogCardSeed("6400062-UZU020", "6400062", "UZU020", "Wither (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU020.png", null),
+    CatalogCardSeed("6400062-UZU021", "6400062", "UZU021", "Infect (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU021.png", 0.2),
+    CatalogCardSeed("6400062-UZU022", "6400062", "UZU022", "Isolate (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU022.png", 0.25),
+    CatalogCardSeed("6400062-UZU023", "6400062", "UZU023", "Prowl (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU023.png", null),
+    CatalogCardSeed("6400062-UZU024", "6400062", "UZU024", "Sedate (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU024.png", null),
+    CatalogCardSeed("6400062-UZU025", "6400062", "UZU025", "Wither (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU025.png", null),
+    CatalogCardSeed("6400062-UZU026", "6400062", "UZU026", "Razor's Edge (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU026.png", 0.05),
+    CatalogCardSeed("6400062-UZU027", "6400062", "UZU027", "Unmovable (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU027.png", null),
+    CatalogCardSeed("6400062-UZU028", "6400062", "UZU028", "Bloodrot Pox", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU028.png", 1.0),
+    CatalogCardSeed("6400062-UZU029", "6400062", "UZU029", "Frailty", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU029.png", null),
+    CatalogCardSeed("6400062-UZU030", "6400062", "UZU030", "Inertia", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU030.png", 0.22),
+    CatalogCardSeed("6400062-UZU031", "6400062", "UZU031", "Ponder", "Normal", "Token", "https://storage.googleapis.com/fabmaster/cardfaces/2023-OUT-UZU/EN/UZU031.png", 0.75),
+)

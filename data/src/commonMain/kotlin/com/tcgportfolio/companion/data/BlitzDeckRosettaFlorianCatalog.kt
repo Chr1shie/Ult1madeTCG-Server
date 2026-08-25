@@ -1,0 +1,35 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckRosettaFlorianSetSeed = CardSetSeed(id = "6400034", name = "Blitz Deck: Rosetta - Florian", game = "FleshAndBlood", totalCards = 29)
+
+val blitzDeckRosettaFlorianCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400034-FLR001", "6400034", "FLR001", "Florian", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR001-RF.webp", 5.32),
+    CatalogCardSeed("6400034-FLR002", "6400034", "FLR002", "Rotwood Reaper", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR002.webp", 0.25),
+    CatalogCardSeed("6400034-FLR003", "6400034", "FLR003", "Helm of Lignum Vitae", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR003.webp", 0.22),
+    CatalogCardSeed("6400034-FLR004", "6400034", "FLR004", "Bloodtorn Bodice", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR004.webp", null),
+    CatalogCardSeed("6400034-FLR005", "6400034", "FLR005", "Runehold Release", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR005.webp", 0.23),
+    CatalogCardSeed("6400034-FLR006", "6400034", "FLR006", "Well Grounded", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR006.webp", 0.25),
+    CatalogCardSeed("6400034-FLR007", "6400034", "FLR007", "Cadaverous Tilling (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR007.webp", 0.29),
+    CatalogCardSeed("6400034-FLR008", "6400034", "FLR008", "Fruits of the Forest (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR008.webp", 0.1),
+    CatalogCardSeed("6400034-FLR009", "6400034", "FLR009", "Runerager Swarm (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR009.webp", 0.1),
+    CatalogCardSeed("6400034-FLR010", "6400034", "FLR010", "Vantage Point (Red)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR010.webp", null),
+    CatalogCardSeed("6400034-FLR011", "6400034", "FLR011", "Rootbound Carapace (Red)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR011.webp", 1.19),
+    CatalogCardSeed("6400034-FLR012", "6400034", "FLR012", "Arcane Cussing (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR012.webp", 2.06),
+    CatalogCardSeed("6400034-FLR013", "6400034", "FLR013", "Arcane Seeds // Life", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR013.webp", 0.47),
+    CatalogCardSeed("6400034-FLR014", "6400034", "FLR014", "Deadwood Dirge (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR014.webp", 0.25),
+    CatalogCardSeed("6400034-FLR015", "6400034", "FLR015", "Malefic Incantation (Red)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR015.webp", 2.06),
+    CatalogCardSeed("6400034-FLR016", "6400034", "FLR016", "Oath of the Arknight (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR016.webp", 0.1),
+    CatalogCardSeed("6400034-FLR017", "6400034", "FLR017", "Strong Yield (Red)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR017.webp", 0.15),
+    CatalogCardSeed("6400034-FLR018", "6400034", "FLR018", "Arcane Cussing (Yellow)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR018.webp", 0.25),
+    CatalogCardSeed("6400034-FLR019", "6400034", "FLR019", "Autumn's Touch (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR019.webp", 0.15),
+    CatalogCardSeed("6400034-FLR020", "6400034", "FLR020", "Cadaverous Tilling (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR020.webp", 0.1),
+    CatalogCardSeed("6400034-FLR021", "6400034", "FLR021", "Earth Form (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR021.webp", null),
+    CatalogCardSeed("6400034-FLR022", "6400034", "FLR022", "Fruits of the Forest (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR022.webp", 0.3),
+    CatalogCardSeed("6400034-FLR023", "6400034", "FLR023", "Splintering Deadwood (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR023.webp", null),
+    CatalogCardSeed("6400034-FLR024", "6400034", "FLR024", "Arcane Cussing (Blue)", "Normal", "Common", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR024.webp", 1.98),
+    CatalogCardSeed("6400034-FLR025", "6400034", "FLR025", "Condemn to Slaughter (Blue)", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR025.webp", 0.25),
+    CatalogCardSeed("6400034-FLR026", "6400034", "FLR026", "Sigil of Sanctuary", "Normal", "Rare", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR026.webp", 0.15),
+    CatalogCardSeed("6400034-FLR027", "6400034", "FLR027", "Embodiment of Earth", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR027.webp", 0.1),
+    CatalogCardSeed("6400034-FLR028", "6400034", "FLR028", "Runechant", "Normal", "Token", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR028.webp", 2.95),
+    CatalogCardSeed("6400034-FLR029", "6400034", "FLR029", "Sanctuary of Aria", "Normal", "None", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/FLR029.webp", null),
+)

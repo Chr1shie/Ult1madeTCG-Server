@@ -1,0 +1,1295 @@
+CREATE TABLE CardSet (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    totalCards INTEGER NOT NULL
+);
+
+-- marketPriceEur (28.07., Cardmarket-Preisabgleich, zunächst nur DBFW) -
+-- echter Cardmarket-Marktpreis (EUR, "trend"-Wert aus deren öffentlichem
+-- Preisverzeichnis), bewusst als EIGENE Spalte neben marketPriceUsd statt
+-- diese zu ersetzen: marketPriceUsd (die Alt-Quelle) bleibt der Fallback für
+-- alles, was (noch) nicht zugeordnet werden konnte oder für andere TCGs.
+-- NULL, solange keine eindeutige Zuordnung zu genau einer Cardmarket-
+-- Karte möglich war (siehe CardmarketPriceMatcher.kt - Karten, die sich
+-- eine Cardmarket-Notierung mit einer anderen Variante teilen, z.B. Normal/
+-- Alternate Art, werden bewusst NICHT zugeordnet, um keinen falschen Preis
+-- zu raten).
+-- marketPriceEurOptions/-SelectedIndex/-SelectedAt (28.07., Nutzer-Vorgabe
+-- "Decisions are great if you can make them, and if you don't need them it
+-- doesn't matter") - Cardmarket führt für einen Kartencode oft mehrere
+-- Notierungen (Normal/Alternate Art/Reprint/...), ohne dass wir automatisch
+-- sicher wüssten, welche zu welcher unserer Katalogzeilen gehört (siehe
+-- CardmarketPriceSync.kt). marketPriceEurOptions speichert ALLE gefundenen
+-- Preise als aufsteigend sortiertes JSON-Array; marketPriceEur bleibt der
+-- tatsächlich VERWENDETE ("aktive") Preis. Per Default = billigste Option
+-- (Index 0). Der Nutzer kann in der App/im Server manuell die richtige
+-- Option wählen (er kennt seine physische Karte), festgehalten in
+-- marketPriceEurSelectedIndex - bleibt über den nächsten täglichen
+-- Preisabgleich hinweg erhalten (Position im - dann evtl. neuen - Array,
+-- nicht der eingefrorene Preis selbst, damit sich der Wert mit dem Markt
+-- mitbewegt). marketPriceEurSelectedAt ist der Zeitstempel für den
+-- App<->Server-Sync-Abgleich (die Auswahl selbst ist echte Nutzer-Angabe
+-- und wird synchronisiert, die rohen Cardmarket-Daten selbst bewusst NICHT,
+-- siehe Kommentar bei CardmarketPriceSync.kt).
+-- ruleSupertype/ruleSubtypes/ruleLegalStandard/ruleLegalExpanded (02.08.,
+-- Deckbau-Regelwerk, zunächst nur Pokémon) - unser bisheriger Katalog kennt
+-- nur Name/Nummer/Rarität/Bild/Preis, aber keine für den Deckbau nötigen
+-- Spielregel-Daten (Kartentyp, Basis/Entwicklung, Format-Legalität). Kommt
+-- von einer ZWEITEN, unabhängigen Quelle (api.pokemontcg.io, siehe
+-- PokemonCardRulesSync.kt), nicht von der Alt-Katalog-API (das ist eine reine
+-- Preis-API ohne Regel-Metadaten). NULL = keine Regeldaten bekannt (alle
+-- Nicht-Pokémon-Karten, plus vereinzelte Pokémon-Karten ohne Fund) - das
+-- Deck-Regelwerk behandelt NULL bewusst als "keine Prüfung möglich" statt
+-- als Regelverstoß, siehe PokemonDeckRules.kt.
+-- ruleSubtypes ist ein JSON-Array (z.B. ["Basic"], ["Stage 1"], ["Item"],
+-- ["Basic Energy"]) - analog zu marketPriceEurOptions als JSON-Text-Spalte,
+-- gleiches Muster wie dort.
+CREATE TABLE CardCatalogEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    setId TEXT NOT NULL,
+    number TEXT NOT NULL,
+    name TEXT NOT NULL,
+    variant TEXT NOT NULL DEFAULT 'Normal',
+    rarity TEXT NOT NULL,
+    imageUrl TEXT NOT NULL,
+    marketPriceUsd REAL,
+    marketPriceEur REAL,
+    marketPriceEurOptions TEXT,
+    marketPriceEurSelectedIndex INTEGER,
+    marketPriceEurSelectedAt INTEGER,
+    ruleSupertype TEXT,
+    ruleSubtypes TEXT,
+    ruleLegalStandard INTEGER,
+    ruleLegalExpanded INTEGER,
+    cardmarketId INTEGER,
+    FOREIGN KEY (setId) REFERENCES CardSet(id)
+);
+
+-- Eigenes Foto (09.08., Nutzer-Vorgabe "wenn es kein Bild zu einer Karte
+-- gibt, kann man selbst ein Foto einfügen") - je Katalogkarte (nicht je
+-- einzelner besessener Kopie), damit EIN hochgeladenes Foto überall greift,
+-- wo diese Karte auftaucht (Sammlung, Binder, Wantsliste, Deck). Bewusst
+-- eine EIGENE Tabelle statt CardCatalogEntity.imageUrl direkt zu
+-- überschreiben - der Katalog wird bei jedem CATALOG_SEED_VERSION-Sprung
+-- neu bestückt (siehe seedSet()/updateCatalogSeedFields), das würde ein
+-- eigenes Foto sonst wieder verlieren. Bewusst OHNE accountId - dasselbe
+-- gedruckte Kartendesign sieht für alle Accounts gleich aus, das Foto ist
+-- ein Ersatz für ein fehlendes offizielles Katalogbild, keine Momentaufnahme
+-- einer einzelnen physischen Kopie. imageUrl trägt wie bei den Vault-
+-- Produkten (siehe LocalImageStorage.kt) den "local:"-Präfix für lokal auf
+-- dem Gerät gespeicherte Fotos - synct bewusst NICHT geräteübergreifend,
+-- exakt wie das bestehende Vault-Vorbild (ein lokaler Dateipfad wäre auf
+-- einem anderen Gerät ohnehin bedeutungslos).
+CREATE TABLE CustomCardPhotoEntity (
+    cardId TEXT NOT NULL PRIMARY KEY REFERENCES CardCatalogEntity(id),
+    imageUrl TEXT NOT NULL,
+    updatedAt INTEGER NOT NULL
+);
+
+-- Mandantenfähigkeit (02.08., Nutzer-Vorgabe "die Pokémon-Sammlung meines
+-- Sohnes tracken, ohne dass sie sich mit meiner vermischt") - siehe
+-- CONCEPT.md "Mandantenfähigkeit / Mehrere Accounts" für die volle
+-- Spezifikation. Ein echtes Sync-Objekt wie Binder/Wishlist: uid ist die
+-- stabile, geräteübergreifende Identität (App und Server vergeben ids
+-- unabhängig voneinander), id nur die lokale Autoincrement-Referenz für
+-- Fremdschlüssel innerhalb DIESER Datenbank. pinHash/pinSalt bewusst
+-- optional (NULL = kein PIN) - vierstellige PIN statt echtem Passwort
+-- (Nutzer-Vorgabe), eine WEICHE Sperre, keine Verschlüsselung. isDefault/
+-- "zuletzt geöffnet" sind ABSICHTLICH NICHT hier, sondern rein lokale
+-- AppSettings-Einträge je Gerät (siehe Kommentar in CONCEPT.md) - sonst
+-- würde ein auf Gerät A gesetzter Standard-Account auch auf Gerät B
+-- erzwungen.
+CREATE TABLE AccountEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uid TEXT NOT NULL DEFAULT '',
+    name TEXT NOT NULL,
+    pinHash TEXT,
+    pinSalt TEXT,
+    createdAt INTEGER NOT NULL DEFAULT 0,
+    updatedAt INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE PortfolioItemEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    purchasePrice REAL NOT NULL,
+    quantity INTEGER NOT NULL,
+    isHolo INTEGER NOT NULL DEFAULT 0,
+    imageUrl TEXT,
+    cardId TEXT REFERENCES CardCatalogEntity(id),
+    -- Für den Sync-Existenz-Abgleich (siehe Migration 10/DeletionLog) - wann
+    -- dieser Eintrag zuletzt (neu) entstanden ist (Insert, erneuter Merge-
+    -- Insert, oder Backup-Restore), NICHT wann Felder zuletzt geändert wurden
+    updatedAt INTEGER NOT NULL DEFAULT 0,
+    -- Mandantenfähigkeit (02.08.) - siehe AccountEntity. DEFAULT 1, weil die
+    -- Migration (17.sqm) den ersten (Standard-)Account IMMER als allererste
+    -- Zeile in AccountEntity anlegt und dieser damit garantiert id=1 bekommt -
+    -- bestehende Karten landen dadurch automatisch im Standard-Account.
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
+    -- Eigener Preis (18.08., Nutzer-Vorgabe, siehe 25.sqm): vom Nutzer von
+    -- Hand eingetragener EUR-Wert je Karte. NULL = keiner. Die beiden
+    -- Schalter steuern, WO er mitgezählt wird: customPriceInTotal = im
+    -- globalen Gesamtwert (impliziert auch den TCG-Wert),
+    -- customPriceInGameTotal = nur im Gesamtwert des jeweiligen TCGs
+    -- (z.B. handgepflegte Naruto-Werte, ohne den globalen Gesamtwert zu
+    -- "verwaschen"). Beide aus = der Preis zählt nur in der immer
+    -- sichtbaren "Eigene Werte"-Kennzahl. Ist der Preis gesetzt und ein
+    -- Schalter aktiv, ERSETZT er den Cardmarket-Preis dieser Karte in der
+    -- jeweiligen Summe (nicht zusätzlich).
+    customPriceEur REAL,
+    customPriceInTotal INTEGER NOT NULL DEFAULT 1,
+    customPriceInGameTotal INTEGER NOT NULL DEFAULT 1,
+    -- Holo-Stil je Karte (18.08., Nutzer-Vorgabe "lieber haben als
+    -- brauchen", siehe 26.sqm): "rainbow"/"galaxy"/"gold"/"glitter",
+    -- NULL = der global eingestellte Stil (Settings-Key "holoStyle",
+    -- Standard "random" = stabil pro Karte gewürfelt). Der Karten-Wert
+    -- übertrumpft die globale Einstellung.
+    holoStyle TEXT
+);
+
+-- Löschprotokoll nur für Server-Sync, siehe Migration 9 für die Begründung
+-- (bewusst getrennt vom Backup-Export/-Import, das absichtlich keine
+-- Tombstones nutzt). accountId (02.08.) - eine Löschung in Account 1 darf
+-- niemals eine gleichnamige/gleich aussehende Karte in Account 2 treffen.
+CREATE TABLE DeletionLog (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    itemType TEXT NOT NULL,
+    itemKey TEXT NOT NULL,
+    deletedAt INTEGER NOT NULL,
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+);
+
+CREATE TABLE AppSettings (
+    key TEXT NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+-- Katalog bekannter versiegelter Produkte (Starter Decks, Booster Boxen, ...)
+-- je Spiel - ermöglicht "Durchstöbern" statt Freitext-Eingabe, analog zu
+-- CardCatalogEntity bei den Einzelkarten
+-- marketPriceEurOptions/-SelectedIndex/-SelectedAt (11.08., siehe 24.sqm) -
+-- exakt dasselbe Prinzip wie bei CardCatalogEntity (siehe dortigen
+-- ausführlichen Kommentar): applyCardmarketSealedPrices() findet oft mehrere
+-- Cardmarket-Notierungen für denselben bereinigten Produktnamen (z.B.
+-- Konvolute/Bundles mit ähnlichem Namen), marketPriceEurOptions speichert
+-- ALLE als JSON-Array, der Nutzer kann die zu seinem physischen Produkt
+-- passende manuell wählen (marketPriceEurSelectedIndex), bleibt über
+-- künftige Preisabgleiche hinweg erhalten.
+CREATE TABLE SealedCatalogEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    game TEXT NOT NULL,
+    imageUrl TEXT,
+    marketPriceUsd REAL,
+    -- Cardmarket-EUR-Preis (03.08.), siehe 19.sqm/CardmarketPriceSync.kt
+    marketPriceEur REAL,
+    marketPriceEurOptions TEXT,
+    marketPriceEurSelectedIndex INTEGER,
+    marketPriceEurSelectedAt INTEGER
+);
+
+-- Fertig gekaufte/versiegelte Produkte im eigenen Vault. Normalerweise über
+-- catalogId mit einem bekannten Katalogeintrag verknüpft (aus dem Durchstöbern
+-- gewählt); catalogId bleibt NULL bei frei eingetragenen Produkten, die nicht
+-- im Katalog stehen. "category"/"name" bleiben trotzdem eigene Spalten (nicht
+-- nur über den Katalog gejoint), damit Freitext-Einträge ohne Katalogbezug
+-- funktionieren.
+CREATE TABLE SealedProductEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    game TEXT NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1,
+    isSealed INTEGER NOT NULL DEFAULT 1,
+    purchasePrice REAL NOT NULL DEFAULT 0.0,
+    imageUrl TEXT,
+    catalogId TEXT REFERENCES SealedCatalogEntity(id),
+    -- Siehe PortfolioItemEntity.updatedAt
+    updatedAt INTEGER NOT NULL DEFAULT 0,
+    -- Mandantenfähigkeit (02.08.) - siehe AccountEntity/PortfolioItemEntity.accountId
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
+    -- Eigener Preis für Sealed-Produkte (20.08., Nutzer-Vorgabe "im Vault
+    -- bei Produkten ohne Marktpreis selbst einen Wert eingeben ... genau so
+    -- wie bei Karten") - identische Semantik wie die gleichnamigen Spalten
+    -- der PortfolioItemEntity, siehe deren Spalten-Kommentar
+    customPriceEur REAL,
+    customPriceInTotal INTEGER NOT NULL DEFAULT 1,
+    customPriceInGameTotal INTEGER NOT NULL DEFAULT 1
+);
+
+-- Wunschlisten (27.07., Nutzer-Vorgabe) - eigene Wunschlisten je TCG,
+-- komplett getrennt von PortfolioItemEntity: Karten hier sind ausdrücklich
+-- NICHT im Bestand und dürfen nie in Sammlung/Statistiken auftauchen.
+-- uid (28.07., Nutzer-Vorgabe "alles soll synchron sein"): stabile,
+-- geräteübergreifende Identität für den Server-Sync - die lokale
+-- AUTOINCREMENT-id ist NICHT stabil zwischen App und Server (beide vergeben
+-- ids unabhängig voneinander), anders als Katalogkarten mit ihrer festen
+-- cardId. Wird einmal beim Anlegen generiert (siehe
+-- PortfolioRepository.generateWishlistUid()) und nie geändert.
+CREATE TABLE WishlistEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    uid TEXT NOT NULL DEFAULT '',
+    -- Mandantenfähigkeit (02.08.) - siehe AccountEntity/PortfolioItemEntity.accountId.
+    -- WishlistItemEntity braucht KEIN eigenes accountId - hängt immer über
+    -- wishlistId am Account seiner Liste.
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
+    -- Umbenennen (19.08., Nutzer-Vorgabe) - LWW-Zeitstempel wie
+    -- BinderEntity.nameUpdatedAt, siehe Migration 27.sqm
+    nameUpdatedAt INTEGER NOT NULL DEFAULT 0
+);
+
+-- cardId bleibt NULL bei Karten, die (noch) nicht im Katalog stehen -
+-- name/imageUrl sind deshalb eigene Spalten (nicht nur über den Katalog
+-- gejoint), analog zu SealedProductEntity
+CREATE TABLE WishlistItemEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    wishlistId INTEGER NOT NULL REFERENCES WishlistEntity(id),
+    cardId TEXT REFERENCES CardCatalogEntity(id),
+    name TEXT NOT NULL,
+    imageUrl TEXT,
+    addedAt INTEGER NOT NULL
+);
+
+-- Binder (31.07., Nutzer-Vorgabe) - organisiert die ECHTE Sammlung in
+-- benannte Ordner/Alben je TCG (physische Aufbewahrung). Anders als
+-- WishlistEntity/WishlistItemEntity sind Binder-Karten keine eigene
+-- Kategorie "nicht besessener" Karten, sondern eine zusätzliche, rein
+-- organisatorische Zuordnung für Karten, die man ohnehin schon besitzt -
+-- deshalb strukturell IDENTISCH zu Wishlist aufgebaut (gleiche 1:n-
+-- Verschachtelung, gleicher Sync-Mechanismus), aber bewusst KEINE
+-- Fremdschlüssel-Beziehung zu PortfolioItemEntity: ein Binder-Eintrag merkt
+-- sich nur "diese Katalogkarte liegt in diesem Binder", unabhängig davon,
+-- ob/wie oft die Karte gerade im Bestand steht. Dadurch bleibt Binder genauso
+-- einfach zu synchronisieren wie Wishlist (keine zusätzliche Verknüpfung mit
+-- potenziell abweichenden PortfolioItemEntity-ids auf App/Server).
+-- uid von Anfang an dabei (nicht wie bei WishlistEntity nachträglich per
+-- Migration ergänzt) - siehe Kommentar dort für die Begründung.
+-- pageSize (31.07., Nutzer-Vorgabe "den echten Binder 1:1 abbilden") - 9, 12
+-- oder 16 Karten pro Seite, entspricht den in echt gängigen Binder-
+-- Seitengrößen. Wird beim Anlegen festgelegt und danach nicht mehr
+-- geändert (ein bereits einsortierter Binder ließe sich sonst nicht mehr
+-- sinnvoll umrechnen).
+CREATE TABLE BinderEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    uid TEXT NOT NULL DEFAULT '',
+    pageSize INTEGER NOT NULL DEFAULT 9,
+    -- Mandantenfähigkeit (02.08.) - siehe WishlistEntity.accountId, gleiches
+    -- Prinzip: BinderItemEntity braucht kein eigenes accountId.
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
+    -- Umbenennen (03.08., Nutzer-Vorgabe) - eigener Zeitstempel NUR für den
+    -- Namen, analog zu BinderItemEntity.positionUpdatedAt: alles andere an
+    -- einem Binder ist nach dem Anlegen unveränderlich, der Name jetzt der
+    -- einzige echte "Update"-Fall auf Binder-Ebene selbst (siehe
+    -- importAccountBundle() in PortfolioRepository.kt für den LWW-Abgleich).
+    nameUpdatedAt INTEGER NOT NULL DEFAULT 0,
+    -- Binder-Optik (25.08., Nutzer-Vorgabe "Binder nicht nur als Text,
+    -- sondern als Bild"): color = Hex-Farbe des gezeichneten Buchdeckels
+    -- (NULL = TCG-Akzentfarbe), coverImageUrl = optionales eigenes Foto
+    -- (lokaler Pfad). Bewusst OHNE Sync - Deko ist Geräte-Sache und Fotos
+    -- sind lokale Dateien; die Server-Weboberfläche hat ihre eigene Farbe
+    -- (gleiche Spalten, eigener Endpunkt).
+    color TEXT,
+    coverImageUrl TEXT
+);
+
+updateBinderColor:
+UPDATE BinderEntity SET color = ? WHERE id = ?;
+
+updateBinderCoverImage:
+UPDATE BinderEntity SET coverImageUrl = ? WHERE id = ?;
+
+-- position (31.07., Nutzer-Vorgabe) - der feste Platz einer Karte im Binder
+-- (0-basiert, Seite = position / pageSize, Platz auf der Seite = position %
+-- pageSize) - erst dadurch lässt sich ein echter Binder 1:1 abbilden
+-- (Karten liegen an FESTEN Stellen, nicht nur in Einfüge-Reihenfolge).
+-- Neue Karten bekommen die nächste freie Position ans Ende angehängt,
+-- swapBinderItemPositions() tauscht zwei Positionen (siehe Kommentar dort) -
+-- so kann der Nutzer die Anordnung an seinen echten Binder anpassen.
+-- positionUpdatedAt: eigener Zeitstempel NUR für die Position (getrennt von
+-- addedAt) - wird für den Sync-Abgleich gebraucht, da Positionsänderungen
+-- (anders als alles sonst bei Binder/Wishlist) ein echter "Update"-Fall
+-- sind, kein reines Anlegen/Löschen (siehe PortfolioRepository.importSyncData()).
+CREATE TABLE BinderItemEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    binderId INTEGER NOT NULL REFERENCES BinderEntity(id),
+    cardId TEXT REFERENCES CardCatalogEntity(id),
+    name TEXT NOT NULL,
+    imageUrl TEXT,
+    addedAt INTEGER NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    positionUpdatedAt INTEGER NOT NULL DEFAULT 0
+);
+
+-- Decks (02.08., Nutzer-Vorgabe Phase 3) - geht ums SPIELEN/Deckbauen, nicht
+-- um Bestand/Wert (siehe CONCEPT.md "Deckbuilding") - deshalb strukturell
+-- eigenständig statt Binder/Wishlist wiederzuverwenden: kein Preis-/
+-- Bestandsbezug, dafür Kartenmenge PRO Karte (bis zu 4 Exemplare bei
+-- Pokémon) statt fester Steckplätze wie beim Binder. uid von Anfang an
+-- dabei (Sync-Identität wie bei Binder), accountId wie überall seit der
+-- Mandantenfähigkeit.
+CREATE TABLE DeckEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    uid TEXT NOT NULL DEFAULT '',
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+);
+
+-- cardId bewusst NOT NULL (anders als Binder/Wishlist) - ein Deck-Eintrag
+-- OHNE Katalogbezug könnte nie gegen das Regelwerk geprüft werden (siehe
+-- PokemonDeckRules.kt braucht CardCatalogEntity.ruleSupertype/ruleSubtypes),
+-- Freitext-Karten ergeben im Deckbau-Kontext daher keinen Sinn. quantity
+-- statt fester Steckplätze - ein Deck zählt WIE OFT eine Karte drin ist
+-- (bis zu 4x bei den meisten TCGs), keine physische Anordnung wie im Binder.
+CREATE TABLE DeckCardEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    deckId INTEGER NOT NULL REFERENCES DeckEntity(id),
+    cardId TEXT NOT NULL REFERENCES CardCatalogEntity(id),
+    quantity INTEGER NOT NULL DEFAULT 1,
+    addedAt INTEGER NOT NULL
+);
+
+-- Manuelle Cardmarket-Zuordnung (04.08., Nutzer-Vorgabe "der User sieht
+-- nach und wählt aus und ordnet zu und die App merkt sich das") - für
+-- Katalogkarten, die der tägliche Namens-/Code-Abgleich
+-- (CardmarketPriceSync.kt/applyCardmarketCardPrices()) nicht automatisch
+-- zuordnen konnte. Der Nutzer sucht einmalig manuell im (für dieses Spiel
+-- heruntergeladenen) Cardmarket-Produktkatalog die richtige Karte und
+-- bestätigt sie - ab dann zieht applyCardmarketCardPrices() bei jedem
+-- künftigen täglichen Abgleich den Preis DIREKT über cardmarketProductId,
+-- ohne erneut zu raten. cardmarketProductName ist reine Anzeige-Info (für
+-- die "manuell zugeordnet"-Übersicht), nicht Teil der eigentlichen
+-- Zuordnungslogik.
+CREATE TABLE CardmarketManualMapping (
+    cardId TEXT NOT NULL PRIMARY KEY REFERENCES CardCatalogEntity(id),
+    cardmarketProductId INTEGER NOT NULL,
+    cardmarketProductName TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+-- Sealed-Pendant zu CardmarketManualMapping (11.08., siehe 24.sqm) -
+-- bewusst OHNE accountId, genau wie beim Karten-Original: der
+-- Katalogeintrag selbst (nicht die einzelne besessene Kopie) bekommt die
+-- Zuordnung, gilt also geräteweit für alle Accounts.
+CREATE TABLE SealedCardmarketManualMapping (
+    sealedId TEXT NOT NULL PRIMARY KEY REFERENCES SealedCatalogEntity(id),
+    cardmarketProductId INTEGER NOT NULL,
+    cardmarketProductName TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+-- ---------- Accounts (02.08.) ----------
+
+insertAccount:
+INSERT INTO AccountEntity(uid, name, pinHash, pinSalt, createdAt, updatedAt)
+VALUES (?, ?, ?, ?, ?, ?);
+
+updateAccount:
+UPDATE AccountEntity SET name = ?, pinHash = ?, pinSalt = ?, updatedAt = ? WHERE id = ?;
+
+deleteAccount:
+DELETE FROM AccountEntity WHERE id = ?;
+
+selectAccountById:
+SELECT * FROM AccountEntity WHERE id = ? LIMIT 1;
+
+selectAccountByUid:
+SELECT * FROM AccountEntity WHERE uid = ? LIMIT 1;
+
+selectAllAccounts:
+SELECT * FROM AccountEntity ORDER BY createdAt;
+
+-- Löschungen GANZER Accounts (02.08.) - bewusst OHNE accountId-Filter (im
+-- Unterschied zu selectDeletionLog): der gelöschte Account selbst existiert
+-- danach nicht mehr, ein Löschvermerk kann also nicht sinnvoll nach ihm
+-- gefiltert werden - dieser Vermerk-Typ ist inhärent geräteweit.
+selectAccountDeletionLog:
+SELECT * FROM DeletionLog WHERE itemType = 'account';
+
+-- Accounts, die vor Einführung der uid-Spalte angelegt wurden (sollte es
+-- praktisch nie geben, da AccountEntity von Anfang an eine uid hat - Query
+-- trotzdem analog zu selectWishlistsMissingUid() für Robustheit vorhanden)
+selectAccountsMissingUid:
+SELECT * FROM AccountEntity WHERE uid = '';
+
+updateAccountUid:
+UPDATE AccountEntity SET uid = ? WHERE id = ?;
+
+-- Kaskadierendes Löschen eines Accounts (02.08., Nutzer-Vorgabe "von Anfang
+-- an mit einbauen") - erst die abhängigen Zeilen, dann den Account selbst;
+-- WishlistItemEntity/BinderItemEntity hängen über die id der jeweiligen
+-- Liste/des Binders daran, nicht direkt über accountId.
+deleteItemsForAccount:
+DELETE FROM PortfolioItemEntity WHERE accountId = ?;
+
+deleteSealedProductsForAccount:
+DELETE FROM SealedProductEntity WHERE accountId = ?;
+
+deleteWishlistItemsForAccount:
+DELETE FROM WishlistItemEntity WHERE wishlistId IN (SELECT id FROM WishlistEntity WHERE accountId = ?);
+
+deleteWishlistsForAccount:
+DELETE FROM WishlistEntity WHERE accountId = ?;
+
+deleteBinderItemsForAccount:
+DELETE FROM BinderItemEntity WHERE binderId IN (SELECT id FROM BinderEntity WHERE accountId = ?);
+
+deleteBindersForAccount:
+DELETE FROM BinderEntity WHERE accountId = ?;
+
+deleteDeletionLogForAccount:
+DELETE FROM DeletionLog WHERE accountId = ?;
+
+-- Globaler Bestands-Reset (06.08., Katalog-API-Umstieg die Alt-Quelle -> freie
+-- TCG-eigene APIs, z.B. Scryfall für MTG) - läuft einmalig pro
+-- CATALOG_SEED_VERSION-Sprung, siehe PortfolioRepository.resetAllCollections()/
+-- ensureCatalogSeeded(). Bewusst über ALLE Accounts UND alle Spiele (nicht nur
+-- das gerade migrierte TCG) - Nutzer-Vorgabe "alle Karten purgen meine ich
+-- auch alle anderen TCG Karten". AccountEntity/AppSettings bleiben unberührt,
+-- nur der Kartenbestand wird geleert; der Katalog zum Neu-Einscannen bleibt
+-- sofort nutzbar.
+resetAllPortfolioItems:
+DELETE FROM PortfolioItemEntity;
+
+resetAllWishlistItems:
+DELETE FROM WishlistItemEntity;
+
+resetAllWishlists:
+DELETE FROM WishlistEntity;
+
+resetAllBinderItems:
+DELETE FROM BinderItemEntity;
+
+resetAllBinders:
+DELETE FROM BinderEntity;
+
+resetAllDeckCards:
+DELETE FROM DeckCardEntity;
+
+resetAllDecks:
+DELETE FROM DeckEntity;
+
+-- ---------- Sammlung ----------
+
+insertItem:
+INSERT INTO PortfolioItemEntity(name, purchasePrice, quantity, isHolo, imageUrl, cardId, updatedAt, accountId)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+updateItem:
+UPDATE PortfolioItemEntity
+SET quantity = ?, isHolo = ?, purchasePrice = ?, updatedAt = ?
+WHERE id = ?;
+
+-- Eigener Preis (18.08.) - eigene Query statt updateItem zu erweitern
+-- (updateItem hat viele Aufrufer, u.a. den Sync-Merge). updatedAt wird
+-- mitgesetzt, damit die Änderung per Last-Write-Wins synct.
+updateCustomPrice:
+UPDATE PortfolioItemEntity
+SET customPriceEur = ?, customPriceInTotal = ?, customPriceInGameTotal = ?, updatedAt = ?
+WHERE id = ?;
+
+-- Holo-Stil je Karte (18.08.) - updatedAt mitgesetzt für Last-Write-Wins-Sync
+updateHoloStyle:
+UPDATE PortfolioItemEntity
+SET holoStyle = ?, updatedAt = ?
+WHERE id = ?;
+
+-- Wechselt, welche Katalogkarte (Art-Variante) eine besessene Karte
+-- repräsentiert (31.07., Nutzer-Vorgabe "man kann auch das Bild wechseln,
+-- wenn man einen anderen Preis wählt") - siehe
+-- PortfolioRepository.changeCardVariant().
+updateItemCardId:
+UPDATE PortfolioItemEntity SET cardId = ?, updatedAt = ? WHERE id = ?;
+
+deleteItem:
+DELETE FROM PortfolioItemEntity WHERE id = ?;
+
+selectItemById:
+SELECT * FROM PortfolioItemEntity WHERE id = ? LIMIT 1;
+
+-- accountId (02.08.) - zwei verschiedene Accounts können unabhängig
+-- voneinander dieselbe Karte (gleiche cardId+isHolo) besitzen, ohne dass
+-- sich das gegenseitig überschreibt.
+selectByCardIdAndHolo:
+SELECT * FROM PortfolioItemEntity WHERE cardId = ? AND isHolo = ? AND accountId = ? LIMIT 1;
+
+selectAll:
+SELECT
+    PortfolioItemEntity.id AS id,
+    COALESCE(CardCatalogEntity.name, PortfolioItemEntity.name) AS name,
+    PortfolioItemEntity.purchasePrice AS purchasePrice,
+    PortfolioItemEntity.quantity AS quantity,
+    PortfolioItemEntity.isHolo AS isHolo,
+    COALESCE(CustomCardPhotoEntity.imageUrl, CardCatalogEntity.imageUrl, PortfolioItemEntity.imageUrl) AS imageUrl,
+    PortfolioItemEntity.cardId AS cardId,
+    CardCatalogEntity.setId AS setId,
+    CardCatalogEntity.marketPriceUsd AS marketPriceUsd,
+    PortfolioItemEntity.updatedAt AS updatedAt,
+    CardCatalogEntity.marketPriceEur AS marketPriceEur,
+    CardCatalogEntity.marketPriceEurOptions AS marketPriceEurOptions,
+    CardCatalogEntity.marketPriceEurSelectedIndex AS marketPriceEurSelectedIndex,
+    CardCatalogEntity.rarity AS rarity,
+    PortfolioItemEntity.customPriceEur AS customPriceEur,
+    PortfolioItemEntity.customPriceInTotal AS customPriceInTotal,
+    PortfolioItemEntity.customPriceInGameTotal AS customPriceInGameTotal,
+    PortfolioItemEntity.holoStyle AS holoStyle
+FROM PortfolioItemEntity
+LEFT JOIN CardCatalogEntity ON PortfolioItemEntity.cardId = CardCatalogEntity.id
+LEFT JOIN CustomCardPhotoEntity ON PortfolioItemEntity.cardId = CustomCardPhotoEntity.cardId
+WHERE PortfolioItemEntity.accountId = ?;
+
+-- Wie selectAll, aber zusätzlich mit dem TCG-Namen (game) - eigene Query statt
+-- selectAll zu erweitern, damit die App-Abfrage unangetastet bleibt. Wird vom
+-- Server (Weboberfläche) gebraucht, um die Sammlung pro TCG einzufärben/zu
+-- gruppieren, was ohne eigenes "aktuell gewähltes Spiel" (wie in der App)
+-- nötig ist.
+selectAllWithGame:
+SELECT
+    PortfolioItemEntity.id AS id,
+    COALESCE(CardCatalogEntity.name, PortfolioItemEntity.name) AS name,
+    PortfolioItemEntity.purchasePrice AS purchasePrice,
+    PortfolioItemEntity.quantity AS quantity,
+    PortfolioItemEntity.isHolo AS isHolo,
+    COALESCE(CustomCardPhotoEntity.imageUrl, CardCatalogEntity.imageUrl, PortfolioItemEntity.imageUrl) AS imageUrl,
+    PortfolioItemEntity.cardId AS cardId,
+    CardCatalogEntity.setId AS setId,
+    CardCatalogEntity.marketPriceUsd AS marketPriceUsd,
+    CardSet.game AS game,
+    CardCatalogEntity.marketPriceEur AS marketPriceEur,
+    CardCatalogEntity.marketPriceEurOptions AS marketPriceEurOptions,
+    CardCatalogEntity.marketPriceEurSelectedIndex AS marketPriceEurSelectedIndex,
+    CardCatalogEntity.rarity AS rarity,
+    PortfolioItemEntity.updatedAt AS updatedAt,
+    PortfolioItemEntity.customPriceEur AS customPriceEur,
+    PortfolioItemEntity.customPriceInTotal AS customPriceInTotal,
+    PortfolioItemEntity.customPriceInGameTotal AS customPriceInGameTotal,
+    PortfolioItemEntity.holoStyle AS holoStyle
+FROM PortfolioItemEntity
+LEFT JOIN CardCatalogEntity ON PortfolioItemEntity.cardId = CardCatalogEntity.id
+LEFT JOIN CardSet ON CardCatalogEntity.setId = CardSet.id
+LEFT JOIN CustomCardPhotoEntity ON PortfolioItemEntity.cardId = CustomCardPhotoEntity.cardId
+WHERE PortfolioItemEntity.accountId = ?;
+
+-- Bild-Proxy-Validierung (17.08., Safari/Apache-mod_http2-Fund, siehe
+-- /images/proxy in server/Main.kt) - der Proxy darf ausschließlich URLs
+-- laden, die wirklich als Katalog-/Sealed-Bild hinterlegt sind, sonst wäre
+-- er ein offener Proxy. Volltabellen-Scan ohne Index ist hier bewusst ok:
+-- wenige ms pro Aufruf, und Treffer werden serverseitig gecacht.
+countCatalogImageUrl:
+SELECT COUNT(*) FROM CardCatalogEntity WHERE imageUrl = ?;
+
+countSealedCatalogImageUrl:
+SELECT COUNT(*) FROM SealedCatalogEntity WHERE imageUrl = ?;
+
+-- Bild-URLs aller BESESSENEN Karten/Sealed-Produkte, über alle Accounts
+-- (17.08., persistenter Bild-Cache) - der Server sichert diese Bilder
+-- proaktiv in seinen Platten-Cache (siehe /images/proxy + Prefetch in
+-- server/Main.kt), als Versicherung gegen sterbende Bildquellen.
+selectOwnedCardImageUrls:
+SELECT DISTINCT CardCatalogEntity.imageUrl FROM PortfolioItemEntity
+INNER JOIN CardCatalogEntity ON PortfolioItemEntity.cardId = CardCatalogEntity.id;
+
+selectOwnedSealedImageUrls:
+SELECT DISTINCT SealedCatalogEntity.imageUrl FROM SealedProductEntity
+INNER JOIN SealedCatalogEntity ON SealedProductEntity.catalogId = SealedCatalogEntity.id
+WHERE SealedCatalogEntity.imageUrl IS NOT NULL;
+
+insertCardSet:
+INSERT OR IGNORE INTO CardSet(id, name, game, totalCards)
+VALUES (?, ?, ?, ?);
+
+selectAllCardSets:
+SELECT * FROM CardSet;
+
+-- Reparatur für den "One Piece" (mit Leerzeichen) vs. "OnePiece"-Tippfehler
+-- in 18 Promo-/Vorabendcheck-Sets (31.07.) - siehe
+-- PortfolioRepository.ensureOnePieceGameNameFixed(). ensureCatalogSeeded()
+-- aktualisiert bei bereits gesäten Sets nur die Kartenpreise, nie
+-- CardSet.game, deshalb ein eigener, einmaliger Reparatur-Query nötig statt
+-- den Fix einfach über die normale Katalog-Aktualisierung mitlaufen zu
+-- lassen.
+updateCardSetGame:
+UPDATE CardSet SET game = ? WHERE game = ?;
+
+-- Nachzug für totalCards bei bereits gesäten Sets (09.08., YuGiOh-
+-- Umstellung von der Alt-Quelle auf YGOPRODeck) - seedSet() aktualisierte bei
+-- bereits gesäten Sets bisher nur die einzelnen Kartenfelder
+-- (updateCatalogSeedFields), nie aber CardSet.totalCards selbst (der lief
+-- nur beim allerersten Einfügen über insertCardSet mit). Ohne diesen
+-- Nachzug würde eine bei der Quellenumstellung korrigierte Kartenzahl
+-- (die Anzahl gefundener Karten je Set weicht von der ursprünglich von
+-- die Alt-Quelle übernommenen totalCards teils ab) bei schon installierten
+-- Apps/Servern nie ankommen - derselbe Bug wie bei den Katalog-
+-- Bildquellen-Umstellungen zuvor (siehe updateCatalogSeedFields-Kommentar).
+updateCardSetTotalCards:
+UPDATE CardSet SET totalCards = ? WHERE id = ?;
+
+insertCatalogCard:
+INSERT OR IGNORE INTO CardCatalogEntity(id, setId, number, name, variant, rarity, imageUrl, marketPriceUsd, cardmarketId)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+catalogCountForSet:
+SELECT COUNT(*) FROM CardCatalogEntity WHERE setId = ?;
+
+-- Katalog-Stammdaten-Nachzug (07.08., Nutzer-Fund "046/277 nicht im Katalog
+-- gefunden" + "DBFW hat auf dem Server noch die alten Bilder") - seedSet()
+-- aktualisierte bei bereits gesäten Sets bisher NUR marketPriceUsd/
+-- cardmarketId (zwei einzelne UPDATE-Anweisungen pro Karte). Jede reine
+-- Katalogkorrektur seit dem letzten CATALOG_SEED_VERSION-Sprung
+-- (Bildquellen-Umstellungen DBFW/Pokemon/One Piece/Digimon/YuGiOh/Lorcana/
+-- Riftbound/FFTCG/Flesh & Blood, dazu die fehlende MTG-Nummer/Setgröße-Form)
+-- kam dadurch bei bereits gesäten Installationen (u.a. dem eigenen Server)
+-- NIE an - die Version wurde für keine dieser Änderungen erneut hochgezählt,
+-- ensureCatalogSeeded() lief seither also gar nicht mehr durch.
+-- number/name/variant/rarity/imageUrl werden deshalb jetzt genau wie der
+-- Preis bei JEDEM Versionssprung aus den Seed-Daten nachgezogen - bewusst
+-- als EINE kombinierte Anweisung statt separater updateCatalogPrice()/
+-- updateCatalogCardmarketId()-Aufrufe wie zunächst (Bugfix 07.08.,
+-- Nutzer-Fund "Suche stockt extrem" direkt nach dem Versionssprung) - bei
+-- weit über 160.000 Karten macht eine dritte UPDATE-Anweisung PRO KARTE
+-- den ohnehin schon teuren einmaligen Nachzug-Lauf spürbar langsamer.
+-- COALESCE lässt cardmarketId unangetastet, wenn die Seed-Daten dafür NULL
+-- liefern (nicht jedes TCG hat eine, siehe cardmarketId-Kommentar in
+-- CardCatalogSeed.kt) - entspricht exakt der vorherigen
+-- "nur wenn != null"-Bedingung in Kotlin. Läuft NUR für bereits gesäte Sets
+-- mit (siehe seedSet()) - beim Ersteinfügen steckt alles schon in
+-- insertCatalogCard oben.
+updateCatalogSeedFields:
+UPDATE CardCatalogEntity
+SET number = ?, name = ?, variant = ?, rarity = ?, imageUrl = ?, marketPriceUsd = ?, cardmarketId = COALESCE(?, cardmarketId)
+WHERE id = ?;
+
+updateCatalogEurPrice:
+UPDATE CardCatalogEntity SET marketPriceEur = ? WHERE id = ?;
+
+-- Täglicher Preisabgleich (28.07.) - schreibt Optionsliste + neu berechneten
+-- aktiven Preis in einem Rutsch (Auswahl-Index bleibt dabei unangetastet,
+-- siehe applyCardmarketCardPrices()/recomputeEffectivePrice() in der
+-- Repository)
+updateCatalogEurOptionsAndPrice:
+UPDATE CardCatalogEntity SET marketPriceEurOptions = ?, marketPriceEur = ? WHERE id = ?;
+
+-- Manuelle Nutzer-Auswahl (28.07.) - "welche der mehreren Cardmarket-
+-- Notierungen ist meine echte Karte"
+updateCatalogEurSelection:
+UPDATE CardCatalogEntity
+SET marketPriceEurSelectedIndex = ?, marketPriceEurSelectedAt = ?, marketPriceEur = ?
+WHERE id = ?;
+
+selectCatalogCardById:
+SELECT * FROM CardCatalogEntity WHERE id = ? LIMIT 1;
+
+-- Eigenes Foto (09.08.), siehe Kommentar bei CustomCardPhotoEntity oben.
+-- INSERT OR REPLACE statt zweier separater INSERT/UPDATE-Aufrufe - das
+-- erneute Setzen (z.B. ein besseres Foto nachreichen) ist genauso häufig
+-- wie das Erst-Anlegen, gleiches Muster wie bei setSetting() oben.
+upsertCustomCardPhoto:
+INSERT OR REPLACE INTO CustomCardPhotoEntity(cardId, imageUrl, updatedAt)
+VALUES (?, ?, ?);
+
+deleteCustomCardPhoto:
+DELETE FROM CustomCardPhotoEntity WHERE cardId = ?;
+
+selectCustomCardPhoto:
+SELECT * FROM CustomCardPhotoEntity WHERE cardId = ? LIMIT 1;
+
+-- Für den Sync-Export (28.07.) - nur Karten mit echter manueller
+-- Preisauswahl, siehe SyncCardmarketPriceSelection
+selectCatalogCardsWithPriceSelection:
+SELECT * FROM CardCatalogEntity WHERE marketPriceEurSelectedIndex IS NOT NULL;
+
+selectCatalogForSet:
+SELECT * FROM CardCatalogEntity WHERE setId = ? ORDER BY number, variant;
+
+-- Namenssuche im Katalog eines TCG (26.07.) - für den "Karte hinzufügen"-
+-- Button auf der Weboberfläche (siehe Main.kt). LIMIT gegen sehr große
+-- Treffermengen bei kurzen Suchbegriffen.
+searchCatalog:
+SELECT CardCatalogEntity.*, CardSet.name AS setName
+FROM CardCatalogEntity
+JOIN CardSet ON CardCatalogEntity.setId = CardSet.id
+WHERE CardSet.game = ? AND CardCatalogEntity.name LIKE '%' || ? || '%'
+ORDER BY CardCatalogEntity.name
+LIMIT 40;
+
+-- Für den Cardmarket-Preisabgleich (28.07.) - alle Katalogkarten eines TCGs
+-- auf einmal, um Mehrdeutigkeiten (mehrere Varianten teilen sich dieselbe
+-- Kartennummer, z.B. Normal/Alternate Art) clientseitig zu erkennen, siehe
+-- CardmarketPriceSync.kt.
+selectCatalogForGame:
+SELECT CardCatalogEntity.*
+FROM CardCatalogEntity
+JOIN CardSet ON CardCatalogEntity.setId = CardSet.id
+WHERE CardSet.game = ?;
+
+-- accountId (02.08.) - der Account-Filter sitzt in der JOIN-Bedingung
+-- (nicht in WHERE), damit die LEFT JOINs LEFT JOINs bleiben und Sets ohne
+-- eigene Karten in DIESEM Account trotzdem mit ownedCount=0 auftauchen,
+-- statt komplett aus dem Ergebnis zu verschwinden.
+selectSetProgress:
+SELECT
+    CardSet.id AS setId,
+    CardSet.name AS setName,
+    CardSet.totalCards AS totalCards,
+    COUNT(DISTINCT PortfolioItemEntity.cardId) AS ownedCount
+FROM CardSet
+LEFT JOIN CardCatalogEntity ON CardCatalogEntity.setId = CardSet.id
+LEFT JOIN PortfolioItemEntity ON PortfolioItemEntity.cardId = CardCatalogEntity.id AND PortfolioItemEntity.accountId = ?
+GROUP BY CardSet.id;
+
+getSetting:
+SELECT value FROM AppSettings WHERE key = ?;
+
+setSetting:
+INSERT OR REPLACE INTO AppSettings(key, value) VALUES (?, ?);
+
+-- accountId (02.08.) - siehe Kommentar bei DeletionLog
+insertDeletionLog:
+INSERT INTO DeletionLog(itemType, itemKey, deletedAt, accountId) VALUES (?, ?, ?, ?);
+
+selectDeletionLog:
+SELECT * FROM DeletionLog WHERE accountId = ?;
+
+insertSealedProduct:
+INSERT INTO SealedProductEntity(name, category, game, quantity, isSealed, purchasePrice, imageUrl, catalogId, updatedAt, accountId, customPriceEur, customPriceInTotal, customPriceInGameTotal)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Sealed-Wantsliste (25.08., Nutzer-Vorgabe "im Vault Wantslisten zu
+-- Sealed-Gegenständen erstellen, z.B. Pokémon-Elite-Trainer-Boxen" + "Preis-
+-- Alarm setzen"): EINE Liste pro TCG (kein Listen-Verwalten wie bei Karten-
+-- Wants - der Vault-Plus-Dialog führt direkt hinein). priceAlarmEur ist der
+-- optionale Alarm-Schwellwert: liegt der Cardmarket-Preis des Katalogeintrags
+-- beim täglichen Abgleich darunter/gleich, meldet sich die App beim Start
+-- (siehe selectTriggeredSealedAlarms + Alarm-Dialog in App.kt). Bewusst
+-- OHNE Sync (App-lokal) - Server-Nachzug nach dem Launch, siehe CONCEPT.md.
+CREATE TABLE SealedWishlistItemEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    game TEXT NOT NULL,
+    catalogId TEXT NOT NULL,
+    priceAlarmEur REAL,
+    createdAt INTEGER NOT NULL,
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+);
+
+selectSealedWishlistForGame:
+SELECT
+    SealedWishlistItemEntity.id AS id,
+    SealedWishlistItemEntity.catalogId AS catalogId,
+    SealedWishlistItemEntity.priceAlarmEur AS priceAlarmEur,
+    SealedCatalogEntity.name AS name,
+    SealedCatalogEntity.category AS category,
+    SealedCatalogEntity.imageUrl AS imageUrl,
+    SealedCatalogEntity.marketPriceEur AS marketPriceEur
+FROM SealedWishlistItemEntity
+LEFT JOIN SealedCatalogEntity ON SealedWishlistItemEntity.catalogId = SealedCatalogEntity.id
+WHERE SealedWishlistItemEntity.game = ? AND SealedWishlistItemEntity.accountId = ?
+ORDER BY SealedWishlistItemEntity.createdAt;
+
+selectTriggeredSealedAlarms:
+SELECT
+    SealedWishlistItemEntity.id AS id,
+    SealedWishlistItemEntity.game AS game,
+    SealedWishlistItemEntity.priceAlarmEur AS priceAlarmEur,
+    SealedCatalogEntity.name AS name,
+    SealedCatalogEntity.marketPriceEur AS marketPriceEur
+FROM SealedWishlistItemEntity
+JOIN SealedCatalogEntity ON SealedWishlistItemEntity.catalogId = SealedCatalogEntity.id
+WHERE SealedWishlistItemEntity.accountId = ?
+  AND SealedWishlistItemEntity.priceAlarmEur IS NOT NULL
+  AND SealedCatalogEntity.marketPriceEur IS NOT NULL
+  AND SealedCatalogEntity.marketPriceEur <= SealedWishlistItemEntity.priceAlarmEur;
+
+insertSealedWishlistItem:
+INSERT INTO SealedWishlistItemEntity(game, catalogId, createdAt, accountId) VALUES (?, ?, ?, ?);
+
+deleteSealedWishlistItem:
+DELETE FROM SealedWishlistItemEntity WHERE id = ?;
+
+updateSealedWishlistAlarm:
+UPDATE SealedWishlistItemEntity SET priceAlarmEur = ? WHERE id = ?;
+
+deleteSealedWishlistItemsForAccount:
+DELETE FROM SealedWishlistItemEntity WHERE accountId = ?;
+
+-- Eigener Preis für Sealed (20.08.) - Pendant zu updateCustomPrice der Karten
+updateSealedCustomPrice:
+UPDATE SealedProductEntity
+SET customPriceEur = ?, customPriceInTotal = ?, customPriceInGameTotal = ?, updatedAt = ?
+WHERE id = ?;
+
+updateSealedProduct:
+UPDATE SealedProductEntity
+SET name = ?, category = ?, quantity = ?, isSealed = ?, purchasePrice = ?, imageUrl = ?, updatedAt = ?
+WHERE id = ?;
+
+deleteSealedProduct:
+DELETE FROM SealedProductEntity WHERE id = ?;
+
+selectSealedProductById:
+SELECT * FROM SealedProductEntity WHERE id = ? LIMIT 1;
+
+-- Eigenes Foto für Sealed-Produkte (12.08.) - leichtgewichtiger als
+-- updateSealedProduct, da nur das Bild geändert wird und imageUrl NICHT
+-- Teil der Sync-Identität ist (siehe sealedKey() in PortfolioRepository),
+-- also ohne DeletionLog-Eintrag auskommt.
+updateSealedProductImageUrl:
+UPDATE SealedProductEntity SET imageUrl = ?, updatedAt = ? WHERE id = ?;
+
+selectAllSealedProducts:
+SELECT * FROM SealedProductEntity WHERE accountId = ? ORDER BY category, name;
+
+selectByCatalogIdAndSealed:
+SELECT * FROM SealedProductEntity WHERE catalogId = ? AND isSealed = ? AND accountId = ? LIMIT 1;
+
+insertSealedCatalogEntry:
+INSERT OR IGNORE INTO SealedCatalogEntity(id, name, category, game, imageUrl, marketPriceUsd)
+VALUES (?, ?, ?, ?, ?, ?);
+
+updateSealedCatalogPrice:
+UPDATE SealedCatalogEntity SET marketPriceUsd = ? WHERE id = ?;
+
+-- Cardmarket-EUR-Preis für Sealed-Produkte (03.08.), siehe Kommentar bei
+-- SealedCatalogEntity/19.sqm - eigene Abfrage statt updateSealedCatalogPrice
+-- wiederzuverwenden, da beide Preise unabhängig voneinander aktualisiert
+-- werden (USD weiterhin über ensureSealedCatalogSeeded(), EUR über den
+-- Cardmarket-Abgleich)
+updateSealedCatalogEurPrice:
+UPDATE SealedCatalogEntity SET marketPriceEur = ? WHERE id = ?;
+
+-- Mehrere Cardmarket-Notierungen für ein Sealed-Produkt (11.08.), siehe
+-- 24.sqm-Kommentar - Pendant zu updateCatalogEurOptionsAndPrice().
+updateSealedCatalogEurOptionsAndPrice:
+UPDATE SealedCatalogEntity SET marketPriceEurOptions = ?, marketPriceEur = ? WHERE id = ?;
+
+-- Manuelle Nutzer-Auswahl unter mehreren Notierungen (11.08.) - Pendant zu
+-- updateCatalogEurSelection().
+updateSealedCatalogEurSelection:
+UPDATE SealedCatalogEntity
+SET marketPriceEurSelectedIndex = ?, marketPriceEurSelectedAt = ?, marketPriceEur = ?
+WHERE id = ?;
+
+selectSealedCatalogById:
+SELECT * FROM SealedCatalogEntity WHERE id = ? LIMIT 1;
+
+selectSealedCatalogWithPriceSelection:
+SELECT * FROM SealedCatalogEntity WHERE marketPriceEurSelectedIndex IS NOT NULL;
+
+selectSealedCatalog:
+SELECT * FROM SealedCatalogEntity ORDER BY category, name;
+
+selectSealedProductsWithPrice:
+SELECT
+    SealedProductEntity.id AS id,
+    SealedProductEntity.name AS name,
+    SealedProductEntity.category AS category,
+    SealedProductEntity.game AS game,
+    SealedProductEntity.quantity AS quantity,
+    SealedProductEntity.isSealed AS isSealed,
+    SealedProductEntity.purchasePrice AS purchasePrice,
+    SealedProductEntity.imageUrl AS imageUrl,
+    SealedProductEntity.catalogId AS catalogId,
+    SealedProductEntity.customPriceEur AS customPriceEur,
+    SealedProductEntity.customPriceInTotal AS customPriceInTotal,
+    SealedProductEntity.customPriceInGameTotal AS customPriceInGameTotal,
+    SealedCatalogEntity.marketPriceUsd AS marketPriceUsd,
+    SealedCatalogEntity.marketPriceEur AS marketPriceEur,
+    SealedCatalogEntity.marketPriceEurOptions AS marketPriceEurOptions
+FROM SealedProductEntity
+LEFT JOIN SealedCatalogEntity ON SealedProductEntity.catalogId = SealedCatalogEntity.id
+WHERE SealedProductEntity.accountId = ?
+ORDER BY category, name;
+
+insertWishlist:
+INSERT INTO WishlistEntity(name, game, createdAt, uid, accountId) VALUES (?, ?, ?, ?, ?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+deleteWishlist:
+DELETE FROM WishlistEntity WHERE id = ?;
+
+selectWishlistById:
+SELECT * FROM WishlistEntity WHERE id = ? LIMIT 1;
+
+selectWishlistsForGame:
+SELECT * FROM WishlistEntity WHERE game = ? AND accountId = ? ORDER BY createdAt;
+
+-- Für den Sync-Export (28.07.) - je Account (02.08.), analog zu
+-- selectAll()/selectAllSealedProducts() bei der echten Sammlung
+selectAllWishlists:
+SELECT * FROM WishlistEntity WHERE accountId = ?;
+
+-- uid-Nachrüstung (28.07.) für Listen, die vor Einführung der Spalte
+-- angelegt wurden - siehe ensureWishlistUidsBackfilled() in der Repository
+selectWishlistsMissingUid:
+SELECT * FROM WishlistEntity WHERE uid = '';
+
+updateWishlistUid:
+UPDATE WishlistEntity SET uid = ? WHERE id = ?;
+
+insertWishlistItem:
+INSERT INTO WishlistItemEntity(wishlistId, cardId, name, imageUrl, addedAt)
+VALUES (?, ?, ?, ?, ?);
+
+deleteWishlistItem:
+DELETE FROM WishlistItemEntity WHERE id = ?;
+
+selectWishlistItemById:
+SELECT * FROM WishlistItemEntity WHERE id = ? LIMIT 1;
+
+deleteWishlistItemsForWishlist:
+DELETE FROM WishlistItemEntity WHERE wishlistId = ?;
+
+-- Offline-Pinnen von Wunschlisten (19.08.): alle Zeilen EINER Liste, um
+-- deren Bild-URLs für den Offline-Cache einzusammeln
+selectWishlistItemsForWishlist:
+SELECT * FROM WishlistItemEntity WHERE wishlistId = ?;
+
+selectByWishlistAndCardId:
+SELECT * FROM WishlistItemEntity WHERE wishlistId = ? AND cardId = ? LIMIT 1;
+
+-- Für den Sync-Export (28.07.) - rohe Zeilen über alle Listen EINES Accounts
+-- hinweg (02.08.), die Repository gruppiert sie selbst nach wishlistId
+selectAllWishlistItemsRawForAccount:
+SELECT WishlistItemEntity.*
+FROM WishlistItemEntity
+JOIN WishlistEntity ON WishlistItemEntity.wishlistId = WishlistEntity.id
+WHERE WishlistEntity.accountId = ?;
+
+-- Alle Wunschlisten-Einträge eines TCGs auf einmal (über alle Listen hinweg,
+-- mit wishlistId zum Gruppieren in der UI) - analog zu selectAllWithGame bei
+-- der echten Sammlung, hier aber ohne Bestand/Statistik-Bezug
+selectWishlistItemsForGame:
+SELECT
+    WishlistItemEntity.id AS id,
+    WishlistItemEntity.wishlistId AS wishlistId,
+    WishlistItemEntity.cardId AS cardId,
+    COALESCE(CardCatalogEntity.name, WishlistItemEntity.name) AS name,
+    COALESCE(CustomCardPhotoEntity.imageUrl, CardCatalogEntity.imageUrl, WishlistItemEntity.imageUrl) AS imageUrl,
+    CardCatalogEntity.setId AS setId,
+    CardCatalogEntity.marketPriceUsd AS marketPriceUsd,
+    CardCatalogEntity.marketPriceEur AS marketPriceEur,
+    CardCatalogEntity.rarity AS rarity,
+    WishlistItemEntity.addedAt AS addedAt
+FROM WishlistItemEntity
+JOIN WishlistEntity ON WishlistItemEntity.wishlistId = WishlistEntity.id
+LEFT JOIN CardCatalogEntity ON WishlistItemEntity.cardId = CardCatalogEntity.id
+LEFT JOIN CustomCardPhotoEntity ON WishlistItemEntity.cardId = CustomCardPhotoEntity.cardId
+WHERE WishlistEntity.game = ? AND WishlistEntity.accountId = ?
+ORDER BY WishlistItemEntity.addedAt DESC;
+
+-- Binder (31.07.) - Queries strukturell identisch zu den Wishlist-Queries
+-- oben, siehe Kommentar bei BinderEntity in der Tabellendefinition.
+insertBinder:
+INSERT INTO BinderEntity(name, game, createdAt, uid, pageSize, accountId) VALUES (?, ?, ?, ?, ?, ?);
+
+updateBinderName:
+UPDATE BinderEntity SET name = ?, nameUpdatedAt = ? WHERE id = ?;
+
+-- Wunschlisten-Umbenennen (19.08., Nutzer-Vorgabe) - gleiche LWW-Mechanik
+updateWishlistName:
+UPDATE WishlistEntity SET name = ?, nameUpdatedAt = ? WHERE id = ?;
+
+-- Kopien-Aufteilen im Binder (19.08.): alle Zeilen einer Karte in einem
+-- Binder, nach Position - die niedrigste ist die "Hauptkarte"
+selectBinderItemsForBinderAndCard:
+SELECT * FROM BinderItemEntity WHERE binderId = ? AND cardId = ? ORDER BY position;
+
+deleteBinder:
+DELETE FROM BinderEntity WHERE id = ?;
+
+selectBinderById:
+SELECT * FROM BinderEntity WHERE id = ? LIMIT 1;
+
+selectBindersForGame:
+SELECT * FROM BinderEntity WHERE game = ? AND accountId = ? ORDER BY createdAt;
+
+selectAllBinders:
+SELECT * FROM BinderEntity WHERE accountId = ?;
+
+insertBinderItem:
+INSERT INTO BinderItemEntity(binderId, cardId, name, imageUrl, addedAt, position, positionUpdatedAt)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteBinderItem:
+DELETE FROM BinderItemEntity WHERE id = ?;
+
+selectBinderItemById:
+SELECT * FROM BinderItemEntity WHERE id = ? LIMIT 1;
+
+deleteBinderItemsForBinder:
+DELETE FROM BinderItemEntity WHERE binderId = ?;
+
+selectByBinderAndCardId:
+SELECT * FROM BinderItemEntity WHERE binderId = ? AND cardId = ? LIMIT 1;
+
+-- Zieht einen Art-Varianten-Wechsel (changeCardVariant() in
+-- PortfolioRepository.kt) auf bereits im Binder liegende Karten nach
+-- (04.08., Nutzer-Fund "Wenn ich das Aussehen einer Karte ändere und die
+-- selbe Karte im Binder habe, ändert sie sich nicht im Binder") -
+-- BinderItemEntity.cardId ist eine feste Zuordnung, kein Live-Verweis auf
+-- PortfolioItemEntity, daher ohne dieses Nachziehen zeigt der Binder nach
+-- einem Variantenwechsel weiter die alte Art. selectBinderItemsForGame
+-- joint bereits live gegen CardCatalogEntity über cardId - sobald cardId
+-- stimmt, zieht Name/Bild automatisch nach, ohne die Snapshot-Spalten
+-- extra anzufassen.
+updateBinderItemsCardId:
+UPDATE BinderItemEntity
+SET cardId = ?
+WHERE cardId = ? AND binderId IN (SELECT id FROM BinderEntity WHERE accountId = ?);
+
+-- Für changeCardVariant() (11.08., Nutzer-Fund "Art-Style-Wechsel wird im
+-- Binder nach dem nächsten Sync wieder rückgängig gemacht") - liefert
+-- binderUid+name aller von updateBinderItemsCardId betroffenen Zeilen, BEVOR
+-- die cardId umgeschrieben wird. Wird gebraucht, um für die ALTE
+-- binderItemKey-Identität (cardId+name, siehe importAccountBundle()) einen
+-- Löschvermerk zu hinterlegen - sonst hält der Server weiter eine Zeile mit
+-- der alten cardId, die beim nächsten performSync() als "neuer, unbekannter"
+-- Eintrag erneut reinkommt und das alte Bild zurückbringt.
+selectBinderItemsByCardIdForAccount:
+SELECT BinderEntity.uid AS binderUid, BinderItemEntity.name AS name
+FROM BinderItemEntity
+JOIN BinderEntity ON BinderItemEntity.binderId = BinderEntity.id
+WHERE BinderItemEntity.cardId = ? AND BinderEntity.accountId = ? AND BinderEntity.uid != '';
+
+-- Rohe Zeilen über alle Binder EINES Accounts hinweg (02.08.), analog zu
+-- selectAllWishlistItemsRawForAccount
+selectAllBinderItemsRawForAccount:
+SELECT BinderItemEntity.*
+FROM BinderItemEntity
+JOIN BinderEntity ON BinderItemEntity.binderId = BinderEntity.id
+WHERE BinderEntity.accountId = ?;
+
+-- Höchste bereits vergebene Position in einem Binder - neue Karten werden
+-- dahinter angehängt (siehe PortfolioRepository.addBinderItems()). COALESCE
+-- zu -1 statt NULL bei leerem Binder (die erste Karte bekommt dann Position
+-- 0) - macht die Spalte NOT NULL, sonst generiert SQLDelight statt eines
+-- einfachen Long? eine eigene Wrapper-Klasse für den nullable Einzelwert.
+selectMaxBinderItemPosition:
+SELECT COALESCE(MAX(position), -1) FROM BinderItemEntity WHERE binderId = ?;
+
+-- Vertauscht die Plätze zweier Karten (31.07., Nutzer-Vorgabe "Karten
+-- tauschen können, damit man die Realität abbilden kann") - zwei einzelne
+-- UPDATEs statt eines generischen "move", weil ein Tausch die einzige
+-- Operation ist, die von der Bedienung her gebraucht wird (siehe
+-- PortfolioRepository.swapBinderItemPositions())
+updateBinderItemPosition:
+UPDATE BinderItemEntity SET position = ?, positionUpdatedAt = ? WHERE id = ?;
+
+-- Leere Seite einfügen (08.08., Nutzer-Vorgabe "leere Seiten zum Binder
+-- hinzufügen können, auch mittendrin") - schiebt alle Karten AB der
+-- Einfüge-Position um eine ganze Seitengröße nach hinten, macht dadurch
+-- genau pageSize freie Plätze an der Einfügestelle. Läuft in einer
+-- Transaktion in PortfolioRepository.insertBinderPage() - eine einzelne
+-- UPDATE-Anweisung reicht (kein Kollisionsrisiko wie bei einem simplen
+-- Tausch: JEDE betroffene Karte bekommt hier denselben festen Versatz).
+shiftBinderItemPositionsFrom:
+UPDATE BinderItemEntity SET position = position + ?, positionUpdatedAt = ? WHERE binderId = ? AND position >= ?;
+
+selectBinderItemsForGame:
+SELECT
+    BinderItemEntity.id AS id,
+    BinderItemEntity.binderId AS binderId,
+    BinderItemEntity.cardId AS cardId,
+    COALESCE(CardCatalogEntity.name, BinderItemEntity.name) AS name,
+    COALESCE(CustomCardPhotoEntity.imageUrl, CardCatalogEntity.imageUrl, BinderItemEntity.imageUrl) AS imageUrl,
+    CardCatalogEntity.setId AS setId,
+    CardCatalogEntity.marketPriceUsd AS marketPriceUsd,
+    CardCatalogEntity.marketPriceEur AS marketPriceEur,
+    CardCatalogEntity.rarity AS rarity,
+    BinderItemEntity.addedAt AS addedAt,
+    BinderItemEntity.position AS position
+FROM BinderItemEntity
+JOIN BinderEntity ON BinderItemEntity.binderId = BinderEntity.id
+LEFT JOIN CardCatalogEntity ON BinderItemEntity.cardId = CardCatalogEntity.id
+LEFT JOIN CustomCardPhotoEntity ON BinderItemEntity.cardId = CustomCardPhotoEntity.cardId
+WHERE BinderEntity.game = ? AND BinderEntity.accountId = ?
+ORDER BY BinderItemEntity.position ASC;
+
+-- ---------- Deck-Regelmetadaten (02.08., siehe PokemonCardRulesSync.kt) ----------
+
+updateCatalogRuleMetadata:
+UPDATE CardCatalogEntity
+SET ruleSupertype = ?, ruleSubtypes = ?, ruleLegalStandard = ?, ruleLegalExpanded = ?
+WHERE id = ?;
+
+-- ---------- Decks (02.08., Nutzer-Vorgabe Phase 3 Deckbuilding) ----------
+
+insertDeck:
+INSERT INTO DeckEntity(name, game, createdAt, uid, accountId) VALUES (?, ?, ?, ?, ?);
+
+deleteDeck:
+DELETE FROM DeckEntity WHERE id = ?;
+
+selectDeckById:
+SELECT * FROM DeckEntity WHERE id = ? LIMIT 1;
+
+selectDecksForGame:
+SELECT * FROM DeckEntity WHERE game = ? AND accountId = ? ORDER BY createdAt;
+
+selectAllDecks:
+SELECT * FROM DeckEntity WHERE accountId = ?;
+
+deleteDeckCardsForDeck:
+DELETE FROM DeckCardEntity WHERE deckId = ?;
+
+insertDeckCard:
+INSERT INTO DeckCardEntity(deckId, cardId, quantity, addedAt) VALUES (?, ?, ?, ?);
+
+-- addedAt wird hier bewusst MIT aktualisiert (dient also als "zuletzt
+-- angefasst" statt nur "erstmals hinzugefügt") - eine Mengenänderung ist
+-- für den Sync-Abgleich derselbe LWW-Fall wie ein Neu-Hinzufügen, eine
+-- eigene positionUpdatedAt-artige Zusatzspalte wäre hier unnötig, da Menge
+-- die einzige veränderliche Eigenschaft einer Deck-Karte ist.
+updateDeckCardQuantity:
+UPDATE DeckCardEntity SET quantity = ?, addedAt = ? WHERE id = ?;
+
+deleteDeckCard:
+DELETE FROM DeckCardEntity WHERE id = ?;
+
+selectDeckCardById:
+SELECT * FROM DeckCardEntity WHERE id = ? LIMIT 1;
+
+selectByDeckAndCardId:
+SELECT * FROM DeckCardEntity WHERE deckId = ? AND cardId = ? LIMIT 1;
+
+-- Für den Sync-Export (02.08.) - rohe Zeilen über alle Decks EINES Accounts
+-- hinweg, analog zu selectAllWishlistItemsRawForAccount
+selectAllDeckCardsRawForAccount:
+SELECT DeckCardEntity.*
+FROM DeckCardEntity
+JOIN DeckEntity ON DeckCardEntity.deckId = DeckEntity.id
+WHERE DeckEntity.accountId = ?;
+
+-- Für den Deck-Builder/-Viewer (02.08.) - inkl. Katalog-Regelmetadaten für
+-- die Regelprüfung (siehe PokemonDeckRules.kt), eine Zeile pro Deck-
+-- Kartentyp (nicht pro physischer Karte), quantity zeigt die Anzahl
+selectDeckCardsForDeck:
+SELECT
+    DeckCardEntity.id AS id,
+    DeckCardEntity.deckId AS deckId,
+    DeckCardEntity.cardId AS cardId,
+    CardCatalogEntity.name AS name,
+    COALESCE(CustomCardPhotoEntity.imageUrl, CardCatalogEntity.imageUrl) AS imageUrl,
+    CardCatalogEntity.setId AS setId,
+    CardCatalogEntity.number AS number,
+    CardCatalogEntity.rarity AS rarity,
+    CardCatalogEntity.ruleSupertype AS ruleSupertype,
+    CardCatalogEntity.ruleSubtypes AS ruleSubtypes,
+    DeckCardEntity.quantity AS quantity,
+    DeckCardEntity.addedAt AS addedAt
+FROM DeckCardEntity
+JOIN CardCatalogEntity ON DeckCardEntity.cardId = CardCatalogEntity.id
+LEFT JOIN CustomCardPhotoEntity ON DeckCardEntity.cardId = CustomCardPhotoEntity.cardId
+WHERE DeckCardEntity.deckId = ?
+ORDER BY CardCatalogEntity.name;
+
+deleteDeckCardsForAccount:
+DELETE FROM DeckCardEntity WHERE deckId IN (SELECT id FROM DeckEntity WHERE accountId = ?);
+
+deleteDecksForAccount:
+DELETE FROM DeckEntity WHERE accountId = ?;
+
+-- Abo-System Phase 1 (04.08., siehe CONCEPT.md) - welche Spiele haben für
+-- diesen Account IRGENDEINEN Eintrag (Karte/Sealed/Wishlist-/Binder-/
+-- Deck-Karte)? Bewusst über die tatsächlichen ITEM-Tabellen (nicht nur
+-- "Wishlist/Binder/Deck als Container existiert") - ein leer angelegter
+-- Binder/Deck soll NICHT als "hier wurde etwas eingetragen" zählen. Das
+-- Ergebnis ist rein aus den Daten abgeleitet (kein eigener "primaryGame"-
+-- Spalte nötig) - genau EIN Treffer bedeutet gesperrt auf dieses Spiel,
+-- kein Treffer oder mehrere Treffer (z.B. bei Bestandskunden von vor
+-- diesem Feature) bedeutet frei wählbar, siehe App.kt canUseGame().
+gamesWithAnyData:
+SELECT CardSet.game AS game FROM PortfolioItemEntity
+JOIN CardCatalogEntity ON CardCatalogEntity.id = PortfolioItemEntity.cardId
+JOIN CardSet ON CardSet.id = CardCatalogEntity.setId
+WHERE PortfolioItemEntity.accountId = ?
+UNION
+SELECT SealedProductEntity.game AS game FROM SealedProductEntity
+WHERE SealedProductEntity.accountId = ?
+UNION
+SELECT WishlistEntity.game AS game FROM WishlistItemEntity
+JOIN WishlistEntity ON WishlistEntity.id = WishlistItemEntity.wishlistId
+WHERE WishlistEntity.accountId = ?
+UNION
+SELECT BinderEntity.game AS game FROM BinderItemEntity
+JOIN BinderEntity ON BinderEntity.id = BinderItemEntity.binderId
+WHERE BinderEntity.accountId = ?
+UNION
+SELECT DeckEntity.game AS game FROM DeckCardEntity
+JOIN DeckEntity ON DeckEntity.id = DeckCardEntity.deckId
+WHERE DeckEntity.accountId = ?;
+
+-- ---------- Manuelle Cardmarket-Zuordnung (04.08.) ----------
+
+upsertCardmarketManualMapping:
+INSERT OR REPLACE INTO CardmarketManualMapping(cardId, cardmarketProductId, cardmarketProductName, createdAt)
+VALUES (?, ?, ?, ?);
+
+deleteCardmarketManualMapping:
+DELETE FROM CardmarketManualMapping WHERE cardId = ?;
+
+selectCardmarketManualMappingForCard:
+SELECT * FROM CardmarketManualMapping WHERE cardId = ? LIMIT 1;
+
+selectCardmarketManualMappingsForGame:
+SELECT CardmarketManualMapping.* FROM CardmarketManualMapping
+JOIN CardCatalogEntity ON CardCatalogEntity.id = CardmarketManualMapping.cardId
+JOIN CardSet ON CardSet.id = CardCatalogEntity.setId
+WHERE CardSet.game = ?;
+
+-- Katalogkarten ohne Preis (04.08., Werteübersicht "X Karten ohne Preis")
+-- - nur besessene Karten (PortfolioItemEntity), da nicht besessene
+-- fehlende Preise für die Werteübersicht irrelevant sind
+selectOwnedCatalogCardsWithoutPrice:
+SELECT DISTINCT CardCatalogEntity.* FROM PortfolioItemEntity
+JOIN CardCatalogEntity ON CardCatalogEntity.id = PortfolioItemEntity.cardId
+JOIN CardSet ON CardSet.id = CardCatalogEntity.setId
+WHERE CardSet.game = ? AND PortfolioItemEntity.accountId = ?
+    AND CardCatalogEntity.marketPriceEur IS NULL;
+
+-- ---------- Manuelle Cardmarket-Zuordnung für Sealed-Produkte (11.08.) ----------
+-- Pendant zu den Karten-Abfragen oben, siehe 24.sqm-Kommentar.
+
+upsertSealedCardmarketManualMapping:
+INSERT OR REPLACE INTO SealedCardmarketManualMapping(sealedId, cardmarketProductId, cardmarketProductName, createdAt)
+VALUES (?, ?, ?, ?);
+
+deleteSealedCardmarketManualMapping:
+DELETE FROM SealedCardmarketManualMapping WHERE sealedId = ?;
+
+selectSealedCardmarketManualMappingForSealed:
+SELECT * FROM SealedCardmarketManualMapping WHERE sealedId = ? LIMIT 1;
+
+selectSealedCardmarketManualMappingsForGame:
+SELECT SealedCardmarketManualMapping.* FROM SealedCardmarketManualMapping
+JOIN SealedCatalogEntity ON SealedCatalogEntity.id = SealedCardmarketManualMapping.sealedId
+WHERE SealedCatalogEntity.game = ?;
+
+-- Besessene Sealed-Produkte ohne Preis (11.08.), Pendant zu
+-- selectOwnedCatalogCardsWithoutPrice - nur wirklich BESESSENE Produkte
+-- (SealedProductEntity), nicht bloß Katalogeinträge, aus demselben Grund
+-- wie bei den Karten.
+selectOwnedSealedCatalogWithoutPrice:
+SELECT DISTINCT SealedCatalogEntity.* FROM SealedProductEntity
+JOIN SealedCatalogEntity ON SealedCatalogEntity.id = SealedProductEntity.catalogId
+WHERE SealedCatalogEntity.game = ? AND SealedProductEntity.accountId = ?
+    AND SealedCatalogEntity.marketPriceEur IS NULL;
+
+-- Für die manuelle Cardmarket-Zuordnung auf dem Server (04.08.) - welches
+-- Spiel gehört zu dieser Katalogkarte (für den passenden Cardmarket-Re-Sync
+-- direkt nach dem manuellen Zuordnen, siehe /api/cardmarketMapping/assign)
+selectGameForCard:
+SELECT CardSet.game AS game FROM CardCatalogEntity
+JOIN CardSet ON CardSet.id = CardCatalogEntity.setId
+WHERE CardCatalogEntity.id = ?
+LIMIT 1;

@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val armoryDeckRhinarSetSeed = CardSetSeed(id = "6400068", name = "Armory Deck: Rhinar", game = "FleshAndBlood", totalCards = 30)
+
+val armoryDeckRhinarCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400068-ARR001", "6400068", "ARR001", "Rhinar, Reckless Rampage", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR001.webp", 0.69),
+    CatalogCardSeed("6400068-ARR002", "6400068", "ARR002", "Romping Club", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR002.webp", 0.58),
+    CatalogCardSeed("6400068-ARR003", "6400068", "ARR003", "Echo Casque", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR003.webp", 5.72),
+    CatalogCardSeed("6400068-ARR004", "6400068", "ARR004", "Torc of Vim", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR004.webp", 3.12),
+    CatalogCardSeed("6400068-ARR005", "6400068", "ARR005", "Goliath Gauntlet", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR005-RF.webp", 3.7),
+    CatalogCardSeed("6400068-ARR006", "6400068", "ARR006", "Trampling Trackers", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR006.webp", 1.5),
+    CatalogCardSeed("6400068-ARR007", "6400068", "ARR007", "Assault and Battery (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR007.webp", null),
+    CatalogCardSeed("6400068-ARR008", "6400068", "ARR008", "Bare Destruction", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR008.webp", 6.29),
+    CatalogCardSeed("6400068-ARR009", "6400068", "ARR009", "Bare Swing (Red)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR009.webp", 0.72),
+    CatalogCardSeed("6400068-ARR010", "6400068", "ARR010", "Massacre", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR010.webp", 0.98),
+    CatalogCardSeed("6400068-ARR011", "6400068", "ARR011", "Pound Town (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR011.webp", null),
+    CatalogCardSeed("6400068-ARR012", "6400068", "ARR012", "Rawhide Rumble", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR012.webp", 0.2),
+    CatalogCardSeed("6400068-ARR013", "6400068", "ARR013", "Show No Mercy", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR013.webp", 0.36),
+    CatalogCardSeed("6400068-ARR014", "6400068", "ARR014", "Strongest Survive", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR014.webp", 0.31),
+    CatalogCardSeed("6400068-ARR015", "6400068", "ARR015", "Bonebreaker Bellow (Red)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR015.webp", null),
+    CatalogCardSeed("6400068-ARR016", "6400068", "ARR016", "Assault and Battery (Yellow)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR016.webp", 0.1),
+    CatalogCardSeed("6400068-ARR017", "6400068", "ARR017", "Bare Swing (Yellow)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR017.webp", 1.97),
+    CatalogCardSeed("6400068-ARR018", "6400068", "ARR018", "Beast Within", "Normal", "Majestic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR018.webp", 6.44),
+    CatalogCardSeed("6400068-ARR019", "6400068", "ARR019", "Buckwild", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR019.webp", 0.25),
+    CatalogCardSeed("6400068-ARR020", "6400068", "ARR020", "Pound Town (Yellow)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR020.webp", null),
+    CatalogCardSeed("6400068-ARR021", "6400068", "ARR021", "Smell Fear (Yellow)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR021.webp", 0.75),
+    CatalogCardSeed("6400068-ARR022", "6400068", "ARR022", "Alpha Instinct", "Normal", "Majestic", "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/ARR022.webp", 3.88),
+    CatalogCardSeed("6400068-ARR023", "6400068", "ARR023", "Wrecker Romp", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR023.webp", 0.31),
+    CatalogCardSeed("6400068-ARR024", "6400068", "ARR024", "Barraging Beatdown (Blue)", "Normal", "Rare", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR024.webp", 0.5),
+    CatalogCardSeed("6400068-ARR025", "6400068", "ARR025", "Bonebreaker Bellow (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR025.webp", null),
+    CatalogCardSeed("6400068-ARR026", "6400068", "ARR026", "Clearing Bellow", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR026.webp", 0.1),
+    CatalogCardSeed("6400068-ARR027", "6400068", "ARR027", "Smashback Alehorn", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR027.webp", 0.25),
+    CatalogCardSeed("6400068-ARR028", "6400068", "ARR028", "Smell Fear (Blue)", "Normal", "Common", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR028.webp", 4.34),
+    CatalogCardSeed("6400068-ARR029", "6400068", "ARR029", "Agility", "Normal", "Basic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR029.webp", 0.8),
+    CatalogCardSeed("6400068-ARR030", "6400068", "ARR030", "Might", "Normal", "Basic", "https://legendstory-production-s3-public.s3.amazonaws.com/media/cards/large/ARR030.webp", 0.69),
+)

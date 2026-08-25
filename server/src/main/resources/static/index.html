@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ult1made TCG — Server</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="glow" id="glow"></div>
+
+<header>
+  <!-- Nutzer-Vorgabe (08.08.) "IP-Adresse und Pairing-Token direkt sichtbar,
+       oben links in der jeweiligen TCG-Farbe" - siehe renderServerInfo() in
+       app.js, Farbe kommt automatisch über --accent (setAccent()). -->
+  <div class="serverInfo" id="serverInfo"></div>
+  <h1>Ult1made<span class="accent">TCG</span></h1>
+  <!-- Mandantenfähigkeit (02.08., Nutzer-Vorgabe) - einfacher Umschalter
+       statt der Auto-Login/PIN-Auswahlbildschirm-Logik der App (bewusste
+       Nutzer-Entscheidung: "eine Website öffnen fühlt sich anders an als
+       die App starten"), siehe renderAccountSwitcher()/authHeaders() in
+       app.js -->
+  <div class="accountSwitcher" id="accountSwitcher">
+    <select id="accountSelect" aria-label="Account"></select>
+    <button id="accountManageBtn" aria-label="Manage accounts" data-de-aria="Accounts verwalten">⚙</button>
+  </div>
+</header>
+
+<nav id="gameFilters" class="chips"></nav>
+
+<div class="actionTabs" id="actionTabs">
+  <button class="actionTab active" data-tab="cards" aria-label="Cards" data-de-aria="Karten">
+    <span class="actionTabAuraWrap">
+      <span class="actionTabAura a1"></span><span class="actionTabAura a2"></span><span class="actionTabAura a3"></span>
+      <span class="mainActionSpark s1"></span><span class="mainActionSpark s2"></span><span class="mainActionSpark s3"></span><span class="mainActionSpark s4"></span><span class="mainActionSpark s5"></span>
+      <span class="actionTabImgWrap"><img class="actionTabImg" id="cardsTabImg" alt=""></span>
+    </span>
+    <span class="actionTabLabel" data-de="Karten">Cards</span>
+  </button>
+  <button class="actionTab" data-tab="vault" aria-label="Vault">
+    <span class="actionTabAuraWrap">
+      <span class="actionTabAura a1"></span><span class="actionTabAura a2"></span><span class="actionTabAura a3"></span>
+      <span class="mainActionSpark s1"></span><span class="mainActionSpark s2"></span><span class="mainActionSpark s3"></span><span class="mainActionSpark s4"></span><span class="mainActionSpark s5"></span>
+      <span class="actionTabImgWrap"><img class="actionTabImg" id="vaultTabImg" alt=""></span>
+    </span>
+    <span class="actionTabLabel">Vault</span>
+  </button>
+  <button class="actionTab" data-tab="value" aria-label="Values" data-de-aria="Werte">
+    <span class="actionTabAuraWrap">
+      <span class="actionTabAura a1"></span><span class="actionTabAura a2"></span><span class="actionTabAura a3"></span>
+      <span class="mainActionSpark s1"></span><span class="mainActionSpark s2"></span><span class="mainActionSpark s3"></span><span class="mainActionSpark s4"></span><span class="mainActionSpark s5"></span>
+      <span class="actionTabImgWrap"><img class="actionTabImg" id="valueTabImg" src="images/coin_front.png" alt=""></span>
+    </span>
+    <span class="actionTabLabel" data-de="Werte">Values</span>
+  </button>
+  <!-- Binder (31.07., Nutzer-Vorgabe) - eigener Tab statt unter "Karten"
+       gequetscht, da auf der Weboberfläche genug Platz ist -->
+  <button class="actionTab" data-tab="binder" aria-label="Binder">
+    <span class="actionTabAuraWrap">
+      <span class="actionTabAura a1"></span><span class="actionTabAura a2"></span><span class="actionTabAura a3"></span>
+      <span class="mainActionSpark s1"></span><span class="mainActionSpark s2"></span><span class="mainActionSpark s3"></span><span class="mainActionSpark s4"></span><span class="mainActionSpark s5"></span>
+      <span class="actionTabImgWrap"><img class="actionTabImg" id="binderTabImg" alt=""></span>
+    </span>
+    <span class="actionTabLabel">Binder</span>
+  </button>
+  <!-- Decks (10.08., Nutzer-Vorgabe "Feature-Parität App <-> Web") - Server-
+       API (siehe /api/decks* in Main.kt) gab es schon länger, nur die
+       Weboberfläche hatte dafür noch keinen Tab, siehe renderDeckTab() in
+       app.js -->
+  <button class="actionTab" data-tab="decks" aria-label="Decks">
+    <span class="actionTabAuraWrap">
+      <span class="actionTabAura a1"></span><span class="actionTabAura a2"></span><span class="actionTabAura a3"></span>
+      <span class="mainActionSpark s1"></span><span class="mainActionSpark s2"></span><span class="mainActionSpark s3"></span><span class="mainActionSpark s4"></span><span class="mainActionSpark s5"></span>
+      <span class="actionTabImgWrap"><img class="actionTabImg" id="decksTabImg" alt=""></span>
+    </span>
+    <span class="actionTabLabel">Decks</span>
+  </button>
+</div>
+
+<div class="statsBar">
+  <div class="stats" id="stats" data-de="lädt…">loading…</div>
+</div>
+
+<main id="content">
+  <p class="status" id="status" data-de="Bitte ein TCG oben auswählen.">Please pick a TCG above.</p>
+  <div class="setAccordion" id="setAccordion"></div>
+  <div class="grid" id="grid"></div>
+  <div class="valuePanel" id="valuePanel"></div>
+  <div class="binderPanel" id="binderPanel"></div>
+  <div class="binderPanel" id="deckPanel"></div>
+</main>
+
+<div class="detailOverlay" id="detailOverlay">
+  <div class="detailCard" id="detailCard">
+    <button class="detailClose" id="detailClose" aria-label="Close" data-de-aria="Schließen">×</button>
+    <div class="detailArt"><img id="detailImg" alt=""></div>
+    <!-- Eigenes Foto (10.08., Feature-Parität App <-> Web) - siehe
+         renderDetailPhotoUpload() in app.js -->
+    <div class="detailPhotoUpload" id="detailPhotoUploadRow"></div>
+    <div class="detailInfo">
+      <h2 id="detailName"></h2>
+      <div class="detailRow" id="detailGameRow"></div>
+      <!-- Bearbeitbare Anzahl/Holo/Versiegelt/Kaufpreis (09.08., Nutzer-
+           Vorgabe "Feature-Parität App <-> Web") - bisher nur statischer
+           Text, siehe renderDetailEditControls() in app.js -->
+      <div class="detailRow" id="detailQuantityRow"></div>
+      <div class="detailRow" id="detailHoloRow"></div>
+      <div class="detailRow" id="detailSealedRow"></div>
+      <div class="detailRow" id="detailPurchasePriceRow"></div>
+        <div id="detailCustomPriceBox"></div>
+      <div class="detailRow" id="detailPriceRow"></div>
+      <div class="detailRow" id="detailEurPriceRow"></div>
+      <div class="detailCmOptions" id="detailCmOptions"></div>
+      <!-- Art-Wechsel (31.07., Nutzer-Vorgabe "wenn man einen anderen Preis
+           wählt, kann man auch das Bild ändern") - siehe
+           renderDetailArtVariants() in app.js -->
+      <div class="detailCmOptions" id="detailArtVariants"></div>
+      <button class="detailDeleteBtn" id="detailDeleteBtn" data-de="Löschen">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="addOverlay" id="addOverlay">
+  <div class="addBox">
+    <button class="detailClose" id="addClose" aria-label="Close" data-de-aria="Schließen">×</button>
+    <h2 id="addTitle" data-de="Karte hinzufügen">Add card</h2>
+    <div id="addActionSlot"></div>
+    <!-- Binder-Auswahl (31.07., Nutzer-Vorgabe) - nur beim normalen
+         "Karte hinzufügen"-Fluss (kind === "cards") sichtbar, siehe
+         renderAddBinderPicker() in app.js -->
+    <div class="addBinderPicker" id="addBinderPicker"></div>
+    <input type="text" id="addSearchInput" class="addSearchInput" placeholder="Search name…" data-de-placeholder="Name suchen…" autocomplete="off">
+    <div class="addGroups" id="addGroups"></div>
+    <div class="addResults" id="addResults"></div>
+  </div>
+</div>
+
+<div class="addToast" id="addToast"></div>
+
+<div class="confirmOverlay" id="confirmOverlay">
+  <div class="confirmBox">
+    <p class="confirmMessage" id="confirmMessage"></p>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="confirmNo" data-de="Abbrechen">Cancel</button>
+      <button class="confirmYes" id="confirmYes" data-de="Löschen">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neuer Binder (31.07., Nutzer-Vorgabe "9, 12 oder 16 Karten pro Seite") -
+     ersetzt den einfachen window.prompt() der Wunschlisten, da hier neben
+     dem Namen auch die Seitengröße gewählt werden muss -->
+<div class="confirmOverlay" id="createBinderOverlay">
+  <div class="confirmBox">
+    <p class="confirmMessage" data-de="Neuer Binder">New binder</p>
+    <input type="text" id="createBinderName" class="addSearchInput" placeholder="Binder name" data-de-placeholder="Name des Binders" autocomplete="off" style="margin-bottom: 14px;">
+    <p class="createBinderHint" data-de="Karten pro Seite (wie beim echten Binder - hinterher nicht mehr änderbar)">Cards per page (like the real binder - cannot be changed later)</p>
+    <div class="createBinderPageSizes" id="createBinderPageSizes"></div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="createBinderCancel" data-de="Abbrechen">Cancel</button>
+      <button class="confirmYes" id="createBinderConfirm" style="background: var(--accent); color: #10100f;" data-de="Erstellen">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neues Deck (10.08., Feature-Parität) - simpler als der Binder-Dialog,
+     Decks brauchen keine Seitengröße -->
+<div class="confirmOverlay" id="createDeckOverlay">
+  <div class="confirmBox">
+    <p class="confirmMessage" data-de="Neues Deck">New deck</p>
+    <input type="text" id="createDeckName" class="addSearchInput" placeholder="Deck name" data-de-placeholder="Name des Decks" autocomplete="off" style="margin-bottom: 14px;">
+    <div class="confirmButtons">
+      <button class="confirmNo" id="createDeckCancel" data-de="Abbrechen">Cancel</button>
+      <button class="confirmYes" id="createDeckConfirm" style="background: var(--accent); color: #10100f;" data-de="Erstellen">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Account-Verwaltung (02.08., Nutzer-Vorgabe Mandantenfähigkeit) - siehe
+     renderAccountsOverlay() in app.js -->
+<div class="confirmOverlay" id="accountsOverlay">
+  <div class="confirmBox">
+    <p class="confirmMessage">Accounts</p>
+    <div id="accountsList"></div>
+    <input type="text" id="newAccountName" class="addSearchInput" placeholder="Name" autocomplete="off" style="margin-top: 14px;">
+    <input type="text" id="newAccountPin" class="addSearchInput" placeholder="PIN (optional, 4 digits)" data-de-placeholder="PIN (optional, 4-stellig)" autocomplete="off" inputmode="numeric" maxlength="4" style="margin-top: 8px;">
+    <!-- Backup (10.08., Feature-Parität App <-> Web) - bezieht sich auf den
+         gerade aktiven Account, siehe BackupDialog.kt in der App für dieselbe
+         Ergänzen-statt-Überschreiben-Logik (PortfolioRepository.exportData()/
+         importData()). -->
+    <div class="backupSection">
+      <p class="backupHint" data-de="Backup (aktiver Account): Sammlung als Datei sichern oder aus einer Datei ergänzen. Beim Import wird nur hinzugefügt, was lokal fehlt - nichts wird überschrieben oder gelöscht.">Backup (active account): save your collection as a file or merge it back in from one. Importing only adds what is missing locally - nothing is overwritten or deleted.</p>
+      <div class="confirmButtons">
+        <button class="confirmNo" id="backupExportBtn" data-de="Exportieren">Export</button>
+        <button class="confirmNo" id="backupImportBtn" data-de="Importieren">Import</button>
+      </div>
+      <input type="file" id="backupImportFile" accept="application/json" style="display:none;">
+      <p class="backupStatus" id="backupStatus"></p>
+    </div>
+    <!-- TCGs pro Account ausblenden (17.08., Nutzer-Vorgabe) - bezieht sich
+         wie das Backup auf den gerade AKTIVEN Account, siehe
+         renderHiddenGamesSection() in app.js. Standard: alles eingeblendet;
+         leuchtender Chip = sichtbar, grauer Chip = ausgeblendet. -->
+    <div class="backupSection">
+      <p class="backupHint" data-de="Sichtbare TCGs (aktiver Account): Antippen blendet ein TCG in dieser Weboberfläche aus bzw. wieder ein. Karten und Daten bleiben dabei unangetastet.">Visible TCGs (active account): tap to hide or show a TCG in this web UI. Cards and data stay untouched.</p>
+      <div id="hiddenGamesChips" class="hiddenGamesChips"></div>
+    </div>
+    <!-- Sprache (18.08., Nutzer-Vorgabe "auch hier Englisch als Standard,
+         in den Einstellungen auf Deutsch umstellbar") - siehe
+         renderLanguageSection() in app.js; Wahl gilt pro Browser
+         (localStorage), nicht pro Account. -->
+    <div class="backupSection">
+      <p class="backupHint" data-de="Sprache dieser Weboberfläche (gilt pro Browser).">Language of this web UI (per browser).</p>
+      <div id="languageChips" class="hiddenGamesChips"></div>
+    </div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="accountsClose" data-de="Schließen">Close</button>
+      <button class="confirmYes" id="accountsAddConfirm" style="background: var(--accent); color: #10100f;" data-de="Account anlegen">Create account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manuelle Cardmarket-Zuordnung (04.08., Nutzer-Vorgabe) - siehe
+     renderCardmarketMappingOverlay()/openCardmarketAssignOverlay() in app.js -->
+<div class="confirmOverlay" id="cardmarketMappingOverlay">
+  <div class="confirmBox" style="max-width: 480px;">
+    <p class="confirmMessage" data-de="Preis-Zuordnung">Price matching</p>
+    <div id="cardmarketMappingList" style="max-height: 60vh; overflow-y: auto;"></div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="cardmarketMappingClose" data-de="Schließen">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirmOverlay" id="cardmarketAssignOverlay">
+  <div class="confirmBox" style="max-width: 480px;">
+    <p class="confirmMessage" id="cardmarketAssignTitle" data-de="Cardmarket-Karte zuordnen">Match Cardmarket card</p>
+    <input type="text" id="cardmarketAssignSearch" class="addSearchInput" placeholder="Search term" data-de-placeholder="Suchbegriff" autocomplete="off">
+    <!-- "Aus dem Set durchstöbern" (12.08., Nutzer-Vorgabe "man kann nur suchen und da findet man ja nichts") -->
+    <button type="button" id="cardmarketAssignBrowseSet" class="confirmNo" style="margin-top: 8px; width: 100%;" data-de="Aus dem Set durchstöbern">Browse the set</button>
+    <div id="cardmarketAssignResults" style="max-height: 45vh; overflow-y: auto; margin-top: 10px;"></div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="cardmarketAssignCancel" data-de="Abbrechen">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sealed-Pendant zu den beiden Overlays oben (11.08., Nutzer-Vorgabe) -
+     siehe renderSealedCardmarketMappingOverlay()/openSealedCardmarketAssignOverlay() in app.js -->
+<div class="confirmOverlay" id="sealedCardmarketMappingOverlay">
+  <div class="confirmBox" style="max-width: 480px;">
+    <p class="confirmMessage" data-de="Preis-Zuordnung (Sealed)">Price matching (sealed)</p>
+    <div id="sealedCardmarketMappingList" style="max-height: 60vh; overflow-y: auto;"></div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="sealedCardmarketMappingClose" data-de="Schließen">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirmOverlay" id="sealedCardmarketAssignOverlay">
+  <div class="confirmBox" style="max-width: 480px;">
+    <p class="confirmMessage" id="sealedCardmarketAssignTitle" data-de="Cardmarket-Produkt zuordnen">Match Cardmarket product</p>
+    <input type="text" id="sealedCardmarketAssignSearch" class="addSearchInput" placeholder="Search term" data-de-placeholder="Suchbegriff" autocomplete="off">
+    <div id="sealedCardmarketAssignResults" style="max-height: 45vh; overflow-y: auto; margin-top: 10px;"></div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="sealedCardmarketAssignCancel" data-de="Abbrechen">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="tokenOverlay" id="tokenOverlay">
+  <div class="tokenBox">
+    <h2>Pairing-Token</h2>
+    <p data-de="Steht im Server-Log beim Start. Einmal eintragen, wird im Browser gemerkt.">Shown in the server log at startup. Enter it once - the browser remembers it.</p>
+    <form id="tokenForm">
+      <input type="text" id="tokenInput" autocomplete="off" autocapitalize="characters" placeholder="e.g. AB12CD34" data-de-placeholder="z.B. AB12CD34">
+      <button type="submit" data-de="Verbinden">Connect</button>
+    </form>
+    <p class="tokenError" id="tokenError"></p>
+  </div>
+</div>
+
+<!-- Disclaimer (03.08., Nutzer-Vorgabe nach Copyright-Recherche) - die App
+     ist ein inoffizielles Fan-Projekt, keine Kooperation der jeweiligen
+     Rechteinhaber. Permanent am Seitenende statt nur einmalig eingeblendet. -->
+<footer class="disclaimerFooter" data-de="Diese App ist ein privates Fan-Projekt und steht in keiner Verbindung zu Pokémon, Nintendo, The Pokémon Company, Bandai Namco, Dragon Ball, One Piece, Digimon, Yu-Gi-Oh! oder Cardmarket. Alle Namen, Bilder und Marken gehören ihren jeweiligen Rechteinhabern.">
+  This app is a private fan project and is not affiliated with Pokémon, Nintendo,
+  The Pokémon Company, Bandai Namco, Dragon Ball, One Piece, Digimon, Yu-Gi-Oh! or
+  Cardmarket. All names, images and trademarks belong to their respective owners.
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>

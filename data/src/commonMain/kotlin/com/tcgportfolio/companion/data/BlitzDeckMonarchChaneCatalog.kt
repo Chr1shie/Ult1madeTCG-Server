@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckMonarchChaneSetSeed = CardSetSeed(id = "6400090", name = "Blitz Deck: Monarch - Chane", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckMonarchChaneCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400090-CHN001", "6400090", "CHN001", "Chane", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN001.width-450.png", 0.51),
+    CatalogCardSeed("6400090-CHN002", "6400090", "CHN002", "Lord Sutcliffe", "Normal", "Majestic", "https://storage.googleapis.com/fabmaster/media/images/CHN002_Lord_Sutcliffe.width-10000.png", 0.43),
+    CatalogCardSeed("6400090-CHN003", "6400090", "CHN003", "Galaxxi Black", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN003.width-450.png", 0.3),
+    CatalogCardSeed("6400090-CHN004", "6400090", "CHN004", "Ebon Fold", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN004.width-450.png", 0.15),
+    CatalogCardSeed("6400090-CHN005", "6400090", "CHN005", "Aether Ironweave", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN005.width-450.png", 0.44),
+    CatalogCardSeed("6400090-CHN006", "6400090", "CHN006", "Spell Fray Gloves", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN006.width-450.png", 0.35),
+    CatalogCardSeed("6400090-CHN007", "6400090", "CHN007", "Snapdragon Scalers", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN007.width-450.png", 0.47),
+    CatalogCardSeed("6400090-CHN008", "6400090", "CHN008", "Soul Reaping", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN008.width-450.png", 0.21),
+    CatalogCardSeed("6400090-CHN009", "6400090", "CHN009", "Bounding Demigon (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN009.width-450.png", 0.4),
+    CatalogCardSeed("6400090-CHN010", "6400090", "CHN010", "Piercing Shadow Vise (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN010.width-450.png", 0.05),
+    CatalogCardSeed("6400090-CHN011", "6400090", "CHN011", "Rift Bind (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN011.width-450.png", 0.07),
+    CatalogCardSeed("6400090-CHN012", "6400090", "CHN012", "Rifted Torment (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN012.width-450.png", 0.13),
+    CatalogCardSeed("6400090-CHN013", "6400090", "CHN013", "Rip Through Reality (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN013.width-450.png", 0.05),
+    CatalogCardSeed("6400090-CHN014", "6400090", "CHN014", "Seeds of Agony (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN014.width-450.png", 0.1),
+    CatalogCardSeed("6400090-CHN015", "6400090", "CHN015", "Unhallowed Rites (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN015.width-450.png", null),
+    CatalogCardSeed("6400090-CHN016", "6400090", "CHN016", "Seeds of Agony (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN016.width-450.png", 0.1),
+    CatalogCardSeed("6400090-CHN017", "6400090", "CHN017", "Seeping Shadows (Yellow)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN017.width-450.png", null),
+    CatalogCardSeed("6400090-CHN018", "6400090", "CHN018", "Piercing Shadow Vise (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN018.width-450.png", 0.1),
+    CatalogCardSeed("6400090-CHN019", "6400090", "CHN019", "Rift Bind (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN019.width-450.png", 0.15),
+    CatalogCardSeed("6400090-CHN020", "6400090", "CHN020", "Rifted Torment (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/cardfaces/2021-MON-CHN/CHN020.png", 0.13),
+    CatalogCardSeed("6400090-CHN021", "6400090", "CHN021", "Ghostly Visit (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN021.width-450.png", 0.18),
+    CatalogCardSeed("6400090-CHN022", "6400090", "CHN022", "Howl from Beyond (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN022.width-450.png", 0.3),
+    CatalogCardSeed("6400090-CHN023", "6400090", "CHN023", "Lunartide Plunderer (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN023.width-450.png", null),
+    CatalogCardSeed("6400090-CHN024", "6400090", "CHN024", "Spew Shadow (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN024.width-450.png", null),
+    CatalogCardSeed("6400090-CHN025", "6400090", "CHN025", "Consuming Volition (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN025.width-450.png", null),
+    CatalogCardSeed("6400090-CHN026", "6400090", "CHN026", "Vexing Malice (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/CHN026.width-450.png", null),
+    CatalogCardSeed("6400090-CHN027", "6400090", "CHN027", "Arcanic Crackle (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN027.width-450.png", null),
+    CatalogCardSeed("6400090-CHN028", "6400090", "CHN028", "Warmonger's Recital (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN028.width-450.png", null),
+    CatalogCardSeed("6400090-CHN029", "6400090", "CHN029", "Warmonger's Recital (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/CHN029.width-450.png", null),
+    CatalogCardSeed("6400090-CHN030", "6400090", "CHN030", "Soul Shackle", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/CHN030.width-450.png", 1.34),
+)

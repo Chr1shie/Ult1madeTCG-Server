@@ -1,0 +1,25 @@
+-- Mandantenfähigkeit (02.08., Nutzer-Vorgabe) - siehe CONCEPT.md
+-- "Mandantenfähigkeit / Mehrere Accounts". Der erste INSERT unten ist
+-- garantiert die allererste Zeile in AccountEntity und bekommt damit
+-- id=1 (AUTOINCREMENT startet bei 1 in einer neuen Tabelle) - genau die id,
+-- auf die sich die DEFAULT-1-Werte der folgenden ALTER TABLEs verlassen.
+-- Bestehende Daten landen dadurch automatisch im neuen Standard-Account,
+-- ohne dass etwas verloren geht.
+CREATE TABLE AccountEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uid TEXT NOT NULL DEFAULT '',
+    name TEXT NOT NULL,
+    pinHash TEXT,
+    pinSalt TEXT,
+    createdAt INTEGER NOT NULL DEFAULT 0,
+    updatedAt INTEGER NOT NULL DEFAULT 0
+);
+
+INSERT INTO AccountEntity (uid, name, pinHash, pinSalt, createdAt, updatedAt)
+VALUES ('acc-bootstrap-default', 'Standard', NULL, NULL, 0, 0);
+
+ALTER TABLE PortfolioItemEntity ADD COLUMN accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id);
+ALTER TABLE SealedProductEntity ADD COLUMN accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id);
+ALTER TABLE WishlistEntity ADD COLUMN accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id);
+ALTER TABLE BinderEntity ADD COLUMN accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id);
+ALTER TABLE DeletionLog ADD COLUMN accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id);

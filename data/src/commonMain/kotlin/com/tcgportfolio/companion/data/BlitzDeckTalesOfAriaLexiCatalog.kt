@@ -1,0 +1,36 @@
+package com.tcgportfolio.companion.data
+
+val blitzDeckTalesOfAriaLexiSetSeed = CardSetSeed(id = "6400010", name = "Blitz Deck: Tales of Aria - Lexi", game = "FleshAndBlood", totalCards = 30)
+
+val blitzDeckTalesOfAriaLexiCatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("6400010-LXI001", "6400010", "LXI001", "Lexi", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI001.width-450.png", 1.19),
+    CatalogCardSeed("6400010-LXI002", "6400010", "LXI002", "Shiver", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI002.width-450.png", 1.33),
+    CatalogCardSeed("6400010-LXI003", "6400010", "LXI003", "Honing Hood", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI003.width-450.png", 0.5),
+    CatalogCardSeed("6400010-LXI004", "6400010", "LXI004", "Deep Blue", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI004.width-450.png", null),
+    CatalogCardSeed("6400010-LXI005", "6400010", "LXI005", "Mark of Lightning", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI005.width-450.png", 0.15),
+    CatalogCardSeed("6400010-LXI006", "6400010", "LXI006", "Ironrot Legs", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI006.width-450.png", null),
+    CatalogCardSeed("6400010-LXI007", "6400010", "LXI007", "Buzz Bolt (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI007.width-450.png", null),
+    CatalogCardSeed("6400010-LXI008", "6400010", "LXI008", "Dazzling Crescendo (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI008.width-450.png", 0.1),
+    CatalogCardSeed("6400010-LXI009", "6400010", "LXI009", "Frazzle (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI009.width-450.png", 0.2),
+    CatalogCardSeed("6400010-LXI010", "6400010", "LXI010", "Snap Shot (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI010.width-450.png", 0.22),
+    CatalogCardSeed("6400010-LXI011", "6400010", "LXI011", "Buzz Bolt (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI011.width-450.png", null),
+    CatalogCardSeed("6400010-LXI012", "6400010", "LXI012", "Frazzle (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI012.width-450.png", 0.15),
+    CatalogCardSeed("6400010-LXI013", "6400010", "LXI013", "Entwine Lightning (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI013.width-450.png", 0.18),
+    CatalogCardSeed("6400010-LXI014", "6400010", "LXI014", "Heaven's Claws (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI014.width-450.png", null),
+    CatalogCardSeed("6400010-LXI015", "6400010", "LXI015", "Shock Striker (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI015.width-450.png", null),
+    CatalogCardSeed("6400010-LXI016", "6400010", "LXI016", "Electrify (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI016.width-450.png", 0.15),
+    CatalogCardSeed("6400010-LXI017", "6400010", "LXI017", "Weave Lightning (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI017.width-450.png", 0.83),
+    CatalogCardSeed("6400010-LXI018", "6400010", "LXI018", "Lightning Press (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI018.width-450.png", 1.3),
+    CatalogCardSeed("6400010-LXI019", "6400010", "LXI019", "Heaven's Claws (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI019.width-450.png", null),
+    CatalogCardSeed("6400010-LXI020", "6400010", "LXI020", "Electrify (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI020.width-450.png", 0.21),
+    CatalogCardSeed("6400010-LXI021", "6400010", "LXI021", "Amulet of Lightning", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI021.width-450.png", 0.15),
+    CatalogCardSeed("6400010-LXI022", "6400010", "LXI022", "Blizzard Bolt (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI022.width-450.png", 0.13),
+    CatalogCardSeed("6400010-LXI023", "6400010", "LXI023", "Chilling Icevein (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI023.width-450.png", 0.15),
+    CatalogCardSeed("6400010-LXI024", "6400010", "LXI024", "Chill to the Bone (Yellow)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI024.width-450.png", 0.15),
+    CatalogCardSeed("6400010-LXI025", "6400010", "LXI025", "Winter's Bite (Blue)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI025.width-450.png", 0.46),
+    CatalogCardSeed("6400010-LXI026", "6400010", "LXI026", "Bolt'n' Shot (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI026.width-450.png", 0.69),
+    CatalogCardSeed("6400010-LXI027", "6400010", "LXI027", "Over Flex (Red)", "Normal", "Common", "https://storage.googleapis.com/fabmaster/media/images/LXI027.width-450.png", 0.13),
+    CatalogCardSeed("6400010-LXI028", "6400010", "LXI028", "Take Aim (Red)", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI028.width-450.png", 1.99),
+    CatalogCardSeed("6400010-LXI029", "6400010", "LXI029", "Pitfall Trap", "Normal", "Rare", "https://storage.googleapis.com/fabmaster/media/images/LXI029.width-450.png", 0.32),
+    CatalogCardSeed("6400010-LXI030", "6400010", "LXI030", "Frostbite", "Normal", "Token", "https://storage.googleapis.com/fabmaster/media/images/LXI030.width-450.png", 0.24),
+)
