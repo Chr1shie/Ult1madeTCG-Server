@@ -297,14 +297,25 @@ CREATE TABLE BinderEntity (
     -- sind lokale Dateien; die Server-Weboberfläche hat ihre eigene Farbe
     -- (gleiche Spalten, eigener Endpunkt).
     color TEXT,
-    coverImageUrl TEXT
+    coverImageUrl TEXT,
+    -- Sync-Zeitstempel für Farbe/Cover (25.08., Nutzer-Korrektur "das wäre
+    -- ja doof, wenn das nicht synct") - LWW wie nameUpdatedAt. Die FARBE
+    -- wandert als Wert durch den normalen Binder-Sync; das COVER-Foto ist
+    -- eine Bilddatei und läuft über den eigenen Foto-Sync-Kanal (siehe
+    -- syncCustomPhotos() in App.kt + /api/photoSync/* in server/Main.kt),
+    -- der Zeitstempel hier entscheidet, welche Seite das neuere Bild hat.
+    colorUpdatedAt INTEGER NOT NULL DEFAULT 0,
+    coverUpdatedAt INTEGER NOT NULL DEFAULT 0
 );
 
 updateBinderColor:
-UPDATE BinderEntity SET color = ? WHERE id = ?;
+UPDATE BinderEntity SET color = ?, colorUpdatedAt = ? WHERE id = ?;
 
 updateBinderCoverImage:
-UPDATE BinderEntity SET coverImageUrl = ? WHERE id = ?;
+UPDATE BinderEntity SET coverImageUrl = ?, coverUpdatedAt = ? WHERE id = ?;
+
+selectAllCustomCardPhotos:
+SELECT * FROM CustomCardPhotoEntity;
 
 -- position (31.07., Nutzer-Vorgabe) - der feste Platz einer Karte im Binder
 -- (0-basiert, Seite = position / pageSize, Platz auf der Seite = position %

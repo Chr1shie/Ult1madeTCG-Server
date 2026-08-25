@@ -484,12 +484,22 @@ data class BinderResponse(
     val pageSize: Long,
     // Binder-Optik (25.08., Nutzer-Vorgabe "echte Binder da stehen") -
     // Hex-Farbe des gezeichneten Buchdeckels, null = Akzentfarbe des TCGs.
-    // Bewusst NICHT mit der App gesynct (Deko ist Geräte-/Server-Sache).
-    val color: String? = null
+    // Farbe synct seit 25.08. per LWW mit der App (colorUpdatedAt);
+    // coverImageUrl kommt über den Foto-Sync-Kanal (/api/photoSync/*) und
+    // zeigt hier auf die server-lokale /images/custom-Kopie.
+    val color: String? = null,
+    val coverImageUrl: String? = null
 )
 
 @Serializable
 data class BinderColorRequest(val id: Long, val color: String? = null)
+
+// Foto-Sync (25.08., Nutzer-Korrektur "eigene Fotos müssen mitsyncen") -
+// Inventar-Eintrag, Feldnamen müssen 1:1 zu PhotoSyncEntry in
+// shared/SyncClient.kt passen (server/ ist reines JVM-Modul, kein Import
+// aus shared möglich - gleiche Lage wie RemoteAccountPreview dort)
+@Serializable
+data class PhotoSyncEntryResponse(val kind: String, val key: String, val updatedAt: Long)
 
 @Serializable
 data class BinderItemResponse(
@@ -1472,7 +1482,8 @@ fun Application.ult1madeServerModule() {
                     game = b.game,
                     itemCount = items.count { it.binderId == b.id }.toLong(),
                     pageSize = b.pageSize,
-                    color = b.color
+                    color = b.color,
+                    coverImageUrl = b.coverImageUrl?.takeIf { it.startsWith("/images/custom/") }
                 )
             }
             call.respond(results)
@@ -1511,6 +1522,107 @@ fun Application.ult1madeServerModule() {
         }
         // Binder umbenennen (03.08., Nutzer-Vorgabe) - Web-Pendant zu
         // renameBinder() in der App/PortfolioRepository.kt
+        // ---------- Foto-Sync (25.08.) ----------
+        // Eigene Fotos (Karten/Vault/Binder-Deckel) zwischen App und Server
+        // abgleichen - Gegenstück zu syncCustomPhotos() in App.kt. Dateien
+        // liegen im bestehenden customPhotosDir und werden über die schon
+        // vorhandene /images/custom-Static-Route auch der Weboberfläche
+        // serviert. Schlüssel siehe SyncClient.kt-Kommentar.
+        fun photoSyncFileName(kind: String, key: String): String {
+            val digest = java.security.MessageDigest.getInstance("MD5")
+                .digest("$kind|$key".toByteArray())
+            return "sync-$kind-" + digest.joinToString("") { b ->
+                (b.toInt() and 0xff).toString(16).padStart(2, '0')
+            } + ".jpg"
+        }
+        fun resolvePhotoUrl(kind: String, key: String): String? = when (kind) {
+            "card" -> repository.getCustomCardPhotoUrl(key)
+            "sealed" -> {
+                val accountUid = key.substringBefore("|", "")
+                val itemKey = key.substringAfter("|", "")
+                repository.getAccounts().firstOrNull { it.uid == accountUid }?.let { acc ->
+                    repository.getAllSealedProductsRaw(acc.id).firstOrNull { p ->
+                        repository.sealedSyncKey(p.catalogId, p.isSealed, p.name, p.category, p.game) == itemKey
+                    }?.imageUrl
+                }
+            }
+            "binder" -> repository.getAccounts().firstNotNullOfOrNull { acc ->
+                repository.getAllBindersRaw(acc.id).firstOrNull { it.uid == key }?.coverImageUrl
+            }
+            else -> null
+        }
+        get("/api/photoSync/list") {
+            val entries = mutableListOf<PhotoSyncEntryResponse>()
+            repository.getAllCustomCardPhotos()
+                .filter { it.imageUrl.startsWith("/images/custom/") }
+                .forEach { entries += PhotoSyncEntryResponse("card", it.cardId, it.updatedAt) }
+            repository.getAccounts().forEach { acc ->
+                repository.getAllSealedProductsRaw(acc.id).forEach { p ->
+                    if (p.imageUrl?.startsWith("/images/custom/") == true) {
+                        val key = acc.uid + "|" + repository.sealedSyncKey(p.catalogId, p.isSealed, p.name, p.category, p.game)
+                        entries += PhotoSyncEntryResponse("sealed", key, p.updatedAt)
+                    }
+                }
+                repository.getAllBindersRaw(acc.id).forEach { b ->
+                    if (b.coverImageUrl?.startsWith("/images/custom/") == true && b.uid.isNotEmpty()) {
+                        entries += PhotoSyncEntryResponse("binder", b.uid, b.coverUpdatedAt)
+                    }
+                }
+            }
+            call.respond(entries)
+        }
+        get("/api/photoSync/file") {
+            val kind = call.request.queryParameters["kind"]
+            val key = call.request.queryParameters["key"]
+            if (kind == null || key == null) {
+                call.respond(HttpStatusCode.BadRequest, "kind/key fehlt")
+                return@get
+            }
+            val url = resolvePhotoUrl(kind, key)
+            val file = url?.takeIf { it.startsWith("/images/custom/") }
+                ?.let { File(customPhotosDir, it.removePrefix("/images/custom/")) }
+            if (file == null || !file.exists()) {
+                call.respond(HttpStatusCode.NotFound, "kein Foto")
+                return@get
+            }
+            call.respondBytes(file.readBytes(), ContentType.Image.JPEG)
+        }
+        post("/api/photoSync/upload") {
+            val kind = call.request.queryParameters["kind"]
+            val key = call.request.queryParameters["key"]
+            val updatedAt = call.request.queryParameters["updatedAt"]?.toLongOrNull()
+            if (kind == null || key == null || updatedAt == null) {
+                call.respond(HttpStatusCode.BadRequest, "kind/key/updatedAt fehlt")
+                return@post
+            }
+            val bytes = call.receive<ByteArray>()
+            val fileName = photoSyncFileName(kind, key)
+            File(customPhotosDir, fileName).writeBytes(bytes)
+            val url = "/images/custom/$fileName"
+            val applied = when (kind) {
+                "card" -> {
+                    repository.setCustomCardPhotoSynced(key, url, updatedAt)
+                    true
+                }
+                "sealed" -> {
+                    val accountUid = key.substringBefore("|", "")
+                    val itemKey = key.substringAfter("|", "")
+                    repository.getAccounts().firstOrNull { it.uid == accountUid }?.let { acc ->
+                        repository.getAllSealedProductsRaw(acc.id).firstOrNull { p ->
+                            repository.sealedSyncKey(p.catalogId, p.isSealed, p.name, p.category, p.game) == itemKey
+                        }?.also { repository.setSealedProductImageSynced(it.id, url, updatedAt) }
+                    } != null
+                }
+                "binder" -> {
+                    repository.getAccounts().firstNotNullOfOrNull { acc ->
+                        repository.getAllBindersRaw(acc.id).firstOrNull { it.uid == key }
+                    }?.also { repository.setBinderCoverImageSynced(it.id, url, updatedAt) } != null
+                }
+                else -> false
+            }
+            if (applied) call.respond(HttpStatusCode.OK) else call.respond(HttpStatusCode.NotFound, "Ziel nicht gefunden")
+        }
+
         // Binder-Farbe (25.08., Nutzer-Vorgabe "echte Binder") - server-eigene
         // Deko, siehe BinderResponse.color
         post("/api/binders/color") {

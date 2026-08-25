@@ -1734,7 +1734,13 @@ function renderBinderOverview(panel, binders, items) {
 
     const cover = document.createElement("div");
     cover.className = "binderCover";
-    cover.style.background = "linear-gradient(135deg, " + shadeBinderColor(base, 1.25) + ", " + base + " 55%, " + shadeBinderColor(base, 0.6) + ")";
+    if (b.coverImageUrl) {
+      // Gesynctes Cover-Foto (25.08.) - Deckelfläche wird zum Foto,
+      // Rücken + Ringe bleiben darüber, damit es ein "Binder" bleibt
+      cover.style.background = "url('" + b.coverImageUrl + "') center/cover no-repeat";
+    } else {
+      cover.style.background = "linear-gradient(135deg, " + shadeBinderColor(base, 1.25) + ", " + base + " 55%, " + shadeBinderColor(base, 0.6) + ")";
+    }
     const spine = document.createElement("div");
     spine.className = "binderSpine";
     spine.style.background = "linear-gradient(to right, " + shadeBinderColor(base, 0.45) + ", " + shadeBinderColor(base, 0.8) + ")";

@@ -108,7 +108,11 @@ data class SyncBinder(
     // Umbenennen (03.08., Nutzer-Vorgabe) - eigener Zeitstempel NUR für den
     // Namen, analog zu SyncBinderItem.positionUpdatedAt, siehe Kommentar bei
     // BinderEntity in Portfolio.sq
-    val nameUpdatedAt: Long = 0
+    val nameUpdatedAt: Long = 0,
+    // Binder-Farbe (25.08., Nutzer-Korrektur "das wäre ja doof") - LWW über
+    // colorUpdatedAt; das Cover-FOTO läuft über den Foto-Sync-Kanal
+    val color: String? = null,
+    val colorUpdatedAt: Long = 0
 )
 
 // Decks (02.08., Phase 3 Deckbuilding, Nutzer-Vorgabe) - strukturell an

@@ -4065,8 +4065,26 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // Binder-Optik (25.08., Nutzer-Vorgabe "Binder als Bild") - Farbe +
     // optionales Cover-Foto, bewusst ohne Sync (siehe Spalten-Kommentar in
     // Portfolio.sq). null = zurück auf Standard (Akzentfarbe/kein Foto).
-    fun setBinderColor(id: Long, colorHex: String?) = dbQueries.updateBinderColor(colorHex, id)
-    fun setBinderCoverImage(id: Long, path: String?) = dbQueries.updateBinderCoverImage(path, id)
+    fun setBinderColor(id: Long, colorHex: String?) =
+        dbQueries.updateBinderColor(colorHex, currentTimeMillis(), id)
+    fun setBinderCoverImage(id: Long, path: String?) =
+        dbQueries.updateBinderCoverImage(path, currentTimeMillis(), id)
+
+    // Foto-Sync (25.08.) - Anwenden einer vom Server geholten Datei MIT
+    // dessen Zeitstempel (statt jetzt), damit LWW stabil bleibt
+    fun setBinderCoverImageSynced(id: Long, path: String?, updatedAt: Long) =
+        dbQueries.updateBinderCoverImage(path, updatedAt, id)
+    fun setCustomCardPhotoSynced(cardId: String, imageUrl: String, updatedAt: Long) =
+        dbQueries.upsertCustomCardPhoto(cardId, imageUrl, updatedAt)
+    fun setSealedProductImageSynced(id: Long, imageUrl: String, updatedAt: Long) =
+        dbQueries.updateSealedProductImageUrl(imageUrl, updatedAt, id)
+    fun getAllCustomCardPhotos() = dbQueries.selectAllCustomCardPhotos().executeAsList()
+    fun getAllSealedProductsRaw(accountId: Long) = dbQueries.selectAllSealedProducts(accountId).executeAsList()
+    fun getAllBindersRaw(accountId: Long) = dbQueries.selectAllBinders(accountId).executeAsList()
+    // Geräteübergreifende Identität eines Sealed-Produkts - öffentliche
+    // Fassung von sealedKey() für den Foto-Sync-Schlüssel
+    fun sealedSyncKey(catalogId: String?, isSealed: Long, name: String, category: String, game: String): String =
+        sealedKey(catalogId, isSealed, name, category, game)
 
     // Sealed-Wantsliste (25.08., Nutzer-Vorgabe) - siehe Tabellen-Kommentar
     // in Portfolio.sq. Eine Liste pro TCG, Einträge zeigen live den
@@ -5195,6 +5213,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         createdAt = b.createdAt,
                         pageSize = b.pageSize.toInt(),
                         nameUpdatedAt = b.nameUpdatedAt,
+                        color = b.color,
+                        colorUpdatedAt = b.colorUpdatedAt,
                         items = (binderItemsByBinderId[b.id] ?: emptyList()).map { i ->
                             SyncBinderItem(
                                 cardId = i.cardId,
@@ -5634,6 +5654,10 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             if (existingLocal == null) {
                 dbQueries.insertBinder(b.name, b.game, b.createdAt, b.uid, b.pageSize.toLong(), localAccountId)
                 localId = dbQueries.lastInsertRowId().executeAsOne()
+                // Binder-Farbe (25.08.) auch beim Neuanlegen übernehmen
+                if (b.colorUpdatedAt > 0) {
+                    dbQueries.updateBinderColor(b.color, b.colorUpdatedAt, localId)
+                }
                 bindersAdded++
                 existingByKey = mutableMapOf()
             } else {
@@ -5645,6 +5669,11 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 // jüngerer nameUpdatedAt-Zeitstempel gewinnt
                 if (b.nameUpdatedAt > existingLocal.nameUpdatedAt) {
                     dbQueries.updateBinderName(b.name, b.nameUpdatedAt, localId)
+                    bindersUpdated++
+                }
+                // Binder-Farbe (25.08.) - gleiche LWW-Mechanik wie der Name
+                if (b.colorUpdatedAt > existingLocal.colorUpdatedAt) {
+                    dbQueries.updateBinderColor(b.color, b.colorUpdatedAt, localId)
                     bindersUpdated++
                 }
             }

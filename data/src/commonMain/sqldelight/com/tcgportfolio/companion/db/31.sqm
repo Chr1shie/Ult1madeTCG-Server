@@ -1,0 +1,4 @@
+-- Sync-Zeitstempel für Binder-Farbe/-Cover (25.08.) - siehe Spalten-
+-- Kommentar in Portfolio.sq.
+ALTER TABLE BinderEntity ADD COLUMN colorUpdatedAt INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE BinderEntity ADD COLUMN coverUpdatedAt INTEGER NOT NULL DEFAULT 0;
