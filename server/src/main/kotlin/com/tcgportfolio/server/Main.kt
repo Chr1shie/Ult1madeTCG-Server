@@ -13,6 +13,7 @@ import com.tcgportfolio.companion.fetchCardmarketPriceGuide
 import com.tcgportfolio.companion.fetchCardmarketProductList
 import com.tcgportfolio.companion.fetchImageForProxy
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -1535,6 +1536,36 @@ fun Application.ult1madeServerModule() {
                 (b.toInt() and 0xff).toString(16).padStart(2, '0')
             } + ".jpg"
         }
+        // Halb übertragene Fotos (28.08., Nutzer-Fund "Binder-Foto nur halb
+        // zu sehen"): ein abgerissener Upload darf nie als fertige Datei
+        // enden. JPEG beginnt mit FFD8 und endet mit FFD9 - fehlt der
+        // Endmarker, ist die Datei unvollständig.
+        fun isCompleteJpeg(bytes: ByteArray): Boolean {
+            if (bytes.size < 4) return false
+            if (bytes[0] != 0xFF.toByte() || bytes[1] != 0xD8.toByte()) return false
+            // EOI in den letzten Bytes suchen (manche Encoder hängen wenige
+            // Füllbytes an, deshalb nicht stur nur die letzten zwei prüfen)
+            for (i in bytes.size - 2 downTo maxOf(0, bytes.size - 32)) {
+                if (bytes[i] == 0xFF.toByte() && bytes[i + 1] == 0xD9.toByte()) return true
+            }
+            return false
+        }
+        fun isCompleteJpegFile(file: File): Boolean {
+            if (!file.exists() || file.length() < 4) return false
+            return java.io.RandomAccessFile(file, "r").use { raf ->
+                val head = ByteArray(2)
+                raf.readFully(head)
+                if (head[0] != 0xFF.toByte() || head[1] != 0xD8.toByte()) return@use false
+                val tailLen = minOf(32L, raf.length()).toInt()
+                raf.seek(raf.length() - tailLen)
+                val tail = ByteArray(tailLen)
+                raf.readFully(tail)
+                for (i in tailLen - 2 downTo 0) {
+                    if (tail[i] == 0xFF.toByte() && tail[i + 1] == 0xD9.toByte()) return@use true
+                }
+                false
+            }
+        }
         fun resolvePhotoUrl(kind: String, key: String): String? = when (kind) {
             "card" -> repository.getCustomCardPhotoUrl(key)
             "sealed" -> {
@@ -1551,20 +1582,29 @@ fun Application.ult1madeServerModule() {
             }
             else -> null
         }
+        // Selbstheilung (28.08.): Einträge, deren Datei fehlt oder
+        // unvollständig ist (z.B. ein früher halb angekommener Upload),
+        // tauchen im Inventar NICHT auf - die App sieht dann "Server hat
+        // kein Foto" und lädt es beim nächsten Sync von selbst neu hoch.
+        fun photoFileHealthy(url: String?): Boolean {
+            val f = url?.takeIf { it.startsWith("/images/custom/") }
+                ?.let { File(customPhotosDir, it.removePrefix("/images/custom/")) }
+            return f != null && isCompleteJpegFile(f)
+        }
         get("/api/photoSync/list") {
             val entries = mutableListOf<PhotoSyncEntryResponse>()
             repository.getAllCustomCardPhotos()
-                .filter { it.imageUrl.startsWith("/images/custom/") }
+                .filter { it.imageUrl.startsWith("/images/custom/") && photoFileHealthy(it.imageUrl) }
                 .forEach { entries += PhotoSyncEntryResponse("card", it.cardId, it.updatedAt) }
             repository.getAccounts().forEach { acc ->
                 repository.getAllSealedProductsRaw(acc.id).forEach { p ->
-                    if (p.imageUrl?.startsWith("/images/custom/") == true) {
+                    if (p.imageUrl?.startsWith("/images/custom/") == true && photoFileHealthy(p.imageUrl)) {
                         val key = acc.uid + "|" + repository.sealedSyncKey(p.catalogId, p.isSealed, p.name, p.category, p.game)
                         entries += PhotoSyncEntryResponse("sealed", key, p.updatedAt)
                     }
                 }
                 repository.getAllBindersRaw(acc.id).forEach { b ->
-                    if (b.coverImageUrl?.startsWith("/images/custom/") == true && b.uid.isNotEmpty()) {
+                    if (b.coverImageUrl?.startsWith("/images/custom/") == true && b.uid.isNotEmpty() && photoFileHealthy(b.coverImageUrl)) {
                         entries += PhotoSyncEntryResponse("binder", b.uid, b.coverUpdatedAt)
                     }
                 }
@@ -1596,8 +1636,25 @@ fun Application.ult1madeServerModule() {
                 return@post
             }
             val bytes = call.receive<ByteArray>()
+            // Abgerissene Übertragung abweisen (28.08.): Länge muss zum
+            // Content-Length passen UND das JPEG muss vollständig sein -
+            // sonst 400, die App versucht es beim nächsten Sync erneut.
+            val expected = call.request.headers[HttpHeaders.ContentLength]?.toLongOrNull()
+            if ((expected != null && bytes.size.toLong() != expected) || !isCompleteJpeg(bytes)) {
+                call.respond(HttpStatusCode.BadRequest, "Foto unvollständig übertragen")
+                return@post
+            }
             val fileName = photoSyncFileName(kind, key)
-            File(customPhotosDir, fileName).writeBytes(bytes)
+            // Atomar schreiben: erst Temp-Datei, dann Move - die Web-
+            // oberfläche sieht so nie eine halb geschriebene Datei
+            val target = File(customPhotosDir, fileName)
+            val tmp = File(customPhotosDir, "$fileName.tmp")
+            tmp.writeBytes(bytes)
+            java.nio.file.Files.move(
+                tmp.toPath(), target.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                java.nio.file.StandardCopyOption.ATOMIC_MOVE
+            )
             val url = "/images/custom/$fileName"
             val applied = when (kind) {
                 "card" -> {

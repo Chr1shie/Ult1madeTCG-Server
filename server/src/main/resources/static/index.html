@@ -184,6 +184,12 @@
     <div id="accountsList"></div>
     <input type="text" id="newAccountName" class="addSearchInput" placeholder="Name" autocomplete="off" style="margin-top: 14px;">
     <input type="text" id="newAccountPin" class="addSearchInput" placeholder="PIN (optional, 4 digits)" data-de-placeholder="PIN (optional, 4-stellig)" autocomplete="off" inputmode="numeric" maxlength="4" style="margin-top: 8px;">
+    <!-- Direkt unter den Eingabefeldern (28.08., Nutzer-Vorgabe) - vorher
+         stand der Knopf ganz unten neben "Schließen", weit weg von den
+         Feldern, zu denen er gehört -->
+    <div class="confirmButtons" style="margin-top: 10px;">
+      <button class="confirmYes" id="accountsAddConfirm" style="background: var(--accent); color: #10100f;" data-de="Account anlegen">Create account</button>
+    </div>
     <!-- Backup (10.08., Feature-Parität App <-> Web) - bezieht sich auf den
          gerade aktiven Account, siehe BackupDialog.kt in der App für dieselbe
          Ergänzen-statt-Überschreiben-Logik (PortfolioRepository.exportData()/
@@ -215,7 +221,6 @@
     </div>
     <div class="confirmButtons">
       <button class="confirmNo" id="accountsClose" data-de="Schließen">Close</button>
-      <button class="confirmYes" id="accountsAddConfirm" style="background: var(--accent); color: #10100f;" data-de="Account anlegen">Create account</button>
     </div>
   </div>
 </div>
