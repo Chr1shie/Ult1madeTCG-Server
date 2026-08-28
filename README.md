@@ -2,11 +2,13 @@
 
 The companion server for [Ult1made TCG](https://ult1madetcg.com) — the
 multi-TCG collection app for iOS and Android. Run it on your own hardware
-(Raspberry Pi, NAS, any Linux box) to sync all your devices two-way and get
+(Raspberry Pi, NAS, any Linux box) to sync* all your devices two-way and get
 a full web interface for the big screen.
 
 **Your data stays yours:** there is no central cloud and there never will
 be. Every server instance belongs to the person running it.
+
+*to sync your APP with the server you need a Abo which is like a cheap coffee for 2Euros. You don't need the APP to run the server.
 
 ## Quick start (Docker, Linux)
 
