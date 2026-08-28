@@ -1453,6 +1453,22 @@ import com.tcgportfolio.companion.data.battlebondCatalogSeed
 import com.tcgportfolio.companion.data.battlebondSetSeed
 import com.tcgportfolio.companion.data.bloomburrowCatalogSeed
 import com.tcgportfolio.companion.data.bloomburrowSetSeed
+import com.tcgportfolio.companion.data.guildpactSetSeed
+import com.tcgportfolio.companion.data.theHobbitSetSeed
+import com.tcgportfolio.companion.data.theHobbitCatalogSeed
+import com.tcgportfolio.companion.data.theHobbitEternalSetSeed
+import com.tcgportfolio.companion.data.theHobbitEternalCatalogSeed
+import com.tcgportfolio.companion.data.worldsStrongestWarriorsSetSeed
+import com.tcgportfolio.companion.data.worldsStrongestWarriorsCatalogSeed
+import com.tcgportfolio.companion.data.heroinesEditionSetSeed
+import com.tcgportfolio.companion.data.heroinesEditionCatalogSeed
+import com.tcgportfolio.companion.data.storyBooster01SetSeed
+import com.tcgportfolio.companion.data.storyBooster01CatalogSeed
+import com.tcgportfolio.companion.data.blissfulEternitySetSeed
+import com.tcgportfolio.companion.data.blissfulEternityCatalogSeed
+import com.tcgportfolio.companion.data.guildpactCatalogSeed
+import com.tcgportfolio.companion.data.planarChaosSetSeed
+import com.tcgportfolio.companion.data.planarChaosCatalogSeed
 import com.tcgportfolio.companion.data.commander2016CatalogSeed
 import com.tcgportfolio.companion.data.commander2016SetSeed
 import com.tcgportfolio.companion.data.commander2017CatalogSeed
@@ -2336,7 +2352,7 @@ private const val CATALOG_SEED_VERSION_KEY = "catalogSeedVersion"
 // das Set ist inzwischen auf world.digimoncard.com live (25 Spoiler-
 // Karten mit no-image-Sentinel -> 104 Karten + 32 Alternate Arts mit
 // echten Bildern), siehe TimelessBondsCatalog.kt.
-private const val CATALOG_SEED_VERSION = 37
+private const val CATALOG_SEED_VERSION = 38
 
 private const val SEALED_CATALOG_SEED_VERSION_KEY = "sealedCatalogSeedVersion"
 // 2 (11.08.): Pokemon Elite Trainer Boxes von Alt-CDN-Produktfotos auf
@@ -3121,6 +3137,16 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         artSeriesBloomburrowSetSeed to artSeriesBloomburrowCatalogSeed,
         promoPackBloomburrowSetSeed to promoPackBloomburrowCatalogSeed,
         bloomburrowSetSeed to bloomburrowCatalogSeed,
+        // Alt-Sets (25.08., Nutzer-"Kundenanfrage" nach echten Fehlscans)
+        guildpactSetSeed to guildpactCatalogSeed,
+        planarChaosSetSeed to planarChaosCatalogSeed,
+        // Frische-Pass vor dem Launch (25.08.) - siehe CONCEPT.md
+        theHobbitSetSeed to theHobbitCatalogSeed,
+        theHobbitEternalSetSeed to theHobbitEternalCatalogSeed,
+        worldsStrongestWarriorsSetSeed to worldsStrongestWarriorsCatalogSeed,
+        heroinesEditionSetSeed to heroinesEditionCatalogSeed,
+        storyBooster01SetSeed to storyBooster01CatalogSeed,
+        blissfulEternitySetSeed to blissfulEternityCatalogSeed,
         commanderBloomburrowSetSeed to commanderBloomburrowCatalogSeed,
         commanderDuskmournHouseOfHorrorSetSeed to commanderDuskmournHouseOfHorrorCatalogSeed,
         promoPackDuskmournHouseOfHorrorSetSeed to promoPackDuskmournHouseOfHorrorCatalogSeed,
@@ -4092,8 +4118,24 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     fun getSealedWishlist(game: String, accountId: Long) =
         dbQueries.selectSealedWishlistForGame(game, accountId).executeAsList()
 
-    fun addSealedWishlistItem(game: String, catalogId: String, accountId: Long) {
-        dbQueries.insertSealedWishlistItem(game, catalogId, currentTimeMillis(), accountId)
+    // Mehrere Listen (25.08., Nutzer-Vorgabe "wie bei den Karten") - Köpfe
+    fun getSealedWishlists(game: String, accountId: Long) =
+        dbQueries.selectSealedWishlists(game, accountId).executeAsList()
+
+    fun addSealedWishlist(name: String, game: String, accountId: Long): Long {
+        dbQueries.insertSealedWishlist(name, game, currentTimeMillis(), accountId)
+        return dbQueries.lastInsertRowId().executeAsOne()
+    }
+
+    fun removeSealedWishlist(id: Long) {
+        dbQueries.transaction {
+            dbQueries.deleteSealedWishlistItemsForWishlist(id)
+            dbQueries.deleteSealedWishlist(id)
+        }
+    }
+
+    fun addSealedWishlistItem(game: String, catalogId: String, accountId: Long, wishlistId: Long) {
+        dbQueries.insertSealedWishlistItem(game, catalogId, currentTimeMillis(), accountId, wishlistId)
     }
 
     fun removeSealedWishlistItem(id: Long) = dbQueries.deleteSealedWishlistItem(id)
@@ -5056,6 +5098,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         dbQueries.transaction {
             dbQueries.deleteWishlistItemsForAccount(id)
             dbQueries.deleteSealedWishlistItemsForAccount(id)
+            dbQueries.deleteSealedWishlistsForAccount(id)
             dbQueries.deleteWishlistsForAccount(id)
             dbQueries.deleteBinderItemsForAccount(id)
             dbQueries.deleteBindersForAccount(id)

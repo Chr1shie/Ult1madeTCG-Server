@@ -1,0 +1,19 @@
+-- Mehrere Sealed-Wantslisten (25.08., Nutzer-Vorgabe "wie bei den Karten
+-- eben, nur im Vault") - Listen-Köpfe + Zuordnung der Einträge. Bestehende
+-- Einträge (aus der Ein-Listen-Fassung von Migration 29) wandern in eine
+-- automatisch angelegte Liste "Wantsliste" je (Spiel, Account).
+CREATE TABLE SealedWishlistEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    game TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+);
+ALTER TABLE SealedWishlistItemEntity ADD COLUMN wishlistId INTEGER NOT NULL DEFAULT 0;
+INSERT INTO SealedWishlistEntity(name, game, createdAt, accountId)
+SELECT DISTINCT 'Wantsliste', game, 0, accountId FROM SealedWishlistItemEntity;
+UPDATE SealedWishlistItemEntity SET wishlistId = (
+    SELECT id FROM SealedWishlistEntity
+    WHERE SealedWishlistEntity.game = SealedWishlistItemEntity.game
+      AND SealedWishlistEntity.accountId = SealedWishlistItemEntity.accountId
+);
