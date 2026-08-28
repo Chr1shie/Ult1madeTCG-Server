@@ -204,6 +204,11 @@ let setFilter = "owned"; // "owned" | "full" | "missing" - nur relevant für ech
 // buildSortFilterRow()/applySortAndFilter() weiter unten
 let gridSortMode = "date"; // "date" | "nameAsc" | "nameDesc"
 let gridRarityFilter = new Set();
+// Typ-/Farb-Filter (28.08., Parität zur App vom 19.08.) - Chips erscheinen
+// nur, wo die Katalogdaten Typ (ruleSupertype) bzw. Farben (ruleSubtypes)
+// tragen; mehrere gewählte Werte sind ODER-verknüpft (wie in der App)
+let gridTypeFilter = new Set();
+let gridColorFilter = new Set();
 // Auswahl-Modus für den Export bestimmter Karten (26.07., Nutzer-Vorgabe) -
 // pro cardId, wird beim Wechsel des Sets/Filters zurückgesetzt (siehe
 // resetSelection())
@@ -230,11 +235,17 @@ function resetSelection() {
 let ownedSelectionMode = false;
 let selectedOwnedItemIds = new Set();
 let ownedSelectionBinderId = null;
+// Wants-/Deck-Ziele in der Mehrfachauswahl (28.08., Parität zur App vom
+// 20.08. - dort DeckPickerRow/WishlistPickerRow neben dem Binder-Picker)
+let ownedSelectionWishlistId = null;
+let ownedSelectionDeckId = null;
 
 function resetOwnedSelection() {
   ownedSelectionMode = false;
   selectedOwnedItemIds = new Set();
   ownedSelectionBinderId = null;
+  ownedSelectionWishlistId = null;
+  ownedSelectionDeckId = null;
 }
 
 // Werkzeugleiste für die Massenauswahl (03.08.) - Binder-Chips (analog zu
@@ -246,6 +257,28 @@ function buildOwnedSelectionToolbar(ownedForGame) {
   const wrap = document.createElement("div");
   wrap.className = "gridSortFilterRow";
   wrap.style.flexWrap = "wrap";
+
+  // "Alle N angezeigten auswählen" (28.08., Parität zur App vom 20.08.) -
+  // zählt nur die gerade sichtbaren (Filter + Suche angewendet)
+  const shown = applySortAndFilter(ownedForGame);
+  const selectAllBtn = document.createElement("button");
+  selectAllBtn.className = "gridSortChip";
+  selectAllBtn.textContent = tr("Select all ", "Alle ") + shown.length + tr(" shown", " angezeigten auswählen");
+  selectAllBtn.addEventListener("click", () => {
+    shown.forEach(it => selectedOwnedItemIds.add(it.id));
+    render();
+  });
+  wrap.appendChild(selectAllBtn);
+  const selectAllDivider = document.createElement("span");
+  selectAllDivider.className = "gridSortDivider";
+  wrap.appendChild(selectAllDivider);
+
+  // Ziel-Listen bei Bedarf nachladen (einmalig; render() zeichnet die
+  // Chips dann nach) - vorher erschienen Binder-Chips nur, wenn der Cache
+  // zufällig schon durch ein Add-Overlay gefüllt war
+  if (bindersCache[activeGame] === undefined) loadBindersForGame(activeGame);
+  if (wishlistsCache[activeGame] === undefined) loadWishlistsForGame(activeGame);
+  if (decksCache[activeGame] === undefined) loadDecksForGame(activeGame);
 
   const binders = bindersCache[activeGame] || [];
   if (binders.length > 0) {
@@ -292,6 +325,101 @@ function buildOwnedSelectionToolbar(ownedForGame) {
     }
   });
   wrap.appendChild(addBtn);
+
+  // Wants-Listen-Ziel (28.08., Parität zur App) - Chips + Hinzufügen-Knopf,
+  // gleiche Mechanik wie beim Binder darüber
+  const wishlists = wishlistsCache[activeGame] || [];
+  if (wishlists.length > 0) {
+    const divider = document.createElement("span");
+    divider.className = "gridSortDivider";
+    wrap.appendChild(divider);
+    wishlists.forEach(w => {
+      const chip = document.createElement("button");
+      chip.className = "gridSortChip" + (ownedSelectionWishlistId === w.id ? " active" : "");
+      chip.textContent = w.name;
+      chip.addEventListener("click", () => {
+        ownedSelectionWishlistId = ownedSelectionWishlistId === w.id ? null : w.id;
+        render();
+      });
+      wrap.appendChild(chip);
+    });
+    const wlBtn = document.createElement("button");
+    wlBtn.className = "gridSortChip";
+    wlBtn.textContent = tr("Add to want list", "Zu Wantsliste hinzufügen");
+    wlBtn.disabled = ownedSelectionWishlistId === null;
+    wlBtn.addEventListener("click", async () => {
+      if (ownedSelectionWishlistId === null) return;
+      const ownedById = new Map(ownedForGame.map(it => [it.id, it]));
+      const cards = Array.from(selectedOwnedItemIds)
+        .map(id => ownedById.get(id))
+        .filter(it => it)
+        .map(it => ({ cardId: it.cardId || null, name: it.name, imageUrl: it.imageUrl || null }));
+      try {
+        await fetch("/api/wishlistItems/add", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({ wishlistId: ownedSelectionWishlistId, cards })
+        });
+        delete wishlistItemsCache[activeGame];
+        await loadWishlistsForGame(activeGame);
+        resetOwnedSelection();
+        render();
+      } catch (err) {
+        showAddToast(tr("Adding failed", "Hinzufügen fehlgeschlagen"));
+      }
+    });
+    wrap.appendChild(wlBtn);
+  }
+
+  // Deck-Ziel (28.08., Parität zur App) - ein Aufruf pro Karte, wie im
+  // Add-Overlay; Karten ohne Katalog-Bezug (cardId) können nicht ins Deck
+  const decks = decksCache[activeGame] || [];
+  if (decks.length > 0) {
+    const divider = document.createElement("span");
+    divider.className = "gridSortDivider";
+    wrap.appendChild(divider);
+    decks.forEach(d => {
+      const chip = document.createElement("button");
+      chip.className = "gridSortChip" + (ownedSelectionDeckId === d.id ? " active" : "");
+      chip.textContent = d.name;
+      chip.addEventListener("click", () => {
+        ownedSelectionDeckId = ownedSelectionDeckId === d.id ? null : d.id;
+        render();
+      });
+      wrap.appendChild(chip);
+    });
+    const deckBtn = document.createElement("button");
+    deckBtn.className = "gridSortChip";
+    deckBtn.textContent = tr("Add to deck", "Zu Deck hinzufügen");
+    deckBtn.disabled = ownedSelectionDeckId === null;
+    deckBtn.addEventListener("click", async () => {
+      if (ownedSelectionDeckId === null) return;
+      const ownedById = new Map(ownedForGame.map(it => [it.id, it]));
+      const cards = Array.from(selectedOwnedItemIds)
+        .map(id => ownedById.get(id))
+        .filter(it => it && it.cardId);
+      let ok = 0;
+      for (const it of cards) {
+        try {
+          const res = await fetch("/api/deckCards/add", {
+            method: "POST",
+            headers: authHeaders(true),
+            body: JSON.stringify({ deckId: ownedSelectionDeckId, cardId: it.cardId })
+          });
+          if (res.ok) ok++;
+        } catch (err) {
+          // einzelner Fehlschlag stoppt nicht den Rest
+        }
+      }
+      delete deckCardsCache[ownedSelectionDeckId];
+      delete decksCache[activeGame];
+      await loadDecksForGame(activeGame);
+      showAddToast("✓ " + ok + " " + tr("added to deck", "zum Deck hinzugefügt"));
+      resetOwnedSelection();
+      render();
+    });
+    wrap.appendChild(deckBtn);
+  }
 
   const deleteBtn = document.createElement("button");
   deleteBtn.className = "gridSortChip danger";
@@ -656,6 +784,8 @@ function applyGameSwitch(g) {
   selectedDeckCardIds = new Set();
   deckValidation = null;
   gridRarityFilter = new Set();
+  gridTypeFilter = new Set();
+  gridColorFilter = new Set();
   gridSearchQuery = "";
   resetSelection();
   render();
@@ -896,6 +1026,14 @@ function renderVaultTab() {
       imageSrc: (GAME_BY_CODE[activeGame] || {}).image || GAMES[0].image,
       onClick: () => openAddOverlay("vault")
     }));
+    // Sealed-Wantslisten (28.08., Parität zur App - dort im Plus-Dialog)
+    const wlLists = sealedWishlistsCache[activeGame];
+    if (wlLists === undefined) loadSealedWishlistsForGame(activeGame);
+    allBody.appendChild(buildMainActionButton({
+      label: tr("Want lists", "Wantslisten") + (wlLists ? " (" + wlLists.length + ")" : ""),
+      imageSrc: (GAME_BY_CODE[activeGame] || {}).image || GAMES[0].image,
+      onClick: () => openSealedWishlistOverlay()
+    }));
     if (ownedForGame.length === 0) {
       const empty = document.createElement("p");
       empty.className = "status";
@@ -942,6 +1080,254 @@ function renderVaultTab() {
   }
 }
 
+// ---------- Sealed-Wantslisten (28.08., Parität zur App vom 25.08.) ----------
+// Übersicht (Listen mit Anzahl + Preissumme) und Detail (Produkte mit
+// Cardmarket-Preis, Preis-Alarm-Glocke und Entfernen). Produkte kommen über
+// das generische Add-Overlay (kind "sealedWishlist", durchsucht den
+// Sealed-Katalog wie der Vault-Zweig). Alarm-Semantik wie in der App:
+// Schwelle gesetzt = Hinweis, sobald der Preisabgleich sie erreicht.
+const sealedWishlistsCache = {};      // game -> [{id,name,game,itemCount}]
+const sealedWishlistItemsCache = {};  // game -> [{id,wishlistId,catalogId,...,priceAlarmEur}]
+let sealedWlView = { mode: "overview", listId: null };
+
+async function loadSealedWishlistsForGame(game) {
+  try {
+    const [wRes, iRes] = await Promise.all([
+      authedFetch("/api/sealedWishlists?game=" + encodeURIComponent(game)),
+      authedFetch("/api/sealedWishlistItems?game=" + encodeURIComponent(game))
+    ]);
+    if (wRes.ok) sealedWishlistsCache[game] = await wRes.json();
+    if (iRes.ok) sealedWishlistItemsCache[game] = await iRes.json();
+    if (activeTab === "vault" && activeGame === game) render();
+  } catch (err) {
+    // Zusatzfeature - bei Fehlern bleibt der Rest der Seite nutzbar
+  }
+}
+
+function openSealedWishlistOverlay() {
+  sealedWlView = { mode: "overview", listId: null };
+  document.getElementById("sealedWishlistOverlay").classList.add("visible");
+  renderSealedWishlistOverlay();
+  loadSealedWishlistsForGame(activeGame).then(renderSealedWishlistOverlay);
+}
+
+function closeSealedWishlistOverlay() {
+  document.getElementById("sealedWishlistOverlay").classList.remove("visible");
+}
+
+function sealedWlPriceSum(items) {
+  return items.reduce((sum, it) => sum + (it.marketPriceEur || 0), 0);
+}
+
+function buildSealedWlRow(mainText, subText, thumbUrl) {
+  const row = document.createElement("div");
+  row.className = "addResultRow";
+  const thumb = document.createElement("div");
+  thumb.className = "thumb";
+  if (thumbUrl) {
+    const img = document.createElement("img");
+    img.src = thumbUrl;
+    img.alt = "";
+    thumb.appendChild(img);
+  }
+  const info = document.createElement("div");
+  info.className = "info";
+  const nameDiv = document.createElement("div");
+  nameDiv.className = "name";
+  nameDiv.textContent = mainText;
+  const subDiv = document.createElement("div");
+  subDiv.className = "sub";
+  subDiv.textContent = subText || "";
+  info.appendChild(nameDiv);
+  info.appendChild(subDiv);
+  row.appendChild(thumb);
+  row.appendChild(info);
+  return row;
+}
+
+function renderSealedWishlistOverlay() {
+  const overlay = document.getElementById("sealedWishlistOverlay");
+  if (!overlay.classList.contains("visible")) return;
+  const title = document.getElementById("sealedWishlistTitle");
+  const content = document.getElementById("sealedWishlistContent");
+  const back = document.getElementById("sealedWishlistBack");
+  const lists = sealedWishlistsCache[activeGame] || [];
+  const items = sealedWishlistItemsCache[activeGame] || [];
+  content.innerHTML = "";
+
+  if (sealedWlView.mode === "detail") {
+    const list = lists.find(l => l.id === sealedWlView.listId);
+    if (!list) {
+      sealedWlView = { mode: "overview", listId: null };
+      renderSealedWishlistOverlay();
+      return;
+    }
+    const listItems = items.filter(it => it.wishlistId === list.id);
+    title.textContent = list.name;
+    back.style.display = "";
+
+    const sub = document.createElement("p");
+    sub.className = "backupHint";
+    sub.textContent = listItems.length + " " + tr("product(s)", "Produkt(e)") + " · " + formatEur(sealedWlPriceSum(listItems)) + " " + tr("total", "gesamt");
+    content.appendChild(sub);
+
+    content.appendChild(buildMainActionButton({
+      label: tr("Add products", "Produkte hinzufügen"),
+      imageSrc: (GAME_BY_CODE[activeGame] || {}).image || GAMES[0].image,
+      onClick: () => {
+        closeSealedWishlistOverlay();
+        openAddOverlay("sealedWishlist", list.id);
+      }
+    }));
+
+    if (listItems.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "backupHint";
+      empty.textContent = tr("No products in this list yet.", "Noch keine Produkte in dieser Liste.");
+      content.appendChild(empty);
+    }
+    for (const it of listItems) {
+      const priceText = it.marketPriceEur != null ? formatEur(it.marketPriceEur) : tr("no price", "kein Preis");
+      const alarmText = it.priceAlarmEur != null
+        ? "🔔 " + tr("alert at ", "Alarm bei ") + formatEur(it.priceAlarmEur)
+        : "";
+      const row = buildSealedWlRow(it.name || it.catalogId, (it.category || "") + " · " + priceText + (alarmText ? " · " + alarmText : ""), it.imageUrl);
+      // Alarm-Glocke: setzt/ändert die Schwelle, leer = entfernen (wie der
+      // Alarm-Dialog in der App, nur als schlichte Eingabe)
+      const bell = document.createElement("button");
+      bell.className = "confirmNo";
+      bell.style.marginLeft = "auto";
+      bell.textContent = it.priceAlarmEur != null ? "🔔" : "🔕";
+      bell.title = tr("Price alert", "Preis-Alarm");
+      bell.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const raw = window.prompt(
+          tr("Alert me when the price drops to (EUR, empty = remove):", "Melden, wenn der Preis fällt auf (EUR, leer = entfernen):"),
+          it.priceAlarmEur != null ? String(it.priceAlarmEur) : ""
+        );
+        if (raw === null) return;
+        const value = raw.trim() === "" ? null : parseFloat(raw.replace(",", "."));
+        if (raw.trim() !== "" && (isNaN(value) || value < 0)) return;
+        await fetch("/api/sealedWishlistItems/alarm", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({ id: it.id, priceEur: value })
+        });
+        await loadSealedWishlistsForGame(activeGame);
+        renderSealedWishlistOverlay();
+      });
+      row.appendChild(bell);
+      const remove = document.createElement("button");
+      remove.className = "confirmNo";
+      remove.textContent = "✕";
+      remove.title = tr("Remove", "Entfernen");
+      remove.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        await fetch("/api/sealedWishlistItems/delete", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({ id: it.id })
+        });
+        await loadSealedWishlistsForGame(activeGame);
+        renderSealedWishlistOverlay();
+      });
+      row.appendChild(remove);
+      content.appendChild(row);
+    }
+    return;
+  }
+
+  // Übersicht
+  title.textContent = tr("Want lists", "Wantslisten");
+  back.style.display = "none";
+
+  const createRow = document.createElement("div");
+  createRow.style.display = "flex";
+  createRow.style.gap = "8px";
+  createRow.style.marginBottom = "10px";
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "addSearchInput";
+  nameInput.placeholder = tr("New list name", "Name der neuen Liste");
+  nameInput.autocomplete = "off";
+  const createBtn = document.createElement("button");
+  createBtn.className = "confirmYes";
+  createBtn.style.background = "var(--accent)";
+  createBtn.style.color = "#10100f";
+  createBtn.textContent = tr("Create", "Erstellen");
+  createBtn.addEventListener("click", async () => {
+    const name = nameInput.value.trim();
+    if (!name) return;
+    await fetch("/api/sealedWishlists", {
+      method: "POST",
+      headers: authHeaders(true),
+      body: JSON.stringify({ name, game: activeGame })
+    });
+    nameInput.value = "";
+    await loadSealedWishlistsForGame(activeGame);
+    renderSealedWishlistOverlay();
+  });
+  createRow.appendChild(nameInput);
+  createRow.appendChild(createBtn);
+  content.appendChild(createRow);
+
+  if (lists.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "backupHint";
+    empty.textContent = tr("No want lists yet - create one above.", "Noch keine Wantslisten - oben eine anlegen.");
+    content.appendChild(empty);
+  }
+  for (const list of lists) {
+    const listItems = items.filter(it => it.wishlistId === list.id);
+    const row = buildSealedWlRow(
+      list.name,
+      list.itemCount + " " + tr("product(s)", "Produkt(e)") + " · " + formatEur(sealedWlPriceSum(listItems))
+    );
+    row.style.cursor = "pointer";
+    row.addEventListener("click", () => {
+      sealedWlView = { mode: "detail", listId: list.id };
+      renderSealedWishlistOverlay();
+    });
+    const del = document.createElement("button");
+    del.className = "confirmNo";
+    del.style.marginLeft = "auto";
+    del.textContent = "✕";
+    del.title = tr("Delete list", "Liste löschen");
+    del.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      if (!window.confirm(tr("Delete this want list?", "Diese Wantsliste löschen?"))) return;
+      await fetch("/api/sealedWishlists/delete", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ id: list.id })
+      });
+      await loadSealedWishlistsForGame(activeGame);
+      renderSealedWishlistOverlay();
+    });
+    row.appendChild(del);
+    content.appendChild(row);
+  }
+}
+
+// Ausgelöste Preis-Alarme einmal pro Seiten-Sitzung anzeigen - Pendant zum
+// Alarm-Dialog beim App-Start (Schwelle erreicht/unterschritten)
+let sealedAlarmsShown = false;
+async function maybeShowSealedAlarms() {
+  if (sealedAlarmsShown) return;
+  try {
+    const res = await authedFetch("/api/sealedWishlistAlarms");
+    if (!res.ok) return;
+    const alarms = await res.json();
+    if (alarms.length === 0) return;
+    sealedAlarmsShown = true;
+    const names = alarms.slice(0, 3).map(a => a.name || "?").join(", ");
+    const more = alarms.length > 3 ? " +" + (alarms.length - 3) : "";
+    showAddToast("🔔 " + tr("Price alert: ", "Preis-Alarm: ") + names + more + " " + tr("reached your target price", "hat deinen Wunschpreis erreicht"));
+  } catch (err) {
+    // Best-effort-Hinweis
+  }
+}
+
 // Sortierung + Raritäts-Filter fürs Karten-Grid (31.07., Nutzer-Vorgabe) -
 // "date" verändert die Reihenfolge bewusst NICHT (entspricht "wie es jetzt
 // eh ist"), analog zu GridSortMode.DATE_ADDED in der App. Raritäten werden
@@ -956,6 +1342,14 @@ let gridSearchQuery = "";
 
 function applySortAndFilter(items) {
   let result = gridRarityFilter.size === 0 ? items : items.filter(it => gridRarityFilter.has(it.rarity));
+  // Typ-/Farb-Filter (28.08.) - ODER innerhalb eines Filters, UND zwischen
+  // den Filtern (wie in der App: displayedGridCards in App.kt)
+  if (gridTypeFilter.size > 0) {
+    result = result.filter(it => it.ruleSupertype && gridTypeFilter.has(it.ruleSupertype));
+  }
+  if (gridColorFilter.size > 0) {
+    result = result.filter(it => (it.ruleSubtypes || []).some(s => gridColorFilter.has(s)));
+  }
   if (gridSearchQuery.trim()) {
     const q = gridSearchQuery.trim().toLowerCase();
     result = result.filter(it => it.name.toLowerCase().includes(q));
@@ -1018,6 +1412,26 @@ function buildSortFilterRow(items) {
       row.appendChild(chip);
     });
   }
+  // Typ-/Farb-Chips (28.08., Parität zur App vom 19.08.) - erscheinen nur,
+  // wenn die Einträge die Katalog-Regelfelder tragen (Set-Grids)
+  const addChipGroup = (values, filterSet) => {
+    if (values.length === 0) return;
+    const divider = document.createElement("span");
+    divider.className = "gridSortDivider";
+    row.appendChild(divider);
+    values.forEach(v => {
+      const chip = document.createElement("button");
+      chip.className = "gridSortChip" + (filterSet.has(v) ? " active" : "");
+      chip.textContent = v;
+      chip.addEventListener("click", () => {
+        if (filterSet.has(v)) filterSet.delete(v); else filterSet.add(v);
+        render();
+      });
+      row.appendChild(chip);
+    });
+  };
+  addChipGroup(Array.from(new Set(items.map(it => it.ruleSupertype).filter(Boolean))).sort(), gridTypeFilter);
+  addChipGroup(Array.from(new Set(items.flatMap(it => it.ruleSubtypes || []))).sort(), gridColorFilter);
   return row;
 }
 
@@ -2181,6 +2595,26 @@ function buildBinderSlotElement(item, position) {
   }
   card.appendChild(art);
 
+  // "Ein Fach nach vorn schieben" (28.08., Parität zum Doppel-Tipp in der
+  // App): Doppelklick im Einsortieren-Modus schiebt diese und alle
+  // folgenden Karten um ein Fach weiter - es entsteht eine Lücke
+  card.addEventListener("dblclick", async () => {
+    if (!binderArrangeMode) return;
+    binderSwapSourceId = null;
+    try {
+      await fetch("/api/binderItems/shiftForward", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ binderId: item.binderId, atPosition: position })
+      });
+    } catch (err) {
+      showAddToast(tr("Shifting failed", "Verschieben fehlgeschlagen"));
+    }
+    delete binderItemsCache[activeGame];
+    await loadBindersForGame(activeGame);
+    render();
+  });
+
   card.addEventListener("click", async () => {
     if (binderArrangeMode) {
       if (binderSwapSourceId == null) {
@@ -2244,6 +2678,23 @@ function renderOpenSetBody(body, set, ownedForGame) {
     disabled: !catalog,
     onClick: () => runSetExport(set, catalog, ownedInSet)
   }));
+  // Zusatz-Aktionen (28.08., Parität zum App-Export-Dialog): Dubletten +
+  // "Fehlende in Wantsliste übernehmen" - als schlanke Chips unterm Export
+  const extraExportRow = document.createElement("div");
+  extraExportRow.className = "gridSortFilterRow";
+  const dupBtn = document.createElement("button");
+  dupBtn.className = "gridSortChip";
+  dupBtn.textContent = tr("Export duplicates", "Dubletten exportieren");
+  dupBtn.disabled = !catalog;
+  dupBtn.addEventListener("click", () => runSetExport(set, catalog, ownedInSet, "duplicates"));
+  extraExportRow.appendChild(dupBtn);
+  const missingWlBtn = document.createElement("button");
+  missingWlBtn.className = "gridSortChip";
+  missingWlBtn.textContent = tr("Missing → want list", "Fehlende → Wantsliste");
+  missingWlBtn.disabled = !catalog;
+  missingWlBtn.addEventListener("click", () => addMissingToWishlist(set, catalog, ownedInSet));
+  extraExportRow.appendChild(missingWlBtn);
+  body.appendChild(extraExportRow);
 
   const filters = document.createElement("div");
   filters.className = "setFilters";
@@ -2356,17 +2807,32 @@ function buildMainActionButton(opts) {
 // Ohne Auswahl richtet sich der Modus nach dem aktiven Filter (Gesammelte
 // Karten/Ganzes Set/Fehlende), mit Auswahl werden nur die markierten Karten
 // exportiert (immer mit echter Anzahl bzw. 1, wenn nicht besessen).
-function runSetExport(set, catalog, ownedInSet) {
+// Varianten lesbar im Namen (28.08., Parität zu displayName() in App.kt) -
+// "Alternate Art"-Karten heißen im Export "Name (Variante)", damit sich
+// gleichnamige Varianten in der Cardmarket-Wantsliste nicht vermischen
+function catalogDisplayName(c) {
+  return (!c.variant || c.variant === "Normal") ? c.name : c.name + " (" + c.variant + ")";
+}
+
+// modeOverride "duplicates" (28.08., Parität zum App-Export-Dialog):
+// exportiert je Karte die überzähligen Exemplare (Anzahl - 1)
+function runSetExport(set, catalog, ownedInSet, modeOverride) {
   if (!catalog) return;
   const ownedByCardId = new Map(ownedInSet.map(item => [item.cardId, item]));
-  const sorted = [...catalog].sort((a, b) => a.number.localeCompare(b.number));
+  // Sortierung wie die App: (Nummer, Variante) - Varianten sonst zufällig
+  const sorted = [...catalog].sort((a, b) =>
+    a.number.localeCompare(b.number) || (a.variant || "").localeCompare(b.variant || ""));
   const lines = [];
 
   for (const c of sorted) {
-    if (selectionMode && selectedCardIds.size > 0 && !selectedCardIds.has(c.id)) continue;
+    if (!modeOverride && selectionMode && selectedCardIds.size > 0 && !selectedCardIds.has(c.id)) continue;
     const owned = ownedByCardId.get(c.id);
     const quantity = owned ? owned.quantity : 0;
-    const name = owned ? owned.name : c.name;
+    const name = catalogDisplayName(c);
+    if (modeOverride === "duplicates") {
+      if (quantity > 1) lines.push((quantity - 1) + "x " + name + " (" + set.name + ")");
+      continue;
+    }
     if (selectionMode && selectedCardIds.size > 0) {
       const exportQuantity = quantity > 0 ? quantity : 1;
       lines.push(exportQuantity + "x " + name + " (" + set.name + ")");
@@ -2383,8 +2849,48 @@ function runSetExport(set, catalog, ownedInSet) {
   }
 
   const safeSetName = set.name.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-  const suffix = selectionMode && selectedCardIds.size > 0 ? tr("selection", "auswahl") : setFilter;
+  const suffix = modeOverride === "duplicates" ? tr("duplicates", "dubletten")
+    : (selectionMode && selectedCardIds.size > 0 ? tr("selection", "auswahl") : setFilter);
   downloadTextFile(safeSetName + "_" + suffix + ".txt", lines.join("\n"));
+}
+
+// "Fehlende in Wantsliste übernehmen" (28.08., Parität zur App vom 18.08.):
+// legt eine Wantsliste mit dem Set-Namen an (bzw. nutzt eine vorhandene
+// gleichen Namens) und trägt alle fehlenden Karten ein - schon enthaltene
+// überspringt der Server (addWishlistItems ist insert-if-missing)
+async function addMissingToWishlist(set, catalog, ownedInSet) {
+  if (!catalog) return;
+  const ownedIds = new Set(ownedInSet.map(item => item.cardId).filter(Boolean));
+  const missing = catalog.filter(c => !ownedIds.has(c.id));
+  if (missing.length === 0) {
+    showAddToast(tr("No missing cards - the set is complete!", "Keine fehlenden Karten - das Set ist komplett!"));
+    return;
+  }
+  try {
+    let target = (wishlistsCache[activeGame] || []).find(w => w.name === set.name);
+    if (!target) {
+      const res = await fetch("/api/wishlists", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ name: set.name, game: activeGame })
+      });
+      if (!res.ok) throw new Error("create failed");
+      target = await res.json();
+    }
+    await fetch("/api/wishlistItems/add", {
+      method: "POST",
+      headers: authHeaders(true),
+      body: JSON.stringify({
+        wishlistId: target.id,
+        cards: missing.map(c => ({ cardId: c.id, name: catalogDisplayName(c), imageUrl: c.imageUrl || null }))
+      })
+    });
+    delete wishlistItemsCache[activeGame];
+    await loadWishlistsForGame(activeGame);
+    showAddToast("✓ " + missing.length + " " + tr("card(s) added to \"", "Karte(n) übernommen in \"") + set.name + "\"");
+  } catch (err) {
+    showAddToast(tr("Adding failed", "Übernehmen fehlgeschlagen"));
+  }
 }
 
 function downloadTextFile(filename, text) {
@@ -2771,6 +3277,15 @@ let addOverlayKind = null; // "cards" | "vault" | "wishlist" | "binder" | "deck"
 let addSelected = new Map(); // key -> Payload fürs POST beim Hinzufügen
 let addGroupId = null; // ausgewähltes Set (Karten/Wishlist/Binder) bzw. Kategorie (Vault)
 let addWishlistTargetId = null; // Ziel-Liste, nur bei kind === "wishlist"
+// Sealed-Wantslisten (28.08.) - Ziel-Liste, nur bei kind === "sealedWishlist"
+let addSealedWishlistTargetId = null;
+
+// "vault" und "sealedWishlist" durchstöbern beide den SEALED-Katalog
+// (Kategorien statt Sets) - alle Verzweigungen im Add-Overlay, die bisher
+// auf === "vault" prüften, meinen in Wahrheit diese Katalog-Art
+function addKindUsesSealedCatalog() {
+  return addOverlayKind === "vault" || addOverlayKind === "sealedWishlist";
+}
 // Ziel-Binder, nur bei kind === "binder" (direktes Hinzufügen vorhandener
 // Katalogkarten zu einem offenen Binder, siehe renderBinderDetail()) -
 // bewusst getrennt von addBinderTargetId (das ist die optionale
@@ -2791,6 +3306,7 @@ function openAddOverlay(kind, listId) {
   addWishlistTargetId = kind === "wishlist" ? (listId || null) : null;
   addBinderOverlayTargetId = kind === "binder" ? (listId || null) : null;
   addDeckTargetId = kind === "deck" ? (listId || null) : null;
+  addSealedWishlistTargetId = kind === "sealedWishlist" ? (listId || null) : null;
   // Binder-Auswahl beim "Karte hinzufügen"-Fluss zurücksetzen (31.07.) - eine
   // vorherige Sitzung darf keinen stillen Binder aus einem früheren Öffnen
   // übernehmen
@@ -2802,6 +3318,7 @@ function openAddOverlay(kind, listId) {
     : kind === "wishlist" ? tr("Add card to wishlist", "Karte zur Wunschliste hinzufügen")
     : kind === "binder" ? tr("Add card to binder", "Karte zum Binder hinzufügen")
     : kind === "deck" ? tr("Add card to deck", "Karte zum Deck hinzufügen")
+    : kind === "sealedWishlist" ? tr("Add product to want list", "Produkt zur Wantsliste hinzufügen")
     : tr("Add vault product", "Vault-Produkt hinzufügen");
   input.value = "";
   overlay.classList.add("visible");
@@ -2829,6 +3346,7 @@ function closeAddOverlay() {
   addBinderOverlayTargetId = null;
   addBinderTargetId = null;
   addDeckTargetId = null;
+  addSealedWishlistTargetId = null;
 }
 
 function showAddToast(text) {
@@ -2929,7 +3447,7 @@ function renderAddGroups() {
   wrap.innerHTML = "";
   wrap.className = "setAccordion";
 
-  if (addOverlayKind !== "vault") {
+  if (!addKindUsesSealedCatalog()) {
     const requestedKind = addOverlayKind;
     const sets = setsCache[activeGame];
     if (!sets) {
@@ -2945,9 +3463,37 @@ function renderAddGroups() {
     const catalog = sealedCatalogCache[activeGame];
     if (!catalog) {
       ensureSealedCatalogLoaded(activeGame).then(() => {
-        if (addOverlayKind === "vault") renderAddGroups();
+        if (addKindUsesSealedCatalog()) renderAddGroups();
       });
       return;
+    }
+    // Eigenes Produkt (28.08., Parität zu "Nicht dabei? Eigenes Produkt
+    // eintragen" in VaultScreen.kt) - nur beim Vault-Hinzufügen, nicht bei
+    // Wantslisten (die brauchen einen Katalog-Bezug für den Preis)
+    if (addOverlayKind === "vault") {
+      const customBtn = document.createElement("button");
+      customBtn.className = "gridSortChip";
+      customBtn.style.margin = "0 0 8px 0";
+      customBtn.textContent = tr("Not listed? Add a custom product", "Nicht dabei? Eigenes Produkt eintragen");
+      customBtn.addEventListener("click", async () => {
+        const name = window.prompt(tr("Product name:", "Produktname:"), "");
+        if (name === null || !name.trim()) return;
+        const category = window.prompt(tr("Category (e.g. Display, Tin):", "Kategorie (z.B. Display, Tin):"), "");
+        if (category === null || !category.trim()) return;
+        try {
+          const res = await fetch("/api/sealed/add", {
+            method: "POST",
+            headers: authHeaders(true),
+            body: JSON.stringify({ catalogId: null, name: name.trim(), category: category.trim(), game: activeGame, imageUrl: null, quantity: 1, isSealed: true })
+          });
+          if (!res.ok) throw new Error("add failed");
+          showAddToast("✓ 1 " + tr("vault product", "Vault-Produkt") + " " + tr("added", "hinzugefügt"));
+          await loadData();
+        } catch (err) {
+          showAddToast(tr("Adding failed", "Hinzufügen fehlgeschlagen"));
+        }
+      });
+      wrap.appendChild(customBtn);
     }
     const categories = Array.from(new Set(catalog.map(c => c.category))).sort();
     for (const cat of categories) {
@@ -2975,7 +3521,7 @@ function buildAddAccordionItem(id, label, count) {
   const body = document.createElement("div");
   body.className = "setAccordionBody";
   if (isOpen) {
-    if (addOverlayKind !== "vault") {
+    if (!addKindUsesSealedCatalog()) {
       const catalog = catalogCache[id];
       if (!catalog) {
         const loading = document.createElement("p");
@@ -3030,7 +3576,7 @@ function buildAddGroupGrid(catalog) {
 // Mengen-/Holo-Anzeige, da diese Kacheln reine Katalogeinträge zum
 // Hinzufügen sind, keine bereits besessenen Sammlungs-Zeilen.
 function buildAddCardTile(item, missing) {
-  const payload = addOverlayKind === "vault"
+  const payload = addKindUsesSealedCatalog()
     ? { catalogId: item.id, name: item.name, category: item.category, game: activeGame, imageUrl: item.imageUrl, quantity: 1, isSealed: true }
     : (addOverlayKind === "wishlist" || addOverlayKind === "binder")
       ? { cardId: item.id, name: item.name, imageUrl: item.imageUrl }
@@ -3117,7 +3663,7 @@ function renderAddContent() {
 }
 
 async function runAddSearch(query) {
-  if (addOverlayKind !== "vault") {
+  if (!addKindUsesSealedCatalog()) {
     try {
       const res = await authedFetch("/api/searchCatalog?game=" + encodeURIComponent(activeGame) + "&query=" + encodeURIComponent(query));
       if (!res.ok) return;
@@ -3254,6 +3800,20 @@ async function runAddBatch() {
     } catch (err) {
       // s.u. - Toast zeigt den Fehlschlag
     }
+  } else if (kind === "sealedWishlist") {
+    // Sealed-Wantsliste (28.08.) - ein Aufruf pro Produkt, wie beim Deck
+    for (const payload of payloads) {
+      try {
+        const res = await fetch("/api/sealedWishlistItems/add", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({ wishlistId: addSealedWishlistTargetId, game: activeGame, catalogId: payload.catalogId })
+        });
+        if (res.ok) successCount++;
+      } catch (err) {
+        // einzelner Fehlschlag stoppt nicht den Rest des Stapels
+      }
+    }
   } else if (kind === "deck") {
     // Kein Batch-Endpunkt fürs Deck (siehe AddDeckCardRequest in Main.kt -
     // ein Aufruf pro Karte), analog zum "cards"/"vault"-Zweig unten
@@ -3317,13 +3877,17 @@ async function runAddBatch() {
         ? (successCount === 1 ? tr("binder card", "Karte zum Binder") : tr("binder cards", "Karten zum Binder"))
         : kind === "deck"
           ? (successCount === 1 ? tr("deck card", "Karte zum Deck") : tr("deck cards", "Karten zum Deck"))
-          : (successCount === 1 ? tr("vault product", "Vault-Produkt") : tr("vault products", "Vault-Produkte"));
+          : kind === "sealedWishlist"
+            ? (successCount === 1 ? tr("want list product", "Produkt zur Wantsliste") : tr("want list products", "Produkte zur Wantsliste"))
+            : (successCount === 1 ? tr("vault product", "Vault-Produkt") : tr("vault products", "Vault-Produkte"));
   showAddToast(successCount > 0 ? ("✓ " + successCount + " " + noun + " " + tr("added", "hinzugefügt")) : tr("Adding failed", "Hinzufügen fehlgeschlagen"));
 
   addSelected = new Map();
   if (kind === "wishlist") {
     delete wishlistItemsCache[activeGame];
     await loadWishlistsForGame(activeGame);
+  } else if (kind === "sealedWishlist") {
+    await loadSealedWishlistsForGame(activeGame);
   } else if (kind === "binder") {
     delete binderItemsCache[activeGame];
     await loadBindersForGame(activeGame);
@@ -3486,13 +4050,19 @@ function renderValuePanel() {
   const statsGrid = document.createElement("div");
   statsGrid.className = "valueStatsGrid";
 
-  function addStat(label, amount, sub, color) {
+  // targetItem (28.08., Parität zur App vom 19.08.): Kachel springt direkt
+  // in die Karte bzw. das Vault-Produkt (tapFor() in ValueOverviewScreen.kt)
+  function addStat(label, amount, sub, color, targetItem) {
     const el = document.createElement("div");
     el.className = "valueStat";
     el.innerHTML =
       "<div class=\"label\">" + label + "</div>" +
       "<div class=\"amount\"" + (color ? " style=\"color:" + color + "\"" : "") + ">" + amount + "</div>" +
       (sub ? "<div class=\"sub\">" + sub + "</div>" : "");
+    if (targetItem) {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", () => openCardDetail(targetItem, null));
+    }
     statsGrid.appendChild(el);
   }
 
@@ -3504,12 +4074,12 @@ function renderValuePanel() {
     null,
     totalProfitEur >= 0 ? "#66BB6A" : "#E57373"
   );
-  addStat(tr("Biggest gain (card)", "Größter Gewinn (Karte)"), bestCard ? formatEur(profitEur(bestCard)) : tr("No data yet", "Noch keine Daten"), bestCard ? bestCard.name : null, "#66BB6A");
-  addStat(tr("Biggest loss (card)", "Größter Verlust (Karte)"), worstCard ? formatEur(profitEur(worstCard)) : tr("No data yet", "Noch keine Daten"), worstCard ? worstCard.name : null, "#E57373");
-  addStat(tr("Biggest gain (vault product)", "Größter Gewinn (Vault-Produkt)"), bestSealed ? formatEur(profitEur(bestSealed)) : tr("No data yet", "Noch keine Daten"), bestSealed ? bestSealed.name : null, "#66BB6A");
-  addStat(tr("Biggest loss (vault product)", "Größter Verlust (Vault-Produkt)"), worstSealed ? formatEur(profitEur(worstSealed)) : tr("No data yet", "Noch keine Daten"), worstSealed ? worstSealed.name : null, "#E57373");
-  addStat(tr("Most valuable card", "Wertvollste Karte"), mostValuableCard ? formatTileMarketPrice(mostValuableCard) : tr("No data yet", "Noch keine Daten"), mostValuableCard ? mostValuableCard.name : null);
-  addStat(tr("Most valuable vault product", "Wertvollstes Vault-Produkt"), mostValuableSealed ? formatTileMarketPrice(mostValuableSealed) : tr("No data yet", "Noch keine Daten"), mostValuableSealed ? mostValuableSealed.name : null);
+  addStat(tr("Biggest gain (card)", "Größter Gewinn (Karte)"), bestCard ? formatEur(profitEur(bestCard)) : tr("No data yet", "Noch keine Daten"), bestCard ? bestCard.name : null, "#66BB6A", bestCard);
+  addStat(tr("Biggest loss (card)", "Größter Verlust (Karte)"), worstCard ? formatEur(profitEur(worstCard)) : tr("No data yet", "Noch keine Daten"), worstCard ? worstCard.name : null, "#E57373", worstCard);
+  addStat(tr("Biggest gain (vault product)", "Größter Gewinn (Vault-Produkt)"), bestSealed ? formatEur(profitEur(bestSealed)) : tr("No data yet", "Noch keine Daten"), bestSealed ? bestSealed.name : null, "#66BB6A", bestSealed);
+  addStat(tr("Biggest loss (vault product)", "Größter Verlust (Vault-Produkt)"), worstSealed ? formatEur(profitEur(worstSealed)) : tr("No data yet", "Noch keine Daten"), worstSealed ? worstSealed.name : null, "#E57373", worstSealed);
+  addStat(tr("Most valuable card", "Wertvollste Karte"), mostValuableCard ? formatTileMarketPrice(mostValuableCard) : tr("No data yet", "Noch keine Daten"), mostValuableCard ? mostValuableCard.name : null, null, mostValuableCard);
+  addStat(tr("Most valuable vault product", "Wertvollstes Vault-Produkt"), mostValuableSealed ? formatTileMarketPrice(mostValuableSealed) : tr("No data yet", "Noch keine Daten"), mostValuableSealed ? mostValuableSealed.name : null, null, mostValuableSealed);
 
   panel.appendChild(statsGrid);
 
@@ -3694,6 +4264,14 @@ function buildCardmarketMappingRow(card, subtitle, removableCardId) {
   const img = document.createElement("img");
   img.src = card.imageUrl;
   img.style.cssText = "width:36px;height:50px;object-fit:cover;border-radius:4px;background:rgba(255,255,255,0.08);";
+  // Bild-Tipp öffnet die Karte selbst (28.08., Parität zur App vom 25.08.)
+  img.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const owned = allCards.find(c => c.id === card.id) || allCards.find(c => c.cardId && c.cardId === card.cardId);
+    if (!owned) return;
+    document.getElementById("cardmarketMappingOverlay").classList.remove("visible");
+    openCardDetail(owned, null);
+  });
   row.appendChild(img);
   const textWrap = document.createElement("div");
   textWrap.style.cssText = "flex:1;min-width:0;";
@@ -3702,6 +4280,29 @@ function buildCardmarketMappingRow(card, subtitle, removableCardId) {
     "<div style=\"color:var(--accent);font-size:0.8rem;\">" + subtitle + "</div>";
   row.appendChild(textWrap);
   row.addEventListener("click", () => openCardmarketAssignOverlay(card));
+  // Eigener Preis direkt aus der Ohne-Preis-Zeile (28.08., Parität zur
+  // App vom 19.08.) - nur bei den Zeilen OHNE Zuordnung sinnvoll
+  if (!removableCardId) {
+    const priceBtn = document.createElement("button");
+    priceBtn.textContent = "€";
+    priceBtn.title = tr("Set own price", "Eigenen Preis setzen");
+    priceBtn.style.cssText = "background:none;border:1px solid rgba(255,255,255,0.25);border-radius:6px;color:#fff;font-size:0.9rem;cursor:pointer;padding:2px 8px;";
+    priceBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const owned = allCards.find(c => c.id === card.id);
+      if (!owned) return;
+      const raw = window.prompt(tr("Own price (EUR):", "Eigener Preis (EUR):"), "");
+      if (raw === null) return;
+      const value = parseFloat(raw.replace(",", "."));
+      if (isNaN(value) || value < 0) return;
+      owned.customPriceEur = value;
+      if (owned.customPriceInTotal === undefined || owned.customPriceInTotal === null) owned.customPriceInTotal = 1;
+      if (owned.customPriceInGameTotal === undefined || owned.customPriceInGameTotal === null) owned.customPriceInGameTotal = 1;
+      await persistCustomPrice(owned, false);
+      openCardmarketMappingOverlay();
+    });
+    row.appendChild(priceBtn);
+  }
   if (removableCardId) {
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "✕";
@@ -3879,6 +4480,14 @@ function buildSealedCardmarketMappingRow(item, subtitle, removableSealedId) {
   const img = document.createElement("img");
   img.src = item.imageUrl || "";
   img.style.cssText = "width:36px;height:50px;object-fit:cover;border-radius:4px;background:rgba(255,255,255,0.08);";
+  // Bild-Tipp öffnet das Produkt (28.08., Parität zur App vom 25.08.)
+  img.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const owned = allSealed.find(s => s.id === item.id);
+    if (!owned) return;
+    document.getElementById("sealedCardmarketMappingOverlay").classList.remove("visible");
+    openCardDetail(owned, null);
+  });
   row.appendChild(img);
   const textWrap = document.createElement("div");
   textWrap.style.cssText = "flex:1;min-width:0;";
@@ -3887,6 +4496,28 @@ function buildSealedCardmarketMappingRow(item, subtitle, removableSealedId) {
     "<div style=\"color:var(--accent);font-size:0.8rem;\">" + subtitle + "</div>";
   row.appendChild(textWrap);
   row.addEventListener("click", () => openSealedCardmarketAssignOverlay(item));
+  // Eigener Preis direkt aus der Ohne-Preis-Zeile (28.08.)
+  if (!removableSealedId) {
+    const priceBtn = document.createElement("button");
+    priceBtn.textContent = "€";
+    priceBtn.title = tr("Set own price", "Eigenen Preis setzen");
+    priceBtn.style.cssText = "background:none;border:1px solid rgba(255,255,255,0.25);border-radius:6px;color:#fff;font-size:0.9rem;cursor:pointer;padding:2px 8px;";
+    priceBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const owned = allSealed.find(s => s.id === item.id);
+      if (!owned) return;
+      const raw = window.prompt(tr("Own price (EUR):", "Eigener Preis (EUR):"), "");
+      if (raw === null) return;
+      const value = parseFloat(raw.replace(",", "."));
+      if (isNaN(value) || value < 0) return;
+      owned.customPriceEur = value;
+      if (owned.customPriceInTotal === undefined || owned.customPriceInTotal === null) owned.customPriceInTotal = 1;
+      if (owned.customPriceInGameTotal === undefined || owned.customPriceInGameTotal === null) owned.customPriceInGameTotal = 1;
+      await persistCustomPrice(owned, true);
+      openSealedCardmarketMappingOverlay();
+    });
+    row.appendChild(priceBtn);
+  }
   if (removableSealedId) {
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "✕";
@@ -4287,6 +4918,25 @@ function renderDetailEditControls(item) {
       renderDetailEditControls(item);
     });
     sealedRow.appendChild(sealedChip);
+    // Name/Kategorie bearbeiten (28.08., Parität zum Bearbeiten-Formular in
+    // VaultScreen.kt - /api/sealed/update konnte beides schon, nur die
+    // Oberfläche fehlte). Stift-Knopf, damit die Zeile schlank bleibt.
+    const editBtn = document.createElement("button");
+    editBtn.className = "detailCmChip";
+    editBtn.textContent = "✎ " + tr("Edit", "Bearbeiten");
+    editBtn.style.marginLeft = "8px";
+    editBtn.addEventListener("click", () => {
+      const newName = window.prompt(tr("Product name:", "Produktname:"), item.name);
+      if (newName === null || !newName.trim()) return;
+      const newCategory = window.prompt(tr("Category:", "Kategorie:"), item.category || "");
+      if (newCategory === null || !newCategory.trim()) return;
+      item.name = newName.trim();
+      item.category = newCategory.trim();
+      persistDetailItem(item, isSealed);
+      const nameEl = document.getElementById("detailName");
+      if (nameEl) nameEl.textContent = item.name;
+    });
+    sealedRow.appendChild(editBtn);
   }
 
   const priceRow = document.getElementById("detailPurchasePriceRow");
@@ -4753,6 +5403,8 @@ async function loadData() {
     allCards = await cardsRes.json();
     allSealed = await sealedRes.json();
     render();
+    // Preis-Alarm-Hinweis (28.08., Pendant zum Alarm-Dialog der App)
+    maybeShowSealedAlarms();
   } catch (err) {
     status.textContent = tr("Collection could not be loaded: ", "Sammlung konnte nicht geladen werden: ") + err.message;
     status.style.display = "block";
@@ -4963,6 +5615,16 @@ document.getElementById("accountManageBtn").addEventListener("click", () => {
 
 document.getElementById("accountsClose").addEventListener("click", () => {
   document.getElementById("accountsOverlay").classList.remove("visible");
+});
+
+// Sealed-Wantslisten-Overlay (28.08.)
+document.getElementById("sealedWishlistClose").addEventListener("click", () => {
+  closeSealedWishlistOverlay();
+  if (activeTab === "vault") render();
+});
+document.getElementById("sealedWishlistBack").addEventListener("click", () => {
+  sealedWlView = { mode: "overview", listId: null };
+  renderSealedWishlistOverlay();
 });
 
 document.getElementById("accountsAddConfirm").addEventListener("click", async () => {

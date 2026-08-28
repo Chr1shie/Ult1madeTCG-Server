@@ -115,6 +115,28 @@ data class SyncBinder(
     val colorUpdatedAt: Long = 0
 )
 
+// Sealed-Wantslisten (28.08., Server-Parität vor dem Launch) - strukturell
+// wie SyncWishlist/SyncBinder (uid als Listen-Identität), Eintrags-Identität
+// ist die catalogId innerhalb der Liste. Der Preis-Alarm ist die einzige
+// veränderliche Eigenschaft (analog position beim Binder-Eintrag) und wird
+// per alarmUpdatedAt-LWW aufgelöst.
+@Serializable
+data class SyncSealedWishlistItem(
+    val catalogId: String,
+    val addedAt: Long,
+    val priceAlarmEur: Double? = null,
+    val alarmUpdatedAt: Long = 0
+)
+
+@Serializable
+data class SyncSealedWishlist(
+    val uid: String,
+    val name: String,
+    val game: String,
+    val createdAt: Long,
+    val items: List<SyncSealedWishlistItem> = emptyList()
+)
+
 // Decks (02.08., Phase 3 Deckbuilding, Nutzer-Vorgabe) - strukturell an
 // SyncBinder angelehnt (uid als Sync-Identität), aber ohne Steckplätze:
 // quantity statt position, addedAt dient hier bewusst als "zuletzt
@@ -196,7 +218,12 @@ data class SyncAccount(
     val deletedBinderItemKeys: List<SyncDeletion> = emptyList(),
     val decks: List<SyncDeck> = emptyList(),
     val deletedDeckKeys: List<SyncDeletion> = emptyList(),
-    val deletedDeckCardKeys: List<SyncDeletion> = emptyList()
+    val deletedDeckCardKeys: List<SyncDeletion> = emptyList(),
+    // Sealed-Wantslisten (28.08.) - Defaults halten alte Gegenstellen
+    // kompatibel (App v5/Server davor kennen die Felder schlicht nicht)
+    val sealedWishlists: List<SyncSealedWishlist> = emptyList(),
+    val deletedSealedWishlistKeys: List<SyncDeletion> = emptyList(),
+    val deletedSealedWishlistItemKeys: List<SyncDeletion> = emptyList()
 )
 
 @Serializable

@@ -792,18 +792,24 @@ CREATE TABLE SealedWishlistItemEntity (
     -- Mehrere Listen (25.08., Nutzer-Vorgabe "wie bei den Karten eben, nur
     -- im Vault") - 0 = Alt-Eintrag vor Migration 32, wird dort einer
     -- automatisch angelegten Liste "Wantsliste" zugeordnet
-    wishlistId INTEGER NOT NULL DEFAULT 0
+    wishlistId INTEGER NOT NULL DEFAULT 0,
+    -- Sync (28.08., Migration 33): LWW-Zeitstempel für den Preis-Alarm -
+    -- der Alarm ist die einzige veränderliche Eigenschaft eines Eintrags
+    -- (analog positionUpdatedAt beim Binder), jüngerer Wert gewinnt
+    alarmUpdatedAt INTEGER NOT NULL DEFAULT 0
 );
 
 -- Sealed-Wantslisten-Köpfe (25.08., Nutzer-Vorgabe) - Pendant zu
--- WishlistEntity der Karten, bewusst ohne uid/Sync (wie die Einträge:
--- App-lokal, Server-Nachzug nach Launch)
+-- WishlistEntity der Karten. Seit Migration 33 (28.08.) MIT uid und damit
+-- syncfähig (Server-Parität vor dem Launch, Nutzer-Vorgabe "alles lieber
+-- machen bevor wir veröffentlichen")
 CREATE TABLE SealedWishlistEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     game TEXT NOT NULL,
     createdAt INTEGER NOT NULL,
-    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
+    uid TEXT NOT NULL DEFAULT ''
 );
 
 selectSealedWishlists:
@@ -814,10 +820,30 @@ WHERE game = ? AND accountId = ?
 ORDER BY createdAt;
 
 insertSealedWishlist:
-INSERT INTO SealedWishlistEntity(name, game, createdAt, accountId) VALUES (?, ?, ?, ?);
+INSERT INTO SealedWishlistEntity(name, game, createdAt, accountId, uid) VALUES (?, ?, ?, ?, ?);
 
 deleteSealedWishlist:
 DELETE FROM SealedWishlistEntity WHERE id = ?;
+
+-- Sync (28.08.) - Rohzugriffe + uid-Nachrüstung, Muster wie bei den
+-- Karten-Wantslisten (selectWishlistsMissingUid & Co.)
+selectSealedWishlistsMissingUid:
+SELECT * FROM SealedWishlistEntity WHERE uid = '';
+
+updateSealedWishlistUid:
+UPDATE SealedWishlistEntity SET uid = ? WHERE id = ?;
+
+selectSealedWishlistById:
+SELECT * FROM SealedWishlistEntity WHERE id = ?;
+
+selectSealedWishlistItemById:
+SELECT * FROM SealedWishlistItemEntity WHERE id = ?;
+
+selectAllSealedWishlistsRawForAccount:
+SELECT * FROM SealedWishlistEntity WHERE accountId = ?;
+
+selectAllSealedWishlistItemsRawForAccount:
+SELECT * FROM SealedWishlistItemEntity WHERE accountId = ?;
 
 deleteSealedWishlistItemsForWishlist:
 DELETE FROM SealedWishlistItemEntity WHERE wishlistId = ?;
@@ -861,7 +887,7 @@ deleteSealedWishlistItem:
 DELETE FROM SealedWishlistItemEntity WHERE id = ?;
 
 updateSealedWishlistAlarm:
-UPDATE SealedWishlistItemEntity SET priceAlarmEur = ? WHERE id = ?;
+UPDATE SealedWishlistItemEntity SET priceAlarmEur = ?, alarmUpdatedAt = ? WHERE id = ?;
 
 deleteSealedWishlistItemsForAccount:
 DELETE FROM SealedWishlistItemEntity WHERE accountId = ?;

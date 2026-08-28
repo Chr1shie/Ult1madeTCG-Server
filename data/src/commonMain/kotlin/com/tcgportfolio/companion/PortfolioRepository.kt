@@ -20,6 +20,8 @@ import com.tcgportfolio.companion.data.SyncDeckCard
 import com.tcgportfolio.companion.data.SyncDeletion
 import com.tcgportfolio.companion.data.SyncPayload
 import com.tcgportfolio.companion.data.SyncSealedProduct
+import com.tcgportfolio.companion.data.SyncSealedWishlist
+import com.tcgportfolio.companion.data.SyncSealedWishlistItem
 import com.tcgportfolio.companion.data.SyncWishlist
 import com.tcgportfolio.companion.data.SyncWishlistItem
 import com.tcgportfolio.companion.data.adventureOnKamisIslandCatalogSeed
@@ -1890,6 +1892,7 @@ import com.tcgportfolio.companion.db.SelectBinderItemsForGame
 import com.tcgportfolio.companion.db.SelectWishlistItemsForGame
 import com.tcgportfolio.companion.db.BinderEntity
 import com.tcgportfolio.companion.db.BinderItemEntity
+import com.tcgportfolio.companion.db.SealedWishlistItemEntity
 import com.tcgportfolio.companion.db.WishlistEntity
 import com.tcgportfolio.companion.db.AccountEntity
 import com.tcgportfolio.companion.db.DeckEntity
@@ -4125,15 +4128,37 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     fun getSealedWishlists(game: String, accountId: Long) =
         dbQueries.selectSealedWishlists(game, accountId).executeAsList()
 
-    fun addSealedWishlist(name: String, game: String, accountId: Long): Long {
-        dbQueries.insertSealedWishlist(name, game, currentTimeMillis(), accountId)
-        return dbQueries.lastInsertRowId().executeAsOne()
+    // Sync-Identität (28.08.) - Muster wie generateWishlistUid()
+    private fun generateSealedWishlistUid(): String =
+        "swl-" + currentTimeMillis() + "-" + (1..12).map { idChars.random() }.joinToString("")
+
+    // Listen aus der Zeit VOR der uid-Spalte (Migration 33) einmalig
+    // nachrüsten - beim App-/Server-Start aufgerufen, direkt neben
+    // ensureWishlistUidsBackfilled()
+    fun ensureSealedWishlistUidsBackfilled() {
+        val missing = dbQueries.selectSealedWishlistsMissingUid().executeAsList()
+        if (missing.isEmpty()) return
+        dbQueries.transaction {
+            missing.forEach { w -> dbQueries.updateSealedWishlistUid(generateSealedWishlistUid(), w.id) }
+        }
     }
 
+    fun addSealedWishlist(name: String, game: String, accountId: Long): Long {
+        return dbQueries.transactionWithResult {
+            dbQueries.insertSealedWishlist(name, game, currentTimeMillis(), accountId, generateSealedWishlistUid())
+            dbQueries.lastInsertRowId().executeAsOne()
+        }
+    }
+
+    // Löschvermerk (28.08., mit dem Sync-Kanal) - analog deleteWishlist()
     fun removeSealedWishlist(id: Long) {
+        val list = dbQueries.selectSealedWishlistById(id).executeAsOneOrNull()
         dbQueries.transaction {
             dbQueries.deleteSealedWishlistItemsForWishlist(id)
             dbQueries.deleteSealedWishlist(id)
+            if (list != null && list.uid.isNotEmpty()) {
+                dbQueries.insertDeletionLog("sealedWishlist", list.uid, currentTimeMillis(), list.accountId)
+            }
         }
     }
 
@@ -4141,11 +4166,22 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         dbQueries.insertSealedWishlistItem(game, catalogId, currentTimeMillis(), accountId, wishlistId)
     }
 
-    fun removeSealedWishlistItem(id: Long) = dbQueries.deleteSealedWishlistItem(id)
+    // Löschvermerk-Schlüssel: "<listenUid>|<catalogId>" (28.08., analog
+    // zum wishlistItem-Schlüssel beim Karten-Pendant)
+    fun removeSealedWishlistItem(id: Long) {
+        val item = dbQueries.selectSealedWishlistItemById(id).executeAsOneOrNull()
+        val listUid = item?.let { dbQueries.selectSealedWishlistById(it.wishlistId).executeAsOneOrNull()?.uid }
+        dbQueries.transaction {
+            dbQueries.deleteSealedWishlistItem(id)
+            if (item != null && !listUid.isNullOrEmpty()) {
+                dbQueries.insertDeletionLog("sealedWishlistItem", "$listUid|${item.catalogId}", currentTimeMillis(), item.accountId)
+            }
+        }
+    }
 
-    // null = Alarm entfernen
+    // null = Alarm entfernen; alarmUpdatedAt für die Sync-LWW-Auflösung
     fun setSealedWishlistAlarm(id: Long, priceEur: Double?) =
-        dbQueries.updateSealedWishlistAlarm(priceEur, id)
+        dbQueries.updateSealedWishlistAlarm(priceEur, currentTimeMillis(), id)
 
     // Alle Einträge (über alle TCGs), deren Alarm-Schwelle der aktuelle
     // Cardmarket-Preis erreicht/unterschritten hat - für die Meldung beim
@@ -4984,6 +5020,28 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         }
                     )
                 },
+            sealedWishlists = run {
+                val itemsByListId = dbQueries.selectAllSealedWishlistItemsRawForAccount(accountId).executeAsList()
+                    .groupBy { it.wishlistId }
+                dbQueries.selectAllSealedWishlistsRawForAccount(accountId).executeAsList()
+                    .filter { it.uid.isNotEmpty() }
+                    .map { w ->
+                        SyncSealedWishlist(
+                            uid = w.uid,
+                            name = w.name,
+                            game = w.game,
+                            createdAt = w.createdAt,
+                            items = (itemsByListId[w.id] ?: emptyList()).map { i ->
+                                SyncSealedWishlistItem(
+                                    catalogId = i.catalogId,
+                                    addedAt = i.createdAt,
+                                    priceAlarmEur = i.priceAlarmEur,
+                                    alarmUpdatedAt = i.alarmUpdatedAt
+                                )
+                            }
+                        )
+                    }
+            },
             sealedProducts = sealedRows.map {
                 ExportedSealedProduct(
                     catalogId = it.catalogId,
@@ -5015,7 +5073,10 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         val decksAdded: Int = 0,
         val deckCardsAdded: Int = 0,
         // Backup v3 (28.08.) - wiederhergestellte eigene Fotos
-        val photosRestored: Int = 0
+        val photosRestored: Int = 0,
+        // Sealed-Wantslisten (28.08., mit dem Sync-Kanal)
+        val sealedWishlistsAdded: Int = 0,
+        val sealedWishlistItemsAdded: Int = 0
     )
 
     // Katalog-verknüpfte Einträge (cardId/catalogId gesetzt) werden darüber
@@ -5053,6 +5114,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         var binderItemsAdded = 0
         var decksAdded = 0
         var deckCardsAdded = 0
+        var sealedWishlistsAdded = 0
+        var sealedWishlistItemsAdded = 0
 
         dbQueries.transaction {
             val existingCardKeys = dbQueries.selectAll(accountId).executeAsList()
@@ -5220,6 +5283,37 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     deckCardsAdded++
                 }
             }
+
+            // Sealed-Wantslisten (28.08.) - gleiche Add-only-Regeln wie oben;
+            // Alarm-Schwellen kommen bei NEU angelegten Einträgen mit
+            val localSealedWlByUid = dbQueries.selectAllSealedWishlistsRawForAccount(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }.associateBy { it.uid }
+            val localSealedWlItems = dbQueries.selectAllSealedWishlistItemsRawForAccount(accountId).executeAsList()
+                .groupBy { it.wishlistId }
+            payload.sealedWishlists.forEach { w ->
+                val existing = localSealedWlByUid[w.uid]
+                val localId: Long
+                val existingCatalogIds: MutableSet<String>
+                if (existing == null) {
+                    dbQueries.insertSealedWishlist(w.name, w.game, now, accountId, w.uid)
+                    localId = dbQueries.lastInsertRowId().executeAsOne()
+                    sealedWishlistsAdded++
+                    existingCatalogIds = mutableSetOf()
+                } else {
+                    localId = existing.id
+                    existingCatalogIds = (localSealedWlItems[localId] ?: emptyList())
+                        .map { it.catalogId }.toMutableSet()
+                }
+                w.items.forEach { item ->
+                    if (item.catalogId in existingCatalogIds) return@forEach
+                    dbQueries.insertSealedWishlistItem(w.game, item.catalogId, now, accountId, localId)
+                    if (item.priceAlarmEur != null) {
+                        dbQueries.updateSealedWishlistAlarm(item.priceAlarmEur, now, dbQueries.lastInsertRowId().executeAsOne())
+                    }
+                    existingCatalogIds += item.catalogId
+                    sealedWishlistItemsAdded++
+                }
+            }
         }
 
         // ---------- Eigene Fotos (28.08., Backup v3) ----------
@@ -5267,7 +5361,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             wishlistsAdded, wishlistItemsAdded,
             bindersAdded, binderItemsAdded,
             decksAdded, deckCardsAdded,
-            photosRestored
+            photosRestored,
+            sealedWishlistsAdded, sealedWishlistItemsAdded
         )
     }
 
@@ -5452,7 +5547,13 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         val deckCardsAdded: Int = 0,
         val decksDeleted: Int = 0,
         val deckCardsDeleted: Int = 0,
-        val deckCardsUpdated: Int = 0
+        val deckCardsUpdated: Int = 0,
+        // Sealed-Wantslisten (28.08., Server-Parität)
+        val sealedWishlistsAdded: Int = 0,
+        val sealedWishlistItemsAdded: Int = 0,
+        val sealedWishlistsDeleted: Int = 0,
+        val sealedWishlistItemsDeleted: Int = 0,
+        val sealedWishlistAlarmsUpdated: Int = 0
     )
 
     private data class AccountMergeCounts(
@@ -5462,7 +5563,11 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         val bindersAdded: Int = 0, val binderItemsAdded: Int = 0, val bindersDeleted: Int = 0, val binderItemsDeleted: Int = 0,
         val binderItemsUpdated: Int = 0, val bindersUpdated: Int = 0,
         val decksAdded: Int = 0, val deckCardsAdded: Int = 0, val decksDeleted: Int = 0, val deckCardsDeleted: Int = 0,
-        val deckCardsUpdated: Int = 0
+        val deckCardsUpdated: Int = 0,
+        // Sealed-Wantslisten (28.08.)
+        val sealedWishlistsAdded: Int = 0, val sealedWishlistItemsAdded: Int = 0,
+        val sealedWishlistsDeleted: Int = 0, val sealedWishlistItemsDeleted: Int = 0,
+        val sealedWishlistAlarmsUpdated: Int = 0
     )
 
     // Baut das komplette Sync-Datenpaket EINES Accounts - genau der Körper
@@ -5585,6 +5690,35 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 .map { SyncDeletion(it.itemKey, it.deletedAt) },
             deletedDeckCardKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
                 .filter { it.itemType == "deckCard" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            // Sealed-Wantslisten (28.08.) - Aufbau wie wishlists oben
+            sealedWishlists = run {
+                val itemsByListId = dbQueries.selectAllSealedWishlistItemsRawForAccount(account.id).executeAsList()
+                    .groupBy { it.wishlistId }
+                dbQueries.selectAllSealedWishlistsRawForAccount(account.id).executeAsList()
+                    .filter { it.uid.isNotEmpty() }
+                    .map { w ->
+                        SyncSealedWishlist(
+                            uid = w.uid,
+                            name = w.name,
+                            game = w.game,
+                            createdAt = w.createdAt,
+                            items = (itemsByListId[w.id] ?: emptyList()).map { i ->
+                                SyncSealedWishlistItem(
+                                    catalogId = i.catalogId,
+                                    addedAt = i.createdAt,
+                                    priceAlarmEur = i.priceAlarmEur,
+                                    alarmUpdatedAt = i.alarmUpdatedAt
+                                )
+                            }
+                        )
+                    }
+            },
+            deletedSealedWishlistKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "sealedWishlist" }
+                .map { SyncDeletion(it.itemKey, it.deletedAt) },
+            deletedSealedWishlistItemKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
+                .filter { it.itemType == "sealedWishlistItem" }
                 .map { SyncDeletion(it.itemKey, it.deletedAt) }
         )
     }
@@ -6131,11 +6265,114 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             }
         }
 
+        // ---------- Sealed-Wantslisten (28.08.) ----------
+        // Zweistufig, identisch zum Wunschlisten-Merge oben - Identität =
+        // uid bzw. catalogId je Liste; der Preis-Alarm ist der einzige
+        // "Update"-Fall (alarmUpdatedAt-LWW, analog Binder-Position).
+        var sealedWishlistsAdded = 0
+        var sealedWishlistItemsAdded = 0
+        var sealedWishlistsDeleted = 0
+        var sealedWishlistItemsDeleted = 0
+        var sealedWishlistAlarmsUpdated = 0
+
+        val localSealedWishlistByUid = dbQueries.selectAllSealedWishlistsRawForAccount(localAccountId).executeAsList()
+            .filter { it.uid.isNotEmpty() }.associateBy { it.uid }.toMutableMap()
+        val localSealedItemsByListId = dbQueries.selectAllSealedWishlistItemsRawForAccount(localAccountId).executeAsList()
+            .groupBy { it.wishlistId }
+
+        val localSwlDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "sealedWishlist" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val swlDeletionTimestamps = localSwlDeletions.toMutableMap()
+        bundle.deletedSealedWishlistKeys.forEach { d ->
+            swlDeletionTimestamps[d.itemKey] = maxOf(swlDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+        swlDeletionTimestamps.forEach { (uid, delAt) ->
+            val local = localSealedWishlistByUid[uid]
+            if (local != null && delAt >= local.createdAt) {
+                dbQueries.deleteSealedWishlistItemsForWishlist(local.id)
+                dbQueries.deleteSealedWishlist(local.id)
+                localSealedWishlistByUid.remove(uid)
+                sealedWishlistsDeleted++
+            }
+            if ((localSwlDeletions[uid] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("sealedWishlist", uid, delAt, localAccountId)
+            }
+        }
+
+        val localSwlItemDeletions = dbQueries.selectDeletionLog(localAccountId).executeAsList()
+            .filter { it.itemType == "sealedWishlistItem" }
+            .groupBy { it.itemKey }
+            .mapValues { (_, rows) -> rows.maxOf { it.deletedAt } }
+        val swlItemDeletionTimestamps = localSwlItemDeletions.toMutableMap()
+        bundle.deletedSealedWishlistItemKeys.forEach { d ->
+            swlItemDeletionTimestamps[d.itemKey] = maxOf(swlItemDeletionTimestamps[d.itemKey] ?: -1L, d.deletedAt)
+        }
+        swlItemDeletionTimestamps.forEach { (fullKey, delAt) ->
+            val uid = fullKey.substringBefore("|")
+            val catalogId = fullKey.substringAfter("|")
+            val local = localSealedWishlistByUid[uid]
+            if (local != null) {
+                val match = (localSealedItemsByListId[local.id] ?: emptyList()).find { it.catalogId == catalogId }
+                if (match != null && delAt >= match.createdAt) {
+                    dbQueries.deleteSealedWishlistItem(match.id)
+                    sealedWishlistItemsDeleted++
+                }
+            }
+            if ((localSwlItemDeletions[fullKey] ?: -1L) < delAt) {
+                dbQueries.insertDeletionLog("sealedWishlistItem", fullKey, delAt, localAccountId)
+            }
+        }
+
+        bundle.sealedWishlists.forEach { w ->
+            val listDelAt = swlDeletionTimestamps[w.uid]
+            if (listDelAt != null && listDelAt >= w.createdAt) return@forEach
+
+            val existingLocal = localSealedWishlistByUid[w.uid]
+            val localId: Long
+            val existingByCatalogId: MutableMap<String, SealedWishlistItemEntity>
+            if (existingLocal == null) {
+                dbQueries.insertSealedWishlist(w.name, w.game, w.createdAt, localAccountId, w.uid)
+                localId = dbQueries.lastInsertRowId().executeAsOne()
+                sealedWishlistsAdded++
+                existingByCatalogId = mutableMapOf()
+            } else {
+                localId = existingLocal.id
+                existingByCatalogId = (localSealedItemsByListId[localId] ?: emptyList())
+                    .associateByTo(mutableMapOf()) { it.catalogId }
+            }
+
+            w.items.forEach { item ->
+                val fullKey = "${w.uid}|${item.catalogId}"
+                val itemDelAt = swlItemDeletionTimestamps[fullKey]
+                if (itemDelAt != null && itemDelAt >= item.addedAt) return@forEach
+                val existingItem = existingByCatalogId[item.catalogId]
+                if (existingItem != null) {
+                    if (item.alarmUpdatedAt > existingItem.alarmUpdatedAt) {
+                        dbQueries.updateSealedWishlistAlarm(item.priceAlarmEur, item.alarmUpdatedAt, existingItem.id)
+                        sealedWishlistAlarmsUpdated++
+                    }
+                    return@forEach
+                }
+                dbQueries.insertSealedWishlistItem(w.game, item.catalogId, item.addedAt, localAccountId, localId)
+                if (item.priceAlarmEur != null || item.alarmUpdatedAt > 0) {
+                    dbQueries.updateSealedWishlistAlarm(item.priceAlarmEur, item.alarmUpdatedAt, dbQueries.lastInsertRowId().executeAsOne())
+                }
+                sealedWishlistItemsAdded++
+            }
+        }
+
         return AccountMergeCounts(
             cardsAdded, sealedAdded, cardsDeleted, sealedDeleted, cardsUpdated, sealedUpdated,
             wishlistsAdded, wishlistItemsAdded, wishlistsDeleted, wishlistItemsDeleted,
             bindersAdded, binderItemsAdded, bindersDeleted, binderItemsDeleted, binderItemsUpdated, bindersUpdated,
-            decksAdded, deckCardsAdded, decksDeleted, deckCardsDeleted, deckCardsUpdated
+            decksAdded, deckCardsAdded, decksDeleted, deckCardsDeleted, deckCardsUpdated,
+            sealedWishlistsAdded = sealedWishlistsAdded,
+            sealedWishlistItemsAdded = sealedWishlistItemsAdded,
+            sealedWishlistsDeleted = sealedWishlistsDeleted,
+            sealedWishlistItemsDeleted = sealedWishlistItemsDeleted,
+            sealedWishlistAlarmsUpdated = sealedWishlistAlarmsUpdated
         )
     }
 
@@ -6174,6 +6411,10 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     dbQueries.deleteWishlistsForAccount(local.id)
                     dbQueries.deleteBinderItemsForAccount(local.id)
                     dbQueries.deleteBindersForAccount(local.id)
+                    // Sealed-Wantslisten (28.08.) - gehörten bisher nicht zur
+                    // Konto-Lösch-Kaskade, weil sie nicht synchronisiert wurden
+                    dbQueries.deleteSealedWishlistItemsForAccount(local.id)
+                    dbQueries.deleteSealedWishlistsForAccount(local.id)
                     dbQueries.deleteItemsForAccount(local.id)
                     dbQueries.deleteSealedProductsForAccount(local.id)
                     dbQueries.deleteDeletionLogForAccount(local.id)
@@ -6234,7 +6475,12 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     totals.deckCardsAdded + counts.deckCardsAdded,
                     totals.decksDeleted + counts.decksDeleted,
                     totals.deckCardsDeleted + counts.deckCardsDeleted,
-                    totals.deckCardsUpdated + counts.deckCardsUpdated
+                    totals.deckCardsUpdated + counts.deckCardsUpdated,
+                    totals.sealedWishlistsAdded + counts.sealedWishlistsAdded,
+                    totals.sealedWishlistItemsAdded + counts.sealedWishlistItemsAdded,
+                    totals.sealedWishlistsDeleted + counts.sealedWishlistsDeleted,
+                    totals.sealedWishlistItemsDeleted + counts.sealedWishlistItemsDeleted,
+                    totals.sealedWishlistAlarmsUpdated + counts.sealedWishlistAlarmsUpdated
                 )
             }
         }
@@ -6293,7 +6539,12 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             totals.bindersAdded, totals.binderItemsAdded, totals.bindersDeleted, totals.binderItemsDeleted,
             totals.binderItemsUpdated, totals.bindersUpdated,
             accountsAdded, accountsUpdated, accountsDeleted,
-            totals.decksAdded, totals.deckCardsAdded, totals.decksDeleted, totals.deckCardsDeleted, totals.deckCardsUpdated
+            totals.decksAdded, totals.deckCardsAdded, totals.decksDeleted, totals.deckCardsDeleted, totals.deckCardsUpdated,
+            sealedWishlistsAdded = totals.sealedWishlistsAdded,
+            sealedWishlistItemsAdded = totals.sealedWishlistItemsAdded,
+            sealedWishlistsDeleted = totals.sealedWishlistsDeleted,
+            sealedWishlistItemsDeleted = totals.sealedWishlistItemsDeleted,
+            sealedWishlistAlarmsUpdated = totals.sealedWishlistAlarmsUpdated
         )
     }
 }

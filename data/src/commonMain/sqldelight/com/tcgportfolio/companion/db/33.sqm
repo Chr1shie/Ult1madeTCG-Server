@@ -1,0 +1,7 @@
+-- Sealed-Wantslisten syncfähig (28.08., Server-Parität vor dem Launch,
+-- Nutzer-Vorgabe "alles lieber machen bevor wir veröffentlichen"):
+-- stabile uid je Liste (Backfill für Bestandszeilen macht
+-- ensureSealedWishlistUidsBackfilled() beim Start, analog zu den
+-- Karten-Wantslisten) + LWW-Zeitstempel für den Preis-Alarm.
+ALTER TABLE SealedWishlistEntity ADD COLUMN uid TEXT NOT NULL DEFAULT '';
+ALTER TABLE SealedWishlistItemEntity ADD COLUMN alarmUpdatedAt INTEGER NOT NULL DEFAULT 0;

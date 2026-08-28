@@ -291,7 +291,11 @@ data class CatalogCardResponse(
     val rarity: String? = null,
     // Art-Variante (Normal/Alternate Art/...) - für den Art-Wechsel in der
     // Kartendetailansicht, siehe changeCardVariant()
-    val variant: String? = null
+    val variant: String? = null,
+    // Typ-/Farb-Filter (28.08., Parität zur App vom 19.08.) - Kartentyp
+    // (Supertype) + Farben/Subtypen für die Filter-Chips im Set-Grid
+    val ruleSupertype: String? = null,
+    val ruleSubtypes: List<String> = emptyList()
 )
 
 @Serializable
@@ -472,6 +476,46 @@ data class AddWishlistItemsRequest(val wishlistId: Long, val cards: List<Wishlis
 
 @Serializable
 data class IdListRequest(val ids: List<Long>)
+
+// Sealed-Wantslisten (28.08., Server-Parität zur App vom 25.08.) - Köpfe,
+// Einträge (mit Katalog-Join für Bild/Preis) und der Preis-Alarm
+@Serializable
+data class SealedWishlistResponse(val id: Long, val name: String, val game: String, val itemCount: Long)
+
+@Serializable
+data class SealedWishlistItemResponse(
+    val id: Long,
+    val wishlistId: Long,
+    val catalogId: String,
+    val name: String?,
+    val category: String?,
+    val imageUrl: String?,
+    val marketPriceEur: Double?,
+    val priceAlarmEur: Double?
+)
+
+@Serializable
+data class CreateSealedWishlistRequest(val name: String, val game: String)
+
+@Serializable
+data class AddSealedWishlistItemRequest(val wishlistId: Long, val game: String, val catalogId: String)
+
+@Serializable
+data class SealedWishlistAlarmRequest(val id: Long, val priceEur: Double?)
+
+@Serializable
+data class IdRequest(val id: Long)
+
+@Serializable
+data class ShiftBinderItemsRequest(val binderId: Long, val atPosition: Long)
+
+@Serializable
+data class TriggeredSealedAlarmResponse(
+    val game: String,
+    val name: String?,
+    val priceAlarmEur: Double?,
+    val marketPriceEur: Double?
+)
 
 // Binder auf der Weboberfläche (31.07., Nutzer-Vorgabe) - spiegelt dieselbe
 // Funktion wie in der App (siehe BinderScreen.kt), REST-Endpunkte 1:1
@@ -755,6 +799,7 @@ fun Application.ult1madeServerModule() {
     // billige Einzel-Queries, und resolveAccountId()/Wunschlisten-Routen
     // sollen ab der allerersten Anfrage korrekte Daten sehen.
     repository.ensureWishlistUidsBackfilled()
+    repository.ensureSealedWishlistUidsBackfilled()
     // Accounts (02.08.) - siehe Kommentare bei ensureDefaultAccountExists()/
     // ensureAccountUidsBackfilled() in PortfolioRepository. Reihenfolge:
     // erst sicherstellen, dass es überhaupt einen Account gibt, dann fehlende
@@ -1051,7 +1096,9 @@ fun Application.ult1madeServerModule() {
                     marketPriceEurOptions = repository.decodeCardmarketOptions(it.marketPriceEurOptions),
                     marketPriceEurSelectedIndex = it.marketPriceEurSelectedIndex?.toInt(),
                     rarity = it.rarity,
-                    variant = it.variant
+                    variant = it.variant,
+                    ruleSupertype = it.ruleSupertype,
+                    ruleSubtypes = repository.decodeRuleSubtypes(it.ruleSubtypes)
                 )
             }
             call.respond(cards)
@@ -1479,6 +1526,80 @@ fun Application.ult1madeServerModule() {
             repository.deleteWishlistItems(body.ids)
             call.respond(HttpStatusCode.OK)
         }
+        // Sealed-Wantslisten (28.08., Parität zur App vom 25.08.) - gleiche
+        // Struktur wie die Karten-Wantslisten-Routen oben, nur auf den
+        // Sealed-Katalog bezogen; der Preis-Alarm läuft über die App-seitig
+        // eingeführte setSealedWishlistAlarm-Semantik (null = entfernen)
+        get("/api/sealedWishlists") {
+            val game = call.request.queryParameters["game"]
+            if (game == null) {
+                call.respond(HttpStatusCode.BadRequest, "game fehlt")
+                return@get
+            }
+            val results = repository.getSealedWishlists(game, resolveAccountId(call)).map { w ->
+                SealedWishlistResponse(id = w.id, name = w.name, game = w.game, itemCount = w.itemCount)
+            }
+            call.respond(results)
+        }
+        get("/api/sealedWishlistItems") {
+            val game = call.request.queryParameters["game"]
+            if (game == null) {
+                call.respond(HttpStatusCode.BadRequest, "game fehlt")
+                return@get
+            }
+            val results = repository.getSealedWishlist(game, resolveAccountId(call)).map {
+                SealedWishlistItemResponse(
+                    id = it.id,
+                    wishlistId = it.wishlistId,
+                    catalogId = it.catalogId,
+                    name = it.name,
+                    category = it.category,
+                    imageUrl = it.imageUrl,
+                    marketPriceEur = it.marketPriceEur,
+                    priceAlarmEur = it.priceAlarmEur
+                )
+            }
+            call.respond(results)
+        }
+        post("/api/sealedWishlists") {
+            val body = call.receive<CreateSealedWishlistRequest>()
+            val id = repository.addSealedWishlist(body.name, body.game, resolveAccountId(call))
+            call.respond(SealedWishlistResponse(id = id, name = body.name, game = body.game, itemCount = 0))
+        }
+        post("/api/sealedWishlists/delete") {
+            val body = call.receive<IdRequest>()
+            repository.removeSealedWishlist(body.id)
+            call.respond(HttpStatusCode.OK)
+        }
+        post("/api/sealedWishlistItems/add") {
+            val body = call.receive<AddSealedWishlistItemRequest>()
+            repository.addSealedWishlistItem(body.game, body.catalogId, resolveAccountId(call), body.wishlistId)
+            call.respond(HttpStatusCode.OK)
+        }
+        post("/api/sealedWishlistItems/delete") {
+            val body = call.receive<IdRequest>()
+            repository.removeSealedWishlistItem(body.id)
+            call.respond(HttpStatusCode.OK)
+        }
+        post("/api/sealedWishlistItems/alarm") {
+            val body = call.receive<SealedWishlistAlarmRequest>()
+            repository.setSealedWishlistAlarm(body.id, body.priceEur)
+            call.respond(HttpStatusCode.OK)
+        }
+        // Ausgelöste Preis-Alarme (Schwelle erreicht/unterschritten) - die
+        // Weboberfläche zeigt sie nach dem Laden als Hinweis an, analog zum
+        // Alarm-Dialog beim App-Start
+        get("/api/sealedWishlistAlarms") {
+            val results = repository.getTriggeredSealedAlarms(resolveAccountId(call)).map {
+                TriggeredSealedAlarmResponse(
+                    game = it.game,
+                    name = it.name,
+                    priceAlarmEur = it.priceAlarmEur,
+                    marketPriceEur = it.marketPriceEur
+                )
+            }
+            call.respond(results)
+        }
         // Binder (31.07.) - siehe Kommentar bei BinderResponse oben
         get("/api/binders") {
             val game = call.request.queryParameters["game"]
@@ -1694,6 +1815,14 @@ fun Application.ult1madeServerModule() {
 
         // Binder-Farbe (25.08., Nutzer-Vorgabe "echte Binder") - server-eigene
         // Deko, siehe BinderResponse.color
+        // "Ein Fach nach vorn schieben" (28.08., Parität zum Doppel-Tipp in
+        // BinderScreen.kt vom 09.08.) - schiebt die Karte an atPosition und
+        // alle folgenden um ein Fach weiter, es entsteht eine Lücke
+        post("/api/binderItems/shiftForward") {
+            val body = call.receive<ShiftBinderItemsRequest>()
+            repository.shiftBinderItemsForward(body.binderId, body.atPosition)
+            call.respond(HttpStatusCode.OK)
+        }
         post("/api/binders/color") {
             val body = call.receive<BinderColorRequest>()
             repository.setBinderColor(body.id, body.color)

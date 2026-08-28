@@ -70,6 +70,8 @@ data class BackupPayload(
     val wishlists: List<SyncWishlist> = emptyList(),
     val binders: List<SyncBinder> = emptyList(),
     val decks: List<SyncDeck> = emptyList(),
+    // Sealed-Wantslisten (28.08., mit dem Sync-Kanal zusammen ergänzt)
+    val sealedWishlists: List<SyncSealedWishlist> = emptyList(),
     // v3 (28.08.) - eigene Fotos, siehe BackupPhoto oben
     val photos: List<BackupPhoto> = emptyList()
 )

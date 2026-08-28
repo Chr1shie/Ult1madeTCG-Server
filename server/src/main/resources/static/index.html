@@ -225,6 +225,20 @@
   </div>
 </div>
 
+<!-- Sealed-Wantslisten (28.08., Parität zur App vom 25.08.) - Übersicht
+     (Listen mit Anzahl + Preissumme) und Detail (Produkte mit Preis-Alarm),
+     siehe renderSealedWishlistOverlay() in app.js -->
+<div class="confirmOverlay" id="sealedWishlistOverlay">
+  <div class="confirmBox" style="max-width: 520px;">
+    <p class="confirmMessage" id="sealedWishlistTitle" data-de="Wantslisten">Want lists</p>
+    <div id="sealedWishlistContent" style="max-height: 60vh; overflow-y: auto;"></div>
+    <div class="confirmButtons">
+      <button class="confirmNo" id="sealedWishlistBack" data-de="Zurück">Back</button>
+      <button class="confirmNo" id="sealedWishlistClose" data-de="Schließen">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Manuelle Cardmarket-Zuordnung (04.08., Nutzer-Vorgabe) - siehe
      renderCardmarketMappingOverlay()/openCardmarketAssignOverlay() in app.js -->
 <div class="confirmOverlay" id="cardmarketMappingOverlay">
