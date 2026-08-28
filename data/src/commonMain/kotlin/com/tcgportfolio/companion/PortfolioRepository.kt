@@ -4870,6 +4870,14 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // etwas gelöscht und steht noch in einem alten Backup, kommt es beim
     // Import bewusst wieder zurück (kein Tombstone-Mechanismus mehr).
     fun exportData(accountId: Long): String {
+        // Wunschlisten/Binder/Decks (28.08., Backup-Vollständigkeit) - gleiche
+        // Abfragen und Abbildung wie exportAccountBundle(), nur ohne Löschlisten
+        val wishlistItemsByListId = dbQueries.selectAllWishlistItemsRawForAccount(accountId).executeAsList()
+            .groupBy { it.wishlistId }
+        val binderItemsByBinderId = dbQueries.selectAllBinderItemsRawForAccount(accountId).executeAsList()
+            .groupBy { it.binderId }
+        val deckCardsByDeckId = dbQueries.selectAllDeckCardsRawForAccount(accountId).executeAsList()
+            .groupBy { it.deckId }
         val payload = BackupPayload(
             exportedAt = currentTimeMillis(),
             cards = dbQueries.selectAll(accountId).executeAsList().map {
@@ -4879,9 +4887,64 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     name = it.name,
                     quantity = it.quantity,
                     purchasePrice = it.purchasePrice,
-                    imageUrl = it.imageUrl
+                    imageUrl = it.imageUrl,
+                    customPriceEur = it.customPriceEur,
+                    customPriceInTotal = it.customPriceInTotal,
+                    customPriceInGameTotal = it.customPriceInGameTotal,
+                    holoStyle = it.holoStyle
                 )
             },
+            wishlists = dbQueries.selectAllWishlists(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }
+                .map { w ->
+                    SyncWishlist(
+                        uid = w.uid,
+                        name = w.name,
+                        game = w.game,
+                        createdAt = w.createdAt,
+                        nameUpdatedAt = w.nameUpdatedAt,
+                        items = (wishlistItemsByListId[w.id] ?: emptyList()).map { i ->
+                            SyncWishlistItem(cardId = i.cardId, name = i.name, imageUrl = i.imageUrl, addedAt = i.addedAt)
+                        }
+                    )
+                },
+            binders = dbQueries.selectAllBinders(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }
+                .map { b ->
+                    SyncBinder(
+                        uid = b.uid,
+                        name = b.name,
+                        game = b.game,
+                        createdAt = b.createdAt,
+                        pageSize = b.pageSize.toInt(),
+                        nameUpdatedAt = b.nameUpdatedAt,
+                        color = b.color,
+                        colorUpdatedAt = b.colorUpdatedAt,
+                        items = (binderItemsByBinderId[b.id] ?: emptyList()).map { i ->
+                            SyncBinderItem(
+                                cardId = i.cardId,
+                                name = i.name,
+                                imageUrl = i.imageUrl,
+                                addedAt = i.addedAt,
+                                position = i.position.toInt(),
+                                positionUpdatedAt = i.positionUpdatedAt
+                            )
+                        }
+                    )
+                },
+            decks = dbQueries.selectAllDecks(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }
+                .map { d ->
+                    SyncDeck(
+                        uid = d.uid,
+                        name = d.name,
+                        game = d.game,
+                        createdAt = d.createdAt,
+                        cards = (deckCardsByDeckId[d.id] ?: emptyList()).map { c ->
+                            SyncDeckCard(cardId = c.cardId, quantity = c.quantity, addedAt = c.addedAt)
+                        }
+                    )
+                },
             sealedProducts = dbQueries.selectAllSealedProducts(accountId).executeAsList().map {
                 ExportedSealedProduct(
                     catalogId = it.catalogId,
@@ -4901,7 +4964,18 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         return backupJson.encodeToString(BackupPayload.serializer(), payload)
     }
 
-    data class ImportSummary(val cardsAdded: Int, val sealedAdded: Int)
+    // Defaults, damit bestehende Aufrufer (Server-Web-Import) unverändert
+    // weiterbauen - die neuen Ebenen kamen mit Backup version 2 (28.08.)
+    data class ImportSummary(
+        val cardsAdded: Int,
+        val sealedAdded: Int,
+        val wishlistsAdded: Int = 0,
+        val wishlistItemsAdded: Int = 0,
+        val bindersAdded: Int = 0,
+        val binderItemsAdded: Int = 0,
+        val decksAdded: Int = 0,
+        val deckCardsAdded: Int = 0
+    )
 
     // Katalog-verknüpfte Einträge (cardId/catalogId gesetzt) werden darüber
     // identifiziert - Freitext-Einträge (kein Katalog-Link, siehe VaultScreen
@@ -4921,6 +4995,12 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         val payload = backupJson.decodeFromString(BackupPayload.serializer(), json)
         var cardsAdded = 0
         var sealedAdded = 0
+        var wishlistsAdded = 0
+        var wishlistItemsAdded = 0
+        var bindersAdded = 0
+        var binderItemsAdded = 0
+        var decksAdded = 0
+        var deckCardsAdded = 0
 
         dbQueries.transaction {
             val existingCardKeys = dbQueries.selectAll(accountId).executeAsList()
@@ -4951,6 +5031,23 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     updatedAt = currentTimeMillis(),
                     accountId = accountId
                 )
+                // Eigener Preis + Holo-Stil (28.08.) - wie beim Sync-Import
+                // als Folge-Update, insertItem bleibt schlank
+                if (c.holoStyle != null || c.customPriceEur != null || c.customPriceInTotal != 1L || c.customPriceInGameTotal != 1L) {
+                    val newId = dbQueries.lastInsertRowId().executeAsOne()
+                    if (c.holoStyle != null) {
+                        dbQueries.updateHoloStyle(holoStyle = c.holoStyle, updatedAt = currentTimeMillis(), id = newId)
+                    }
+                    if (c.customPriceEur != null || c.customPriceInTotal != 1L || c.customPriceInGameTotal != 1L) {
+                        dbQueries.updateCustomPrice(
+                            customPriceEur = c.customPriceEur,
+                            customPriceInTotal = c.customPriceInTotal,
+                            customPriceInGameTotal = c.customPriceInGameTotal,
+                            updatedAt = currentTimeMillis(),
+                            id = newId
+                        )
+                    }
+                }
                 cardsAdded++
             }
 
@@ -4975,9 +5072,110 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 )
                 sealedAdded++
             }
+
+            // ---------- Wunschlisten/Binder/Decks (28.08., Backup v2) ----------
+            // Add-only, bewusst OHNE Löschlisten-Abgleich (Backup-Restore soll
+            // Gelöschtes zurückbringen, siehe SyncModels.kt-Kommentar). Alle
+            // Zeitstempel = jetzt - wie bei den Karten oben, damit ein
+            // wiederhergestellter Eintrag beim nächsten Server-Sync eine alte,
+            // längst propagierte Löschung überholt statt sofort wieder zu
+            // verschwinden. Identität = uid; Import derselben Datei ist
+            // idempotent (vorhandene uid/Schlüssel werden übersprungen),
+            // Bestehendes wird nie umbenannt oder umgefärbt.
+            val now = currentTimeMillis()
+
+            val localWishlistByUid = dbQueries.selectAllWishlists(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }.associateBy { it.uid }
+            val localWishlistItems = dbQueries.selectAllWishlistItemsRawForAccount(accountId).executeAsList()
+                .groupBy { it.wishlistId }
+            payload.wishlists.forEach { w ->
+                val existing = localWishlistByUid[w.uid]
+                val localId: Long
+                val existingKeys: MutableSet<String>
+                if (existing == null) {
+                    dbQueries.insertWishlist(w.name, w.game, now, w.uid, accountId)
+                    localId = dbQueries.lastInsertRowId().executeAsOne()
+                    wishlistsAdded++
+                    existingKeys = mutableSetOf()
+                } else {
+                    localId = existing.id
+                    existingKeys = (localWishlistItems[localId] ?: emptyList())
+                        .map { wishlistItemKey(it.cardId, it.name) }.toMutableSet()
+                }
+                w.items.forEach { item ->
+                    val key = wishlistItemKey(item.cardId, item.name)
+                    if (key in existingKeys) return@forEach
+                    dbQueries.insertWishlistItem(localId, item.cardId, item.name, item.imageUrl, now)
+                    existingKeys += key
+                    wishlistItemsAdded++
+                }
+            }
+
+            val localBinderByUid = dbQueries.selectAllBinders(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }.associateBy { it.uid }
+            val localBinderItems = dbQueries.selectAllBinderItemsRawForAccount(accountId).executeAsList()
+                .groupBy { it.binderId }
+            payload.binders.forEach { b ->
+                val existing = localBinderByUid[b.uid]
+                val localId: Long
+                val existingKeys: MutableSet<String>
+                if (existing == null) {
+                    dbQueries.insertBinder(b.name, b.game, now, b.uid, b.pageSize.toLong(), accountId)
+                    localId = dbQueries.lastInsertRowId().executeAsOne()
+                    if (b.color != null) {
+                        dbQueries.updateBinderColor(b.color, now, localId)
+                    }
+                    bindersAdded++
+                    existingKeys = mutableSetOf()
+                } else {
+                    localId = existing.id
+                    existingKeys = (localBinderItems[localId] ?: emptyList())
+                        .map { binderItemKey(it.cardId, it.name) }.toMutableSet()
+                }
+                b.items.forEach { item ->
+                    val key = binderItemKey(item.cardId, item.name)
+                    if (key in existingKeys) return@forEach
+                    // Steckplatz (position) kommt aus dem Backup, damit die
+                    // Seitenaufteilung die Wiederherstellung überlebt
+                    dbQueries.insertBinderItem(localId, item.cardId, item.name, item.imageUrl, now, item.position.toLong(), now)
+                    existingKeys += key
+                    binderItemsAdded++
+                }
+            }
+
+            val localDeckByUid = dbQueries.selectAllDecks(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }.associateBy { it.uid }
+            val localDeckCards = dbQueries.selectAllDeckCardsRawForAccount(accountId).executeAsList()
+                .groupBy { it.deckId }
+            payload.decks.forEach { d ->
+                val existing = localDeckByUid[d.uid]
+                val localId: Long
+                val existingCardIds: MutableSet<String>
+                if (existing == null) {
+                    dbQueries.insertDeck(d.name, d.game, now, d.uid, accountId)
+                    localId = dbQueries.lastInsertRowId().executeAsOne()
+                    decksAdded++
+                    existingCardIds = mutableSetOf()
+                } else {
+                    localId = existing.id
+                    existingCardIds = (localDeckCards[localId] ?: emptyList())
+                        .map { it.cardId }.toMutableSet()
+                }
+                d.cards.forEach { card ->
+                    if (card.cardId in existingCardIds) return@forEach
+                    dbQueries.insertDeckCard(localId, card.cardId, card.quantity, now)
+                    existingCardIds += card.cardId
+                    deckCardsAdded++
+                }
+            }
         }
 
-        return ImportSummary(cardsAdded, sealedAdded)
+        return ImportSummary(
+            cardsAdded, sealedAdded,
+            wishlistsAdded, wishlistItemsAdded,
+            bindersAdded, binderItemsAdded,
+            decksAdded, deckCardsAdded
+        )
     }
 
     // --- Accounts (02.08., Nutzer-Vorgabe Mandantenfähigkeit) ---

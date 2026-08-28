@@ -550,7 +550,17 @@ data class MoveBinderItemRequest(val itemId: Long, val newPosition: Long)
 // unten) - das ist reine Server<->Server/App-Zusammenführung, hier geht es um
 // eine herunterladbare/wieder einlesbare Datei wie beim App-Backup-Dialog.
 @Serializable
-data class BackupImportResponse(val cardsAdded: Int, val sealedAdded: Int)
+data class BackupImportResponse(
+    val cardsAdded: Int,
+    val sealedAdded: Int,
+    // Backup v2 (28.08.) - Binder/Wants/Decks stellt importData seither mit her
+    val bindersAdded: Int = 0,
+    val binderItemsAdded: Int = 0,
+    val wishlistsAdded: Int = 0,
+    val wishlistItemsAdded: Int = 0,
+    val decksAdded: Int = 0,
+    val deckCardsAdded: Int = 0
+)
 
 // Eigenes Foto (10.08.) - siehe /api/customPhoto/* weiter unten
 @Serializable
@@ -1739,7 +1749,12 @@ fun Application.ult1madeServerModule() {
                 call.respond(HttpStatusCode.BadRequest, "Datei konnte nicht gelesen werden")
                 return@post
             }
-            call.respond(BackupImportResponse(summary.cardsAdded, summary.sealedAdded))
+            call.respond(BackupImportResponse(
+                summary.cardsAdded, summary.sealedAdded,
+                summary.bindersAdded, summary.binderItemsAdded,
+                summary.wishlistsAdded, summary.wishlistItemsAdded,
+                summary.decksAdded, summary.deckCardsAdded
+            ))
         }
         // Eigenes Foto hochladen (10.08., Feature-Parität App <-> Web) - die
         // App nimmt das Foto per Kamera auf und speichert es lokal auf dem

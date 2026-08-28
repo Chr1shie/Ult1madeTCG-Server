@@ -4996,8 +4996,18 @@ document.getElementById("backupImportFile").addEventListener("change", async (e)
     });
     if (!res.ok) throw new Error("import failed");
     const summary = await res.json();
+    // Backup v2 (28.08.): Binder/Wants/Decks nur erwähnen, wenn welche kamen
+    const extras = [];
+    if ((summary.bindersAdded || 0) + (summary.binderItemsAdded || 0) > 0)
+      extras.push(summary.bindersAdded + " " + tr("binder(s) with ", "Binder mit ") + summary.binderItemsAdded + " " + tr("card(s)", "Karte(n)"));
+    if ((summary.wishlistsAdded || 0) + (summary.wishlistItemsAdded || 0) > 0)
+      extras.push(summary.wishlistsAdded + " " + tr("want list(s) with ", "Wants-Liste(n) mit ") + summary.wishlistItemsAdded + " " + tr("card(s)", "Karte(n)"));
+    if ((summary.decksAdded || 0) + (summary.deckCardsAdded || 0) > 0)
+      extras.push(summary.decksAdded + " " + tr("deck(s) with ", "Deck(s) mit ") + summary.deckCardsAdded + " " + tr("card(s)", "Karte(n)"));
     status.textContent = tr("Import done: ", "Import fertig: ") + summary.cardsAdded + " " + tr("card(s), ", "Karte(n), ") + summary.sealedAdded +
-      " " + tr("vault product(s) added. Existing entries were not changed.", "Vault-Produkt(e) ergänzt. Bereits Vorhandenes wurde nicht verändert.");
+      " " + tr("vault product(s) added. ", "Vault-Produkt(e) ergänzt. ") +
+      (extras.length ? tr("Also restored: ", "Außerdem wiederhergestellt: ") + extras.join(", ") + ". " : "") +
+      tr("Existing entries were not changed.", "Bereits Vorhandenes wurde nicht verändert.");
     await loadData();
   } catch (err) {
     status.textContent = tr("Import failed - the file could not be read.", "Import fehlgeschlagen - Datei konnte nicht gelesen werden.");
