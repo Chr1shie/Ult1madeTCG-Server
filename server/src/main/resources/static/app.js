@@ -4449,18 +4449,39 @@ async function deleteDetailItem(item, isSealed) {
 // server") - Web-Pendant zur App-Kartendetailansicht. Erscheint nur, wenn
 // überhaupt eine Cardmarket-Notierung gefunden wurde; die Auswahl-Chips nur,
 // wenn es mehr als eine gibt ("if you don't need them it doesn't matter").
+// "Preise" eingeklappt (28.08., Nutzer-Fund "soviel Preise, dass man die
+// Karte nicht mehr sieht" - Parität zur App, dort seit 13.08.): bei mehreren
+// Notierungen steht erstmal nur die Preiszeile mit Pfeil da, die Chip-Liste
+// klappt erst beim Anklicken auf. Merker pro Karte/Produkt, damit die Liste
+// nach einer Auswahl offen bleibt, bei der nächsten Karte aber wieder zu ist.
+let detailCmExpandedFor = null;
+
 function renderDetailCardmarketOptions(item) {
   const row = document.getElementById("detailEurPriceRow");
   const wrap = document.getElementById("detailCmOptions");
   const options = item.marketPriceEurOptions || [];
   wrap.innerHTML = "";
   wrap.classList.remove("visible");
+  row.style.cursor = "";
+  row.onclick = null;
   if (options.length === 0) {
     row.innerHTML = "";
     return;
   }
-  row.innerHTML = "<span>" + tr("Market price (Cardmarket)", "Marktpreis (Cardmarket)") + "</span><span class=\"value\">" + formatEur(item.marketPriceEur || 0) + "</span>";
-  if (options.length <= 1) return;
+  if (options.length <= 1) {
+    row.innerHTML = "<span>" + tr("Market price (Cardmarket)", "Marktpreis (Cardmarket)") + "</span><span class=\"value\">" + formatEur(item.marketPriceEur || 0) + "</span>";
+    return;
+  }
+
+  const identity = item.cardId || item.catalogId || item.name;
+  const expanded = detailCmExpandedFor === identity;
+  row.innerHTML = "<span>" + tr("Prices", "Preise") + "</span><span class=\"value\">" + formatEur(item.marketPriceEur || 0) + " " + (expanded ? "▴" : "▾") + "</span>";
+  row.style.cursor = "pointer";
+  row.onclick = () => {
+    detailCmExpandedFor = expanded ? null : identity;
+    renderDetailCardmarketOptions(item);
+  };
+  if (!expanded) return;
 
   wrap.classList.add("visible");
   const hint = document.createElement("div");
