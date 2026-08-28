@@ -5004,6 +5004,8 @@ document.getElementById("backupImportFile").addEventListener("change", async (e)
       extras.push(summary.wishlistsAdded + " " + tr("want list(s) with ", "Wants-Liste(n) mit ") + summary.wishlistItemsAdded + " " + tr("card(s)", "Karte(n)"));
     if ((summary.decksAdded || 0) + (summary.deckCardsAdded || 0) > 0)
       extras.push(summary.decksAdded + " " + tr("deck(s) with ", "Deck(s) mit ") + summary.deckCardsAdded + " " + tr("card(s)", "Karte(n)"));
+    if ((summary.photosRestored || 0) > 0)
+      extras.push(summary.photosRestored + " " + tr("photo(s)", "Foto(s)"));
     status.textContent = tr("Import done: ", "Import fertig: ") + summary.cardsAdded + " " + tr("card(s), ", "Karte(n), ") + summary.sealedAdded +
       " " + tr("vault product(s) added. ", "Vault-Produkt(e) ergänzt. ") +
       (extras.length ? tr("Also restored: ", "Außerdem wiederhergestellt: ") + extras.join(", ") + ". " : "") +

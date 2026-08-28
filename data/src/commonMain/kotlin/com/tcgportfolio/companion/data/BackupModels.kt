@@ -39,9 +39,23 @@ data class ExportedSealedProduct(
     val customPriceInGameTotal: Long = 1
 )
 
+// Eigene Fotos im Backup (28.08., Backup v3, Nutzer-Wunsch "dass die
+// eigenen Fotos nicht mitkommen ist ja auch total doof"): JPEG-Bytes als
+// Base64 direkt im JSON - eine einzige Backup-Datei bleibt das Format,
+// dafür wächst sie pro Foto um ~1,3x der Dateigröße. kind/key sind
+// dieselben stabilen Identitäten wie im Foto-Sync-Kanal (SyncClient.kt):
+// card = cardId, sealed = sealedSyncKey (OHNE Account-Präfix, das Backup
+// ist eh pro Account), binder = Binder-uid.
+@Serializable
+data class BackupPhoto(
+    val kind: String,
+    val key: String,
+    val base64: String
+)
+
 @Serializable
 data class BackupPayload(
-    val version: Int = 2,
+    val version: Int = 3,
     val exportedAt: Long,
     val cards: List<ExportedCard> = emptyList(),
     val sealedProducts: List<ExportedSealedProduct> = emptyList(),
@@ -55,5 +69,7 @@ data class BackupPayload(
     // neue Backups dank ignoreUnknownKeys (nur ohne die neuen Ebenen).
     val wishlists: List<SyncWishlist> = emptyList(),
     val binders: List<SyncBinder> = emptyList(),
-    val decks: List<SyncDeck> = emptyList()
+    val decks: List<SyncDeck> = emptyList(),
+    // v3 (28.08.) - eigene Fotos, siehe BackupPhoto oben
+    val photos: List<BackupPhoto> = emptyList()
 )

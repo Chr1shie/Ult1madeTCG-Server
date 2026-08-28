@@ -559,7 +559,9 @@ data class BackupImportResponse(
     val wishlistsAdded: Int = 0,
     val wishlistItemsAdded: Int = 0,
     val decksAdded: Int = 0,
-    val deckCardsAdded: Int = 0
+    val deckCardsAdded: Int = 0,
+    // Backup v3 (28.08.) - wiederhergestellte eigene Fotos
+    val photosRestored: Int = 0
 )
 
 // Eigenes Foto (10.08.) - siehe /api/customPhoto/* weiter unten
@@ -1738,13 +1740,40 @@ fun Application.ult1madeServerModule() {
         // typisierte Request-Klasse - der Body IST bereits das Backup-JSON).
         get("/api/backup/export") {
             val accountId = resolveAccountId(call)
-            call.respondText(repository.exportData(accountId), ContentType.Application.Json)
+            // Backup v3 (28.08.): eigene Fotos aus customPhotosDir einbetten
+            call.respondText(
+                repository.exportData(accountId) { _, _, imageUrl ->
+                    imageUrl.takeIf { it.startsWith("/images/custom/") }
+                        ?.let { File(customPhotosDir, it.removePrefix("/images/custom/")) }
+                        ?.takeIf { it.exists() }?.readBytes()
+                },
+                ContentType.Application.Json
+            )
         }
         post("/api/backup/import") {
             val accountId = resolveAccountId(call)
             val json = call.receiveText()
             val summary = try {
-                repository.importData(accountId, json)
+                // photoSaver (Backup v3): gleiche Dateinamen wie der Foto-
+                // Sync-Kanal (photoSyncFileName; sealed dort mit Account-
+                // Präfix), atomar geschrieben; vorhandene eigene Fotos werden
+                // nicht überschrieben (add-only), kaputte JPEGs abgewiesen
+                repository.importData(accountId, json) { kind, key, bytes, currentUrl ->
+                    if (currentUrl != null && currentUrl.startsWith("/images/custom/")) null
+                    else if (!isCompleteJpeg(bytes)) null
+                    else {
+                        val accountUid = repository.getAccounts().firstOrNull { it.id == accountId }?.uid.orEmpty()
+                        val fileName = photoSyncFileName(kind, if (kind == "sealed") "$accountUid|$key" else key)
+                        val tmp = File(customPhotosDir, "$fileName.tmp")
+                        tmp.writeBytes(bytes)
+                        java.nio.file.Files.move(
+                            tmp.toPath(), File(customPhotosDir, fileName).toPath(),
+                            java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                            java.nio.file.StandardCopyOption.ATOMIC_MOVE
+                        )
+                        "/images/custom/$fileName"
+                    }
+                }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Datei konnte nicht gelesen werden")
                 return@post
@@ -1753,7 +1782,8 @@ fun Application.ult1madeServerModule() {
                 summary.cardsAdded, summary.sealedAdded,
                 summary.bindersAdded, summary.binderItemsAdded,
                 summary.wishlistsAdded, summary.wishlistItemsAdded,
-                summary.decksAdded, summary.deckCardsAdded
+                summary.decksAdded, summary.deckCardsAdded,
+                summary.photosRestored
             ))
         }
         // Eigenes Foto hochladen (10.08., Feature-Parität App <-> Web) - die

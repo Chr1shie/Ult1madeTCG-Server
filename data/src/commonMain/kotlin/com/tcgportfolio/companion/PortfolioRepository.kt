@@ -4,8 +4,11 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.tcgportfolio.companion.data.BackupPayload
+import com.tcgportfolio.companion.data.BackupPhoto
 import com.tcgportfolio.companion.data.ExportedCard
 import com.tcgportfolio.companion.data.ExportedSealedProduct
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import com.tcgportfolio.companion.data.SyncAccount
 import com.tcgportfolio.companion.data.SyncBinder
 import com.tcgportfolio.companion.data.SyncBinderItem
@@ -4869,7 +4872,15 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // verändert oder gelöscht - importiert wird nur, was lokal fehlt. Wurde
     // etwas gelöscht und steht noch in einem alten Backup, kommt es beim
     // Import bewusst wieder zurück (kein Tombstone-Mechanismus mehr).
-    fun exportData(accountId: Long): String {
+    // photoReader (28.08., Backup v3): liest die JPEG-Bytes zu einer Bild-URL -
+    // die PLATTFORM entscheidet, was lesbar ist (App: "local:"-Pfade über
+    // readLocalImageBytes, Server: /images/custom/-Dateien); null = Foto
+    // überspringen. Das Repository kennt bewusst keine Pfad-Präfixe.
+    @OptIn(ExperimentalEncodingApi::class)
+    suspend fun exportData(
+        accountId: Long,
+        photoReader: suspend (kind: String, key: String, imageUrl: String) -> ByteArray? = { _, _, _ -> null }
+    ): String {
         // Wunschlisten/Binder/Decks (28.08., Backup-Vollständigkeit) - gleiche
         // Abfragen und Abbildung wie exportAccountBundle(), nur ohne Löschlisten
         val wishlistItemsByListId = dbQueries.selectAllWishlistItemsRawForAccount(accountId).executeAsList()
@@ -4878,9 +4889,38 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             .groupBy { it.binderId }
         val deckCardsByDeckId = dbQueries.selectAllDeckCardsRawForAccount(accountId).executeAsList()
             .groupBy { it.deckId }
+        val cardRows = dbQueries.selectAll(accountId).executeAsList()
+        val sealedRows = dbQueries.selectAllSealedProducts(accountId).executeAsList()
+        val binderRows = dbQueries.selectAllBinders(accountId).executeAsList().filter { it.uid.isNotEmpty() }
+
+        // Eigene Fotos (28.08., Backup v3) - nur Fotos zu Einträgen DIESES
+        // Accounts; was lesbar ist, entscheidet der photoReader des Aufrufers
+        val photos = mutableListOf<BackupPhoto>()
+        val exportedCardIds = cardRows.mapNotNull { it.cardId }.toSet()
+        getAllCustomCardPhotos().forEach { p ->
+            if (p.cardId !in exportedCardIds) return@forEach
+            photoReader("card", p.cardId, p.imageUrl)?.let {
+                photos += BackupPhoto("card", p.cardId, Base64.encode(it))
+            }
+        }
+        sealedRows.forEach { s ->
+            val url = s.imageUrl ?: return@forEach
+            val key = sealedSyncKey(s.catalogId, s.isSealed, s.name, s.category, s.game)
+            photoReader("sealed", key, url)?.let {
+                photos += BackupPhoto("sealed", key, Base64.encode(it))
+            }
+        }
+        binderRows.forEach { b ->
+            val url = b.coverImageUrl ?: return@forEach
+            photoReader("binder", b.uid, url)?.let {
+                photos += BackupPhoto("binder", b.uid, Base64.encode(it))
+            }
+        }
+
         val payload = BackupPayload(
             exportedAt = currentTimeMillis(),
-            cards = dbQueries.selectAll(accountId).executeAsList().map {
+            photos = photos,
+            cards = cardRows.map {
                 ExportedCard(
                     cardId = it.cardId,
                     isHolo = it.isHolo,
@@ -4908,8 +4948,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         }
                     )
                 },
-            binders = dbQueries.selectAllBinders(accountId).executeAsList()
-                .filter { it.uid.isNotEmpty() }
+            binders = binderRows
                 .map { b ->
                     SyncBinder(
                         uid = b.uid,
@@ -4945,7 +4984,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         }
                     )
                 },
-            sealedProducts = dbQueries.selectAllSealedProducts(accountId).executeAsList().map {
+            sealedProducts = sealedRows.map {
                 ExportedSealedProduct(
                     catalogId = it.catalogId,
                     isSealed = it.isSealed,
@@ -4974,7 +5013,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         val bindersAdded: Int = 0,
         val binderItemsAdded: Int = 0,
         val decksAdded: Int = 0,
-        val deckCardsAdded: Int = 0
+        val deckCardsAdded: Int = 0,
+        // Backup v3 (28.08.) - wiederhergestellte eigene Fotos
+        val photosRestored: Int = 0
     )
 
     // Katalog-verknüpfte Einträge (cardId/catalogId gesetzt) werden darüber
@@ -4991,7 +5032,18 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     private fun sealedKey(catalogId: String?, isSealed: Long, name: String, category: String, game: String): String =
         if (catalogId != null) "id|$catalogId|$isSealed" else "name|$name|$category|$game|$isSealed"
 
-    fun importData(accountId: Long, json: String): ImportSummary {
+    // photoSaver (28.08., Backup v3): speichert JPEG-Bytes und liefert die
+    // neue Bild-URL zurück (App: saveLocalImageBytes -> "local:"-Pfad,
+    // Server: Datei in customPhotosDir -> /images/custom/-URL). currentUrl
+    // ist der aktuelle Wert des Ziel-Eintrags - der Aufrufer entscheidet
+    // damit "schon ein eigenes Foto da -> null = überspringen" (add-only,
+    // wie der ganze Backup-Import). Das Repository kennt keine Pfad-Präfixe.
+    @OptIn(ExperimentalEncodingApi::class)
+    suspend fun importData(
+        accountId: Long,
+        json: String,
+        photoSaver: suspend (kind: String, key: String, bytes: ByteArray, currentUrl: String?) -> String? = { _, _, _, _ -> null }
+    ): ImportSummary {
         val payload = backupJson.decodeFromString(BackupPayload.serializer(), json)
         var cardsAdded = 0
         var sealedAdded = 0
@@ -5170,11 +5222,52 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             }
         }
 
+        // ---------- Eigene Fotos (28.08., Backup v3) ----------
+        // Bewusst NACH der Transaktion (photoSaver macht Datei-I/O und ist
+        // suspend - beides gehört nicht in den DB-Transaktionsblock); die
+        // Ziel-Einträge existieren jetzt sicher. Add-only über currentUrl:
+        // hat der Eintrag schon ein eigenes Foto, liefert der Aufrufer null.
+        var photosRestored = 0
+        if (payload.photos.isNotEmpty()) {
+            val sealedBySyncKey = dbQueries.selectAllSealedProducts(accountId).executeAsList()
+                .associateBy { sealedSyncKey(it.catalogId, it.isSealed, it.name, it.category, it.game) }
+            val bindersByUid = dbQueries.selectAllBinders(accountId).executeAsList()
+                .filter { it.uid.isNotEmpty() }.associateBy { it.uid }
+            payload.photos.forEach { p ->
+                val bytes = runCatching { Base64.decode(p.base64) }.getOrNull() ?: return@forEach
+                val now = currentTimeMillis()
+                when (p.kind) {
+                    "card" -> {
+                        val current = getCustomCardPhotoUrl(p.key)
+                        photoSaver("card", p.key, bytes, current)?.let { url ->
+                            setCustomCardPhotoSynced(p.key, url, now)
+                            photosRestored++
+                        }
+                    }
+                    "sealed" -> {
+                        val row = sealedBySyncKey[p.key] ?: return@forEach
+                        photoSaver("sealed", p.key, bytes, row.imageUrl)?.let { url ->
+                            setSealedProductImageSynced(row.id, url, now)
+                            photosRestored++
+                        }
+                    }
+                    "binder" -> {
+                        val row = bindersByUid[p.key] ?: return@forEach
+                        photoSaver("binder", p.key, bytes, row.coverImageUrl)?.let { url ->
+                            setBinderCoverImageSynced(row.id, url, now)
+                            photosRestored++
+                        }
+                    }
+                }
+            }
+        }
+
         return ImportSummary(
             cardsAdded, sealedAdded,
             wishlistsAdded, wishlistItemsAdded,
             bindersAdded, binderItemsAdded,
-            decksAdded, deckCardsAdded
+            decksAdded, deckCardsAdded,
+            photosRestored
         )
     }
 
