@@ -91,8 +91,13 @@
 </main>
 
 <div class="detailOverlay" id="detailOverlay">
+  <!-- X außerhalb der Karte (31.08., Nutzer-Fund "X gar nicht mehr
+       drückbar"): die Karte kippt beim Maus-Bewegen live in 3D - ein Knopf
+       IN der Karte wandert dadurch unterm Zeiger weg bzw. wird verdeckt.
+       Als Overlay-Kind in der Bildschirm-Ecke ist er von der 3D-Geometrie
+       komplett entkoppelt (Lightbox-Muster). -->
+  <button class="detailClose" id="detailClose" aria-label="Close" data-de-aria="Schließen">×</button>
   <div class="detailCard" id="detailCard">
-    <button class="detailClose" id="detailClose" aria-label="Close" data-de-aria="Schließen">×</button>
     <div class="detailArt"><img id="detailImg" alt=""></div>
     <!-- Eigenes Foto (10.08., Feature-Parität App <-> Web) - siehe
          renderDetailPhotoUpload() in app.js -->

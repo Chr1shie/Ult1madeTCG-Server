@@ -811,26 +811,24 @@ h1 .accent {
   .detailCard { width: min(360px, 84vw); margin-right: 0; }
 }
 
+/* X als Overlay-Kind in der Bildschirm-Ecke (31.08., zweiter Anlauf -
+   siehe Kommentar in index.html): bewusst NICHT in .detailCard, deren
+   3D-Kippung den Knopf verdeckte bzw. unterm Zeiger wegzog */
 .detailClose {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(20, 20, 24, 0.85);
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
   transition: background 0.15s ease;
-  /* Immer VOR der Karte (31.08., Nutzer-Fund "X wird von der Karte
-     verdeckt"): .detailCard spannt mit preserve-3d einen 3D-Kontext auf,
-     in dem das Kartenbild den Knopf überdeckte - translateZ hebt ihn
-     über die Kartenebene, z-index deckt den 2D-Fall ab */
-  z-index: 30;
-  transform: translateZ(80px);
+  z-index: 60;
 }
 
 .detailClose:hover { background: rgba(255,255,255,0.22); }
