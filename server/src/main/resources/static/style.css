@@ -825,6 +825,12 @@ h1 .accent {
   line-height: 1;
   cursor: pointer;
   transition: background 0.15s ease;
+  /* Immer VOR der Karte (31.08., Nutzer-Fund "X wird von der Karte
+     verdeckt"): .detailCard spannt mit preserve-3d einen 3D-Kontext auf,
+     in dem das Kartenbild den Knopf überdeckte - translateZ hebt ihn
+     über die Kartenebene, z-index deckt den 2D-Fall ab */
+  z-index: 30;
+  transform: translateZ(80px);
 }
 
 .detailClose:hover { background: rgba(255,255,255,0.22); }

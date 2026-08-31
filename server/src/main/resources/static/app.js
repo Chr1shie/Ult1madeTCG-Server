@@ -4984,45 +4984,51 @@ function renderDetailEditControls(item) {
     const v = parseFloat(cpInput.value);
     item.customPriceEur = (cpInput.value === "" || isNaN(v) || v < 0) ? null : v;
     persistCustomPrice(item, isSealed);
+    // Chips-Zeile sofort ein-/ausblenden, wenn der Preis gesetzt/geleert wird
+    renderDetailEditControls(item);
   });
   cpRow.appendChild(cpInput);
   cpBox.appendChild(cpRow);
 
-  const cpSwitchRow = document.createElement("div");
-  cpSwitchRow.className = "detailRow";
-  const cpSwitchLabel = document.createElement("span");
-  cpSwitchLabel.textContent = tr("Counts in", "Zählt in");
-  cpSwitchRow.appendChild(cpSwitchLabel);
-  const cpChips = document.createElement("span");
+  // "Zählt in" nur zeigen, wenn ein eigener Preis gesetzt ist (31.08.,
+  // Nutzer-Vorgabe) - ohne Preis haben die Schalter nichts zu schalten
+  if (item.customPriceEur !== null && item.customPriceEur !== undefined) {
+    const cpSwitchRow = document.createElement("div");
+    cpSwitchRow.className = "detailRow";
+    const cpSwitchLabel = document.createElement("span");
+    cpSwitchLabel.textContent = tr("Counts in", "Zählt in");
+    cpSwitchRow.appendChild(cpSwitchLabel);
+    const cpChips = document.createElement("span");
 
-  const totalChip = document.createElement("button");
-  totalChip.className = "detailCmChip" + (item.customPriceInTotal === 1 ? " active" : "");
-  totalChip.textContent = tr("Total value", "Gesamtwert");
-  totalChip.addEventListener("click", () => {
-    item.customPriceInTotal = item.customPriceInTotal === 1 ? 0 : 1;
-    persistCustomPrice(item, isSealed);
-    renderDetailEditControls(item);
-  });
-  cpChips.appendChild(totalChip);
+    const totalChip = document.createElement("button");
+    totalChip.className = "detailCmChip" + (item.customPriceInTotal === 1 ? " active" : "");
+    totalChip.textContent = tr("Total value", "Gesamtwert");
+    totalChip.addEventListener("click", () => {
+      item.customPriceInTotal = item.customPriceInTotal === 1 ? 0 : 1;
+      persistCustomPrice(item, isSealed);
+      renderDetailEditControls(item);
+    });
+    cpChips.appendChild(totalChip);
 
-  const gameChip = document.createElement("button");
-  const gameChipOn = item.customPriceInTotal === 1 || item.customPriceInGameTotal === 1;
-  gameChip.className = "detailCmChip" + (gameChipOn ? " active" : "");
-  gameChip.textContent = tr("TCG only", "Nur TCG");
-  // Chip 1 an => automatisch mit drin und gesperrt (gleiche Regel wie in
-  // der App)
-  gameChip.disabled = item.customPriceInTotal === 1;
-  if (gameChip.disabled) gameChip.style.opacity = "0.5";
-  gameChip.style.marginLeft = "6px";
-  gameChip.addEventListener("click", () => {
-    if (item.customPriceInTotal === 1) return;
-    item.customPriceInGameTotal = item.customPriceInGameTotal === 1 ? 0 : 1;
-    persistCustomPrice(item, isSealed);
-    renderDetailEditControls(item);
-  });
-  cpChips.appendChild(gameChip);
-  cpSwitchRow.appendChild(cpChips);
-  cpBox.appendChild(cpSwitchRow);
+    const gameChip = document.createElement("button");
+    const gameChipOn = item.customPriceInTotal === 1 || item.customPriceInGameTotal === 1;
+    gameChip.className = "detailCmChip" + (gameChipOn ? " active" : "");
+    gameChip.textContent = tr("TCG only", "Nur TCG");
+    // Chip 1 an => automatisch mit drin und gesperrt (gleiche Regel wie in
+    // der App)
+    gameChip.disabled = item.customPriceInTotal === 1;
+    if (gameChip.disabled) gameChip.style.opacity = "0.5";
+    gameChip.style.marginLeft = "6px";
+    gameChip.addEventListener("click", () => {
+      if (item.customPriceInTotal === 1) return;
+      item.customPriceInGameTotal = item.customPriceInGameTotal === 1 ? 0 : 1;
+      persistCustomPrice(item, isSealed);
+      renderDetailEditControls(item);
+    });
+    cpChips.appendChild(gameChip);
+    cpSwitchRow.appendChild(cpChips);
+    cpBox.appendChild(cpSwitchRow);
+  }
 
   const deleteBtn = document.getElementById("detailDeleteBtn");
   deleteBtn.onclick = () => deleteDetailItem(item, isSealed);
@@ -5236,8 +5242,21 @@ async function changeCardVariant(item, newCardId) {
   if (!item.cardId) return;
   const oldCardId = item.cardId;
   // Sofortiges lokales Update analog zu selectCardmarketPrice() oben, damit
-  // sich die Auswahl direkt anfühlt
+  // sich die Auswahl direkt anfühlt. Die Detailansicht bleibt dabei OFFEN
+  // (31.08., Nutzer-Vorgabe "kann man das nicht adhoc machen?") - Bild und
+  // Chips werden an Ort und Stelle getauscht, loadData() läuft im
+  // Hintergrund für Grid/Werte nach.
   item.cardId = newCardId;
+  const catalog = item.setId ? catalogCache[item.setId] : null;
+  const newEntry = catalog ? catalog.find(c => c.id === newCardId) : null;
+  if (newEntry) {
+    item.imageUrl = newEntry.imageUrl;
+    const img = document.getElementById("detailImg");
+    if (img && newEntry.imageUrl) img.src = newEntry.imageUrl;
+    const nameEl = document.getElementById("detailName");
+    if (nameEl) nameEl.textContent = item.name;
+  }
+  renderDetailArtVariants(item);
   try {
     await fetch("/api/collection/changeVariant", {
       method: "POST",
@@ -5247,7 +5266,6 @@ async function changeCardVariant(item, newCardId) {
   } catch (err) {
     showAddToast(tr("Switch failed", "Wechsel fehlgeschlagen"));
   }
-  closeCardDetail();
   loadData();
 }
 
