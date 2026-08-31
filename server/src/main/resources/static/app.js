@@ -141,14 +141,27 @@ document.addEventListener("error", (e) => {
 // delegierter Listener für alle Kacheln (auch später nachgerenderte) statt
 // je Kachel einen: setzt --hx/--hy auf der .art-Fläche, der Verlauf selbst
 // lebt in style.css (.card .art::after). Kein 3D-Kippen im Grid.
+// Auf den Bildschirm-Takt gedrosselt (31.08., Nutzer-Fund "es stockt, wenn
+// man über die Karten fährt"): pointermove feuert weit öfter als der
+// Bildschirm zeichnet, und jedes Event erzwang mit getBoundingClientRect
+// eine Layout-Berechnung. Jetzt merkt sich der Listener nur die letzte
+// Position und rechnet EINMAL pro Frame - sieht identisch aus.
+let holoFrame = 0;
+let holoLast = null;
 document.addEventListener("pointermove", (e) => {
   const art = e.target.closest ? e.target.closest(".card .art") : null;
   if (!art) return;
-  const r = art.getBoundingClientRect();
-  if (r.width === 0 || r.height === 0) return;
-  art.style.setProperty("--hx", (((e.clientX - r.left) / r.width) - 0.5) * 2);
-  art.style.setProperty("--hy", (((e.clientY - r.top) / r.height) - 0.5) * 2);
-});
+  holoLast = { art, x: e.clientX, y: e.clientY };
+  if (holoFrame) return;
+  holoFrame = requestAnimationFrame(() => {
+    holoFrame = 0;
+    const { art: a, x, y } = holoLast;
+    const r = a.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return;
+    a.style.setProperty("--hx", (((x - r.left) / r.width) - 0.5) * 2);
+    a.style.setProperty("--hy", (((y - r.top) / r.height) - 0.5) * 2);
+  });
+}, { passive: true });
 
 // Detailansicht: Holo-Glanz MIT Kippen (17.08., wie die Hero-Karte der
 // Homepage). Neigung auf .detailArt (nicht .detailCard, siehe style.css-
@@ -157,21 +170,29 @@ document.addEventListener("pointermove", (e) => {
 (() => {
   const detailCard = document.getElementById("detailCard");
   if (!detailCard) return;
+  // Gleiche Frame-Drosselung wie beim Grid-Glanz oben (31.08.)
+  let tiltFrame = 0;
+  let tiltLast = null;
   detailCard.addEventListener("pointermove", (e) => {
-    const art = detailCard.querySelector(".detailArt");
-    if (!art) return;
-    const r = art.getBoundingClientRect();
-    if (r.width === 0 || r.height === 0) return;
-    const nx = (((e.clientX - r.left) / r.width) - 0.5) * 2;
-    const ny = (((e.clientY - r.top) / r.height) - 0.5) * 2;
-    art.style.setProperty("--hx", Math.max(-1, Math.min(1, nx)));
-    art.style.setProperty("--hy", Math.max(-1, Math.min(1, ny)));
-    // Kippung aufs IMG statt auf .detailArt (18.08., dritter Anlauf gegen
-    // den "Schatten": siehe style.css-Kommentar - so wird sie flach in die
-    // Kartenebene projiziert und taucht nie hinter die dunkle Karte)
-    const img = art.querySelector("img");
-    if (img) img.style.transform = `rotateY(${Math.max(-1, Math.min(1, nx)) * 10}deg) rotateX(${Math.max(-1, Math.min(1, ny)) * -8}deg)`;
-  });
+    tiltLast = { x: e.clientX, y: e.clientY };
+    if (tiltFrame) return;
+    tiltFrame = requestAnimationFrame(() => {
+      tiltFrame = 0;
+      const art = detailCard.querySelector(".detailArt");
+      if (!art) return;
+      const r = art.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      const nx = Math.max(-1, Math.min(1, (((tiltLast.x - r.left) / r.width) - 0.5) * 2));
+      const ny = Math.max(-1, Math.min(1, (((tiltLast.y - r.top) / r.height) - 0.5) * 2));
+      art.style.setProperty("--hx", nx);
+      art.style.setProperty("--hy", ny);
+      // Kippung aufs IMG statt auf .detailArt (18.08., dritter Anlauf gegen
+      // den "Schatten": siehe style.css-Kommentar - so wird sie flach in die
+      // Kartenebene projiziert und taucht nie hinter die dunkle Karte)
+      const img = art.querySelector("img");
+      if (img) img.style.transform = `rotateY(${nx * 10}deg) rotateX(${ny * -8}deg)`;
+    });
+  }, { passive: true });
   detailCard.addEventListener("pointerleave", () => {
     const art = detailCard.querySelector(".detailArt");
     if (!art) return;
@@ -5397,7 +5418,8 @@ function shatterAndClose() {
   }
 }
 
-document.getElementById("detailClose").addEventListener("click", shatterAndClose);
+// Kein Schließen-X mehr in der Detailansicht (31.08., Nutzer-Entscheidung) -
+// Klick neben die Karte oder Escape schließen, siehe die zwei Handler hier
 document.getElementById("detailOverlay").addEventListener("click", (e) => {
   if (e.target.id === "detailOverlay") shatterAndClose();
 });

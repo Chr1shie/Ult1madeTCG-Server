@@ -811,24 +811,23 @@ h1 .accent {
   .detailCard { width: min(360px, 84vw); margin-right: 0; }
 }
 
-/* X als Overlay-Kind in der Bildschirm-Ecke (31.08., zweiter Anlauf -
-   siehe Kommentar in index.html): bewusst NICHT in .detailCard, deren
-   3D-Kippung den Knopf verdeckte bzw. unterm Zeiger wegzog */
+/* Nur noch vom Add-Overlay genutzt (addClose in der 2D-.addBox) - die
+   Detailansicht hat seit 31.08. bewusst kein X mehr (Nutzer-Entscheidung,
+   Klick daneben/Escape schließen) */
 .detailClose {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 38px;
-  height: 38px;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(20, 20, 24, 0.85);
+  border: none;
+  background: rgba(255,255,255,0.1);
   color: #fff;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
   transition: background 0.15s ease;
-  z-index: 60;
 }
 
 .detailClose:hover { background: rgba(255,255,255,0.22); }
