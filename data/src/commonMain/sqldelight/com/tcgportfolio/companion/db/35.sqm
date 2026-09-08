@@ -1,0 +1,7 @@
+-- Deckbau-Formate (08.09., 1.1, Nutzer-Auftrag "Deckbau-Regeln für Magic:
+-- Commander, Standard, Pioneer"): format = "standard"/"pioneer"/"commander"
+-- (NULL = kein Format/kein Regelcheck), commanderCardId = festgelegter
+-- Commander (nur bei "commander"). Siehe MtgDeckRules.kt; beides synct
+-- über SyncDeck mit.
+ALTER TABLE DeckEntity ADD COLUMN format TEXT;
+ALTER TABLE DeckEntity ADD COLUMN commanderCardId TEXT;

@@ -3243,6 +3243,62 @@ function renderDeckDetail(panel, deck) {
   }));
   panel.appendChild(actionRow);
 
+  // Deckbau-Format + Commander (08.09., Magic: Standard/Pioneer/Commander -
+  // siehe MtgDeckRules.kt; Parität zur App-Detailansicht). Speichert sofort
+  // (POST /api/decks/format) und lässt den Regelcheck neu laufen.
+  if (deck.game === "MTG") {
+    const formatRow = document.createElement("div");
+    formatRow.className = "wishlistStatRow";
+    formatRow.style.display = "block";
+    const label = document.createElement("span");
+    label.textContent = tr("Format: ", "Format: ");
+    formatRow.appendChild(label);
+    const saveFormat = async (format, commanderCardId) => {
+      const res = await fetch("/api/decks/format", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ deckId: deck.id, format: format, commanderCardId: commanderCardId })
+      });
+      if (!res.ok) { showAddToast(tr("Saving failed.", "Speichern fehlgeschlagen.")); return; }
+      deck.format = format;
+      deck.commanderCardId = format === "commander" ? commanderCardId : null;
+      delete decksCache[activeGame];
+      await loadDecksForGame(deck.game);
+      await runDeckValidation(deck);
+    };
+    for (const [value, text] of [[null, tr("None", "Keins")], ["standard", "Standard"], ["pioneer", "Pioneer"], ["commander", "Commander"]]) {
+      const chip = document.createElement("button");
+      chip.className = "gridSortChip" + ((deck.format || null) === value ? " active" : "");
+      chip.textContent = text;
+      chip.style.marginLeft = "6px";
+      chip.addEventListener("click", () => saveFormat(value, deck.commanderCardId || null));
+      formatRow.appendChild(chip);
+    }
+    if (deck.format === "commander") {
+      const cmdRow = document.createElement("div");
+      cmdRow.style.marginTop = "6px";
+      const cmdLabel = document.createElement("span");
+      cmdLabel.textContent = tr("Commander: ", "Commander: ");
+      cmdRow.appendChild(cmdLabel);
+      const select = document.createElement("select");
+      const none = document.createElement("option");
+      none.value = "";
+      none.textContent = tr("not set", "nicht festgelegt");
+      select.appendChild(none);
+      (deckCardsCache[deck.id] || []).forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.cardId;
+        opt.textContent = c.name;
+        if (c.cardId === deck.commanderCardId) opt.selected = true;
+        select.appendChild(opt);
+      });
+      select.addEventListener("change", () => saveFormat("commander", select.value || null));
+      cmdRow.appendChild(select);
+      formatRow.appendChild(cmdRow);
+    }
+    panel.appendChild(formatRow);
+  }
+
   if (deckValidation) {
     const box = document.createElement("div");
     box.className = "wishlistStatRow";

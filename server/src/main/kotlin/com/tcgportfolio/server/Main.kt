@@ -3,6 +3,7 @@ package com.tcgportfolio.server
 import com.tcgportfolio.companion.DatabaseDriverFactory
 import com.tcgportfolio.companion.DatabaseModule
 import com.tcgportfolio.companion.LocalizedCardImages
+import com.tcgportfolio.companion.MtgFormat
 import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_DE
 import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_EN
 import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_MODE_AS_SCANNED
@@ -664,8 +665,14 @@ data class DeckResponse(
     val id: Long,
     val name: String,
     val game: String,
-    val cardCount: Long
+    val cardCount: Long,
+    // Deckbau-Format + Commander (08.09., siehe MtgDeckRules.kt)
+    val format: String? = null,
+    val commanderCardId: String? = null
 )
+
+@Serializable
+data class DeckFormatRequest(val deckId: Long, val format: String? = null, val commanderCardId: String? = null)
 
 @Serializable
 data class DeckCardResponse(
@@ -2088,9 +2095,17 @@ fun Application.ult1madeServerModule() {
             val accountId = resolveAccountId(call)
             val results = repository.getDecksForGame(accountId, game).map { d ->
                 val cardCount = repository.getDeckCards(d.id).sumOf { it.quantity }
-                DeckResponse(id = d.id, name = d.name, game = d.game, cardCount = cardCount)
+                DeckResponse(id = d.id, name = d.name, game = d.game, cardCount = cardCount, format = d.format, commanderCardId = d.commanderCardId)
             }
             call.respond(results)
+        }
+        // Deckbau-Format + Commander (08.09., Magic - siehe MtgDeckRules.kt;
+        // Web-Parität zur App-Detailansicht)
+        post("/api/decks/format") {
+            val body = call.receive<DeckFormatRequest>()
+            val format = body.format?.takeIf { MtgFormat.fromKey(it) != null }
+            repository.setDeckFormat(body.deckId, format, if (format == MtgFormat.COMMANDER.key) body.commanderCardId else null)
+            call.respond(HttpStatusCode.OK)
         }
         get("/api/deckCards") {
             val deckId = call.request.queryParameters["deckId"]?.toLongOrNull()

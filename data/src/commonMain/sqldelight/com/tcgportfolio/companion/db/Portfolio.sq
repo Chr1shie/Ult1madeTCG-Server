@@ -358,7 +358,10 @@ CREATE TABLE DeckEntity (
     game TEXT NOT NULL,
     createdAt INTEGER NOT NULL,
     uid TEXT NOT NULL DEFAULT '',
-    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id)
+    accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
+    -- Deckbau-Format + Commander (08.09., siehe 35.sqm/MtgDeckRules.kt)
+    format TEXT,
+    commanderCardId TEXT
 );
 
 -- cardId bewusst NOT NULL (anders als Binder/Wishlist) - ein Deck-Eintrag
@@ -1215,6 +1218,10 @@ WHERE id = ?;
 
 insertDeck:
 INSERT INTO DeckEntity(name, game, createdAt, uid, accountId) VALUES (?, ?, ?, ?, ?);
+
+-- Deckbau-Format + Commander (08.09., siehe MtgDeckRules.kt)
+updateDeckFormat:
+UPDATE DeckEntity SET format = ?, commanderCardId = ? WHERE id = ?;
 
 deleteDeck:
 DELETE FROM DeckEntity WHERE id = ?;

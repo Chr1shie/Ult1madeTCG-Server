@@ -164,7 +164,12 @@ data class SyncDeck(
     val name: String,
     val game: String,
     val createdAt: Long,
-    val cards: List<SyncDeckCard> = emptyList()
+    val cards: List<SyncDeckCard> = emptyList(),
+    // Deckbau-Format + Commander (08.09., siehe MtgDeckRules.kt) - Defaults
+    // halten alte Gegenstellen kompatibel; beim Merge gewinnt ein gesetzter
+    // Wert über einen lokal fehlenden
+    val format: String? = null,
+    val commanderCardId: String? = null
 )
 
 // Manuelle Cardmarket-Preisauswahl (28.07., Nutzer-Vorgabe "let the user

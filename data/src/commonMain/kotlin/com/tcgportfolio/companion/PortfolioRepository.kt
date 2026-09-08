@@ -4936,7 +4936,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // "keine Prüfung verfügbar", die UI zeigt dann nichts statt einer
     // falschen "alles ok"-Aussage)
     fun validateDeck(deckId: Long, game: String): DeckRuleCheckResult? {
-        if (game != "Pokemon" && game != "DBFW") return null
+        if (game != "Pokemon" && game != "DBFW" && game != "MTG" && game != "FinalFantasy") return null
         val cards = getDeckCards(deckId).map {
             DeckRuleCheckCard(
                 cardId = it.cardId,
@@ -4947,11 +4947,61 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 number = it.number
             )
         }
+        val deck = dbQueries.selectDeckById(deckId).executeAsOneOrNull()
         return when (game) {
             "Pokemon" -> checkPokemonDeckRules(cards)
             "DBFW" -> checkDbfwDeckRules(cards)
+            // Magic (08.09.): nur mit gewähltem Format, siehe MtgDeckRules.kt
+            "MTG" -> MtgFormat.fromKey(deck?.format)?.let { checkMtgDeckRules(cards, it, deck?.commanderCardId) }
+            "FinalFantasy" -> checkFinalFantasyDeckRules(cards)
             else -> null
         }
+    }
+
+    // Deckbau-Format + Commander (08.09., siehe MtgDeckRules.kt)
+    fun setDeckFormat(deckId: Long, format: String?, commanderCardId: String?) {
+        dbQueries.updateDeckFormat(format, commanderCardId, deckId)
+    }
+
+    fun getDeckById(deckId: Long): DeckEntity? = dbQueries.selectDeckById(deckId).executeAsOneOrNull()
+
+    // --- Import aus anderen Apps / Decklisten (08.09., siehe CardListImport.kt) ---
+
+    fun resolveCardList(lines: List<ImportedCardLine>, game: String): ResolvedImport =
+        CardListImport.resolve(lines, getCatalogForGame(game))
+
+    // Zugeordnete Karten in die Sammlung (Menge/Foil/Kaufpreis/Sprache aus
+    // der Liste; Sprache "de"/"en" landet als Scan-Sprache, damit auch
+    // importierte deutsche Karten ihr deutsches Bild bekommen)
+    fun importResolvedToCollection(accountId: Long, resolved: ResolvedImport): Long {
+        val items = resolved.matched.map { r ->
+            CardToAdd(
+                name = "${r.card.name} [${r.card.number}]",
+                price = r.line.purchasePrice ?: 0.0,
+                quantity = r.line.quantity,
+                isHolo = r.line.foil,
+                imageUrl = r.card.imageUrl,
+                cardId = r.card.id,
+                scanLanguage = r.line.language?.take(2)?.takeIf { it == "de" || it == "en" }
+            )
+        }
+        addCards(accountId, items)
+        return items.sumOf { it.quantity }
+    }
+
+    // Neues Deck aus einer zugeordneten Liste; Commander-Abschnitt setzt
+    // Format + Commander automatisch
+    fun createDeckFromResolved(accountId: Long, name: String, game: String, resolved: ResolvedImport, format: String?): Long {
+        val deckId = addDeck(accountId, name, game)
+        dbQueries.transaction {
+            resolved.matched.forEach { r -> addCardToDeck(deckId, r.card.id, r.line.quantity) }
+        }
+        val commander = resolved.matched.firstOrNull { it.line.section == "commander" }?.card?.id
+        val effectiveFormat = format ?: if (commander != null) MtgFormat.COMMANDER.key else null
+        if (effectiveFormat != null || commander != null) {
+            dbQueries.updateDeckFormat(effectiveFormat, commander, deckId)
+        }
+        return deckId
     }
 
     // --- Export/Import (Backup, solange es noch keinen Sync-Server gibt) ---
@@ -5071,7 +5121,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         createdAt = d.createdAt,
                         cards = (deckCardsByDeckId[d.id] ?: emptyList()).map { c ->
                             SyncDeckCard(cardId = c.cardId, quantity = c.quantity, addedAt = c.addedAt)
-                        }
+                        },
+                        format = d.format,
+                        commanderCardId = d.commanderCardId
                     )
                 },
             sealedWishlists = run {
@@ -5328,10 +5380,16 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 if (existing == null) {
                     dbQueries.insertDeck(d.name, d.game, now, d.uid, accountId)
                     localId = dbQueries.lastInsertRowId().executeAsOne()
+                    if (d.format != null || d.commanderCardId != null) {
+                        dbQueries.updateDeckFormat(d.format, d.commanderCardId, localId)
+                    }
                     decksAdded++
                     existingCardIds = mutableSetOf()
                 } else {
                     localId = existing.id
+                    if (existing.format == null && d.format != null) {
+                        dbQueries.updateDeckFormat(d.format, d.commanderCardId, localId)
+                    }
                     existingCardIds = (localDeckCards[localId] ?: emptyList())
                         .map { it.cardId }.toMutableSet()
                 }
@@ -5743,7 +5801,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         createdAt = d.createdAt,
                         cards = (deckCardsByDeckId[d.id] ?: emptyList()).map { c ->
                             SyncDeckCard(cardId = c.cardId, quantity = c.quantity, addedAt = c.addedAt)
-                        }
+                        },
+                        format = d.format,
+                        commanderCardId = d.commanderCardId
                     )
                 },
             deletedDeckKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
@@ -6307,10 +6367,20 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             if (existingLocal == null) {
                 dbQueries.insertDeck(d.name, d.game, d.createdAt, d.uid, localAccountId)
                 localId = dbQueries.lastInsertRowId().executeAsOne()
+                if (d.format != null || d.commanderCardId != null) {
+                    dbQueries.updateDeckFormat(d.format, d.commanderCardId, localId)
+                }
                 decksAdded++
                 existingByCardId = mutableMapOf()
             } else {
                 localId = existingLocal.id
+                // Format/Commander (08.09.): gesetzter Wert gewinnt über
+                // lokal fehlenden (Decks haben keinen eigenen updatedAt)
+                if ((existingLocal.format == null && d.format != null) ||
+                    (existingLocal.commanderCardId == null && d.commanderCardId != null)
+                ) {
+                    dbQueries.updateDeckFormat(d.format ?: existingLocal.format, d.commanderCardId ?: existingLocal.commanderCardId, localId)
+                }
                 existingByCardId = (localCardsByDeckId[localId] ?: emptyList())
                     .associateByTo(mutableMapOf()) { it.cardId }
             }
