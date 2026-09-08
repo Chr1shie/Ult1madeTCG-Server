@@ -169,7 +169,12 @@ data class SyncDeck(
     // halten alte Gegenstellen kompatibel; beim Merge gewinnt ein gesetzter
     // Wert über einen lokal fehlenden
     val format: String? = null,
-    val commanderCardId: String? = null
+    val commanderCardId: String? = null,
+    // Deck-Cover (08.09.): nur http-URLs (Katalogkarte) wandern hier mit,
+    // eigene Fotos laufen über den Foto-Sync-Kanal ("deck"); LWW per
+    // coverUpdatedAt
+    val coverImageUrl: String? = null,
+    val coverUpdatedAt: Long = 0
 )
 
 // Manuelle Cardmarket-Preisauswahl (28.07., Nutzer-Vorgabe "let the user

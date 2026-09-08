@@ -1,0 +1,7 @@
+-- Deck-Cover (08.09., Nutzer-Vorgabe "das Commander-Bild als Deck-Bild ...
+-- Decks auch in den 3D-Kästen wie im Vault ... eigene Fotos"): eigenes
+-- Cover-Bild (Katalog-URL einer Deckkarte oder "local:"-Foto), NULL =
+-- automatisch (Commander bzw. erste Karte). coverUpdatedAt für LWW-Sync
+-- und Foto-Sync, genau wie BinderEntity.coverUpdatedAt.
+ALTER TABLE DeckEntity ADD COLUMN coverImageUrl TEXT;
+ALTER TABLE DeckEntity ADD COLUMN coverUpdatedAt INTEGER NOT NULL DEFAULT 0;

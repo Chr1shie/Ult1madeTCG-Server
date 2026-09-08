@@ -4735,17 +4735,42 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // Karten werden hinten angehängt (nächste freie Position) - der Nutzer
     // ordnet sie danach bei Bedarf per Kartentausch so an, wie sie im echten
     // Binder liegen (siehe swapBinderItemPositions()).
-    fun addBinderItems(binderId: Long, items: List<BinderCardToAdd>) {
+    // allowDuplicates (08.09., Binder neu einscannen): beim Nachbau des
+    // echten Binders in Scan-Reihenfolge bekommt jede gescannte Karte ihre
+    // eigene Tasche - auch die zweite Kopie derselben Karte (sonst wird sie
+    // wie beim normalen Hinzufügen gestapelt/übersprungen)
+    fun addBinderItems(binderId: Long, items: List<BinderCardToAdd>, allowDuplicates: Boolean = false) {
         dbQueries.transaction {
             var nextPosition = dbQueries.selectMaxBinderItemPosition(binderId).executeAsOne() + 1
             items.forEach { item ->
-                val existing = item.cardId?.let {
+                val existing = if (allowDuplicates) null else item.cardId?.let {
                     dbQueries.selectByBinderAndCardId(binderId, it).executeAsOneOrNull()
                 }
                 if (existing == null) {
                     dbQueries.insertBinderItem(binderId, item.cardId, item.name, item.imageUrl, currentTimeMillis(), nextPosition, 0L)
                     nextPosition++
                 }
+            }
+        }
+    }
+
+    // Karten ab einer bestimmten Tasche einfügen (08.09., Nutzer-Vorgabe
+    // "auf einen leeren Platz tippen, dann die Auswahl aus der Sammlung, damit
+    // man die Karte genau an der Stelle einfügt"): die Karten kommen in
+    // Listen-Reihenfolge ab startPosition in die nächsten FREIEN Taschen,
+    // belegte werden übersprungen, nichts wird verdrängt. Karten, die schon
+    // im Binder liegen, werden wie bei addBinderItems übersprungen.
+    fun addBinderItemsAtPosition(binderId: Long, items: List<BinderCardToAdd>, startPosition: Long) {
+        dbQueries.transaction {
+            val occupied = dbQueries.selectBinderItemPositions(binderId).executeAsList().toMutableSet()
+            var cursor = startPosition.coerceAtLeast(0L)
+            items.forEach { item ->
+                val existing = item.cardId?.let { dbQueries.selectByBinderAndCardId(binderId, it).executeAsOneOrNull() }
+                if (existing != null) return@forEach
+                while (cursor in occupied) cursor++
+                dbQueries.insertBinderItem(binderId, item.cardId, item.name, item.imageUrl, currentTimeMillis(), cursor, 0L)
+                occupied += cursor
+                cursor++
             }
         }
     }
@@ -4868,12 +4893,24 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     fun getDeckCards(deckId: Long): List<SelectDeckCardsForDeck> =
         dbQueries.selectDeckCardsForDeck(deckId).executeAsList()
 
-    fun addDeck(accountId: Long, name: String, game: String): Long {
+    // format (08.09.): Deckbau-Format gleich beim Anlegen (Nutzer-Vorgabe
+    // "direkt unter der Namensvergabe auswählen")
+    fun addDeck(accountId: Long, name: String, game: String, format: String? = null): Long {
         return dbQueries.transactionWithResult {
             dbQueries.insertDeck(name, game, currentTimeMillis(), generateDeckUid(), accountId)
-            dbQueries.lastInsertRowId().executeAsOne()
+            val id = dbQueries.lastInsertRowId().executeAsOne()
+            if (format != null) dbQueries.updateDeckFormat(format, null, id)
+            id
         }
     }
+
+    // Deck-Cover (08.09., siehe 36.sqm) - null = automatisch (Commander bzw.
+    // erste Karte); Synced-Variante für Foto-Sync mit Server-Zeitstempel
+    fun setDeckCoverImage(id: Long, imageUrl: String?) =
+        dbQueries.updateDeckCoverImage(imageUrl, currentTimeMillis(), id)
+    fun setDeckCoverImageSynced(id: Long, imageUrl: String?, updatedAt: Long) =
+        dbQueries.updateDeckCoverImage(imageUrl, updatedAt, id)
+    fun getAllDecksRaw(accountId: Long) = dbQueries.selectAllDecks(accountId).executeAsList()
 
     fun deleteDeck(id: Long) {
         val deck = dbQueries.selectDeckById(id).executeAsOneOrNull()
@@ -5054,6 +5091,13 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 photos += BackupPhoto("binder", b.uid, Base64.encode(it))
             }
         }
+        // Deck-Cover-Fotos (08.09.)
+        dbQueries.selectAllDecks(accountId).executeAsList().filter { it.uid.isNotEmpty() }.forEach { d ->
+            val url = d.coverImageUrl ?: return@forEach
+            photoReader("deck", d.uid, url)?.let {
+                photos += BackupPhoto("deck", d.uid, Base64.encode(it))
+            }
+        }
 
         val payload = BackupPayload(
             exportedAt = currentTimeMillis(),
@@ -5123,7 +5167,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                             SyncDeckCard(cardId = c.cardId, quantity = c.quantity, addedAt = c.addedAt)
                         },
                         format = d.format,
-                        commanderCardId = d.commanderCardId
+                        commanderCardId = d.commanderCardId,
+                        coverImageUrl = d.coverImageUrl?.takeIf { it.startsWith("http") },
+                        coverUpdatedAt = d.coverUpdatedAt
                     )
                 },
             sealedWishlists = run {
@@ -5383,6 +5429,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     if (d.format != null || d.commanderCardId != null) {
                         dbQueries.updateDeckFormat(d.format, d.commanderCardId, localId)
                     }
+                    if (d.coverImageUrl != null) {
+                        dbQueries.updateDeckCoverImage(d.coverImageUrl, d.coverUpdatedAt, localId)
+                    }
                     decksAdded++
                     existingCardIds = mutableSetOf()
                 } else {
@@ -5466,6 +5515,14 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         val row = bindersByUid[p.key] ?: return@forEach
                         photoSaver("binder", p.key, bytes, row.coverImageUrl)?.let { url ->
                             setBinderCoverImageSynced(row.id, url, now)
+                            photosRestored++
+                        }
+                    }
+                    // Deck-Cover (08.09.)
+                    "deck" -> {
+                        val row = dbQueries.selectAllDecks(accountId).executeAsList().firstOrNull { it.uid == p.key } ?: return@forEach
+                        photoSaver("deck", p.key, bytes, row.coverImageUrl)?.let { url ->
+                            setDeckCoverImageSynced(row.id, url, now)
                             photosRestored++
                         }
                     }
@@ -5803,7 +5860,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                             SyncDeckCard(cardId = c.cardId, quantity = c.quantity, addedAt = c.addedAt)
                         },
                         format = d.format,
-                        commanderCardId = d.commanderCardId
+                        commanderCardId = d.commanderCardId,
+                        coverImageUrl = d.coverImageUrl?.takeIf { it.startsWith("http") },
+                        coverUpdatedAt = d.coverUpdatedAt
                     )
                 },
             deletedDeckKeys = dbQueries.selectDeletionLog(account.id).executeAsList()
@@ -6370,10 +6429,17 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 if (d.format != null || d.commanderCardId != null) {
                     dbQueries.updateDeckFormat(d.format, d.commanderCardId, localId)
                 }
+                if (d.coverImageUrl != null) {
+                    dbQueries.updateDeckCoverImage(d.coverImageUrl, d.coverUpdatedAt, localId)
+                }
                 decksAdded++
                 existingByCardId = mutableMapOf()
             } else {
                 localId = existingLocal.id
+                // Deck-Cover (08.09.): jüngerer Katalog-Cover-Eintrag gewinnt
+                if (d.coverImageUrl != null && d.coverUpdatedAt > existingLocal.coverUpdatedAt) {
+                    dbQueries.updateDeckCoverImage(d.coverImageUrl, d.coverUpdatedAt, localId)
+                }
                 // Format/Commander (08.09.): gesetzter Wert gewinnt über
                 // lokal fehlenden (Decks haben keinen eigenen updatedAt)
                 if ((existingLocal.format == null && d.format != null) ||

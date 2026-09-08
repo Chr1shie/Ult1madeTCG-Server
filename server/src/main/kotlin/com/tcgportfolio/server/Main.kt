@@ -668,7 +668,9 @@ data class DeckResponse(
     val cardCount: Long,
     // Deckbau-Format + Commander (08.09., siehe MtgDeckRules.kt)
     val format: String? = null,
-    val commanderCardId: String? = null
+    val commanderCardId: String? = null,
+    // Deck-Cover (08.09.) - Katalog-URL oder /images/custom/-Pfad
+    val coverImageUrl: String? = null
 )
 
 @Serializable
@@ -1764,6 +1766,10 @@ fun Application.ult1madeServerModule() {
             "binder" -> repository.getAccounts().firstNotNullOfOrNull { acc ->
                 repository.getAllBindersRaw(acc.id).firstOrNull { it.uid == key }?.coverImageUrl
             }
+            // Deck-Cover (08.09.)
+            "deck" -> repository.getAccounts().firstNotNullOfOrNull { acc ->
+                repository.getAllDecksRaw(acc.id).firstOrNull { it.uid == key }?.coverImageUrl
+            }
             else -> null
         }
         // Selbstheilung (28.08.): Einträge, deren Datei fehlt oder
@@ -1790,6 +1796,12 @@ fun Application.ult1madeServerModule() {
                 repository.getAllBindersRaw(acc.id).forEach { b ->
                     if (b.coverImageUrl?.startsWith("/images/custom/") == true && b.uid.isNotEmpty() && photoFileHealthy(b.coverImageUrl)) {
                         entries += PhotoSyncEntryResponse("binder", b.uid, b.coverUpdatedAt)
+                    }
+                }
+                // Deck-Cover (08.09.)
+                repository.getAllDecksRaw(acc.id).forEach { d ->
+                    if (d.coverImageUrl?.startsWith("/images/custom/") == true && d.uid.isNotEmpty() && photoFileHealthy(d.coverImageUrl)) {
+                        entries += PhotoSyncEntryResponse("deck", d.uid, d.coverUpdatedAt)
                     }
                 }
             }
@@ -1858,6 +1870,12 @@ fun Application.ult1madeServerModule() {
                     repository.getAccounts().firstNotNullOfOrNull { acc ->
                         repository.getAllBindersRaw(acc.id).firstOrNull { it.uid == key }
                     }?.also { repository.setBinderCoverImageSynced(it.id, url, updatedAt) } != null
+                }
+                // Deck-Cover (08.09.)
+                "deck" -> {
+                    repository.getAccounts().firstNotNullOfOrNull { acc ->
+                        repository.getAllDecksRaw(acc.id).firstOrNull { it.uid == key }
+                    }?.also { repository.setDeckCoverImageSynced(it.id, url, updatedAt) } != null
                 }
                 else -> false
             }
@@ -2095,7 +2113,7 @@ fun Application.ult1madeServerModule() {
             val accountId = resolveAccountId(call)
             val results = repository.getDecksForGame(accountId, game).map { d ->
                 val cardCount = repository.getDeckCards(d.id).sumOf { it.quantity }
-                DeckResponse(id = d.id, name = d.name, game = d.game, cardCount = cardCount, format = d.format, commanderCardId = d.commanderCardId)
+                DeckResponse(id = d.id, name = d.name, game = d.game, cardCount = cardCount, format = d.format, commanderCardId = d.commanderCardId, coverImageUrl = d.coverImageUrl)
             }
             call.respond(results)
         }

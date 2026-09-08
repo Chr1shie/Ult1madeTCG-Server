@@ -361,7 +361,10 @@ CREATE TABLE DeckEntity (
     accountId INTEGER NOT NULL DEFAULT 1 REFERENCES AccountEntity(id),
     -- Deckbau-Format + Commander (08.09., siehe 35.sqm/MtgDeckRules.kt)
     format TEXT,
-    commanderCardId TEXT
+    commanderCardId TEXT,
+    -- Deck-Cover (08.09., siehe 36.sqm) - NULL = automatisch
+    coverImageUrl TEXT,
+    coverUpdatedAt INTEGER NOT NULL DEFAULT 0
 );
 
 -- cardId bewusst NOT NULL (anders als Binder/Wishlist) - ein Deck-Eintrag
@@ -1169,6 +1172,10 @@ WHERE BinderEntity.accountId = ?;
 selectMaxBinderItemPosition:
 SELECT COALESCE(MAX(position), -1) FROM BinderItemEntity WHERE binderId = ?;
 
+-- Belegte Taschen eines Binders (08.09., siehe addBinderItemsAtPosition)
+selectBinderItemPositions:
+SELECT position FROM BinderItemEntity WHERE binderId = ?;
+
 -- Vertauscht die Plätze zweier Karten (31.07., Nutzer-Vorgabe "Karten
 -- tauschen können, damit man die Realität abbilden kann") - zwei einzelne
 -- UPDATEs statt eines generischen "move", weil ein Tausch die einzige
@@ -1222,6 +1229,10 @@ INSERT INTO DeckEntity(name, game, createdAt, uid, accountId) VALUES (?, ?, ?, ?
 -- Deckbau-Format + Commander (08.09., siehe MtgDeckRules.kt)
 updateDeckFormat:
 UPDATE DeckEntity SET format = ?, commanderCardId = ? WHERE id = ?;
+
+-- Deck-Cover (08.09., siehe 36.sqm)
+updateDeckCoverImage:
+UPDATE DeckEntity SET coverImageUrl = ?, coverUpdatedAt = ? WHERE id = ?;
 
 deleteDeck:
 DELETE FROM DeckEntity WHERE id = ?;
