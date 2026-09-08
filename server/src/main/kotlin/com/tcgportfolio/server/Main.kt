@@ -2,6 +2,10 @@ package com.tcgportfolio.server
 
 import com.tcgportfolio.companion.DatabaseDriverFactory
 import com.tcgportfolio.companion.DatabaseModule
+import com.tcgportfolio.companion.LocalizedCardImages
+import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_DE
+import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_EN
+import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_MODE_AS_SCANNED
 import com.tcgportfolio.companion.PortfolioRepository
 import com.tcgportfolio.companion.refreshCardmarketPricesIfStale
 import com.tcgportfolio.companion.refreshDbfwCardRulesIfStale
@@ -211,7 +215,14 @@ data class CollectionCardResponse(
     // siehe Spalten-Kommentar in Portfolio.sq
     val customPriceEur: Double? = null,
     val customPriceInTotal: Long = 1,
-    val customPriceInGameTotal: Long = 1
+    val customPriceInGameTotal: Long = 1,
+    // Sprachbewusste Kartenbilder (07.09., siehe LocalizedCardImages.kt):
+    // Scan-Sprache, Pro-Karte-Override und die deutsche Bild-URL (null =
+    // keine bekannt) - die Weboberfläche entscheidet damit clientseitig
+    // (globaler Modus aus /api/cardImageLanguageMode), welches Bild sie zeigt
+    val scanLanguage: String? = null,
+    val imageLanguage: String? = null,
+    val imageUrlDe: String? = null
 )
 
 @Serializable
@@ -394,6 +405,14 @@ data class UpdateCardRequest(val id: Long, val quantity: Long, val isHolo: Boole
 // Sealed-Produkte, priceEur = null löscht den Eintrag
 @Serializable
 data class CustomPriceRequest(val id: Long, val priceEur: Double? = null, val inTotal: Boolean = true, val inGameTotal: Boolean = true)
+
+// Sprachbewusste Kartenbilder (07.09.): Pro-Karte-Override ("de"/"en", null =
+// zurück auf die globale Einstellung) und die globale Einstellung selbst
+@Serializable
+data class ImageLanguageRequest(val id: Long, val language: String? = null)
+
+@Serializable
+data class CardImageLanguageModeResponse(val mode: String)
 
 @Serializable
 data class RenameWishlistRequest(val id: Long, val name: String)
@@ -1053,7 +1072,10 @@ fun Application.ult1madeServerModule() {
                     rarity = it.rarity,
                     customPriceEur = it.customPriceEur,
                     customPriceInTotal = it.customPriceInTotal,
-                    customPriceInGameTotal = it.customPriceInGameTotal
+                    customPriceInGameTotal = it.customPriceInGameTotal,
+                    scanLanguage = it.scanLanguage,
+                    imageLanguage = it.imageLanguage,
+                    imageUrlDe = LocalizedCardImages.germanImageUrl(it.cardId, it.imageUrl)
                 )
             }
             call.respond(cards)
@@ -1377,6 +1399,28 @@ fun Application.ult1madeServerModule() {
             val body = call.receive<CustomPriceRequest>()
             repository.setSealedCustomPrice(body.id, body.priceEur, body.inTotal, body.inGameTotal)
             call.respond(HttpStatusCode.OK)
+        }
+        // Sprachbewusste Kartenbilder (07.09., Nutzer-Design 31.08. "Server/
+        // Weboberfläche bekommen alles gleichwertig") - dieselben Repository-
+        // Funktionen wie die App-Detailansicht bzw. die App-Einstellungen;
+        // der Modus synct per LWW-Zeitstempel mit der App (siehe
+        // SyncPayload.cardImageLanguageMode).
+        post("/api/collection/imageLanguage") {
+            val body = call.receive<ImageLanguageRequest>()
+            val language = body.language?.takeIf { it == CARD_IMAGE_LANGUAGE_DE || it == CARD_IMAGE_LANGUAGE_EN }
+            repository.setCardImageLanguage(body.id, language)
+            call.respond(HttpStatusCode.OK)
+        }
+        get("/api/cardImageLanguageMode") {
+            call.respond(CardImageLanguageModeResponse(repository.getCardImageLanguageMode()))
+        }
+        post("/api/cardImageLanguageMode") {
+            val body = call.receive<CardImageLanguageModeResponse>()
+            val mode = body.mode.takeIf {
+                it == CARD_IMAGE_LANGUAGE_MODE_AS_SCANNED || it == CARD_IMAGE_LANGUAGE_DE || it == CARD_IMAGE_LANGUAGE_EN
+            } ?: CARD_IMAGE_LANGUAGE_MODE_AS_SCANNED
+            repository.setCardImageLanguageMode(mode)
+            call.respond(CardImageLanguageModeResponse(mode))
         }
         get("/api/sealedCatalog") {
             val game = call.request.queryParameters["game"]

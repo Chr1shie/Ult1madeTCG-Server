@@ -145,7 +145,13 @@ CREATE TABLE PortfolioItemEntity (
     -- NULL = der global eingestellte Stil (Settings-Key "holoStyle",
     -- Standard "random" = stabil pro Karte gewürfelt). Der Karten-Wert
     -- übertrumpft die globale Einstellung.
-    holoStyle TEXT
+    holoStyle TEXT,
+    -- Sprachbewusste Kartenbilder (07.09., siehe 34.sqm/LocalizedCardImages.kt):
+    -- scanLanguage = beim Scannen erkannte Kartensprache ("de"/"en", NULL =
+    -- unbekannt/manuell), imageLanguage = Pro-Karte-Override fürs Bild
+    -- (NULL = globale Einstellung "cardImageLanguageMode")
+    scanLanguage TEXT,
+    imageLanguage TEXT
 );
 
 -- Löschprotokoll nur für Server-Sync, siehe Migration 9 für die Begründung
@@ -514,6 +520,13 @@ UPDATE PortfolioItemEntity
 SET holoStyle = ?, updatedAt = ?
 WHERE id = ?;
 
+-- Sprachbewusste Kartenbilder (07.09.) - updatedAt mitgesetzt für
+-- Last-Write-Wins-Sync, siehe Spalten-Kommentar oben
+updateItemLanguages:
+UPDATE PortfolioItemEntity
+SET scanLanguage = ?, imageLanguage = ?, updatedAt = ?
+WHERE id = ?;
+
 -- Wechselt, welche Katalogkarte (Art-Variante) eine besessene Karte
 -- repräsentiert (31.07., Nutzer-Vorgabe "man kann auch das Bild wechseln,
 -- wenn man einen anderen Preis wählt") - siehe
@@ -552,7 +565,9 @@ SELECT
     PortfolioItemEntity.customPriceEur AS customPriceEur,
     PortfolioItemEntity.customPriceInTotal AS customPriceInTotal,
     PortfolioItemEntity.customPriceInGameTotal AS customPriceInGameTotal,
-    PortfolioItemEntity.holoStyle AS holoStyle
+    PortfolioItemEntity.holoStyle AS holoStyle,
+    PortfolioItemEntity.scanLanguage AS scanLanguage,
+    PortfolioItemEntity.imageLanguage AS imageLanguage
 FROM PortfolioItemEntity
 LEFT JOIN CardCatalogEntity ON PortfolioItemEntity.cardId = CardCatalogEntity.id
 LEFT JOIN CustomCardPhotoEntity ON PortfolioItemEntity.cardId = CustomCardPhotoEntity.cardId
@@ -583,7 +598,9 @@ SELECT
     PortfolioItemEntity.customPriceEur AS customPriceEur,
     PortfolioItemEntity.customPriceInTotal AS customPriceInTotal,
     PortfolioItemEntity.customPriceInGameTotal AS customPriceInGameTotal,
-    PortfolioItemEntity.holoStyle AS holoStyle
+    PortfolioItemEntity.holoStyle AS holoStyle,
+    PortfolioItemEntity.scanLanguage AS scanLanguage,
+    PortfolioItemEntity.imageLanguage AS imageLanguage
 FROM PortfolioItemEntity
 LEFT JOIN CardCatalogEntity ON PortfolioItemEntity.cardId = CardCatalogEntity.id
 LEFT JOIN CardSet ON CardCatalogEntity.setId = CardSet.id

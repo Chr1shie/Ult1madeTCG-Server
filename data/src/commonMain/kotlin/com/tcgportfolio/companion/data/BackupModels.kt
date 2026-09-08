@@ -20,7 +20,10 @@ data class ExportedCard(
     val customPriceEur: Double? = null,
     val customPriceInTotal: Long = 1,
     val customPriceInGameTotal: Long = 1,
-    val holoStyle: String? = null
+    val holoStyle: String? = null,
+    // Sprachbewusste Kartenbilder (07.09.) - Defaults halten alte Backups lesbar
+    val scanLanguage: String? = null,
+    val imageLanguage: String? = null
 )
 
 @Serializable

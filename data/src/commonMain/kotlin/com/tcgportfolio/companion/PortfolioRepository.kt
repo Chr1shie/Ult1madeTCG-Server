@@ -4040,13 +4040,16 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         val quantity: Long,
         val isHolo: Boolean,
         val imageUrl: String? = null,
-        val cardId: String? = null
+        val cardId: String? = null,
+        // Sprachbewusste Kartenbilder (07.09.): beim Scannen erkannte
+        // Kartensprache ("de"/"en"), null = unbekannt/manuell
+        val scanLanguage: String? = null
     )
 
     fun addCards(accountId: Long, items: List<CardToAdd>) {
         dbQueries.transaction {
             items.forEach { item ->
-                addCardInternal(accountId, item.name, item.price, item.quantity, item.isHolo, item.imageUrl, item.cardId)
+                addCardInternal(accountId, item.name, item.price, item.quantity, item.isHolo, item.imageUrl, item.cardId, item.scanLanguage)
             }
         }
     }
@@ -4058,8 +4061,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         quantity: Long,
         isHolo: Boolean,
         imageUrl: String? = null,
-        cardId: String? = null
-    ) = addCardInternal(accountId, name, price, quantity, isHolo, imageUrl, cardId)
+        cardId: String? = null,
+        scanLanguage: String? = null
+    ) = addCardInternal(accountId, name, price, quantity, isHolo, imageUrl, cardId, scanLanguage)
 
     private fun addCardInternal(
         accountId: Long,
@@ -4068,7 +4072,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         quantity: Long,
         isHolo: Boolean,
         imageUrl: String? = null,
-        cardId: String? = null
+        cardId: String? = null,
+        scanLanguage: String? = null
     ) {
         val holoValue = if (isHolo) 1L else 0L
         val existing = cardId?.let { dbQueries.selectByCardIdAndHolo(it, holoValue, accountId).executeAsOneOrNull() }
@@ -4080,6 +4085,11 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 updatedAt = currentTimeMillis(),
                 id = existing.id
             )
+            // Scan-Sprache nachtragen, falls die Zeile noch keine kennt
+            // (z.B. zuerst von Hand angelegt, jetzt die echte Karte gescannt)
+            if (scanLanguage != null && existing.scanLanguage == null) {
+                dbQueries.updateItemLanguages(scanLanguage, existing.imageLanguage, currentTimeMillis(), existing.id)
+            }
         } else {
             dbQueries.insertItem(
                 name = name,
@@ -4091,6 +4101,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 updatedAt = currentTimeMillis(),
                 accountId = accountId
             )
+            if (scanLanguage != null) {
+                dbQueries.updateItemLanguages(scanLanguage, null, currentTimeMillis(), dbQueries.lastInsertRowId().executeAsOne())
+            }
         }
     }
 
@@ -4218,6 +4231,24 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         dbQueries.updateHoloStyle(holoStyle = style, updatedAt = currentTimeMillis(), id = id)
     }
 
+    // Sprachbewusste Kartenbilder (07.09., siehe LocalizedCardImages.kt) -
+    // Pro-Karte-Override fürs Bild ("de"/"en"), null = zurück auf die globale
+    // Einstellung. Die Scan-Sprache bleibt dabei unangetastet.
+    fun setCardImageLanguage(id: Long, language: String?) {
+        val existing = dbQueries.selectItemById(id).executeAsOneOrNull() ?: return
+        dbQueries.updateItemLanguages(existing.scanLanguage, language, currentTimeMillis(), id)
+    }
+
+    // Globaler Modus "asScanned"/"de"/"en" - mit Zeitstempel für den LWW-Sync
+    // (Muster marketFactor/marketFactorUpdatedAt), von App UND Server genutzt
+    fun setCardImageLanguageMode(mode: String) {
+        setSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE, mode)
+        setSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE_UPDATED_AT, currentTimeMillis().toString())
+    }
+
+    fun getCardImageLanguageMode(): String =
+        getSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE) ?: CARD_IMAGE_LANGUAGE_MODE_AS_SCANNED
+
     fun updateCard(id: Long, quantity: Long, isHolo: Boolean, purchasePrice: Double) {
         val holoValue = if (isHolo) 1L else 0L
         val now = currentTimeMillis()
@@ -4334,8 +4365,13 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // Karten- oder Sealed-Katalog stehen, dürfen über /images/proxy geladen
     // werden (siehe server/Main.kt). Schutz gegen Missbrauch als offener Proxy.
     fun isKnownImageUrl(url: String): Boolean {
-        return dbQueries.countCatalogImageUrl(url).executeAsOne() > 0 ||
+        if (dbQueries.countCatalogImageUrl(url).executeAsOne() > 0 ||
             dbQueries.countSealedCatalogImageUrl(url).executeAsOne() > 0
+        ) return true
+        // Deutsche Bildvarianten (07.09., siehe LocalizedCardImages.kt)
+        val englishSource = LocalizedCardImages.englishSourceUrl(url)
+        if (englishSource != null && dbQueries.countCatalogImageUrl(englishSource).executeAsOne() > 0) return true
+        return LocalizedCardImages.isMappedGermanUrl(url)
     }
 
     // Bild-URLs aller besessenen Karten/Sealed-Produkte über alle Accounts
@@ -4738,6 +4774,22 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         dbQueries.updateBinderItemPosition(newPosition, currentTimeMillis(), itemId)
     }
 
+    // Mehrere Karten in EINER Transaktion umsetzen (07.09., Nutzer-Vorgabe
+    // "Karte markieren und auf einen leeren Platz tippen, dann muss die
+    // Karte dorthin wandern" - BinderScreen berechnet die Zielplätze, hier
+    // wird nur geschrieben). Eine Transaktion statt n Einzelaufrufen, damit
+    // Leser nie einen Zwischenstand mit zwei Karten auf derselben Position
+    // sehen, wenn markierte Karten untereinander Plätze tauschen.
+    fun moveBinderItemsToPositions(moves: List<Pair<Long, Long>>) {
+        if (moves.isEmpty()) return
+        val now = currentTimeMillis()
+        dbQueries.transaction {
+            moves.forEach { (itemId, newPosition) ->
+                dbQueries.updateBinderItemPosition(newPosition, now, itemId)
+            }
+        }
+    }
+
     // Leere Seite einfügen (08.08., Nutzer-Vorgabe "auch mittendrin, z.B. auf
     // Seite 3 eine neue Seite einfügen die dann Seite 4 wird") - schiebt alle
     // Karten ab genau dieser Seite um eine ganze Seitengröße nach hinten,
@@ -4967,7 +5019,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     customPriceEur = it.customPriceEur,
                     customPriceInTotal = it.customPriceInTotal,
                     customPriceInGameTotal = it.customPriceInGameTotal,
-                    holoStyle = it.holoStyle
+                    holoStyle = it.holoStyle,
+                    scanLanguage = it.scanLanguage,
+                    imageLanguage = it.imageLanguage
                 )
             },
             wishlists = dbQueries.selectAllWishlists(accountId).executeAsList()
@@ -5146,6 +5200,11 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     updatedAt = currentTimeMillis(),
                     accountId = accountId
                 )
+                // Sprachbewusste Kartenbilder (07.09.) - Scan-Sprache/Override
+                // aus dem Backup mitnehmen
+                if (c.scanLanguage != null || c.imageLanguage != null) {
+                    dbQueries.updateItemLanguages(c.scanLanguage, c.imageLanguage, currentTimeMillis(), dbQueries.lastInsertRowId().executeAsOne())
+                }
                 // Eigener Preis + Holo-Stil (28.08.) - wie beim Sync-Import
                 // als Folge-Update, insertItem bleibt schlank
                 if (c.holoStyle != null || c.customPriceEur != null || c.customPriceInTotal != 1L || c.customPriceInGameTotal != 1L) {
@@ -5597,7 +5656,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     customPriceEur = it.customPriceEur,
                     customPriceInTotal = it.customPriceInTotal,
                     customPriceInGameTotal = it.customPriceInGameTotal,
-                    holoStyle = it.holoStyle
+                    holoStyle = it.holoStyle,
+                    scanLanguage = it.scanLanguage,
+                    imageLanguage = it.imageLanguage
                 )
             },
             sealedProducts = dbQueries.selectAllSealedProducts(account.id).executeAsList().map {
@@ -5729,6 +5790,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             exportedAt = currentTimeMillis(),
             marketFactor = getSetting("marketFactor")?.toFloatOrNull(),
             marketFactorUpdatedAt = getSetting("marketFactorUpdatedAt")?.toLongOrNull(),
+            cardImageLanguageMode = getSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE),
+            cardImageLanguageModeUpdatedAt = getSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE_UPDATED_AT)?.toLongOrNull(),
             // marketPriceEurSelectedIndex ist wegen des "IS NOT NULL" in der
             // WHERE-Klausel von selectCatalogCardsWithPriceSelection() hier
             // bereits nicht-nullbar (SQLDelight leitet das automatisch ab) -
@@ -5840,6 +5903,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         id = local.id
                     )
                     dbQueries.updateHoloStyle(holoStyle = c.holoStyle, updatedAt = c.updatedAt, id = local.id)
+                    // Sprachbewusste Kartenbilder (07.09.) - gehört zum selben LWW-Paket
+                    dbQueries.updateItemLanguages(c.scanLanguage, c.imageLanguage, c.updatedAt, local.id)
                     cardsUpdated++
                 }
                 // sonst: lokaler Stand ist mindestens genauso aktuell -> nichts tun
@@ -5859,6 +5924,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 // frisch eingefügte Zeile
                 if (c.holoStyle != null) {
                     dbQueries.updateHoloStyle(holoStyle = c.holoStyle, updatedAt = c.updatedAt, id = dbQueries.lastInsertRowId().executeAsOne())
+                }
+                if (c.scanLanguage != null || c.imageLanguage != null) {
+                    dbQueries.updateItemLanguages(c.scanLanguage, c.imageLanguage, c.updatedAt, dbQueries.lastInsertRowId().executeAsOne())
                 }
                 if (c.customPriceEur != null || c.customPriceInTotal != 1L || c.customPriceInGameTotal != 1L) {
                     dbQueries.updateCustomPrice(
@@ -6529,6 +6597,14 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             if (payload.marketFactorUpdatedAt > localUpdatedAt) {
                 setSetting("marketFactor", payload.marketFactor.toString())
                 setSetting("marketFactorUpdatedAt", payload.marketFactorUpdatedAt.toString())
+            }
+        }
+        // Kartenbild-Sprache (07.09.) - dasselbe LWW-Prinzip wie marketFactor
+        if (payload.cardImageLanguageMode != null && payload.cardImageLanguageModeUpdatedAt != null) {
+            val localUpdatedAt = getSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE_UPDATED_AT)?.toLongOrNull() ?: -1L
+            if (payload.cardImageLanguageModeUpdatedAt > localUpdatedAt) {
+                setSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE, payload.cardImageLanguageMode)
+                setSetting(SETTING_CARD_IMAGE_LANGUAGE_MODE_UPDATED_AT, payload.cardImageLanguageModeUpdatedAt.toString())
             }
         }
 

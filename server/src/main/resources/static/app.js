@@ -475,6 +475,60 @@ let openVaultCategory = "ALL";
 // App-Default, bis der echte Wert vom Server geladen ist.
 let marketFactor = 0.8;
 
+// Kartenbild-Sprache (07.09., sprachbewusste Kartenbilder - siehe
+// LocalizedCardImages.kt): globaler Modus "asScanned"/"de"/"en" vom Server
+// (GET/POST /api/cardImageLanguageMode, synct mit der App). Jede
+// Bestandskarte bringt scanLanguage/imageLanguage/imageUrlDe mit
+// (CollectionCardResponse) - die Entscheidung fällt hier clientseitig,
+// exakt nach derselben Regel wie in der App: Override > Modus (asScanned ->
+// Scan-Sprache) > Englisch; Deutsch nur, wenn ein deutsches Bild bekannt ist.
+let cardImageLanguageMode = "asScanned";
+
+async function loadCardImageLanguageMode() {
+  try {
+    const res = await authedFetch("/api/cardImageLanguageMode");
+    if (!res.ok) return;
+    const data = await res.json();
+    cardImageLanguageMode = data.mode || "asScanned";
+    render();
+  } catch (err) {
+    // Best-effort - ohne Antwort bleibt es beim Standard
+  }
+}
+
+function wantedImageLanguage(item) {
+  if (item.imageLanguage) return item.imageLanguage;
+  if (cardImageLanguageMode === "de" || cardImageLanguageMode === "en") return cardImageLanguageMode;
+  return item.scanLanguage || "en";
+}
+
+function displayImageUrl(item) {
+  return (wantedImageLanguage(item) === "de" && item.imageUrlDe) ? item.imageUrlDe : item.imageUrl;
+}
+
+// Rückfall aufs englische Original, wenn das deutsche Bild nicht lädt -
+// per error-Event UND per Zeitlimit (TCGdex lässt fehlende deutsche Bilder
+// hängen statt 404 zu liefern, Recherche 31.08.). Der globale Proxy-
+// Rückfall (siehe unten) läuft davor; erst wenn auch der scheitert, greift
+// hier das Original, danach wie gewohnt der "Kein Bild"-Platzhalter.
+function attachImageLanguageFallback(img, fallbackUrl) {
+  if (!fallbackUrl || img.getAttribute("src") === fallbackUrl) return;
+  let done = false;
+  const useFallback = () => {
+    if (done) return;
+    done = true;
+    img.src = fallbackUrl;
+  };
+  img.addEventListener("error", () => {
+    const src = img.getAttribute("src") || "";
+    // Erst den Proxy-Versuch abwarten (relative Proxy-URL), dann zurück
+    if (!src.startsWith("https://")) useFallback();
+  });
+  setTimeout(() => {
+    if (!done && img.naturalWidth === 0 && img.isConnected) useFallback();
+  }, 8000);
+}
+
 // Wunschlisten (27.07., Nutzer-Vorgabe) - eigener Akkordeon-Eintrag direkt
 // unter "Alle", komplett getrennt von allCards/Statistiken (siehe Server-
 // seitigen Kommentar bei WishlistResponse). Pro TCG geladen wie
@@ -553,6 +607,28 @@ async function renderServerInfo() {
     token = tr("not reachable", "nicht erreichbar");
   }
   el.textContent = "IP: " + host + " · Token: " + token;
+  // Pairing-QR (07.09.): Antippen der Zeile zeigt Adresse + Token als
+  // QR-Code, den die App per Kamera-Symbol neben dem Token-Feld einliest -
+  // Inhalt "ult1made-pair:<host>|<token>" (siehe PAIRING_QR_PREFIX in
+  // CodeScanDialog.kt), nochmaliges Antippen blendet ihn wieder aus
+  const qrEl = document.getElementById("pairQr");
+  if (qrEl && typeof qrcode === "function" && /^[A-Z0-9]{8}$/.test(token)) {
+    el.style.cursor = "pointer";
+    el.onclick = () => {
+      if (!qrEl.hidden) { qrEl.hidden = true; return; }
+      try {
+        const qr = qrcode(0, "M");
+        qr.addData("ult1made-pair:" + host + "|" + token);
+        qr.make();
+        qrEl.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true }) +
+          '<div class="pairQrHint">' + tr("Scan in the app: camera icon next to the pairing token", "In der App scannen: Kamera-Symbol neben dem Pairing-Token") + "</div>";
+        qrEl.hidden = false;
+      } catch (e) {
+        qrEl.textContent = "QR: " + e;
+        qrEl.hidden = false;
+      }
+    };
+  }
 }
 
 // Mandantenfähigkeit (02.08., Nutzer-Vorgabe) - "einfacher Umschalter reicht,
@@ -881,12 +957,16 @@ function buildCardTile(item, opts) {
   if (item.imageUrl) {
     art.className = "art";
     const img = document.createElement("img");
-    img.src = item.imageUrl;
+    const shownUrl = displayImageUrl(item);
+    img.src = shownUrl;
     img.loading = "lazy";
     img.alt = item.name;
+    // Sprach-Rückfall (07.09.) vor dem Platzhalter, siehe attachImageLanguageFallback
+    if (shownUrl !== item.imageUrl) attachImageLanguageFallback(img, item.imageUrl);
     // Fällt auf den Platzhalter zurück, falls das Bild nicht lädt (z.B.
     // tote URL) statt eines kaputten Bild-Icons
     img.addEventListener("error", () => {
+      if (shownUrl !== item.imageUrl && img.getAttribute("src") !== item.imageUrl) return;
       art.className = "art placeholder";
       art.textContent = tr("No image", "Kein Bild");
     });
@@ -4687,7 +4767,9 @@ async function openCardDetail(item, sourceEl) {
   // Regenbogen-Schimmer nur für Holo-Karten (18.08., siehe style.css)
   detailCard.classList.toggle("holo", !!item.isHolo);
   if (item.imageUrl) {
-    img.src = item.imageUrl;
+    const shownUrl = displayImageUrl(item);
+    img.src = shownUrl;
+    if (shownUrl !== item.imageUrl) attachImageLanguageFallback(img, item.imageUrl);
     img.style.display = "";
     try {
       await img.decode();
@@ -4708,6 +4790,7 @@ async function openCardDetail(item, sourceEl) {
   document.getElementById("detailName").textContent = item.name + (item.isHolo ? " ✨" : "");
   document.getElementById("detailGameRow").innerHTML =
     "<span>" + tr("Game", "Spiel") + "</span><span class=\"value\">" + labelFor(item.game) + "</span>";
+  renderDetailImageLanguage(item);
   renderDetailEditControls(item);
   // Cardmarket ist der EINZIGE Marktpreis (03.08., Nutzer-Vorgabe "dann
   // nehmen wir USD-Alt-Preise raus und gut ist" - siehe CONCEPT.md
@@ -5516,6 +5599,7 @@ document.getElementById("accountSelect").addEventListener("change", async (e) =>
   await loadHiddenGames();
   loadData();
   loadMarketFactor();
+  loadCardImageLanguageMode();
 });
 
 // Sichtbare TCGs des AKTIVEN Accounts pflegen (17.08., Nutzer-Vorgabe) -
@@ -5524,7 +5608,87 @@ document.getElementById("accountSelect").addEventListener("change", async (e) =>
 // sofort (POST /api/hiddenGames), wie der Auto-Save-Stil der App. Das
 // letzte sichtbare TCG lässt sich nicht auch noch ausblenden - sonst
 // bliebe eine leere, unbedienbare Chips-Leiste übrig.
+// Kartenbild-Sprache je Karte (07.09., sprachbewusste Kartenbilder) - Chips
+// Auto/DE/EN in der Detailansicht, nur wenn ein deutsches Bild bekannt ist;
+// speichert sofort (POST /api/collection/imageLanguage), tauscht das Bild an
+// Ort und Stelle und lädt die Daten im Hintergrund nach (Muster
+// changeCardVariant, 31.08.).
+function renderDetailImageLanguage(item) {
+  const row = document.getElementById("detailImageLangRow");
+  if (!row) return;
+  const isCard = item.category === undefined && item.id !== undefined && item.imageUrlDe;
+  if (!isCard) {
+    row.hidden = true;
+    row.innerHTML = "";
+    return;
+  }
+  row.hidden = false;
+  row.innerHTML = "";
+  const label = document.createElement("span");
+  label.textContent = tr("Image", "Bild");
+  row.appendChild(label);
+  const chips = document.createElement("span");
+  chips.className = "value";
+  for (const [value, text] of [[null, tr("Auto", "Auto")], ["de", "DE"], ["en", "EN"]]) {
+    const chip = document.createElement("button");
+    chip.className = "gridSortChip" + ((item.imageLanguage || null) === value ? " active" : "");
+    chip.textContent = text;
+    chip.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const res = await fetch("/api/collection/imageLanguage", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ id: item.id, language: value })
+      });
+      if (!res.ok) {
+        showAddToast(tr("Saving failed.", "Speichern fehlgeschlagen."));
+        return;
+      }
+      item.imageLanguage = value;
+      const img = document.getElementById("detailImg");
+      const shownUrl = displayImageUrl(item);
+      if (img && img.getAttribute("src") !== shownUrl) {
+        img.src = shownUrl;
+        if (shownUrl !== item.imageUrl) attachImageLanguageFallback(img, item.imageUrl);
+      }
+      renderDetailImageLanguage(item);
+      loadData();
+    });
+    chips.appendChild(chip);
+  }
+  row.appendChild(chips);
+}
+
+// Globale Kartenbild-Sprache (07.09.) - Chips im Accounts-Overlay, speichert
+// sofort (POST /api/cardImageLanguageMode) und zeichnet das Grid neu
+function renderCardImageLanguageSection() {
+  const wrap = document.getElementById("cardImageLangChips");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  for (const [value, text] of [["asScanned", tr("As scanned", "Wie gescannt")], ["de", tr("German", "Deutsch")], ["en", tr("English", "Englisch")]]) {
+    const chip = document.createElement("button");
+    chip.className = "gridSortChip" + (cardImageLanguageMode === value ? " active" : "");
+    chip.textContent = text;
+    chip.addEventListener("click", async () => {
+      const res = await fetch("/api/cardImageLanguageMode", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ mode: value })
+      });
+      if (!res.ok) {
+        showAddToast(tr("Saving failed.", "Speichern fehlgeschlagen."));
+        return;
+      }
+      cardImageLanguageMode = value;
+      render();
+      renderCardImageLanguageSection();
+    });
+    wrap.appendChild(chip);
+  }
+}
+
 function renderHiddenGamesSection() {
+  renderCardImageLanguageSection();
   const wrap = document.getElementById("hiddenGamesChips");
   wrap.innerHTML = "";
   for (const g of GAMES) {
@@ -5641,6 +5805,7 @@ function renderAccountsOverlay() {
       renderAccountsOverlay();
       loadData();
       loadMarketFactor();
+      loadCardImageLanguageMode();
     });
     row.appendChild(deleteBtn);
 
@@ -5757,6 +5922,7 @@ document.getElementById("tokenForm").addEventListener("submit", (e) => {
     loadHiddenGames();
     loadData();
     loadMarketFactor();
+    loadCardImageLanguageMode();
   });
 });
 
@@ -5772,4 +5938,5 @@ loadAccounts().then(() => {
   loadHiddenGames();
   loadData();
   loadMarketFactor();
+  loadCardImageLanguageMode();
 });

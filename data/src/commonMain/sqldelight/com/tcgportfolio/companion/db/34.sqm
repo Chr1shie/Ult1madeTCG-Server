@@ -1,0 +1,7 @@
+-- Sprachbewusste Kartenbilder (07.09., 1.1-Paket, Nutzer-Design vom
+-- 31.08. - siehe LocalizedCardImages.kt): scanLanguage = beim Scannen
+-- erkannte Kartensprache ("de"/"en", NULL = unbekannt/manuell
+-- hinzugefügt); imageLanguage = Pro-Karte-Override fürs angezeigte Bild
+-- (NULL = folgt der globalen Einstellung "cardImageLanguageMode").
+ALTER TABLE PortfolioItemEntity ADD COLUMN scanLanguage TEXT;
+ALTER TABLE PortfolioItemEntity ADD COLUMN imageLanguage TEXT;

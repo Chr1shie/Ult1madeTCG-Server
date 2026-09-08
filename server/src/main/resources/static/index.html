@@ -13,7 +13,11 @@
   <!-- Nutzer-Vorgabe (08.08.) "IP-Adresse und Pairing-Token direkt sichtbar,
        oben links in der jeweiligen TCG-Farbe" - siehe renderServerInfo() in
        app.js, Farbe kommt automatisch über --accent (setAccent()). -->
-  <div class="serverInfo" id="serverInfo"></div>
+  <div class="serverInfo" id="serverInfo" title="QR-Code für die App anzeigen"></div>
+  <!-- Pairing-QR (07.09.): Adresse + Token als QR-Code, die App liest beides
+       über das Kamera-Symbol neben dem Token-Feld ein (siehe CodeScanDialog.kt);
+       erscheint beim Antippen der IP/Token-Zeile -->
+  <div class="pairQr" id="pairQr" hidden></div>
   <h1>Ult1made<span class="accent">TCG</span></h1>
   <!-- Mandantenfähigkeit (02.08., Nutzer-Vorgabe) - einfacher Umschalter
        statt der Auto-Login/PIN-Auswahlbildschirm-Logik der App (bewusste
@@ -102,6 +106,10 @@
     <div class="detailInfo">
       <h2 id="detailName"></h2>
       <div class="detailRow" id="detailGameRow"></div>
+      <!-- Kartenbild-Sprache je Karte (07.09., sprachbewusste Kartenbilder) -
+           nur gefüllt, wenn es ein deutsches Bild gibt, siehe
+           renderDetailImageLanguage() in app.js -->
+      <div class="detailRow" id="detailImageLangRow" hidden></div>
       <!-- Bearbeitbare Anzahl/Holo/Versiegelt/Kaufpreis (09.08., Nutzer-
            Vorgabe "Feature-Parität App <-> Web") - bisher nur statischer
            Text, siehe renderDetailEditControls() in app.js -->
@@ -221,6 +229,13 @@
       <p class="backupHint" data-de="Sprache dieser Weboberfläche (gilt pro Browser).">Language of this web UI (per browser).</p>
       <div id="languageChips" class="hiddenGamesChips"></div>
     </div>
+    <!-- Kartenbild-Sprache (07.09., sprachbewusste Kartenbilder, Nutzer-
+         Design 31.08.): "Wie gescannt" (Standard) / Deutsch / Englisch -
+         synct mit der App, siehe renderCardImageLanguageSection() in app.js -->
+    <div class="backupSection">
+      <p class="backupHint" data-de="Sprache der Kartenbilder: wie gescannt (deutsche Karte = deutsches Bild) oder fest eine Sprache. Gibt es für Pokémon, Magic, Final Fantasy und teilweise Altered; andere TCGs zeigen immer das englische Bild. Synct mit der App.">Card image language: as scanned (German card = German image) or always one language. Available for Pokémon, Magic, Final Fantasy and partly Altered; other TCGs always show the English image. Syncs with the app.</p>
+      <div id="cardImageLangChips" class="hiddenGamesChips"></div>
+    </div>
     <div class="confirmButtons">
       <button class="confirmNo" id="accountsClose" data-de="Schließen">Close</button>
     </div>
@@ -310,6 +325,7 @@
   Cardmarket. All names, images and trademarks belong to their respective owners.
 </footer>
 
+<script src="qrcode.js" defer></script>
 <script src="app.js" defer></script>
 </body>
 </html>

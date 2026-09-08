@@ -23,7 +23,12 @@ data class SyncCard(
     val customPriceInTotal: Long = 1,
     val customPriceInGameTotal: Long = 1,
     // Holo-Stil je Karte (18.08.) - null = globale Einstellung
-    val holoStyle: String? = null
+    val holoStyle: String? = null,
+    // Sprachbewusste Kartenbilder (07.09., siehe LocalizedCardImages.kt) -
+    // Scan-Sprache + Pro-Karte-Override, Defaults halten alte Gegenstellen
+    // kompatibel
+    val scanLanguage: String? = null,
+    val imageLanguage: String? = null
 )
 
 @Serializable
@@ -238,6 +243,11 @@ data class SyncPayload(
     // Anzeige-Kalibrierung, kein Bestandsdatum).
     val marketFactor: Float? = null,
     val marketFactorUpdatedAt: Long? = null,
+    // Kartenbild-Sprache (07.09., siehe LocalizedCardImages.kt) - geräteweite
+    // Anzeige-Einstellung "asScanned"/"de"/"en", LWW per Zeitstempel genau
+    // wie marketFactor
+    val cardImageLanguageMode: String? = null,
+    val cardImageLanguageModeUpdatedAt: Long? = null,
     // cardmarketPriceSelections (02.08., bewusst weiterhin geräteweit statt
     // pro Account) - die Auswahl sitzt auf CardCatalogEntity, also den
     // GETEILTEN Katalog-Stammdaten, nicht auf einer PortfolioItemEntity-Zeile
