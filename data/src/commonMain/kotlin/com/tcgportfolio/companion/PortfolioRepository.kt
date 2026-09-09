@@ -5708,17 +5708,68 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     sealedMoved++
                 }
             }
+            // Listen/Binder/Decks (09.09., Nutzer-Fund "Binder doppelt nach dem
+            // Zusammenlegen"): gibt es im Ziel schon eine Liste mit gleichem
+            // Namen (+ Spiel, bei Bindern auch Seitengröße), gilt sie als
+            // DIESELBE - nur die fehlenden Karten wandern hinein (add-only, wie
+            // bei Karten/Produkten), die Quell-Liste wird gelöscht. Sonst zieht
+            // die Liste komplett um (neue uid, siehe oben).
+            fun listKey(name: String, game: String) = name.trim().lowercase() + "|" + game
+            val wishlistItemsBySource = dbQueries.selectAllWishlistItemsRawForAccount(sourceId).executeAsList().groupBy { it.wishlistId }
+            val targetWishlists = dbQueries.selectAllWishlists(targetId).executeAsList().associateBy { listKey(it.name, it.game) }
             dbQueries.selectAllWishlists(sourceId).executeAsList().forEach { w ->
-                dbQueries.updateWishlistAccount(targetId, generateWishlistUid(), now, w.id); wishlists++
+                val target = targetWishlists[listKey(w.name, w.game)]
+                if (target != null) {
+                    addWishlistItems(target.id, (wishlistItemsBySource[w.id] ?: emptyList()).map { WishlistCardToAdd(it.cardId, it.name, it.imageUrl) })
+                    deleteWishlist(w.id)
+                } else {
+                    dbQueries.updateWishlistAccount(targetId, generateWishlistUid(), now, w.id)
+                }
+                wishlists++
             }
+            val sealedItemsBySource = dbQueries.selectAllSealedWishlistItemsRawForAccount(sourceId).executeAsList().groupBy { it.wishlistId }
+            val sealedItemsByTarget = dbQueries.selectAllSealedWishlistItemsRawForAccount(targetId).executeAsList().groupBy { it.wishlistId }
+            val targetSealedWishlists = dbQueries.selectAllSealedWishlistsRawForAccount(targetId).executeAsList().associateBy { listKey(it.name, it.game) }
             dbQueries.selectAllSealedWishlistsRawForAccount(sourceId).executeAsList().forEach { w ->
-                dbQueries.updateSealedWishlistAccount(targetId, generateSealedWishlistUid(), now, w.id); sealedWishlists++
+                val target = targetSealedWishlists[listKey(w.name, w.game)]
+                if (target != null) {
+                    val present = (sealedItemsByTarget[target.id] ?: emptyList()).map { it.catalogId }.toSet()
+                    (sealedItemsBySource[w.id] ?: emptyList()).filter { it.catalogId !in present }.forEach { item ->
+                        dbQueries.insertSealedWishlistItem(item.game, item.catalogId, now, targetId, target.id)
+                    }
+                    removeSealedWishlist(w.id)
+                } else {
+                    dbQueries.updateSealedWishlistAccount(targetId, generateSealedWishlistUid(), now, w.id)
+                }
+                sealedWishlists++
             }
+            val binderItemsBySource = dbQueries.selectAllBinderItemsRawForAccount(sourceId).executeAsList().groupBy { it.binderId }
+            val targetBinders = dbQueries.selectAllBinders(targetId).executeAsList().associateBy { listKey(it.name, it.game) + "|" + it.pageSize }
             dbQueries.selectAllBinders(sourceId).executeAsList().forEach { b ->
-                dbQueries.updateBinderAccount(targetId, generateBinderUid(), now, b.id); binders++
+                val target = targetBinders[listKey(b.name, b.game) + "|" + b.pageSize]
+                if (target != null) {
+                    addBinderItems(target.id, (binderItemsBySource[b.id] ?: emptyList()).sortedBy { it.position }.map { BinderCardToAdd(it.cardId, it.name, it.imageUrl) })
+                    deleteBinder(b.id)
+                } else {
+                    dbQueries.updateBinderAccount(targetId, generateBinderUid(), now, b.id)
+                }
+                binders++
             }
+            val deckCardsBySource = dbQueries.selectAllDeckCardsRawForAccount(sourceId).executeAsList().groupBy { it.deckId }
+            val targetDecks = dbQueries.selectAllDecks(targetId).executeAsList().associateBy { listKey(it.name, it.game) }
             dbQueries.selectAllDecks(sourceId).executeAsList().forEach { d ->
-                dbQueries.updateDeckAccount(targetId, generateDeckUid(), now, d.id); decks++
+                val target = targetDecks[listKey(d.name, d.game)]
+                if (target != null) {
+                    (deckCardsBySource[d.id] ?: emptyList()).forEach { c ->
+                        if (dbQueries.selectByDeckAndCardId(target.id, c.cardId).executeAsOneOrNull() == null) {
+                            dbQueries.insertDeckCard(target.id, c.cardId, c.quantity, now)
+                        }
+                    }
+                    deleteDeck(d.id)
+                } else {
+                    dbQueries.updateDeckAccount(targetId, generateDeckUid(), now, d.id)
+                }
+                decks++
             }
         }
         deleteAccount(sourceId)
