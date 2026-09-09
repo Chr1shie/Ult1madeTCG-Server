@@ -186,6 +186,16 @@ data class VerifyAccountPinResponse(val correct: Boolean)
 @Serializable
 data class DeleteAccountRequest(val id: Long)
 
+// Accounts zusammenführen (09.09., siehe PortfolioRepository.mergeAccounts)
+@Serializable
+data class MergeAccountsRequest(val sourceId: Long, val targetId: Long)
+
+@Serializable
+data class MergeAccountsResponse(
+    val cardsMoved: Int, val cardsMerged: Int, val sealedMoved: Int, val sealedMerged: Int,
+    val wishlists: Int, val sealedWishlists: Int, val binders: Int, val decks: Int
+)
+
 @Serializable
 data class CollectionCardResponse(
     // Eigene PortfolioItemEntity-Id (03.08., Nutzer-Vorgabe "Massenauswahl"
@@ -1057,6 +1067,16 @@ fun Application.ult1madeServerModule() {
             val body = call.receive<DeleteAccountRequest>()
             repository.deleteAccount(body.id)
             call.respond(HttpStatusCode.OK)
+        }
+        // Accounts zusammenführen (09.09.) - Ergebnis propagiert per Sync
+        post("/api/accounts/merge") {
+            val body = call.receive<MergeAccountsRequest>()
+            val r = repository.mergeAccounts(body.sourceId, body.targetId)
+            if (r == null) {
+                call.respond(HttpStatusCode.BadRequest, "Quelle/Ziel ungültig")
+            } else {
+                call.respond(MergeAccountsResponse(r.cardsMoved, r.cardsMerged, r.sealedMoved, r.sealedMerged, r.wishlists, r.sealedWishlists, r.binders, r.decks))
+            }
         }
         // Beweist den eigentlichen Zweck der :data-Extraktion: dieselbe
         // PortfolioRepository-Logik wie in der App liefert hier echte

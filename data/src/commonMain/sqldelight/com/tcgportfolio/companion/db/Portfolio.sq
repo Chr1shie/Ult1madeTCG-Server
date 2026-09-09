@@ -451,6 +451,28 @@ UPDATE AccountEntity SET uid = ? WHERE id = ?;
 -- an mit einbauen") - erst die abhängigen Zeilen, dann den Account selbst;
 -- WishlistItemEntity/BinderItemEntity hängen über die id der jeweiligen
 -- Liste/des Binders daran, nicht direkt über accountId.
+-- Accounts zusammenführen (09.09., siehe PortfolioRepository.mergeAccounts):
+-- Zeilen in den Ziel-Account umhängen; Listen/Binder/Decks bekommen dabei
+-- eine NEUE uid + createdAt, damit der Sync sie im Ziel-Account als neu
+-- übernimmt (der Quell-Account wird danach mit Löschvermerk entfernt)
+updateItemAccount:
+UPDATE PortfolioItemEntity SET accountId = ?, updatedAt = ? WHERE id = ?;
+
+updateSealedProductAccount:
+UPDATE SealedProductEntity SET accountId = ?, updatedAt = ? WHERE id = ?;
+
+updateWishlistAccount:
+UPDATE WishlistEntity SET accountId = ?, uid = ?, createdAt = ? WHERE id = ?;
+
+updateSealedWishlistAccount:
+UPDATE SealedWishlistEntity SET accountId = ?, uid = ?, createdAt = ? WHERE id = ?;
+
+updateBinderAccount:
+UPDATE BinderEntity SET accountId = ?, uid = ?, createdAt = ? WHERE id = ?;
+
+updateDeckAccount:
+UPDATE DeckEntity SET accountId = ?, uid = ?, createdAt = ? WHERE id = ?;
+
 deleteItemsForAccount:
 DELETE FROM PortfolioItemEntity WHERE accountId = ?;
 

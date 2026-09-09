@@ -5841,6 +5841,39 @@ function renderAccountsOverlay() {
     });
     row.appendChild(pinBtn);
 
+    // Accounts zusammenführen (09.09., Nutzer-Fund "Standard"-Account des
+    // Servers): alles aus diesem Account in einen anderen übernehmen, dieser
+    // wird danach gelöscht - synct wie eine Löschung + Zuwachs im Ziel
+    const others = accountsCache.filter(a => a.id !== acc.id);
+    if (others.length > 0) {
+      const mergeBtn = document.createElement("button");
+      mergeBtn.textContent = tr("Merge into…", "Übernehmen in…");
+      mergeBtn.addEventListener("click", async () => {
+        const choice = window.prompt(
+          tr("Move everything from \"" + acc.name + "\" into which account? Enter the number:\n", "Alles aus \"" + acc.name + "\" in welchen Account übernehmen? Nummer eingeben:\n") +
+            others.map((a, i) => (i + 1) + ") " + a.name).join("\n")
+        );
+        if (choice === null) return;
+        const target = others[parseInt(choice, 10) - 1];
+        if (!target) return;
+        if (!window.confirm("\"" + acc.name + "\" → \"" + target.name + "\": " + tr("only what is missing is added (nothing is doubled, nothing removed), lists, binders and decks move over, then the source account is deleted. Continue?", "nur Fehlendes kommt dazu (nichts wird verdoppelt, nichts entfernt), Listen, Binder und Decks wandern mit, danach wird der Quell-Account gelöscht. Fortfahren?"))) return;
+        const res = await fetch("/api/accounts/merge", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({ sourceId: acc.id, targetId: target.id })
+        });
+        if (!res.ok) { showAddToast(tr("Merge failed.", "Zusammenführen fehlgeschlagen.")); return; }
+        const r = await res.json();
+        showAddToast(tr("Merged: ", "Übernommen: ") + (r.cardsMoved + r.cardsMerged) + tr(" cards, ", " Karten, ") + (r.sealedMoved + r.sealedMerged) + tr(" products, ", " Produkte, ") + r.wishlists + tr(" wants lists, ", " Wantslisten, ") + r.binders + tr(" binders, ", " Binder, ") + r.decks + tr(" decks", " Decks"));
+        if (isActive) setActiveAccountId(target.id);
+        await loadAccounts();
+        await loadHiddenGames();
+        renderAccountsOverlay();
+        loadData();
+      });
+      row.appendChild(mergeBtn);
+    }
+
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "danger";
     deleteBtn.textContent = tr("Delete", "Löschen");

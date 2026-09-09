@@ -5653,6 +5653,78 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // einbauen", nicht erst später) - trägt zusätzlich einen geräteweiten
     // Löschvermerk ein, damit das Verschwinden über Sync propagiert (siehe
     // selectAccountDeletionLog()/exportSyncData()/importSyncData() unten).
+    // Accounts zusammenführen (09.09., Nutzer-Fund: der Server legte beim
+    // ersten Start einen eigenen "Standard"-Account an, die Vault-Produkte
+    // landeten dort statt im eigenen Account - "Wie bekomme ich den Standard-
+    // Account in meinen Account integriert?"). Alles aus source wandert nach
+    // target, danach wird source wie gewohnt gelöscht (Löschvermerk mit uid,
+    // propagiert per Sync). Regel wie beim Sync/Backup (Nutzer-Vorgabe 09.09.
+    // "nur hinzu, nicht weg - und nicht auf einmal die doppelte Anzahl"):
+    // Karten/Sealed-Produkte, die im Ziel schon existieren (gleiche
+    // Identität), bleiben mit dem ZIEL-Bestand stehen, die Quell-Zeile fällt
+    // weg - Mengen werden NICHT addiert; nur was im Ziel fehlt, kommt dazu.
+    // Alle bewegten Zeilen bekommen updatedAt = jetzt (LWW
+    // gewinnt auf der Gegenseite); Wants-/Sealed-Wants-Listen, Binder und
+    // Decks bekommen NEUE uids + createdAt, damit die Gegenseite sie im
+    // Ziel-Account als neu anlegt und ihre alten Exemplare mit dem Quell-
+    // Account-Löschvermerk kaskadiert entfernt. Eigene Fotos (local:/custom)
+    // hängen an den Zeilen und wandern mit; Deck-/Binder-Cover werden unter
+    // der neuen uid beim nächsten Foto-Sync erneut hochgeladen.
+    data class AccountMergeResult(
+        val cardsMoved: Int, val cardsMerged: Int,
+        val sealedMoved: Int, val sealedMerged: Int,
+        val wishlists: Int, val sealedWishlists: Int, val binders: Int, val decks: Int
+    )
+
+    fun mergeAccounts(sourceId: Long, targetId: Long): AccountMergeResult? {
+        if (sourceId == targetId) return null
+        dbQueries.selectAccountById(sourceId).executeAsOneOrNull() ?: return null
+        dbQueries.selectAccountById(targetId).executeAsOneOrNull() ?: return null
+        val now = currentTimeMillis()
+        var cardsMoved = 0; var cardsMerged = 0; var sealedMoved = 0; var sealedMerged = 0
+        var wishlists = 0; var sealedWishlists = 0; var binders = 0; var decks = 0
+        dbQueries.transaction {
+            dbQueries.selectAll(sourceId).executeAsList().forEach { src ->
+                val existing = src.cardId?.let { dbQueries.selectByCardIdAndHolo(it, src.isHolo, targetId).executeAsOneOrNull() }
+                if (existing != null) {
+                    // schon im Ziel: Zielbestand bleibt, Quelle fällt weg
+                    dbQueries.deleteItem(src.id)
+                    cardsMerged++
+                } else {
+                    dbQueries.updateItemAccount(targetId, now, src.id)
+                    cardsMoved++
+                }
+            }
+            val targetSealedByKey = dbQueries.selectAllSealedProducts(targetId).executeAsList()
+                .associateBy { sealedKey(it.catalogId, it.isSealed, it.name, it.category, it.game) }
+            dbQueries.selectAllSealedProducts(sourceId).executeAsList().forEach { src ->
+                val existing = targetSealedByKey[sealedKey(src.catalogId, src.isSealed, src.name, src.category, src.game)]
+                if (existing != null) {
+                    // schon im Ziel: Zielbestand bleibt, Quelle fällt weg
+                    dbQueries.deleteSealedProduct(src.id)
+                    sealedMerged++
+                } else {
+                    dbQueries.updateSealedProductAccount(targetId, now, src.id)
+                    sealedMoved++
+                }
+            }
+            dbQueries.selectAllWishlists(sourceId).executeAsList().forEach { w ->
+                dbQueries.updateWishlistAccount(targetId, generateWishlistUid(), now, w.id); wishlists++
+            }
+            dbQueries.selectAllSealedWishlistsRawForAccount(sourceId).executeAsList().forEach { w ->
+                dbQueries.updateSealedWishlistAccount(targetId, generateSealedWishlistUid(), now, w.id); sealedWishlists++
+            }
+            dbQueries.selectAllBinders(sourceId).executeAsList().forEach { b ->
+                dbQueries.updateBinderAccount(targetId, generateBinderUid(), now, b.id); binders++
+            }
+            dbQueries.selectAllDecks(sourceId).executeAsList().forEach { d ->
+                dbQueries.updateDeckAccount(targetId, generateDeckUid(), now, d.id); decks++
+            }
+        }
+        deleteAccount(sourceId)
+        return AccountMergeResult(cardsMoved, cardsMerged, sealedMoved, sealedMerged, wishlists, sealedWishlists, binders, decks)
+    }
+
     fun deleteAccount(id: Long) {
         val account = dbQueries.selectAccountById(id).executeAsOneOrNull() ?: return
         dbQueries.transaction {
