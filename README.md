@@ -52,3 +52,13 @@ Configuration via environment variables: `PORT` (default 8080),
 
 The full user handbook (German/English, including the server chapter):
 https://ult1madetcg.com/anleitung.html
+
+## License
+
+Copyright (C) 2026 Christian Meyer
+
+This server is free software, licensed under the **GNU Affero General
+Public License v3.0** (see [LICENSE](LICENSE)). You may run, study, modify
+and share it. If you modify it and make it available to others - including
+as a hosted service - you must publish your modified source under the same
+license. The mobile app is a separate, proprietary product.
