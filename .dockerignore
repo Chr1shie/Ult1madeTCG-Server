@@ -15,3 +15,5 @@ local.properties
 customPhotos
 imageCache
 *.db
+# README-Bilder des Server-Repos (27.09.) - nur für GitHub, nie im Image
+server/docs

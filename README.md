@@ -1,3 +1,5 @@
+<p align="center"><img src="server/docs/images/icon.png" width="96" alt="Ult1made TCG app icon"></p>
+
 # Ult1made TCG — Self-hosted Server
 
 The companion server for [Ult1made TCG](https://ult1madetcg.com) — the
@@ -11,6 +13,27 @@ be. Every server instance belongs to the person running it.
 \*Two-way sync between the app and your server requires the app's Premium
 subscription (1.99 €/month — costs about as much as a cheap coffee). The
 server itself is free, and you don't need the app to run it.
+
+## What it looks like
+
+The web interface - your whole collection on the big screen, here a
+Dragon Ball Fusion World set with its collection progress:
+
+<p align="center"><img src="server/docs/images/web-collection.jpg" width="100%" alt="Set view with collected cards and progress 132/159"></p>
+
+<p align="center">
+  <img src="server/docs/images/web-card-detail.jpg" width="26%" alt="Card detail with quantity, holo flag, price and art selection">
+  <img src="server/docs/images/web-values.jpg" width="72%" alt="Values overview with total collection value, profit and top cards">
+</p>
+
+<p align="center"><img src="server/docs/images/web-vault.jpg" width="100%" alt="Sealed vault with starter decks and their market prices"></p>
+
+The companion app for iOS and Android, which syncs with your server:
+
+<p align="center">
+  <img src="server/docs/images/app-scanner.jpg" width="35%" alt="App card scanner">
+  <img src="server/docs/images/app-binder.jpg" width="35%" alt="App binder view">
+</p>
 
 ## Quick start (Docker, Linux)
 
