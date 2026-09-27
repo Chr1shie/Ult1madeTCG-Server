@@ -2358,7 +2358,12 @@ private const val CATALOG_SEED_VERSION_KEY = "catalogSeedVersion"
 // das Set ist inzwischen auf world.digimoncard.com live (25 Spoiler-
 // Karten mit no-image-Sentinel -> 104 Karten + 32 Alternate Arts mit
 // echten Bildern), siehe TimelessBondsCatalog.kt.
-private const val CATALOG_SEED_VERSION = 38
+// 27.09. (39): ME04 Chaos Rising um die 4 fehlenden Karten ergänzt
+// (037/054/067/102, u.a. Skuntank - Nutzer-Scan-Fund), totalCards 122.
+// Liefert zugleich die MEP-Promo-Bilder vom 17.09. aus, die mit der 1.2
+// OHNE Versionssprung ausgeliefert wurden und deshalb auf bestehenden
+// Installationen nie ankamen (seedSet läuft nur bei Versionswechsel).
+private const val CATALOG_SEED_VERSION = 39
 
 private const val SEALED_CATALOG_SEED_VERSION_KEY = "sealedCatalogSeedVersion"
 // 2 (11.08.): Pokemon Elite Trainer Boxes von Alt-CDN-Produktfotos auf

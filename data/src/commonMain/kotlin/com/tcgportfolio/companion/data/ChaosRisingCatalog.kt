@@ -1,6 +1,6 @@
 package com.tcgportfolio.companion.data
 
-val chaosRisingSetSeed = CardSetSeed(id = "ME04", name = "ME04: Chaos Rising", game = "Pokemon", totalCards = 118)
+val chaosRisingSetSeed = CardSetSeed(id = "ME04", name = "ME04: Chaos Rising", game = "Pokemon", totalCards = 122)
 
 val chaosRisingCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("ME04-001/086", "ME04", "001/086", "Weedle", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/001/high.webp", 0.23),
@@ -39,6 +39,7 @@ val chaosRisingCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("ME04-034/086", "ME04", "034/086", "Deoxys", "Normal", "Uncommon", "https://assets.tcgdex.net/en/me/me04/034/high.webp", 0.24),
     CatalogCardSeed("ME04-035/086", "ME04", "035/086", "Mega Floette ex", "Normal", "Double Rare", "https://assets.tcgdex.net/en/me/me04/035/high.webp", 0.62),
     CatalogCardSeed("ME04-036/086", "ME04", "036/086", "Espurr", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/036/high.webp", 0.22),
+    CatalogCardSeed("ME04-037/086", "ME04", "037/086", "Meowstic", "Normal", "Uncommon", "https://assets.tcgdex.net/en/me/me04/037/high.webp"),
     CatalogCardSeed("ME04-038/086", "ME04", "038/086", "Phantump", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/038/high.webp", 0.24),
     CatalogCardSeed("ME04-039/086", "ME04", "039/086", "Trevenant", "Normal", "Rare", "https://assets.tcgdex.net/en/me/me04/039/high.webp", 0.25),
     CatalogCardSeed("ME04-040/086", "ME04", "040/086", "Pumpkaboo", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/040/high.webp", 0.18),
@@ -55,6 +56,7 @@ val chaosRisingCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("ME04-051/086", "ME04", "051/086", "Crobat", "Normal", "Rare", "https://assets.tcgdex.net/en/me/me04/051/high.webp", 0.31),
     CatalogCardSeed("ME04-052/086", "ME04", "052/086", "Qwilfish", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/052/high.webp", 0.19),
     CatalogCardSeed("ME04-053/086", "ME04", "053/086", "Stunky", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/053/high.webp", 0.17),
+    CatalogCardSeed("ME04-054/086", "ME04", "054/086", "Skuntank", "Normal", "Uncommon", "https://assets.tcgdex.net/en/me/me04/054/high.webp"),
     CatalogCardSeed("ME04-055/086", "ME04", "055/086", "Krookodile ex", "Normal", "Double Rare", "https://assets.tcgdex.net/en/me/me04/055/high.webp", 0.42),
     CatalogCardSeed("ME04-056/086", "ME04", "056/086", "Trubbish", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/056/high.webp", 0.2),
     CatalogCardSeed("ME04-057/086", "ME04", "057/086", "Garbodor", "Normal", "Uncommon", "https://assets.tcgdex.net/en/me/me04/057/high.webp", 0.22),
@@ -67,6 +69,7 @@ val chaosRisingCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("ME04-064/086", "ME04", "064/086", "Cobalion ex", "Normal", "Double Rare", "https://assets.tcgdex.net/en/me/me04/064/high.webp", 0.64),
     CatalogCardSeed("ME04-065/086", "ME04", "065/086", "Mega Dragalge ex", "Normal", "Double Rare", "https://assets.tcgdex.net/en/me/me04/065/high.webp", 0.49),
     CatalogCardSeed("ME04-066/086", "ME04", "066/086", "Goomy", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/066/high.webp", 0.23),
+    CatalogCardSeed("ME04-067/086", "ME04", "067/086", "Sliggoo", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/067/high.webp"),
     CatalogCardSeed("ME04-068/086", "ME04", "068/086", "Goodra", "Normal", "Rare", "https://assets.tcgdex.net/en/me/me04/068/high.webp", 0.14),
     CatalogCardSeed("ME04-069/086", "ME04", "069/086", "Tauros", "Normal", "Uncommon", "https://assets.tcgdex.net/en/me/me04/069/high.webp", 0.23),
     CatalogCardSeed("ME04-070/086", "ME04", "070/086", "Patrat", "Normal", "Common", "https://assets.tcgdex.net/en/me/me04/070/high.webp", 0.19),
@@ -101,6 +104,7 @@ val chaosRisingCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("ME04-099/086", "ME04", "099/086", "Mega Pyroar ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/099/high.webp", 3.74),
     CatalogCardSeed("ME04-100/086", "ME04", "100/086", "Mega Greninja ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/100/high.webp", 12.46),
     CatalogCardSeed("ME04-101/086", "ME04", "101/086", "Mega Floette ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/101/high.webp", 5.06),
+    CatalogCardSeed("ME04-102/086", "ME04", "102/086", "Gourgeist ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/102/high.webp"),
     CatalogCardSeed("ME04-103/086", "ME04", "103/086", "Cobalion ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/103/high.webp", 2.02),
     CatalogCardSeed("ME04-104/086", "ME04", "104/086", "Mega Dragalge ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/104/high.webp", 3.43),
     CatalogCardSeed("ME04-105/086", "ME04", "105/086", "Cinccino ex", "Normal", "Ultra Rare", "https://assets.tcgdex.net/en/me/me04/105/high.webp", 5.0),
