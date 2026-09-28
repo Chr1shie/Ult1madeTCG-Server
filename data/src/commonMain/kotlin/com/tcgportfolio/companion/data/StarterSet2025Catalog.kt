@@ -1,6 +1,6 @@
 package com.tcgportfolio.companion.data
 
-val starterSet2025SetSeed = CardSetSeed(id = "6200022", name = "Starter Set 2025", game = "FinalFantasy", totalCards = 10)
+val starterSet2025SetSeed = CardSetSeed(id = "6200022", name = "Starter Set 2025", game = "FinalFantasy", totalCards = 47)
 
 val starterSet2025CatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("6200022-27-122S", "6200022", "27-122S", "Wuk Lamat", "Normal", "Starter", "https://images.kupodb.com/tcg/cards/27-122S_large_343f7039_1776843687.webp", 2.93),
@@ -13,4 +13,42 @@ val starterSet2025CatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("6200022-27-127S", "6200022", "27-127S", "Lightning EX", "Normal", "Starter", "https://images.kupodb.com/tcg/cards/27-127S_large_5fb26f77_1776843697.webp", 0.91),
     CatalogCardSeed("6200022-27-128S", "6200022", "27-128S", "Charlotte", "Normal", "Starter", "https://images.kupodb.com/tcg/cards/27-128S_large_c0be99f6_1776843690.webp", 1.05),
     CatalogCardSeed("6200022-27-129S", "6200022", "27-129S", "Yuna", "Normal", "Starter", "https://images.kupodb.com/tcg/cards/27-129S_large_1baa5b6c_1776843690.webp", 0.98),
+    // 28.09.: Nachdrucke aus Vol. 1 (Zack, 18) + Vol. 2 (Cloud, 19) - komplette Deckinhalte laut KupoDB
+    CatalogCardSeed("6200022-1-170C", "6200022", "1-170C", "Fairy", "Normal", "Common", "https://images.kupodb.com/tcg/cards/1-170C_large_fce23d96_1776828520.webp", null),
+    CatalogCardSeed("6200022-11-010C", "6200022", "11-010C", "Warrior", "Normal", "Common", "https://images.kupodb.com/tcg/cards/11-010C_large_58ac97d1_1776839068.webp", null),
+    CatalogCardSeed("6200022-11-121C", "6200022", "11-121C", "Porom", "Normal", "Common", "https://images.kupodb.com/tcg/cards/11-121C_large_81b1ca13_1776839263.webp", null),
+    CatalogCardSeed("6200022-12-005C", "6200022", "12-005C", "Ifrit", "Normal", "Common", "https://images.kupodb.com/tcg/cards/12-005C_large_476cfc2c_1776839294.webp", null),
+    CatalogCardSeed("6200022-13-013C", "6200022", "13-013C", "Palom", "Normal", "Common", "https://images.kupodb.com/tcg/cards/13-013C_large_4e3693e9_1776839559.webp", null),
+    CatalogCardSeed("6200022-13-125R", "6200022", "13-125R", "Yuzuki", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/13-125R_large_eb3160f4_1776839761.webp", null),
+    CatalogCardSeed("6200022-18-003C", "6200022", "18-003C", "Machinist", "Normal", "Common", "https://images.kupodb.com/tcg/cards/18-003C_large_694e2b26_1776840848.webp", null),
+    CatalogCardSeed("6200022-18-094C", "6200022", "18-094C", "Geomancer", "Normal", "Common", "https://images.kupodb.com/tcg/cards/18-094C_large_7b9f3e6d_1776841025.webp", null),
+    CatalogCardSeed("6200022-18-129C", "6200022", "18-129C", "Jecht", "Normal", "Common", "https://images.kupodb.com/tcg/cards/18-129C_large_567716fe_1776841091.webp", null),
+    CatalogCardSeed("6200022-20-106R", "6200022", "20-106R", "Alphinaud", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/20-106R_large_1fe8fef7_1776841609.webp", null),
+    CatalogCardSeed("6200022-21-001R", "6200022", "21-001R", "Ward", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/21-001R_large_f9f1ead4_1776841674.webp", null),
+    CatalogCardSeed("6200022-21-010H", "6200022", "21-010H", "Taivas", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/21-010H_large_feebccff_1776841694.webp", null),
+    CatalogCardSeed("6200022-22-112R", "6200022", "22-112R", "Zack", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/22-112R_large_a0b6dc9a_1776842163.webp", null),
+    CatalogCardSeed("6200022-22-123R", "6200022", "22-123R", "Leo", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/22-123R_large_5a063976_1776842189.webp", null),
+    CatalogCardSeed("6200022-23-119R", "6200022", "23-119R", "Vincent", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/23-119R_large_1a67e2f6_1776842386.webp", null),
+    CatalogCardSeed("6200022-23-130H", "6200022", "23-130H", "Luso", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/23-130H_large_1876e5bc_1776842402.webp", null),
+    CatalogCardSeed("6200022-24-126H", "6200022", "24-126H", "Ultima Weapon", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/24-126H_large_29bac39e_1776842720.webp", null),
+    CatalogCardSeed("6200022-3-143C", "6200022", "3-143C", "Leonora", "Normal", "Common", "https://images.kupodb.com/tcg/cards/3-143C_large_2d957198_1776838156.webp", null),
+    CatalogCardSeed("6200022-1-121C", "6200022", "1-121C", "Red Mage", "Normal", "Common", "https://images.kupodb.com/tcg/cards/1-121C_large_e119d433_1776827990.webp", null),
+    CatalogCardSeed("6200022-12-120C", "6200022", "12-120C", "Shantotto", "Normal", "Common", "https://images.kupodb.com/tcg/cards/12-120C_large_c56d0ce3_1776839464.webp", null),
+    CatalogCardSeed("6200022-13-072R", "6200022", "13-072R", "Odin", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/13-072R_large_135ecb6a_1776823075.webp", null),
+    CatalogCardSeed("6200022-16-092C", "6200022", "16-092C", "Noel", "Normal", "Common", "https://images.kupodb.com/tcg/cards/16-092C_large_cdf64f48_1776840511.webp", null),
+    CatalogCardSeed("6200022-18-064C", "6200022", "18-064C", "Geomancer", "Normal", "Common", "https://images.kupodb.com/tcg/cards/18-064C_large_4167dfda_1776840981.webp", null),
+    CatalogCardSeed("6200022-18-069C", "6200022", "18-069C", "Red Mage", "Normal", "Common", "https://images.kupodb.com/tcg/cards/18-069C_large_a155a48c_1776840990.webp", null),
+    CatalogCardSeed("6200022-18-124C", "6200022", "18-124C", "Billy Bob", "Normal", "Common", "https://images.kupodb.com/tcg/cards/18-124C_large_2c4b4645_1776841077.webp", null),
+    CatalogCardSeed("6200022-19-052C", "6200022", "19-052C", "Undead Princess", "Normal", "Common", "https://images.kupodb.com/tcg/cards/19-052C_large_77fc07dc_1776841247.webp", null),
+    CatalogCardSeed("6200022-20-074C", "6200022", "20-074C", "Miner", "Normal", "Common", "https://images.kupodb.com/tcg/cards/20-074C_large_7ced8e97_1776841537.webp", null),
+    CatalogCardSeed("6200022-20-103H", "6200022", "20-103H", "Ramuh", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/20-103H_large_1baeb6c9_1776841601.webp", null),
+    CatalogCardSeed("6200022-20-105C", "6200022", "20-105C", "Reeve", "Normal", "Common", "https://images.kupodb.com/tcg/cards/20-105C_large_0d988df5_1776841601.webp", null),
+    CatalogCardSeed("6200022-22-068R", "6200022", "22-068R", "Prishe", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/22-068R_large_4809d026_1776842086.webp", null),
+    CatalogCardSeed("6200022-22-119R", "6200022", "22-119R", "Maat", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/22-119R_large_d18df0e9_1776842174.webp", null),
+    CatalogCardSeed("6200022-22-120H", "6200022", "22-120H", "Cloud", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/22-120H_large_b2b2caf7_1776842174.webp", null),
+    CatalogCardSeed("6200022-22-124H", "6200022", "22-124H", "Little Leela", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/22-124H_large_4f89c3bb_1776842189.webp", null),
+    CatalogCardSeed("6200022-23-127R", "6200022", "23-127R", "Nyx", "Normal", "Rare", "https://images.kupodb.com/tcg/cards/23-127R_large_d8bc93ac_1776842398.webp", null),
+    CatalogCardSeed("6200022-24-063H", "6200022", "24-063H", "Hugh Yurg", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/24-063H_large_ac10a4f5_1776842607.webp", null),
+    CatalogCardSeed("6200022-24-124H", "6200022", "24-124H", "The Ur-Dragon King", "Normal", "Hero", "https://images.kupodb.com/tcg/cards/24-124H_large_c6c3d532_1776842200.webp", null),
+    CatalogCardSeed("6200022-9-074C", "6200022", "9-074C", "Class Tenth Moogle", "Normal", "Common", "https://images.kupodb.com/tcg/cards/9-074C_large_bba43c63_1776838650.webp", null),
 )

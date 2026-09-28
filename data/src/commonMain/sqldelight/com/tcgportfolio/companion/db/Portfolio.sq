@@ -689,6 +689,36 @@ UPDATE CardSet SET game = ? WHERE game = ?;
 updateCardSetTotalCards:
 UPDATE CardSet SET totalCards = ? WHERE id = ?;
 
+-- Umzug von Sammlungs-Verweisen auf eine neue Katalog-Id (28.09., Fall
+-- DBFW Story Booster 01 vs. Gundam ST01, die sich 16 Karten-Ids teilten).
+-- PortfolioItemEntity kennt kein Spiel, aber den Kartennamen vom Zeitpunkt
+-- des Hinzufügens - darüber wird unterschieden; Binder, Decks und Wantlists
+-- tragen das Spiel am Container.
+remapPortfolioItemCardIdByName:
+UPDATE PortfolioItemEntity SET cardId = :newId WHERE cardId = :oldId AND name LIKE :namePrefix || '%';
+
+remapBinderItemCardIdForGame:
+UPDATE BinderItemEntity SET cardId = :newId
+WHERE cardId = :oldId AND binderId IN (SELECT id FROM BinderEntity WHERE game = :game);
+
+remapDeckCardIdForGame:
+UPDATE DeckCardEntity SET cardId = :newId
+WHERE cardId = :oldId AND deckId IN (SELECT id FROM DeckEntity WHERE game = :game);
+
+remapWishlistItemCardIdForGame:
+UPDATE WishlistItemEntity SET cardId = :newId
+WHERE cardId = :oldId AND wishlistId IN (SELECT id FROM WishlistEntity WHERE game = :game);
+
+-- Anzahl der von der letzten Anweisung geänderten Zeilen (28.09.) - zeigt
+-- nach INSERT OR IGNORE, ob die Katalogkarte schon existierte (0).
+lastStatementChanges:
+SELECT changes();
+
+-- Set-Name aus dem Seed nachziehen (28.09.) - bei der FFTCG-Id-Dublette hatte
+-- das Set den Namen des zuerst gesäten der beiden Sets behalten.
+updateCardSetName:
+UPDATE CardSet SET name = ? WHERE id = ?;
+
 insertCatalogCard:
 INSERT OR IGNORE INTO CardCatalogEntity(id, setId, number, name, variant, rarity, imageUrl, marketPriceUsd, cardmarketId)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -719,9 +749,12 @@ SELECT COUNT(*) FROM CardCatalogEntity WHERE setId = ?;
 -- "nur wenn != null"-Bedingung in Kotlin. Läuft NUR für bereits gesäte Sets
 -- mit (siehe seedSet()) - beim Ersteinfügen steckt alles schon in
 -- insertCatalogCard oben.
+-- setId seit 28.09. mit dabei: eine Karte, deren Seed-Eintrag in ein anderes
+-- Set umzieht (Fall FFTCG: Hidden Trials teilte die Set-Id von Blissful
+-- Eternity), wandert so auch auf bestehenden Installationen mit um.
 updateCatalogSeedFields:
 UPDATE CardCatalogEntity
-SET number = ?, name = ?, variant = ?, rarity = ?, imageUrl = ?, marketPriceUsd = ?, cardmarketId = COALESCE(?, cardmarketId)
+SET setId = ?, number = ?, name = ?, variant = ?, rarity = ?, imageUrl = ?, marketPriceUsd = ?, cardmarketId = COALESCE(?, cardmarketId)
 WHERE id = ?;
 
 updateCatalogEurPrice:

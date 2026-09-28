@@ -5,6 +5,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.tcgportfolio.companion.db.PortfolioDatabase
 import java.io.File
+import java.util.Properties
 
 // Für den Server (Phase 1e) - eigene, lokale SQLite-Datei statt Android/iOS'
 // eingebetteten Treibern (die Schema-Erstellung/-Migration automatisch beim
@@ -45,7 +46,16 @@ actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
         val path = System.getenv("DB_PATH") ?: "portfolio.db"
         val isNewFile = !File(path).exists()
-        val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:$path")
+        // busy_timeout (28.09.): Der Server schreibt beim Start aus mehreren
+        // Coroutinen gleichzeitig (Katalog-Seed, Cardmarket-Preise, Regel-
+        // Abgleiche) - ohne Wartezeit bricht SQLite sofort mit SQLITE_BUSY
+        // ab, und der Katalog-Seed verlor dabei still zufällige Sets
+        // (Messung: 37 von ~1000 bei einem Erststart). Jetzt wartet jeder
+        // Schreiber bis zu 30 s auf die Sperre.
+        val driver: SqlDriver = JdbcSqliteDriver(
+            "jdbc:sqlite:$path",
+            Properties().apply { setProperty("busy_timeout", "30000") }
+        )
         val targetVersion = PortfolioDatabase.Schema.version
 
         if (isNewFile) {

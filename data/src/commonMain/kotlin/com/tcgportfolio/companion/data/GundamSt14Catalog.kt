@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val gundamSt14SetSeed = CardSetSeed(id = "ST14", name = "Heavy Dominion", game = "Gundam", totalCards = 32)
+
+val gundamSt14CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("ST14-001", "ST14", "ST14-001", "The-O", "Normal", "LR", "https://www.gundam-gcg.com/en/images/cards/card/ST14-001.webp?260917", null),
+    CatalogCardSeed("ST14-001-P1", "ST14", "ST14-001", "The-O", "Parallel", "LR +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-001_p1.webp?260917", null),
+    CatalogCardSeed("ST14-002", "ST14", "ST14-002", "Gundam NT-1 Full Armor", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-002.webp?260917", null),
+    CatalogCardSeed("ST14-002-P1", "ST14", "ST14-002", "Gundam NT-1 Full Armor", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-002_p1.webp?260917", null),
+    CatalogCardSeed("ST14-003", "ST14", "ST14-003", "Palace Athene", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-003.webp?260917", null),
+    CatalogCardSeed("ST14-003-P1", "ST14", "ST14-003", "Palace Athene", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-003_p1.webp?260917", null),
+    CatalogCardSeed("ST14-004", "ST14", "ST14-004", "Geara Doga (Heavy Armed Type)", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-004.webp?260917", null),
+    CatalogCardSeed("ST14-004-P1", "ST14", "ST14-004", "Geara Doga (Heavy Armed Type)", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-004_p1.webp?260917", null),
+    CatalogCardSeed("ST14-005", "ST14", "ST14-005", "G-Falcon DX", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-005.webp?260917", null),
+    CatalogCardSeed("ST14-005-P1", "ST14", "ST14-005", "G-Falcon DX", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-005_p1.webp?260917", null),
+    CatalogCardSeed("ST14-006", "ST14", "ST14-006", "Full Armor Unicorn Gundam (Destroy Mode)", "Normal", "LR", "https://www.gundam-gcg.com/en/images/cards/card/ST14-006.webp?260917", null),
+    CatalogCardSeed("ST14-006-P1", "ST14", "ST14-006", "Full Armor Unicorn Gundam (Destroy Mode)", "Parallel", "LR +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-006_p1.webp?260917", null),
+    CatalogCardSeed("ST14-007", "ST14", "ST14-007", "Full Armor Unicorn Gundam (Unicorn Mode)", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-007.webp?260917", null),
+    CatalogCardSeed("ST14-007-P1", "ST14", "ST14-007", "Full Armor Unicorn Gundam (Unicorn Mode)", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-007_p1.webp?260917", null),
+    CatalogCardSeed("ST14-008", "ST14", "ST14-008", "Gundam Heavyarms Custom (EW)", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-008.webp?260917", null),
+    CatalogCardSeed("ST14-008-P1", "ST14", "ST14-008", "Gundam Heavyarms Custom (EW)", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-008_p1.webp?260917", null),
+    CatalogCardSeed("ST14-009", "ST14", "ST14-009", "Duel Gundam (Assault Shroud)", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-009.webp?260917", null),
+    CatalogCardSeed("ST14-009-P1", "ST14", "ST14-009", "Duel Gundam (Assault Shroud)", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-009_p1.webp?260917", null),
+    CatalogCardSeed("ST14-010", "ST14", "ST14-010", "Perfect Strike Gundam", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-010.webp?260917", null),
+    CatalogCardSeed("ST14-010-P1", "ST14", "ST14-010", "Perfect Strike Gundam", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-010_p1.webp?260917", null),
+    CatalogCardSeed("ST14-011", "ST14", "ST14-011", "Paptimus Scirocco", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-011.webp?260917", null),
+    CatalogCardSeed("ST14-011-P1", "ST14", "ST14-011", "Paptimus Scirocco", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-011_p1.webp?260917", null),
+    CatalogCardSeed("ST14-012", "ST14", "ST14-012", "Banagher Links", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-012.webp?260917", null),
+    CatalogCardSeed("ST14-012-P1", "ST14", "ST14-012", "Banagher Links", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-012_p1.webp?260917", null),
+    CatalogCardSeed("ST14-013", "ST14", "ST14-013", "Natural Talent", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-013.webp?260917", null),
+    CatalogCardSeed("ST14-013-P1", "ST14", "ST14-013", "Natural Talent", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-013_p1.webp?260917", null),
+    CatalogCardSeed("ST14-014", "ST14", "ST14-014", "Blazing Mobile Suit Rider", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-014.webp?260917", null),
+    CatalogCardSeed("ST14-014-P1", "ST14", "ST14-014", "Blazing Mobile Suit Rider", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-014_p1.webp?260917", null),
+    CatalogCardSeed("ST14-015", "ST14", "ST14-015", "Battlefield Emotions", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-015.webp?260917", null),
+    CatalogCardSeed("ST14-015-P1", "ST14", "ST14-015", "Battlefield Emotions", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-015_p1.webp?260917", null),
+    CatalogCardSeed("ST14-016", "ST14", "ST14-016", "Gryphios 2", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST14-016.webp?260917", null),
+    CatalogCardSeed("ST14-016-P1", "ST14", "ST14-016", "Gryphios 2", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST14-016_p1.webp?260917", null),
+)

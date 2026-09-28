@@ -1878,6 +1878,220 @@ import com.tcgportfolio.companion.data.zendikarRisingCatalogSeed
 import com.tcgportfolio.companion.data.zendikarRisingExpeditionsCatalogSeed
 import com.tcgportfolio.companion.data.zendikarRisingExpeditionsSetSeed
 import com.tcgportfolio.companion.data.zendikarRisingSetSeed
+import com.tcgportfolio.companion.data.anime25thCollectionSetSeed
+import com.tcgportfolio.companion.data.anime25thCollectionCatalogSeed
+import com.tcgportfolio.companion.data.ascendedHeroesSetSeed
+import com.tcgportfolio.companion.data.ascendedHeroesCatalogSeed
+import com.tcgportfolio.companion.data.beyondTheBraveSetSeed
+import com.tcgportfolio.companion.data.beyondTheBraveCatalogSeed
+import com.tcgportfolio.companion.data.brightnessOfHopeSetSeed
+import com.tcgportfolio.companion.data.brightnessOfHopeCatalogSeed
+import com.tcgportfolio.companion.data.chivalrousXiiiSetSeed
+import com.tcgportfolio.companion.data.chivalrousXiiiCatalogSeed
+import com.tcgportfolio.companion.data.commanderRealityFractureSetSeed
+import com.tcgportfolio.companion.data.commanderRealityFractureCatalogSeed
+import com.tcgportfolio.companion.data.curatorsCollectionHeroinesEditionSetSeed
+import com.tcgportfolio.companion.data.curatorsCollectionHeroinesEditionCatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs01SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs01CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs02SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs02CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs03SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs03CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs04SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs04CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs05SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs05CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs06SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs06CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs07SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs07CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs08SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs08CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs09SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs09CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs10SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs10CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs11SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs11CatalogSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs12SetSeed
+import com.tcgportfolio.companion.data.dbfwStarterDeckFs12CatalogSeed
+import com.tcgportfolio.companion.data.digimonGenerationSetSeed
+import com.tcgportfolio.companion.data.digimonGenerationCatalogSeed
+import com.tcgportfolio.companion.data.digimonLimitedPackLm06SetSeed
+import com.tcgportfolio.companion.data.digimonLimitedPackLm06CatalogSeed
+import com.tcgportfolio.companion.data.digimonLimitedPackLm07SetSeed
+import com.tcgportfolio.companion.data.digimonLimitedPackLm07CatalogSeed
+import com.tcgportfolio.companion.data.digimonLimitedPackLm08SetSeed
+import com.tcgportfolio.companion.data.digimonLimitedPackLm08CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt01SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt01CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt02SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt02CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt03SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt03CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt04SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt04CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt05SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt05CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt06SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt06CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt07SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt07CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt08SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt08CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt09SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt09CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt10SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt10CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt12SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt12CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt13SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt13CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt14SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt14CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt15SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt15CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt16SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt16CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt17SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt17CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt18SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt18CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt19SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt19CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt20SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt20CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt21SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt21CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt22SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt22CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt23SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt23CatalogSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt24SetSeed
+import com.tcgportfolio.companion.data.digimonStarterDeckSt24CatalogSeed
+import com.tcgportfolio.companion.data.dorintheaDemoDeckSetSeed
+import com.tcgportfolio.companion.data.dorintheaDemoDeckCatalogSeed
+import com.tcgportfolio.companion.data.eggheadCrisisSetSeed
+import com.tcgportfolio.companion.data.eggheadCrisisCatalogSeed
+import com.tcgportfolio.companion.data.formatCoconutSetSeed
+import com.tcgportfolio.companion.data.formatCoconutCatalogSeed
+import com.tcgportfolio.companion.data.gundamSt11SetSeed
+import com.tcgportfolio.companion.data.gundamSt11CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt12SetSeed
+import com.tcgportfolio.companion.data.gundamSt12CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt13SetSeed
+import com.tcgportfolio.companion.data.gundamSt13CatalogSeed
+import com.tcgportfolio.companion.data.gundamSt14SetSeed
+import com.tcgportfolio.companion.data.gundamSt14CatalogSeed
+import com.tcgportfolio.companion.data.legendaryArcVDecksSetSeed
+import com.tcgportfolio.companion.data.legendaryArcVDecksCatalogSeed
+import com.tcgportfolio.companion.data.magnificentMonstersSetSeed
+import com.tcgportfolio.companion.data.magnificentMonstersCatalogSeed
+import com.tcgportfolio.companion.data.mangaBooster01SetSeed
+import com.tcgportfolio.companion.data.mangaBooster01CatalogSeed
+import com.tcgportfolio.companion.data.mangaBooster02SetSeed
+import com.tcgportfolio.companion.data.mangaBooster02CatalogSeed
+import com.tcgportfolio.companion.data.megaEvolutionEnergiesSetSeed
+import com.tcgportfolio.companion.data.megaEvolutionEnergiesCatalogSeed
+import com.tcgportfolio.companion.data.memorialCollectionSetSeed
+import com.tcgportfolio.companion.data.memorialCollectionCatalogSeed
+import com.tcgportfolio.companion.data.onePieceCardTheBestSetSeed
+import com.tcgportfolio.companion.data.onePieceCardTheBestCatalogSeed
+import com.tcgportfolio.companion.data.onePieceCardTheBestVol2SetSeed
+import com.tcgportfolio.companion.data.onePieceCardTheBestVol2CatalogSeed
+import com.tcgportfolio.companion.data.opSt01SetSeed
+import com.tcgportfolio.companion.data.opSt01CatalogSeed
+import com.tcgportfolio.companion.data.opSt02SetSeed
+import com.tcgportfolio.companion.data.opSt02CatalogSeed
+import com.tcgportfolio.companion.data.opSt03SetSeed
+import com.tcgportfolio.companion.data.opSt03CatalogSeed
+import com.tcgportfolio.companion.data.opSt04SetSeed
+import com.tcgportfolio.companion.data.opSt04CatalogSeed
+import com.tcgportfolio.companion.data.opSt05SetSeed
+import com.tcgportfolio.companion.data.opSt05CatalogSeed
+import com.tcgportfolio.companion.data.opSt06SetSeed
+import com.tcgportfolio.companion.data.opSt06CatalogSeed
+import com.tcgportfolio.companion.data.opSt07SetSeed
+import com.tcgportfolio.companion.data.opSt07CatalogSeed
+import com.tcgportfolio.companion.data.opSt08SetSeed
+import com.tcgportfolio.companion.data.opSt08CatalogSeed
+import com.tcgportfolio.companion.data.opSt09SetSeed
+import com.tcgportfolio.companion.data.opSt09CatalogSeed
+import com.tcgportfolio.companion.data.opSt10SetSeed
+import com.tcgportfolio.companion.data.opSt10CatalogSeed
+import com.tcgportfolio.companion.data.opSt11SetSeed
+import com.tcgportfolio.companion.data.opSt11CatalogSeed
+import com.tcgportfolio.companion.data.opSt12SetSeed
+import com.tcgportfolio.companion.data.opSt12CatalogSeed
+import com.tcgportfolio.companion.data.opSt13SetSeed
+import com.tcgportfolio.companion.data.opSt13CatalogSeed
+import com.tcgportfolio.companion.data.opSt14SetSeed
+import com.tcgportfolio.companion.data.opSt14CatalogSeed
+import com.tcgportfolio.companion.data.opSt15SetSeed
+import com.tcgportfolio.companion.data.opSt15CatalogSeed
+import com.tcgportfolio.companion.data.opSt16SetSeed
+import com.tcgportfolio.companion.data.opSt16CatalogSeed
+import com.tcgportfolio.companion.data.opSt17SetSeed
+import com.tcgportfolio.companion.data.opSt17CatalogSeed
+import com.tcgportfolio.companion.data.opSt18SetSeed
+import com.tcgportfolio.companion.data.opSt18CatalogSeed
+import com.tcgportfolio.companion.data.opSt19SetSeed
+import com.tcgportfolio.companion.data.opSt19CatalogSeed
+import com.tcgportfolio.companion.data.opSt20SetSeed
+import com.tcgportfolio.companion.data.opSt20CatalogSeed
+import com.tcgportfolio.companion.data.opSt21SetSeed
+import com.tcgportfolio.companion.data.opSt21CatalogSeed
+import com.tcgportfolio.companion.data.opSt22SetSeed
+import com.tcgportfolio.companion.data.opSt22CatalogSeed
+import com.tcgportfolio.companion.data.opSt23SetSeed
+import com.tcgportfolio.companion.data.opSt23CatalogSeed
+import com.tcgportfolio.companion.data.opSt24SetSeed
+import com.tcgportfolio.companion.data.opSt24CatalogSeed
+import com.tcgportfolio.companion.data.opSt25SetSeed
+import com.tcgportfolio.companion.data.opSt25CatalogSeed
+import com.tcgportfolio.companion.data.opSt26SetSeed
+import com.tcgportfolio.companion.data.opSt26CatalogSeed
+import com.tcgportfolio.companion.data.opSt27SetSeed
+import com.tcgportfolio.companion.data.opSt27CatalogSeed
+import com.tcgportfolio.companion.data.opSt28SetSeed
+import com.tcgportfolio.companion.data.opSt28CatalogSeed
+import com.tcgportfolio.companion.data.opSt29SetSeed
+import com.tcgportfolio.companion.data.opSt29CatalogSeed
+import com.tcgportfolio.companion.data.opSt30SetSeed
+import com.tcgportfolio.companion.data.opSt30CatalogSeed
+import com.tcgportfolio.companion.data.opSt31SetSeed
+import com.tcgportfolio.companion.data.opSt31CatalogSeed
+import com.tcgportfolio.companion.data.opSt32SetSeed
+import com.tcgportfolio.companion.data.opSt32CatalogSeed
+import com.tcgportfolio.companion.data.opSt33SetSeed
+import com.tcgportfolio.companion.data.opSt33CatalogSeed
+import com.tcgportfolio.companion.data.opSt34SetSeed
+import com.tcgportfolio.companion.data.opSt34CatalogSeed
+import com.tcgportfolio.companion.data.opSt35SetSeed
+import com.tcgportfolio.companion.data.opSt35CatalogSeed
+import com.tcgportfolio.companion.data.opSt36SetSeed
+import com.tcgportfolio.companion.data.opSt36CatalogSeed
+import com.tcgportfolio.companion.data.pd1PromosSetSeed
+import com.tcgportfolio.companion.data.pd1PromosCatalogSeed
+import com.tcgportfolio.companion.data.realityFractureSetSeed
+import com.tcgportfolio.companion.data.realityFractureCatalogSeed
+import com.tcgportfolio.companion.data.swuHmwSetSeed
+import com.tcgportfolio.companion.data.swuHmwCatalogSeed
+import com.tcgportfolio.companion.data.swuIbhSetSeed
+import com.tcgportfolio.companion.data.swuIbhCatalogSeed
+import com.tcgportfolio.companion.data.swuTs26SetSeed
+import com.tcgportfolio.companion.data.swuTs26CatalogSeed
+import com.tcgportfolio.companion.data.thankYouPackSetSeed
+import com.tcgportfolio.companion.data.thankYouPackCatalogSeed
+import com.tcgportfolio.companion.data.theZetaSetSetSeed
+import com.tcgportfolio.companion.data.theZetaSetCatalogSeed
+import com.tcgportfolio.companion.data.thirtiethCelebrationSetSeed
+import com.tcgportfolio.companion.data.thirtiethCelebrationCatalogSeed
+import com.tcgportfolio.companion.data.thirtiethCelebrationClassicCollectionSetSeed
+import com.tcgportfolio.companion.data.thirtiethCelebrationClassicCollectionCatalogSeed
+import com.tcgportfolio.companion.data.winnersPack20262027SetSeed
+import com.tcgportfolio.companion.data.winnersPack20262027CatalogSeed
 import com.tcgportfolio.companion.db.CardCatalogEntity
 import com.tcgportfolio.companion.db.CardSet
 import com.tcgportfolio.companion.db.PortfolioDatabase
@@ -2363,7 +2577,17 @@ private const val CATALOG_SEED_VERSION_KEY = "catalogSeedVersion"
 // Liefert zugleich die MEP-Promo-Bilder vom 17.09. aus, die mit der 1.2
 // OHNE Versionssprung ausgeliefert wurden und deshalb auf bestehenden
 // Installationen nie ankamen (seedSet läuft nur bei Versionswechsel).
-private const val CATALOG_SEED_VERSION = 39
+// 28.09. (40): Katalog-Frische-Nachtrag - 107 neue Sets (u.a. Pokémon
+// Ascended Heroes/30th Celebration, Magic Reality Fracture, YGO Magnificent
+// Monsters/Beyond the Brave, SWU Homeworlds, DBFW FB11 + Manga Booster,
+// Digimon EX-13/AD-01/LM-06..08, Gundam ST11-14) plus Starter-Deck-Karten-
+// Sets für One Piece (OPST01-36, EB01/02/04, PRB01/02), DBFW (FS01-12) und
+// Digimon (DGST1-24); Sets vervollständigt (Vendetta, Blissful Eternity,
+// SWU TWI, D23, Attack of the Vine, MEP); FFTCG Hidden Trials eigene Set-Id
+// 6200037 (teilte 6200035 mit Blissful Eternity), DBFW Story Booster
+// ST01-001..016 -> FS01B-ST01-0xx (teilten die Ids mit Gundam ST01, siehe
+// migrateStoryBoosterCardIds), SWU SOR/SHD-Foil-Bilder repariert.
+private const val CATALOG_SEED_VERSION = 40
 
 private const val SEALED_CATALOG_SEED_VERSION_KEY = "sealedCatalogSeedVersion"
 // 2 (11.08.): Pokemon Elite Trainer Boxes von Alt-CDN-Produktfotos auf
@@ -3394,6 +3618,125 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         gemPack5SetSeed to gemPack5CatalogSeed,
         silverAgeChapter3SetSeed to silverAgeChapter3CatalogSeed,
         omensOfTheThirdAgeSetSeed to omensOfTheThirdAgeCatalogSeed,
+        // Katalog-Frische-Nachtrag 28.09.2026 (siehe CONCEPT "Katalog-Frische-Check"):
+        // neue Sets aller TCGs + Starter-Deck-Karten-Sets für One Piece/DBFW/Digimon
+        // DBFW
+        brightnessOfHopeSetSeed to brightnessOfHopeCatalogSeed,
+        dbfwStarterDeckFs01SetSeed to dbfwStarterDeckFs01CatalogSeed,
+        dbfwStarterDeckFs02SetSeed to dbfwStarterDeckFs02CatalogSeed,
+        dbfwStarterDeckFs03SetSeed to dbfwStarterDeckFs03CatalogSeed,
+        dbfwStarterDeckFs04SetSeed to dbfwStarterDeckFs04CatalogSeed,
+        dbfwStarterDeckFs05SetSeed to dbfwStarterDeckFs05CatalogSeed,
+        dbfwStarterDeckFs06SetSeed to dbfwStarterDeckFs06CatalogSeed,
+        dbfwStarterDeckFs07SetSeed to dbfwStarterDeckFs07CatalogSeed,
+        dbfwStarterDeckFs08SetSeed to dbfwStarterDeckFs08CatalogSeed,
+        dbfwStarterDeckFs09SetSeed to dbfwStarterDeckFs09CatalogSeed,
+        dbfwStarterDeckFs10SetSeed to dbfwStarterDeckFs10CatalogSeed,
+        dbfwStarterDeckFs11SetSeed to dbfwStarterDeckFs11CatalogSeed,
+        dbfwStarterDeckFs12SetSeed to dbfwStarterDeckFs12CatalogSeed,
+        mangaBooster01SetSeed to mangaBooster01CatalogSeed,
+        mangaBooster02SetSeed to mangaBooster02CatalogSeed,
+        // Digimon
+        chivalrousXiiiSetSeed to chivalrousXiiiCatalogSeed,
+        digimonGenerationSetSeed to digimonGenerationCatalogSeed,
+        digimonLimitedPackLm06SetSeed to digimonLimitedPackLm06CatalogSeed,
+        digimonLimitedPackLm07SetSeed to digimonLimitedPackLm07CatalogSeed,
+        digimonLimitedPackLm08SetSeed to digimonLimitedPackLm08CatalogSeed,
+        digimonStarterDeckSt01SetSeed to digimonStarterDeckSt01CatalogSeed,
+        digimonStarterDeckSt02SetSeed to digimonStarterDeckSt02CatalogSeed,
+        digimonStarterDeckSt03SetSeed to digimonStarterDeckSt03CatalogSeed,
+        digimonStarterDeckSt04SetSeed to digimonStarterDeckSt04CatalogSeed,
+        digimonStarterDeckSt05SetSeed to digimonStarterDeckSt05CatalogSeed,
+        digimonStarterDeckSt06SetSeed to digimonStarterDeckSt06CatalogSeed,
+        digimonStarterDeckSt07SetSeed to digimonStarterDeckSt07CatalogSeed,
+        digimonStarterDeckSt08SetSeed to digimonStarterDeckSt08CatalogSeed,
+        digimonStarterDeckSt09SetSeed to digimonStarterDeckSt09CatalogSeed,
+        digimonStarterDeckSt10SetSeed to digimonStarterDeckSt10CatalogSeed,
+        digimonStarterDeckSt12SetSeed to digimonStarterDeckSt12CatalogSeed,
+        digimonStarterDeckSt13SetSeed to digimonStarterDeckSt13CatalogSeed,
+        digimonStarterDeckSt14SetSeed to digimonStarterDeckSt14CatalogSeed,
+        digimonStarterDeckSt15SetSeed to digimonStarterDeckSt15CatalogSeed,
+        digimonStarterDeckSt16SetSeed to digimonStarterDeckSt16CatalogSeed,
+        digimonStarterDeckSt17SetSeed to digimonStarterDeckSt17CatalogSeed,
+        digimonStarterDeckSt18SetSeed to digimonStarterDeckSt18CatalogSeed,
+        digimonStarterDeckSt19SetSeed to digimonStarterDeckSt19CatalogSeed,
+        digimonStarterDeckSt20SetSeed to digimonStarterDeckSt20CatalogSeed,
+        digimonStarterDeckSt21SetSeed to digimonStarterDeckSt21CatalogSeed,
+        digimonStarterDeckSt22SetSeed to digimonStarterDeckSt22CatalogSeed,
+        digimonStarterDeckSt23SetSeed to digimonStarterDeckSt23CatalogSeed,
+        digimonStarterDeckSt24SetSeed to digimonStarterDeckSt24CatalogSeed,
+        // FleshAndBlood
+        dorintheaDemoDeckSetSeed to dorintheaDemoDeckCatalogSeed,
+        // Gundam
+        gundamSt11SetSeed to gundamSt11CatalogSeed,
+        gundamSt12SetSeed to gundamSt12CatalogSeed,
+        gundamSt13SetSeed to gundamSt13CatalogSeed,
+        gundamSt14SetSeed to gundamSt14CatalogSeed,
+        // Lorcana
+        curatorsCollectionHeroinesEditionSetSeed to curatorsCollectionHeroinesEditionCatalogSeed,
+        formatCoconutSetSeed to formatCoconutCatalogSeed,
+        pd1PromosSetSeed to pd1PromosCatalogSeed,
+        // MTG
+        commanderRealityFractureSetSeed to commanderRealityFractureCatalogSeed,
+        realityFractureSetSeed to realityFractureCatalogSeed,
+        theZetaSetSetSeed to theZetaSetCatalogSeed,
+        // OnePiece
+        anime25thCollectionSetSeed to anime25thCollectionCatalogSeed,
+        eggheadCrisisSetSeed to eggheadCrisisCatalogSeed,
+        memorialCollectionSetSeed to memorialCollectionCatalogSeed,
+        onePieceCardTheBestSetSeed to onePieceCardTheBestCatalogSeed,
+        onePieceCardTheBestVol2SetSeed to onePieceCardTheBestVol2CatalogSeed,
+        opSt01SetSeed to opSt01CatalogSeed,
+        opSt02SetSeed to opSt02CatalogSeed,
+        opSt03SetSeed to opSt03CatalogSeed,
+        opSt04SetSeed to opSt04CatalogSeed,
+        opSt05SetSeed to opSt05CatalogSeed,
+        opSt06SetSeed to opSt06CatalogSeed,
+        opSt07SetSeed to opSt07CatalogSeed,
+        opSt08SetSeed to opSt08CatalogSeed,
+        opSt09SetSeed to opSt09CatalogSeed,
+        opSt10SetSeed to opSt10CatalogSeed,
+        opSt11SetSeed to opSt11CatalogSeed,
+        opSt12SetSeed to opSt12CatalogSeed,
+        opSt13SetSeed to opSt13CatalogSeed,
+        opSt14SetSeed to opSt14CatalogSeed,
+        opSt15SetSeed to opSt15CatalogSeed,
+        opSt16SetSeed to opSt16CatalogSeed,
+        opSt17SetSeed to opSt17CatalogSeed,
+        opSt18SetSeed to opSt18CatalogSeed,
+        opSt19SetSeed to opSt19CatalogSeed,
+        opSt20SetSeed to opSt20CatalogSeed,
+        opSt21SetSeed to opSt21CatalogSeed,
+        opSt22SetSeed to opSt22CatalogSeed,
+        opSt23SetSeed to opSt23CatalogSeed,
+        opSt24SetSeed to opSt24CatalogSeed,
+        opSt25SetSeed to opSt25CatalogSeed,
+        opSt26SetSeed to opSt26CatalogSeed,
+        opSt27SetSeed to opSt27CatalogSeed,
+        opSt28SetSeed to opSt28CatalogSeed,
+        opSt29SetSeed to opSt29CatalogSeed,
+        opSt30SetSeed to opSt30CatalogSeed,
+        opSt31SetSeed to opSt31CatalogSeed,
+        opSt32SetSeed to opSt32CatalogSeed,
+        opSt33SetSeed to opSt33CatalogSeed,
+        opSt34SetSeed to opSt34CatalogSeed,
+        opSt35SetSeed to opSt35CatalogSeed,
+        opSt36SetSeed to opSt36CatalogSeed,
+        // Pokemon
+        ascendedHeroesSetSeed to ascendedHeroesCatalogSeed,
+        megaEvolutionEnergiesSetSeed to megaEvolutionEnergiesCatalogSeed,
+        thirtiethCelebrationSetSeed to thirtiethCelebrationCatalogSeed,
+        thirtiethCelebrationClassicCollectionSetSeed to thirtiethCelebrationClassicCollectionCatalogSeed,
+        // StarWarsUnlimited
+        swuHmwSetSeed to swuHmwCatalogSeed,
+        swuIbhSetSeed to swuIbhCatalogSeed,
+        swuTs26SetSeed to swuTs26CatalogSeed,
+        // YuGiOh
+        beyondTheBraveSetSeed to beyondTheBraveCatalogSeed,
+        legendaryArcVDecksSetSeed to legendaryArcVDecksCatalogSeed,
+        magnificentMonstersSetSeed to magnificentMonstersCatalogSeed,
+        thankYouPackSetSeed to thankYouPackCatalogSeed,
+        winnersPack20262027SetSeed to winnersPack20262027CatalogSeed,
     )
 
     // Alle bekannten Vault-Kataloge (versiegelte Produkte) je Spiel gebündelt
@@ -3479,18 +3822,43 @@ lostThunderSetSeed to lostThunderCatalogSeed,
         // seedSet() - schlägt eines fehl, bleiben alle anderen trotzdem
         // erhalten, und welches Set genau scheitert, ist eingrenzbar.
         val totalSets = allSets.size
+        // Karten-Ids sind über ALLE Spiele eine gemeinsame Tabelle - taucht
+        // eine Id in zwei Seed-Listen auf (28.09. gefunden: 16× DBFW Story
+        // Booster vs. Gundam ST01, dazu Naruto-Promos in Set- und Promo-
+        // Liste), gewinnt der ERSTE Eintrag, wie schon immer beim INSERT OR
+        // IGNORE. Ohne diesen Filter würde das setId-Update in seedSet() die
+        // Karte bei jedem Seed-Lauf zwischen den Sets hin- und herschieben.
+        val seenCardIds = HashSet<String>()
+        val failed = mutableListOf<Pair<CardSetSeed, List<CatalogCardSeed>>>()
         allSets.forEachIndexed { index, (set, cards) ->
+            val uniqueCards = cards.filter { seenCardIds.add(it.id) }
             // Ein scheiterndes Set darf nicht verhindern, dass alle SPÄTEREN
             // Sets in der Liste trotzdem verarbeitet werden (siehe
             // Kommentar oben) - daher zusätzlich pro Set abgefangen statt
             // die Ausnahme einfach durchzureichen
-            runCatching { seedSet(set, cards) }
+            runCatching { seedSet(set, uniqueCards, checkMovedCards = storedVersion != null) }
+                .onFailure { failed += set to uniqueCards }
             onProgress?.invoke(index + 1, totalSets)
         }
+        // Gescheiterte Sets (28.09. gefunden: auf dem Server verlor der Seed
+        // durch gleichzeitige Schreiber still zufällige Sets) einmal
+        // nachholen. Bleibt danach etwas übrig, wird die Version NICHT als
+        // erledigt gespeichert - der nächste Start versucht es erneut, statt
+        // die Lücke bis zum nächsten Versionssprung stehen zu lassen.
+        val stillFailed = failed.filter { (set, cards) ->
+            runCatching { seedSet(set, cards, checkMovedCards = storedVersion != null) }
+                .onFailure { println("Katalog-Seed: Set ${set.id} fehlgeschlagen: ${it.message}") }
+                .isFailure
+        }
+        runCatching { migrateStoryBoosterCardIds() }
+        if (stillFailed.isNotEmpty()) return
         setSetting(CATALOG_SEED_VERSION_KEY, CATALOG_SEED_VERSION.toString())
     }
 
-    private fun seedSet(set: CardSetSeed, cards: List<CatalogCardSeed>) {
+    // checkMovedCards: nur bei einem Update nötig - bei der Erstinstallation
+    // (leere Tabelle) kann keine Karte unter einer alten Set-Id existieren,
+    // und die Zusatzabfrage pro Karte verlängert den Erst-Seed spürbar.
+    private fun seedSet(set: CardSetSeed, cards: List<CatalogCardSeed>, checkMovedCards: Boolean = true) {
         dbQueries.transaction {
             val existingCount = dbQueries.catalogCountForSet(set.id).executeAsOne()
             if (existingCount > 0) {
@@ -3529,6 +3897,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 }
                 cards.forEach { card ->
                     dbQueries.updateCatalogSeedFields(
+                        setId = card.setId,
                         number = card.number,
                         name = card.name,
                         variant = card.variant,
@@ -3545,6 +3914,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 // totalCards nachziehen (09.08.) - siehe Kommentar bei
                 // updateCardSetTotalCards in Portfolio.sq
                 dbQueries.updateCardSetTotalCards(set.totalCards, set.id)
+                dbQueries.updateCardSetName(set.name, set.id)
                 return@transaction
             }
 
@@ -3566,6 +3936,22 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     marketPriceUsd = card.marketPriceUsd,
                     cardmarketId = card.cardmarketId
                 )
+                val inserted = if (checkMovedCards) dbQueries.lastStatementChanges().executeAsOne() else 1L
+                // Karte existierte schon unter einer ALTEN Set-Id (neues Set
+                // durch Umzug, 28.09.) - INSERT OR IGNORE hat dann nichts
+                // getan, erst dieses Update hängt sie ins neue Set. Nur in
+                // diesem Fall, damit der Erst-Seed nicht doppelt schreibt.
+                if (inserted == 0L) dbQueries.updateCatalogSeedFields(
+                    setId = card.setId,
+                    number = card.number,
+                    name = card.name,
+                    variant = card.variant,
+                    rarity = card.rarity,
+                    imageUrl = card.imageUrl,
+                    marketPriceUsd = card.marketPriceUsd,
+                    value = card.cardmarketId,
+                    id = card.id
+                )
             }
         }
     }
@@ -3578,6 +3964,43 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // aktualisiert bei bereits gesäten Sets nur Kartenpreise, nie
     // CardSet.game - daher dieser separate, idempotente Reparatur-Schritt
     // (No-Op, sobald einmal gelaufen).
+    // DBFW Story Booster 01 und Gundam ST01 teilten sich die Karten-Ids
+    // ST01-001..016 (28.09. gefunden) - auf den Geräten gab es dafür nur je
+    // EINE Katalogzeile. Die Story-Booster-Karten heißen jetzt
+    // "FS01B-ST01-0xx"; Sammlungs-Einträge, die eigentlich die Dragon-Ball-
+    // Karte meinten, werden hier umgehängt (idempotent: danach passt kein
+    // alter Verweis mit DBFW-Namen bzw. in DBFW-Containern mehr).
+    private fun migrateStoryBoosterCardIds() {
+        dbQueries.transaction {
+            storyBoosterIdSplit.forEach { (oldId, dbfwName) ->
+                val newId = "FS01B-$oldId"
+                dbQueries.remapPortfolioItemCardIdByName(newId = newId, oldId = oldId, namePrefix = dbfwName)
+                dbQueries.remapBinderItemCardIdForGame(newId = newId, oldId = oldId, game = "DBFW")
+                dbQueries.remapDeckCardIdForGame(newId = newId, oldId = oldId, game = "DBFW")
+                dbQueries.remapWishlistItemCardIdForGame(newId = newId, oldId = oldId, game = "DBFW")
+            }
+        }
+    }
+
+    private val storyBoosterIdSplit = listOf(
+        "ST01-001" to "Son Goten",
+        "ST01-002" to "Krillin",
+        "ST01-003" to "Son Goku",
+        "ST01-004" to "Son Goku",
+        "ST01-005" to "Son Goten",
+        "ST01-006" to "Son Goten",
+        "ST01-007" to "Son Goten",
+        "ST01-008" to "Son Goten/Son Gohan : Adolescence",
+        "ST01-009" to "Son Gohan : Adolescence",
+        "ST01-010" to "Son Gohan : Adolescence",
+        "ST01-011" to "Son Gohan : Adolescence",
+        "ST01-012" to "Trunks : Youth",
+        "ST01-013" to "Trunks : Youth",
+        "ST01-014" to "Videl",
+        "ST01-015" to "Family Kamehameha",
+        "ST01-016" to "Kamehameha",
+    )
+
     fun ensureOnePieceGameNameFixed() {
         dbQueries.updateCardSetGame("OnePiece", "One Piece")
     }

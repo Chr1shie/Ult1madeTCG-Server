@@ -4,7 +4,7 @@ package com.tcgportfolio.companion.data
 // 08.08.2026, FFX-Jubiläums-Set). Quelle: offizielle Square-Enix
 // get-cards-API + fftcg.cdn.sewest.net-Bilder (kupodb hatte das Set noch
 // nicht); Set-Id in der 62000xx-Reihe der übrigen FF-Sets fortgeführt.
-val blissfulEternitySetSeed = CardSetSeed(id = "6200035", name = "Blissful Eternity", game = "FinalFantasy", totalCards = 124)
+val blissfulEternitySetSeed = CardSetSeed(id = "6200035", name = "Blissful Eternity", game = "FinalFantasy", totalCards = 166)
 
 val blissfulEternityCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("6200035-29-001R", "6200035", "29-001R", "Ifrit (XVI)", "Normal", "R", "https://fftcg.cdn.sewest.net/images/cards/full/29-001R_eg.jpg", null),
@@ -131,4 +131,47 @@ val blissfulEternityCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("6200035-29-122R", "6200035", "29-122R", "Mika", "Normal", "R", "https://fftcg.cdn.sewest.net/images/cards/full/29-122R_eg.jpg", null),
     CatalogCardSeed("6200035-29-123R", "6200035", "29-123R", "Jack Garland", "Normal", "R", "https://fftcg.cdn.sewest.net/images/cards/full/29-123R_eg.jpg", null),
     CatalogCardSeed("6200035-29-124R", "6200035", "29-124R", "Auron", "Normal", "R", "https://fftcg.cdn.sewest.net/images/cards/full/29-124R_eg.jpg", null),
+    // 28.09.: Full Arts / Signature / Noir / PR-Foil nachgetragen (KupoDB opus-xxix, 166 Drucke)
+    CatalogCardSeed("6200035-11-127L-NOIR", "6200035", "11-127L", "Cloud (Noir)", "Full Art", "L", "https://images.kupodb.com/tcg/cards/11-127L_NOIR_large_ef359986_1787677421.webp", null),
+    CatalogCardSeed("6200035-14-023L-FA", "6200035", "14-023L", "Gilgamesh (FFBE)", "Full Art", "L", "https://images.kupodb.com/tcg/cards/14-023L_FA_large_071871d8_1787677756.webp", null),
+    CatalogCardSeed("6200035-21-121L-FA", "6200035", "21-121L", "Warrior of Light", "Full Art", "L", "https://images.kupodb.com/tcg/cards/21-121L_FA_large_da3d774f_1787676366.webp", null),
+    CatalogCardSeed("6200035-22-113L-FA", "6200035", "22-113L", "Mont Leonis", "Full Art", "L", "https://images.kupodb.com/tcg/cards/22-113L_FA_large_1411d384_1787677871.webp", null),
+    CatalogCardSeed("6200035-29-008L-FA", "6200035", "29-008L", "Zidane", "Full Art", "L", "https://images.kupodb.com/tcg/cards/29-008L_FA_large_641dd2ab_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-012H-FA", "6200035", "29-012H", "Neon", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-012H_FA_large_30727c25_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-014R-FA", "6200035", "29-014R", "Palom", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-014R_FA_large_86480830_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-015C-FA", "6200035", "29-015C", "Faris", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-015C_FA_large_050c455f_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-020R-FA", "6200035", "29-020R", "Astos", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-020R_FA_large_7cce6cba_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-024H-FA", "6200035", "29-024H", "Shiva", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-024H_FA_large_cbd16db2_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-027L-FA", "6200035", "29-027L", "Shantotto", "Full Art", "L", "https://images.kupodb.com/tcg/cards/29-027L_FA_large_57268932_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-029R-FA", "6200035", "29-029R", "Xezat", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-029R_FA_large_a54db2c6_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-039C-FA", "6200035", "29-039C", "Ahriman", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-039C_FA_large_a5c4116e_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-040H-FA", "6200035", "29-040H", "Adelle", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-040H_FA_large_83875749_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-049H-FA", "6200035", "29-049H", "Sophia (SOPFFO)", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-049H_FA_large_279e191c_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-052H-FA", "6200035", "29-052H", "Bartz", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-052H_FA_large_b6d666d8_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-056R-FA", "6200035", "29-056R", "Lucil", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-056R_FA_large_79aa959e_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-057L-FA", "6200035", "29-057L", "Luso", "Full Art", "L", "https://images.kupodb.com/tcg/cards/29-057L_FA_large_46991cf4_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-059H-FA", "6200035", "29-059H", "Ash", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-059H_FA_large_1253417a_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-075H-FA", "6200035", "29-075H", "Yoran-Oran", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-075H_FA_large_5dd9f12e_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-076H-FA", "6200035", "29-076H", "Roche", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-076H_FA_large_bf6e80a9_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-080C-FA", "6200035", "29-080C", "Chaos", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-080C_FA_large_c95330a1_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-082R-FA", "6200035", "29-082R", "Kelger", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-082R_FA_large_02ea585f_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-083C-FA", "6200035", "29-083C", "Koru-Moru", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-083C_FA_large_6b8e8bcf_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-087L-SIG", "6200035", "29-087L", "Sephiroth (Signature)", "Full Art", "L", "https://images.kupodb.com/tcg/cards/29-087L_SIG_large_447eb2f3_1776844197.webp", null),
+    CatalogCardSeed("6200035-29-094H-FA", "6200035", "29-094H", "Ramuh", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-094H_FA_large_f6692d11_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-097R-FA", "6200035", "29-097R", "Elza", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-097R_FA_large_4f336eac_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-098R-FA", "6200035", "29-098R", "Quina", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-098R_FA_large_1437c06a_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-099H-FA", "6200035", "29-099H", "Jed", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-099H_FA_large_86245f83_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-101H-FA", "6200035", "29-101H", "Syldra", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-101H_FA_large_76a0897e_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-105L-FA", "6200035", "29-105L", "Tidus", "Full Art", "L", "https://images.kupodb.com/tcg/cards/29-105L_FA_large_59667825_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-109R-FA", "6200035", "29-109R", "Porom", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-109R_FA_large_2c4622e9_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-110C-FA", "6200035", "29-110C", "Yuna", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-110C_FA_large_fc15dffb_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-112C-FA", "6200035", "29-112C", "Raz", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-112C_FA_large_eaf142c0_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-113C-FA", "6200035", "29-113C", "Rikken", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-113C_FA_large_eca09868_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-114C-FA", "6200035", "29-114C", "Lenna", "Full Art", "C", "https://images.kupodb.com/tcg/cards/29-114C_FA_large_11bfb349_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-116H-FA", "6200035", "29-116H", "Madeen", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-116H_FA_large_422b2113_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-117H-FA", "6200035", "29-117H", "Ark", "Full Art", "H", "https://images.kupodb.com/tcg/cards/29-117H_FA_large_fdfd9fa9_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-120R-FA", "6200035", "29-120R", "Seymour", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-120R_FA_large_75a4dc8e_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-121R-FA", "6200035", "29-121R", "Wind Drake", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-121R_FA_large_bf0382df_1785778562.webp", null),
+    CatalogCardSeed("6200035-29-122R-FA", "6200035", "29-122R", "Mika", "Full Art", "R", "https://images.kupodb.com/tcg/cards/29-122R_FA_large_799334ea_1785778562.webp", null),
+    CatalogCardSeed("6200035-PR-212-FA", "6200035", "PR-212", "Ramuh (XVI)", "Full Art", "H", "https://images.kupodb.com/tcg/cards/PR-212_29-095H_FA_large_9fa9f528_1787678258.webp", null),
 )

@@ -1,0 +1,48 @@
+package com.tcgportfolio.companion.data
+
+// Winner's Pack 2026-2027 (WI26) - 28.09.2026 aus YGOPRODeck nachgetragen, siehe
+// tools/catalog/generate_yugioh_2026_sets.py.
+val winnersPack20262027SetSeed = CardSetSeed(id = "3600617", name = "Winner's Pack 2026-2027", game = "YuGiOh", totalCards = 40)
+
+val winnersPack20262027CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("3600617-WI26-EN001", "3600617", "WI26-EN001", "Ghost Ogre & Snow Rabbit", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/59438930.jpg"),
+    CatalogCardSeed("3600617-WI26-EN002", "3600617", "WI26-EN002", "Miscellaneousaurus", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/38572779.jpg"),
+    CatalogCardSeed("3600617-WI26-EN003", "3600617", "WI26-EN003", "Ghost Belle & Haunted Mansion", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/73642296.jpg"),
+    CatalogCardSeed("3600617-WI26-EN004", "3600617", "WI26-EN004", "Fantastical Dragon Phantazmay", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/78661338.jpg"),
+    CatalogCardSeed("3600617-WI26-EN005", "3600617", "WI26-EN005", "The Bystial Lubellion", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/32731036.jpg"),
+    CatalogCardSeed("3600617-WI26-EN006", "3600617", "WI26-EN006", "Kashtira Fenrir", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/32909498.jpg"),
+    CatalogCardSeed("3600617-WI26-EN007", "3600617", "WI26-EN007", "Nightmare Apprentice", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/58143852.jpg"),
+    CatalogCardSeed("3600617-WI26-EN008", "3600617", "WI26-EN008", "Fiendsmith Engraver", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/60764609.jpg"),
+    CatalogCardSeed("3600617-WI26-EN009", "3600617", "WI26-EN009", "Mulcharmy Purulia", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/84192580.jpg"),
+    CatalogCardSeed("3600617-WI26-EN010", "3600617", "WI26-EN010", "Mulcharmy Fuwalos", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/42141493.jpg"),
+    CatalogCardSeed("3600617-WI26-EN011", "3600617", "WI26-EN011", "Mulcharmy Meowls", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/87126721.jpg"),
+    CatalogCardSeed("3600617-WI26-EN012", "3600617", "WI26-EN012", "Medius the Pure", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/97556336.jpg"),
+    CatalogCardSeed("3600617-WI26-EN013", "3600617", "WI26-EN013", "Clown Crew Biancaviso", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/82159583.jpg"),
+    CatalogCardSeed("3600617-WI26-EN014", "3600617", "WI26-EN014", "Fydraulis Harmonia", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/70088809.jpg"),
+    CatalogCardSeed("3600617-WI26-EN015", "3600617", "WI26-EN015", "Astrazma Urania", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/18738846.jpg"),
+    CatalogCardSeed("3600617-WI26-EN016", "3600617", "WI26-EN016", "Secreterion Dragon", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/89851827.jpg"),
+    CatalogCardSeed("3600617-WI26-EN017", "3600617", "WI26-EN017", "Hyperinvoked Aeon", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/33166263.jpg"),
+    CatalogCardSeed("3600617-WI26-EN018", "3600617", "WI26-EN018", "Shooting Majestic Star Dragon", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/40939228.jpg"),
+    CatalogCardSeed("3600617-WI26-EN019", "3600617", "WI26-EN019", "Gorgon of Zilofthonia", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/12067160.jpg"),
+    CatalogCardSeed("3600617-WI26-EN020", "3600617", "WI26-EN020", "Harpie's Feather Duster", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/18144507.jpg"),
+    CatalogCardSeed("3600617-WI26-EN021", "3600617", "WI26-EN021", "Terraforming", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/73628505.jpg"),
+    CatalogCardSeed("3600617-WI26-EN022", "3600617", "WI26-EN022", "Super Polymerization", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/48130397.jpg"),
+    CatalogCardSeed("3600617-WI26-EN023", "3600617", "WI26-EN023", "One for One", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/2295440.jpg"),
+    CatalogCardSeed("3600617-WI26-EN024", "3600617", "WI26-EN024", "Shaddoll Fusion", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/44394295.jpg"),
+    CatalogCardSeed("3600617-WI26-EN025", "3600617", "WI26-EN025", "Foolish Burial Goods", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/35726888.jpg"),
+    CatalogCardSeed("3600617-WI26-EN026", "3600617", "WI26-EN026", "Called by the Grave", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/24224830.jpg"),
+    CatalogCardSeed("3600617-WI26-EN027", "3600617", "WI26-EN027", "Crossout Designator", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/65681983.jpg"),
+    CatalogCardSeed("3600617-WI26-EN028", "3600617", "WI26-EN028", "Soul Servant", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/23020408.jpg"),
+    CatalogCardSeed("3600617-WI26-EN029", "3600617", "WI26-EN029", "Triple Tactics Talent", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/25311006.jpg"),
+    CatalogCardSeed("3600617-WI26-EN030", "3600617", "WI26-EN030", "Forbidden Droplet", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/24299458.jpg"),
+    CatalogCardSeed("3600617-WI26-EN031", "3600617", "WI26-EN031", "Duality", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/39973386.jpg"),
+    CatalogCardSeed("3600617-WI26-EN032", "3600617", "WI26-EN032", "Seventh Tachyon", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/7477101.jpg"),
+    CatalogCardSeed("3600617-WI26-EN033", "3600617", "WI26-EN033", "Forbidden Crown", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/98829635.jpg"),
+    CatalogCardSeed("3600617-WI26-EN034", "3600617", "WI26-EN034", "Pot of Sloth", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/98476659.jpg"),
+    CatalogCardSeed("3600617-WI26-EN035", "3600617", "WI26-EN035", "Solemn Strike", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/40605147.jpg"),
+    CatalogCardSeed("3600617-WI26-EN036", "3600617", "WI26-EN036", "Evenly Matched", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/15693423.jpg"),
+    CatalogCardSeed("3600617-WI26-EN037", "3600617", "WI26-EN037", "Infinite Impermanence", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/10045474.jpg"),
+    CatalogCardSeed("3600617-WI26-EN038", "3600617", "WI26-EN038", "Welcome Labrynth", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/5380979.jpg"),
+    CatalogCardSeed("3600617-WI26-EN039", "3600617", "WI26-EN039", "Destructive Daruma Karma Cannon", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/30748475.jpg"),
+    CatalogCardSeed("3600617-WI26-EN040", "3600617", "WI26-EN040", "Solemn Accusation", "Normal", "Ultra Rare", "https://images.ygoprodeck.com/images/cards/78114463.jpg"),
+)

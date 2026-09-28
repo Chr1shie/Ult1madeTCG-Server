@@ -1,6 +1,6 @@
 package com.tcgportfolio.companion.data
 
-val disneyLorcanaPromoCardsSetSeed = CardSetSeed(id = "4500003", name = "Disney Lorcana Promo Cards", game = "Lorcana", totalCards = 125)
+val disneyLorcanaPromoCardsSetSeed = CardSetSeed(id = "4500003", name = "Disney Lorcana Promo Cards", game = "Lorcana", totalCards = 143)
 
 val disneyLorcanaPromoCardsCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("4500003-1-DragonFire", "4500003", "1", "Dragon Fire", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_01d7e6fed9f74da6910769c8b8780f17.avif?1709690747", 67.12),
@@ -128,4 +128,23 @@ val disneyLorcanaPromoCardsCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("4500003-9-BaymaxArmoredCompanion", "4500003", "9", "Baymax - Armored Companion", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_361b2bbfc70b4eb5a934fc18f4653371.avif?1755566144", 82.57),
     CatalogCardSeed("4500003-9-HeiheiBoatSnack", "4500003", "9", "Heihei - Boat Snack", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_34cb2d9dcb664dd590e7122735212e37.avif?1728609660", 8.25),
     CatalogCardSeed("4500003-9-SisuDaringVisitor", "4500003", "9", "Sisu - Daring Visitor", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_a83a5da99ba24518860ad7da3dbe1d02.avif?1773508738", 0.58),
+    // 28.09.: Promo Set 4 (P4, 10) + fehlende Lorcana Challenge Year 3 (C2, 8) aus Lorcast
+    CatalogCardSeed("4500003-7-DaisyDuckParanormalInvestigator", "4500003", "7", "Daisy Duck - Paranormal Investigator", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_3649235bb31d4cf09fcdfa873f660fe3.avif?1789690237", null),
+    CatalogCardSeed("4500003-8-DaisyDuckParanormalInvestigator", "4500003", "8", "Daisy Duck - Paranormal Investigator", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_1923db6966fd4f2991e4dd850de4c627.avif?1789690241", null),
+    CatalogCardSeed("4500003-9-MorphLittleImitator", "4500003", "9", "Morph - Little Imitator", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_fcd5ed5584c345d5a704ae6ca63907d5.avif?1789690186", null),
+    CatalogCardSeed("4500003-10-MeilinLeeLeadVocalist", "4500003", "10", "Meilin Lee - Lead Vocalist", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_c11f3dbe66b641c1b238f59a85d9ad9e.avif?1789690190", null),
+    CatalogCardSeed("4500003-11-RandallBoggsScarySmart", "4500003", "11", "Randall Boggs - Scary Smart", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_0fc8c420ccb540c58dcee61bb7a0f5fd.avif?1789690194", null),
+    CatalogCardSeed("4500003-12-TiggerHunnyBarbarian", "4500003", "12", "Tigger - Hunny Barbarian", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_1db47bd68c9b4567a8aea3e935a1e0df.avif?1789690201", null),
+    CatalogCardSeed("4500003-13-BelleAlwaysReading", "4500003", "13", "Belle - Always Reading", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_5f75f51d10264a9e8df15676a6d012fe.avif?1789690205", null),
+    CatalogCardSeed("4500003-14-IfIDidntHaveYou", "4500003", "14", "If I Didn't Have You", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_5f81d8030a944df18a429df6529b5eb7.avif?1789690209", null),
+    CatalogCardSeed("4500003-15-RapunzelEscapingtheTower", "4500003", "15", "Rapunzel - Escaping the Tower", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_c34200b2cf674408be7b5c850d122434.avif?1789690215", null),
+    CatalogCardSeed("4500003-16-RapunzelEscapingtheTower", "4500003", "16", "Rapunzel - Escaping the Tower", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_d8f350129bf747ba9aaddc15077460c2.avif?1789690219", null),
+    CatalogCardSeed("4500003-4-SimbaPrideProtectorFoil", "4500003", "4", "Simba - Pride Protector (Foil)", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_57f0cec68b0a49d7879d72637f8cb9e5.avif?1776533247", null),
+    CatalogCardSeed("4500003-5-PegasusGiftforHercules", "4500003", "5", "Pegasus - Gift for Hercules", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_6da933a64900487e99028f2a59b09754.avif?1776533253", null),
+    CatalogCardSeed("4500003-9-DragonFire", "4500003", "9", "Dragon Fire", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_f54b0e3b38d340ffa793953c49e6cb56.avif?1776533276", null),
+    CatalogCardSeed("4500003-10-LetItGo", "4500003", "10", "Let It Go", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_bd1327a61be84346b595f07ccf1df0e6.avif?1776533283", null),
+    CatalogCardSeed("4500003-15-StandOut", "4500003", "15", "Stand Out", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_d0049d68c901455c94c76afdd99a2745.avif?1776533289", null),
+    CatalogCardSeed("4500003-16-DownInNewOrleans", "4500003", "16", "Down In New Orleans", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_3334bebad6e7424c80c2b8c0e157f654.avif?1776533296", null),
+    CatalogCardSeed("4500003-17-TheHeadlessHorsemanCursedRider", "4500003", "17", "The Headless Horseman - Cursed Rider", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_f64c2b670af947f8bca5f1ce7a5a88d9.avif?1776533301", null),
+    CatalogCardSeed("4500003-18-TinkerBellInsistentFairy", "4500003", "18", "Tinker Bell - Insistent Fairy", "Normal", "Promo", "https://cards.lorcast.io/card/digital/large/crd_f49776538d7247e998024421be5f5a18.avif?1776533307", null),
 )

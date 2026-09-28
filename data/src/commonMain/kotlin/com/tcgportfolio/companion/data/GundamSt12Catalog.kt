@@ -1,0 +1,38 @@
+package com.tcgportfolio.companion.data
+
+val gundamSt12SetSeed = CardSetSeed(id = "ST12", name = "Raging Onslaught", game = "Gundam", totalCards = 32)
+
+val gundamSt12CatalogSeed: List<CatalogCardSeed> = listOf(
+    CatalogCardSeed("ST12-001", "ST12", "ST12-001", "Gundam Epyon", "Normal", "LR", "https://www.gundam-gcg.com/en/images/cards/card/ST12-001.webp?260917", null),
+    CatalogCardSeed("ST12-001-P1", "ST12", "ST12-001", "Gundam Epyon", "Parallel", "LR +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-001_p1.webp?260917", null),
+    CatalogCardSeed("ST12-002", "ST12", "ST12-002", "Shining Gundam", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-002.webp?260917", null),
+    CatalogCardSeed("ST12-002-P1", "ST12", "ST12-002", "Shining Gundam", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-002_p1.webp?260917", null),
+    CatalogCardSeed("ST12-003", "ST12", "ST12-003", "Tallgeese Ⅲ", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-003.webp?260917", null),
+    CatalogCardSeed("ST12-003-P1", "ST12", "ST12-003", "Tallgeese Ⅲ", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-003_p1.webp?260917", null),
+    CatalogCardSeed("ST12-004", "ST12", "ST12-004", "Gundam Exia", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-004.webp?260917", null),
+    CatalogCardSeed("ST12-004-P1", "ST12", "ST12-004", "Gundam Exia", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-004_p1.webp?260917", null),
+    CatalogCardSeed("ST12-005", "ST12", "ST12-005", "GQuuuuuuX (Omega Psycommu)", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-005.webp?260917", null),
+    CatalogCardSeed("ST12-005-P1", "ST12", "ST12-005", "GQuuuuuuX (Omega Psycommu)", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-005_p1.webp?260917", null),
+    CatalogCardSeed("ST12-006", "ST12", "ST12-006", "Unicorn Gundam 02 Banshee (Destroy Mode)", "Normal", "LR", "https://www.gundam-gcg.com/en/images/cards/card/ST12-006.webp?260917", null),
+    CatalogCardSeed("ST12-006-P1", "ST12", "ST12-006", "Unicorn Gundam 02 Banshee (Destroy Mode)", "Parallel", "LR +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-006_p1.webp?260917", null),
+    CatalogCardSeed("ST12-007", "ST12", "ST12-007", "Gyan", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-007.webp?260917", null),
+    CatalogCardSeed("ST12-007-P1", "ST12", "ST12-007", "Gyan", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-007_p1.webp?260917", null),
+    CatalogCardSeed("ST12-008", "ST12", "ST12-008", "Efreet Schneid", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-008.webp?260917", null),
+    CatalogCardSeed("ST12-008-P1", "ST12", "ST12-008", "Efreet Schneid", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-008_p1.webp?260917", null),
+    CatalogCardSeed("ST12-009", "ST12", "ST12-009", "Unicorn Gundam 02 Banshee (Unicorn Mode)", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-009.webp?260917", null),
+    CatalogCardSeed("ST12-009-P1", "ST12", "ST12-009", "Unicorn Gundam 02 Banshee (Unicorn Mode)", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-009_p1.webp?260917", null),
+    CatalogCardSeed("ST12-010", "ST12", "ST12-010", "Slash Zaku Phantom", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-010.webp?260917", null),
+    CatalogCardSeed("ST12-010-P1", "ST12", "ST12-010", "Slash Zaku Phantom", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-010_p1.webp?260917", null),
+    CatalogCardSeed("ST12-011", "ST12", "ST12-011", "Milliardo Peacecraft", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-011.webp?260917", null),
+    CatalogCardSeed("ST12-011-P1", "ST12", "ST12-011", "Milliardo Peacecraft", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-011_p1.webp?260917", null),
+    CatalogCardSeed("ST12-012", "ST12", "ST12-012", "Ple-Twelve", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-012.webp?260917", null),
+    CatalogCardSeed("ST12-012-P1", "ST12", "ST12-012", "Ple-Twelve", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-012_p1.webp?260917", null),
+    CatalogCardSeed("ST12-013", "ST12", "ST12-013", "The Final Victor", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-013.webp?260917", null),
+    CatalogCardSeed("ST12-013-P1", "ST12", "ST12-013", "The Final Victor", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-013_p1.webp?260917", null),
+    CatalogCardSeed("ST12-014", "ST12", "ST12-014", "Wise Leader's Pride", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-014.webp?260917", null),
+    CatalogCardSeed("ST12-014-P1", "ST12", "ST12-014", "Wise Leader's Pride", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-014_p1.webp?260917", null),
+    CatalogCardSeed("ST12-015", "ST12", "ST12-015", "Two Unicorns", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-015.webp?260917", null),
+    CatalogCardSeed("ST12-015-P1", "ST12", "ST12-015", "Two Unicorns", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-015_p1.webp?260917", null),
+    CatalogCardSeed("ST12-016", "ST12", "ST12-016", "Libra", "Normal", "C", "https://www.gundam-gcg.com/en/images/cards/card/ST12-016.webp?260917", null),
+    CatalogCardSeed("ST12-016-P1", "ST12", "ST12-016", "Libra", "Parallel", "C +", "https://www.gundam-gcg.com/en/images/cards/card/ST12-016_p1.webp?260917", null),
+)

@@ -54,6 +54,7 @@ import io.ktor.server.websocket.timeout
 import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -788,7 +789,14 @@ fun Application.ult1madeServerModule() {
             imagePrefetchRunning.set(false)
         }
     }
+    // Startreihenfolge (28.09.): Preis-/Regel-Abgleiche und Bild-Prefetch
+    // schreiben ebenfalls in die Datenbank und brauchen ohnehin den fertigen
+    // Katalog (sie ordnen ihre Daten Katalogkarten zu). Liefen sie parallel
+    // zum Seed, kollidierten die Transaktionen mit SQLITE_BUSY und der Seed
+    // verlor still zufällige Sets - deshalb warten sie auf dieses Signal.
+    val catalogSeeded = CompletableDeferred<Unit>()
     launch {
+        catalogSeeded.await()
         while (true) {
             prefetchOwnedImagesOnce()
             delay(6 * 60 * 60 * 1000L)
@@ -828,6 +836,8 @@ fun Application.ult1madeServerModule() {
             logger.info("Katalog-Seed geprüft/aktualisiert in ${System.currentTimeMillis() - seedStart}ms")
         } catch (e: Exception) {
             logger.warn("Katalog-Seed fehlgeschlagen: ${e.message}")
+        } finally {
+            catalogSeeded.complete(Unit)
         }
     }
     // Nachrüsten der stabilen Wunschlisten-uid für Listen, die vor Einführung
@@ -853,6 +863,7 @@ fun Application.ult1madeServerModule() {
     // der (anders als die App) oft wochenlang am Stück durchläuft, "täglich"
     // nie erneut auslösen.
     launch {
+        catalogSeeded.await()
         while (true) {
             try {
                 refreshCardmarketPricesIfStale(repository)
@@ -868,6 +879,7 @@ fun Application.ult1madeServerModule() {
     // seltener als Preise), derselbe "eigene Endlosschleife statt nur
     // Start-Check"-Grund wie beim Cardmarket-Abgleich oben.
     launch {
+        catalogSeeded.await()
         while (true) {
             try {
                 refreshPokemonCardRulesIfStale(repository)
@@ -882,6 +894,7 @@ fun Application.ult1madeServerModule() {
     // hinbekommen") - siehe DbfwCardRulesSync.kt, gleiches Muster wie beim
     // Pokémon-Regel-Abgleich oben (eigene, unabhängige monatliche Schleife).
     launch {
+        catalogSeeded.await()
         while (true) {
             try {
                 refreshDbfwCardRulesIfStale(repository)

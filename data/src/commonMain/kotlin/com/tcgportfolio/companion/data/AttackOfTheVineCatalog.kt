@@ -9,7 +9,7 @@ package com.tcgportfolio.companion.data
 // geändert, NICHT die id (bleibt "4500018-N/204") - die id ist der
 // Datenbank-Primärschlüssel, ein Ändern hätte bereits vom Nutzer
 // hinzugefügte Karten dieses Sets von ihrem Katalogeintrag getrennt.
-val attackOfTheVineSetSeed = CardSetSeed(id = "4500018", name = "Attack of the Vine!", game = "Lorcana", totalCards = 244)
+val attackOfTheVineSetSeed = CardSetSeed(id = "4500018", name = "Attack of the Vine!", game = "Lorcana", totalCards = 251)
 
 val attackOfTheVineCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("4500018-1/204", "4500018", "1/207", "Woody - Helping a Friend", "Normal", "Rare", "https://cards.lorcast.io/card/digital/large/crd_1792f6aa4efe42ce93bd680da01f7016.avif?1783188235", 1.2),
@@ -256,4 +256,12 @@ val attackOfTheVineCatalogSeed: List<CatalogCardSeed> = listOf(
     CatalogCardSeed("4500018-97/204", "4500018", "97/207", "Mushu - Stealthy Dragon", "Normal", "Legendary", "https://cards.lorcast.io/card/digital/large/crd_bf600b734e644e82ab7a90529c6f0cb8.avif?1783188871", 9.14),
     CatalogCardSeed("4500018-98/204", "4500018", "98/207", "Carl Fredricksen & Russell - Intrepid Explorers", "Normal", "Rare", "https://cards.lorcast.io/card/digital/large/crd_a11ca900e22b4319a66e50fe7cb8c504.avif?1783188875", 0.5088),
     CatalogCardSeed("4500018-99/204", "4500018", "99/207", "Mickey Mouse & Minnie Mouse - Adventuring Duo", "Normal", "Legendary", "https://cards.lorcast.io/card/digital/large/crd_a02034ec2089499f81f2038b33ca473a.avif?1783188879", 4.86),
+    // 28.09.: 7 fehlende Karten nachgetragen (Lorcast Set 13) - id-Nenner 204 wie oben, number 207
+    CatalogCardSeed("4500018-32/204", "4500018", "32/207", "If I Didn't Have You", "Normal", "Common", "https://cards.lorcast.io/card/digital/large/crd_93ddde65a0ac4c4aa83ef2418e5472ae.avif?1783188546", null),
+    CatalogCardSeed("4500018-78/204", "4500018", "78/207", "Gopher - Hunny Cook", "Normal", "Rare", "https://cards.lorcast.io/card/digital/large/crd_2775897b3f6f41599550c6264cc831a2.avif?1783188775", null),
+    CatalogCardSeed("4500018-105/204", "4500018", "105/207", "Potato", "Normal", "Common", "https://cards.lorcast.io/card/digital/large/crd_11e7ec08264e4f45b0859b62bb6db93e.avif?1783188910", null),
+    CatalogCardSeed("4500018-138/204", "4500018", "138/207", "It's Gonna Be Great!", "Normal", "Common", "https://cards.lorcast.io/card/digital/large/crd_e166ee85c2ff44e6bf459362216daa62.avif?1783189107", null),
+    CatalogCardSeed("4500018-176/204", "4500018", "176/207", "Violet Parr - Super Resilient", "Normal", "Super Rare", "https://cards.lorcast.io/card/digital/large/crd_42efa28cb93746cf9a64e8b2929ef069.avif?1783189702", null),
+    CatalogCardSeed("4500018-180/204", "4500018", "180/207", "Stitch - Protector of Frogs", "Normal", "Common", "https://cards.lorcast.io/card/digital/large/crd_8563c315711c4f45828a59cfdde2a31f.avif?1783189723", null),
+    CatalogCardSeed("4500018-233/204", "4500018", "233/207", "Peter Pan & Tinker Bell - Fast Friends", "Normal", "Enchanted", "https://cards.lorcast.io/card/digital/large/crd_c53298466f7e478ea0b117f26bf7c1d9.avif?1783190724", null),
 )
