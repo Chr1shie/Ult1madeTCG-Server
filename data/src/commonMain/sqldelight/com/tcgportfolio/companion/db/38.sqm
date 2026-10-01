@@ -1,0 +1,7 @@
+-- Index auf das Set (01.10., Gerätetest auf einem älteren Xiaomi: "Katalog
+-- wird geladen" stand über eine Minute). getAllCatalog() fragt je Set
+-- selectCatalogForSet ab (~1.000 Abfragen), und ohne Index durchsuchte jede
+-- davon alle ~157.000 Karten - gemessen 68 s auf dem Testgerät. Mit Index
+-- (inkl. Sortierspalten der Abfrage) liest jede Abfrage nur ihre eigenen
+-- Zeilen in der richtigen Reihenfolge.
+CREATE INDEX IF NOT EXISTS CardCatalogEntity_set_number ON CardCatalogEntity(setId, number, variant);

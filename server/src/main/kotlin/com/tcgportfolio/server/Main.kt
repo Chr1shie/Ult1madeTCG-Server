@@ -1193,7 +1193,10 @@ fun Application.ult1madeServerModule() {
             // für Gundam, höchstens 1x täglich je Set (refreshTcgplayerPrices
             // filtert selbst nach Quelle und Alter)
             runCatching {
-                refreshTcgplayerPrices(repository, tcgplayerGroupIdsForCards(repository.getCatalogForSet(setId).map { it.id }), onlyExtra = true)
+                val setGame = repository.getCardSets().firstOrNull { it.id == setId }?.game
+                if (setGame != null) {
+                    refreshTcgplayerPrices(repository, tcgplayerGroupIdsForCards(repository.getCatalogForSet(setId).map { it.id }, setGame), onlyExtra = true)
+                }
             }
             val cards = repository.getCatalogForSet(setId).map {
                 CatalogCardResponse(

@@ -1,7 +1,8 @@
 package com.tcgportfolio.companion
 
+import com.tcgportfolio.companion.data.tcgplayerCategoryGames
 import com.tcgportfolio.companion.data.tcgplayerGroupCategories
-import com.tcgportfolio.companion.data.tcgplayerMappingChunks
+import com.tcgportfolio.companion.data.tcgplayerMappingByGame
 import com.tcgportfolio.companion.data.tcgplayerSealedMappingChunks
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -48,7 +49,17 @@ private const val TCGPLAYER_MAX_AGE_MILLIS = 20L * 60 * 60 * 1000
 
 data class TcgplayerMappingEntry(val groupId: Int, val productId: Int, val subType: String)
 
+// Zuordnung je Spiel (01.10., Gerätetest auf einem älteren Xiaomi: beim
+// Start wurden alle 140.000 Zeilen eingelesen - auch im Euro-Modus nur wegen
+// Gundam - und machten den ohnehin knappen Speicher noch knapper). Jetzt wird
+// nur das Spiel geparst, das gerade gebraucht wird (lazy, threadsicher).
 object TcgplayerMapping {
+    private class GameMapping(val cards: Map<String, TcgplayerMappingEntry>) {
+        val byGroup: Map<Int, List<Pair<String, TcgplayerMappingEntry>>> by lazy {
+            cards.entries.groupBy({ it.value.groupId }, { it.key to it.value })
+        }
+    }
+
     private fun parse(chunks: List<String>): Map<String, TcgplayerMappingEntry> {
         val map = HashMap<String, TcgplayerMappingEntry>()
         for (chunk in chunks) {
@@ -63,11 +74,9 @@ object TcgplayerMapping {
         return map
     }
 
-    private val cards: Map<String, TcgplayerMappingEntry> by lazy { parse(tcgplayerMappingChunks) }
+    private val games: Map<String, Lazy<GameMapping>> =
+        tcgplayerMappingByGame.mapValues { (_, chunks) -> lazy { GameMapping(parse(chunks)) } }
     private val sealed: Map<String, TcgplayerMappingEntry> by lazy { parse(tcgplayerSealedMappingChunks) }
-    private val cardsByGroup: Map<Int, List<Pair<String, TcgplayerMappingEntry>>> by lazy {
-        cards.entries.groupBy({ it.value.groupId }, { it.key to it.value })
-    }
     private val sealedByGroup: Map<Int, List<Pair<String, TcgplayerMappingEntry>>> by lazy {
         sealed.entries.groupBy({ it.value.groupId }, { it.key to it.value })
     }
@@ -78,9 +87,11 @@ object TcgplayerMapping {
         }.toMap()
     }
 
-    fun card(cardId: String): TcgplayerMappingEntry? = cards[cardId]
+    fun gameOfGroup(groupId: Int): String? = groupCategory[groupId]?.let { tcgplayerCategoryGames[it] }
+    fun card(cardId: String, game: String): TcgplayerMappingEntry? = games[game]?.value?.cards?.get(cardId)
     fun sealed(sealedId: String): TcgplayerMappingEntry? = sealed[sealedId]
-    fun cardsInGroup(groupId: Int) = cardsByGroup[groupId].orEmpty()
+    fun cardsInGroup(groupId: Int): List<Pair<String, TcgplayerMappingEntry>> =
+        gameOfGroup(groupId)?.let { games[it]?.value?.byGroup?.get(groupId) }.orEmpty()
     fun sealedInGroup(groupId: Int) = sealedByGroup[groupId].orEmpty()
 }
 
@@ -139,11 +150,12 @@ suspend fun refreshTcgplayerPrices(
     force: Boolean = false,
     onProgress: ((done: Int, total: Int) -> Unit)? = null
 ): Int {
-    // Bei Euro-Anzeige nur die Spiele ohne Cardmarket-Preise (TCGPLAYER_ONLY_GAMES)
+    // Bei Euro-Anzeige nur die Spiele ohne Cardmarket-Preise (TCGPLAYER_ONLY_GAMES) -
+    // dann wird auch nur deren Zuordnung eingelesen, nicht die aller Spiele
     val allGames = repository.getSetting(PRICE_SOURCE_SETTING_KEY) == PRICE_SOURCE_TCGPLAYER
-    val onlyCategories = TCGPLAYER_ONLY_GAMES.values.toSet()
-    val wanted = (if (onlyExtra) extraGroupIds else repository.tcgplayerRelevantGroupIds() + extraGroupIds)
-        .filter { allGames || TcgplayerMapping.groupCategory[it] in onlyCategories }
+    val gameFilter: Set<String>? = if (allGames) null else TCGPLAYER_ONLY_GAMES.keys
+    val wanted = (if (onlyExtra) extraGroupIds else repository.tcgplayerRelevantGroupIds(gameFilter) + extraGroupIds)
+        .filter { gameFilter == null || TcgplayerMapping.gameOfGroup(it) in gameFilter }
     val fetched = repository.tcgplayerGroupFetchTimes()
     val now = currentTimeMillis()
     val due = wanted.filter { gid ->
@@ -167,5 +179,5 @@ suspend fun refreshTcgplayerPrices(
 
 // Beim Wechsel der Preisquelle und für das gerade geöffnete Set - die
 // Gruppen der Karten eines Sets
-fun tcgplayerGroupIdsForCards(cardIds: Collection<String>): Set<Int> =
-    cardIds.mapNotNull { TcgplayerMapping.card(it)?.groupId }.toSet()
+fun tcgplayerGroupIdsForCards(cardIds: Collection<String>, game: String): Set<Int> =
+    cardIds.mapNotNull { TcgplayerMapping.card(it, game)?.groupId }.toSet()

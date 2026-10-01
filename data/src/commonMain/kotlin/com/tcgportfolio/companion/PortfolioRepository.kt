@@ -4061,11 +4061,15 @@ lostThunderSetSeed to lostThunderCatalogSeed,
 
     // Gruppen (= TCGplayer-Sets) aller Karten/Produkte, deren Preis der
     // Nutzer sieht: Sammlung, Wants, Binder, Decks, Vault (alle Accounts)
-    fun tcgplayerRelevantGroupIds(): Set<Int> {
-        val cardIds = dbQueries.selectPriceRelevantCardIds().executeAsList().mapNotNull { it }
-        val sealedIds = dbQueries.selectPriceRelevantSealedIds().executeAsList().mapNotNull { it }
-        return cardIds.mapNotNull { TcgplayerMapping.card(it)?.groupId }.toSet() +
-            sealedIds.mapNotNull { TcgplayerMapping.sealed(it)?.groupId }.toSet()
+    // games (01.10.): nur diese Spiele betrachten (Euro-Modus: nur Gundam) -
+    // dann wird auch nur deren Zuordnung eingelesen
+    fun tcgplayerRelevantGroupIds(games: Set<String>? = null): Set<Int> {
+        val cards = dbQueries.selectPriceRelevantCards().executeAsList()
+            .filter { games == null || it.game in games }
+        val sealed = dbQueries.selectPriceRelevantSealed().executeAsList()
+            .filter { games == null || it.game in games }
+        return cards.mapNotNull { TcgplayerMapping.card(it.cardId, it.game)?.groupId }.toSet() +
+            sealed.mapNotNull { TcgplayerMapping.sealed(it.catalogId)?.groupId }.toSet()
     }
 
     fun tcgplayerGroupFetchTimes(): Map<Int, Long> =

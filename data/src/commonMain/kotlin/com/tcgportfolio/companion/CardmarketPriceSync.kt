@@ -326,9 +326,11 @@ suspend fun fetchCardmarketProductList(gameId: Int = CARDMARKET_DBFW_GAME_ID, si
 // bringen. Lädt inzwischen alle 10 TCGs (~100 MB in Summe) - auf dem Handy
 // ggf. relevant fürs mobile Datenvolumen, aber unverändert bewusst NICHT
 // awaited (siehe Aufrufer in App.kt/Main.kt), verzögert also nichts.
-suspend fun refreshCardmarketPricesIfStale(repository: PortfolioRepository) {
+// Rückgabe (01.10.): true, wenn tatsächlich abgeglichen wurde - die App lädt
+// den Katalog nur dann neu
+suspend fun refreshCardmarketPricesIfStale(repository: PortfolioRepository): Boolean {
     val lastUpdated = repository.getSetting("cardmarketPricesUpdatedAt")?.toLongOrNull() ?: 0L
-    if (currentTimeMillis() - lastUpdated < ONE_DAY_MILLIS) return
+    if (currentTimeMillis() - lastUpdated < ONE_DAY_MILLIS) return false
     for ((game, gameId) in CARDMARKET_GAME_IDS) {
         // Das Preisverzeichnis (price_guide_$gameId.json) deckt Einzelkarten
         // UND Sealed-Produkte gemeinsam ab (ein idProduct-Namensraum) - EIN
@@ -361,4 +363,5 @@ suspend fun refreshCardmarketPricesIfStale(repository: PortfolioRepository) {
         }
     }
     repository.setSetting("cardmarketPricesUpdatedAt", currentTimeMillis().toString())
+    return true
 }

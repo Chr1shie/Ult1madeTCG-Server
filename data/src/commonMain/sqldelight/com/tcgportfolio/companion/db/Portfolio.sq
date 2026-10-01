@@ -796,6 +796,10 @@ SELECT * FROM CustomCardPhotoEntity WHERE cardId = ? LIMIT 1;
 selectCatalogCardsWithPriceSelection:
 SELECT * FROM CardCatalogEntity WHERE marketPriceEurSelectedIndex IS NOT NULL;
 
+-- Index für selectCatalogForSet (01.10., siehe 38.sqm) - ohne ihn durchsuchte
+-- jede der ~1.000 Set-Abfragen beim Start alle ~157.000 Karten
+CREATE INDEX IF NOT EXISTS CardCatalogEntity_set_number ON CardCatalogEntity(setId, number, variant);
+
 selectCatalogForSet:
 SELECT * FROM CardCatalogEntity WHERE setId = ? ORDER BY number, variant;
 
@@ -1043,15 +1047,24 @@ INSERT OR REPLACE INTO TcgplayerGroupFetch(groupId, fetchedAt) VALUES (?, ?);
 
 -- Karten/Produkte, deren Preis der Nutzer tatsächlich sieht (Sammlung, Wants,
 -- Binder, Decks, Vault) - nur deren TCGplayer-Gruppen werden täglich abgeholt
-selectPriceRelevantCardIds:
-SELECT cardId FROM PortfolioItemEntity WHERE cardId IS NOT NULL
-UNION SELECT cardId FROM WishlistItemEntity WHERE cardId IS NOT NULL
-UNION SELECT cardId FROM BinderItemEntity WHERE cardId IS NOT NULL
-UNION SELECT cardId FROM DeckCardEntity;
+selectPriceRelevantCards:
+SELECT CardCatalogEntity.id AS cardId, CardSet.game AS game
+FROM CardCatalogEntity
+JOIN CardSet ON CardCatalogEntity.setId = CardSet.id
+WHERE CardCatalogEntity.id IN (
+    SELECT cardId FROM PortfolioItemEntity WHERE cardId IS NOT NULL
+    UNION SELECT cardId FROM WishlistItemEntity WHERE cardId IS NOT NULL
+    UNION SELECT cardId FROM BinderItemEntity WHERE cardId IS NOT NULL
+    UNION SELECT cardId FROM DeckCardEntity
+);
 
-selectPriceRelevantSealedIds:
-SELECT catalogId FROM SealedProductEntity WHERE catalogId IS NOT NULL
-UNION SELECT catalogId FROM SealedWishlistItemEntity;
+selectPriceRelevantSealed:
+SELECT SealedCatalogEntity.id AS catalogId, SealedCatalogEntity.game AS game
+FROM SealedCatalogEntity
+WHERE SealedCatalogEntity.id IN (
+    SELECT catalogId FROM SealedProductEntity WHERE catalogId IS NOT NULL
+    UNION SELECT catalogId FROM SealedWishlistItemEntity
+);
 
 -- Cardmarket-EUR-Preis für Sealed-Produkte (03.08.), siehe Kommentar bei
 -- SealedCatalogEntity/19.sqm - eigene Abfrage statt updateSealedCatalogPrice
