@@ -3,7 +3,7 @@ package com.tcgportfolio.companion.data
 val bossDeckChaosSetSeed = CardSetSeed(id = "6200003", name = "Boss Deck: Chaos", game = "FinalFantasy", totalCards = 28)
 
 val bossDeckChaosCatalogSeed: List<CatalogCardSeed> = listOf(
-    CatalogCardSeed("6200003-7-034L", "6200003", "7-034L", "Sephiroth (Full Art)", "Normal", "Legend", "https://images.kupodb.com/tcg/cards/7-034L_large_8ede8d0d_1776929314.webp", 6.29),
+    CatalogCardSeed("6200003-7-034L", "6200003", "7-034L", "Sephiroth (Full Art)", "Normal", "Legend", "https://images.kupodb.com/tcg/cards/7-034L_FA_large_674fb6cb_1776929515.webp", 6.29),
     CatalogCardSeed("6200003-B-001", "6200003", "B-001", "Chaos", "Normal", "None", "https://images.kupodb.com/tcg/cards/B-001_large_dbaeeb6d_1776839512.webp", 1.25),
     CatalogCardSeed("6200003-B-002", "6200003", "B-002", "Spiritus", "Normal", "None", "https://images.kupodb.com/tcg/cards/B-002_large_166d8b6b_1776839512.webp", 1.0),
     CatalogCardSeed("6200003-B-003", "6200003", "B-003", "Garland (B-003)", "Normal", "None", "https://images.kupodb.com/tcg/cards/B-003_large_225527db_1776839512.webp", 1.0),

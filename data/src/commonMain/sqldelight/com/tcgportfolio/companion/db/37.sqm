@@ -1,0 +1,14 @@
+-- TCGplayer-Preise für US-Nutzer (30.09., Nutzer-Vorgabe "Über 70% ... aus den
+-- USA. Die können mit Cardmarket-Preisen in Euro nichts anfangen"): die seit
+-- dem 03.08. ungenutzte Alt-Spalte marketPriceUsd trägt ab jetzt den FRISCHEN
+-- TCGplayer-Marktpreis (Quelle TCGCSV, siehe TcgplayerPriceSync.kt). Die
+-- alten Seed-Werte darin sind veraltet und oft der Foil-/Reverse-Preis ->
+-- geleert, lieber kein Preis als ein falscher.
+UPDATE CardCatalogEntity SET marketPriceUsd = NULL;
+UPDATE SealedCatalogEntity SET marketPriceUsd = NULL;
+
+-- Wann welche TCGplayer-Gruppe (= Set) zuletzt abgeholt wurde (max. 1x/Tag)
+CREATE TABLE TcgplayerGroupFetch (
+    groupId INTEGER NOT NULL PRIMARY KEY,
+    fetchedAt INTEGER NOT NULL
+);

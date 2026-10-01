@@ -754,7 +754,7 @@ SELECT COUNT(*) FROM CardCatalogEntity WHERE setId = ?;
 -- Eternity), wandert so auch auf bestehenden Installationen mit um.
 updateCatalogSeedFields:
 UPDATE CardCatalogEntity
-SET setId = ?, number = ?, name = ?, variant = ?, rarity = ?, imageUrl = ?, marketPriceUsd = ?, cardmarketId = COALESCE(?, cardmarketId)
+SET setId = ?, number = ?, name = ?, variant = ?, rarity = ?, imageUrl = ?, cardmarketId = COALESCE(?, cardmarketId)
 WHERE id = ?;
 
 updateCatalogEurPrice:
@@ -938,7 +938,9 @@ SELECT
     SealedCatalogEntity.name AS name,
     SealedCatalogEntity.category AS category,
     SealedCatalogEntity.imageUrl AS imageUrl,
-    SealedCatalogEntity.marketPriceEur AS marketPriceEur
+    SealedCatalogEntity.marketPriceEur AS marketPriceEur,
+    -- TCGplayer-Preis (30.09., siehe 37.sqm)
+    SealedCatalogEntity.marketPriceUsd AS marketPriceUsd
 FROM SealedWishlistItemEntity
 LEFT JOIN SealedCatalogEntity ON SealedWishlistItemEntity.catalogId = SealedCatalogEntity.id
 WHERE SealedWishlistItemEntity.game = ? AND SealedWishlistItemEntity.accountId = ?
@@ -957,6 +959,22 @@ WHERE SealedWishlistItemEntity.accountId = ?
   AND SealedWishlistItemEntity.priceAlarmEur IS NOT NULL
   AND SealedCatalogEntity.marketPriceEur IS NOT NULL
   AND SealedCatalogEntity.marketPriceEur <= SealedWishlistItemEntity.priceAlarmEur;
+
+-- Dasselbe mit dem TCGplayer-Preis, wenn Dollar gewählt ist (30.09.) - der
+-- Alarm-Schwellwert gilt dann als Dollar-Betrag
+selectTriggeredSealedAlarmsUsd:
+SELECT
+    SealedWishlistItemEntity.id AS id,
+    SealedWishlistItemEntity.game AS game,
+    SealedWishlistItemEntity.priceAlarmEur AS priceAlarmEur,
+    SealedCatalogEntity.name AS name,
+    SealedCatalogEntity.marketPriceUsd AS marketPriceEur
+FROM SealedWishlistItemEntity
+JOIN SealedCatalogEntity ON SealedWishlistItemEntity.catalogId = SealedCatalogEntity.id
+WHERE SealedWishlistItemEntity.accountId = ?
+  AND SealedWishlistItemEntity.priceAlarmEur IS NOT NULL
+  AND SealedCatalogEntity.marketPriceUsd IS NOT NULL
+  AND SealedCatalogEntity.marketPriceUsd <= SealedWishlistItemEntity.priceAlarmEur;
 
 insertSealedWishlistItem:
 INSERT INTO SealedWishlistItemEntity(game, catalogId, createdAt, accountId, wishlistId) VALUES (?, ?, ?, ?, ?);
@@ -1004,8 +1022,36 @@ insertSealedCatalogEntry:
 INSERT OR IGNORE INTO SealedCatalogEntity(id, name, category, game, imageUrl, marketPriceUsd)
 VALUES (?, ?, ?, ?, ?, ?);
 
+-- marketPriceUsd = TCGplayer-Marktpreis (30.09., siehe 37.sqm/TcgplayerPriceSync.kt)
 updateSealedCatalogPrice:
 UPDATE SealedCatalogEntity SET marketPriceUsd = ? WHERE id = ?;
+
+updateCatalogUsdPrice:
+UPDATE CardCatalogEntity SET marketPriceUsd = ? WHERE id = ?;
+
+-- TCGplayer-Abholzeitpunkte je Gruppe (30.09., siehe 37.sqm)
+CREATE TABLE TcgplayerGroupFetch (
+    groupId INTEGER NOT NULL PRIMARY KEY,
+    fetchedAt INTEGER NOT NULL
+);
+
+selectTcgplayerGroupFetches:
+SELECT * FROM TcgplayerGroupFetch;
+
+upsertTcgplayerGroupFetch:
+INSERT OR REPLACE INTO TcgplayerGroupFetch(groupId, fetchedAt) VALUES (?, ?);
+
+-- Karten/Produkte, deren Preis der Nutzer tatsächlich sieht (Sammlung, Wants,
+-- Binder, Decks, Vault) - nur deren TCGplayer-Gruppen werden täglich abgeholt
+selectPriceRelevantCardIds:
+SELECT cardId FROM PortfolioItemEntity WHERE cardId IS NOT NULL
+UNION SELECT cardId FROM WishlistItemEntity WHERE cardId IS NOT NULL
+UNION SELECT cardId FROM BinderItemEntity WHERE cardId IS NOT NULL
+UNION SELECT cardId FROM DeckCardEntity;
+
+selectPriceRelevantSealedIds:
+SELECT catalogId FROM SealedProductEntity WHERE catalogId IS NOT NULL
+UNION SELECT catalogId FROM SealedWishlistItemEntity;
 
 -- Cardmarket-EUR-Preis für Sealed-Produkte (03.08.), siehe Kommentar bei
 -- SealedCatalogEntity/19.sqm - eigene Abfrage statt updateSealedCatalogPrice

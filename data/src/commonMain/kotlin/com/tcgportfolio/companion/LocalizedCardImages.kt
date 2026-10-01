@@ -68,6 +68,11 @@ object LocalizedCardImages {
         return when {
             imageUrl.startsWith(TCGDEX_EN_PREFIX) ->
                 TCGDEX_DE_PREFIX + imageUrl.removePrefix(TCGDEX_EN_PREFIX)
+            // FFTCG-Sonderdrucke (29.09., siehe fix_finalfantasy_variant_images.py):
+            // Full Art/Signature/Noir/Alternate-Art-Promo haben ein eigenes
+            // KupoDB-Bild - die deutsche CDN-Adresse aus der Kartennummer wäre
+            // die NORMALE Karte, deshalb hier kein deutsches Bild
+            imageUrl.startsWith(KUPODB_PREFIX) && kupodbSpecialPrintRegex.containsMatchIn(imageUrl) -> null
             imageUrl.startsWith(FFTCG_CDN_PREFIX) || imageUrl.startsWith(KUPODB_PREFIX) -> {
                 // Katalog-Id "6200035-29-001R" -> Kartennummer "29-001R"
                 // (KupoDB-Set-Ids sind rein numerisch, ohne Bindestrich)
@@ -121,7 +126,8 @@ object LocalizedCardImages {
     fun englishSourceUrl(url: String): String? =
         if (url.startsWith(TCGDEX_DE_PREFIX)) TCGDEX_EN_PREFIX + url.removePrefix(TCGDEX_DE_PREFIX) else null
 
-    private val fftcgGermanUrlRegex = Regex("^https://fftcg\\.cdn\\.sewest\\.net/images/cards/full/[A-Za-z0-9-]{3,12}_de\\.jpg$")
+    private val kupodbSpecialPrintRegex = Regex("/cards/(PR-\\d+_\\d|[^/]*_(FA|SIG|NOIR)_large)")
+    private val fftcgGermanUrlRegex =Regex("^https://fftcg\\.cdn\\.sewest\\.net/images/cards/full/[A-Za-z0-9-]{3,12}_de\\.jpg$")
     private val scryfallUrlRegex = Regex("^https://cards\\.scryfall\\.io/large/front/[0-9a-f]/[0-9a-f]/([0-9a-f-]{36})\\.jpg(\\?\\d+)?$")
     private val alteredGermanUrlRegex = Regex("^https://raw\\.githubusercontent\\.com/AlteredEquinox/cards-nonunique/main/assets/[A-Z0-9]+/CARDS/[A-Z0-9_]+/de_DE/([0-9a-f]{32})\\.jpg$")
     private val mtgDeImageIds: Set<String> by lazy { mtgDe.values.map { it.substringBefore(' ') }.toHashSet() }

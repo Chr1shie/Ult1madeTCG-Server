@@ -2587,7 +2587,11 @@ private const val CATALOG_SEED_VERSION_KEY = "catalogSeedVersion"
 // 6200037 (teilte 6200035 mit Blissful Eternity), DBFW Story Booster
 // ST01-001..016 -> FS01B-ST01-0xx (teilten die Ids mit Gundam ST01, siehe
 // migrateStoryBoosterCardIds), SWU SOR/SHD-Foil-Bilder repariert.
-private const val CATALOG_SEED_VERSION = 40
+// 29.09. (41): FFTCG-Sonderdrucke mit eigenem Bild - 224 Full-Art-/
+// Signature-/Noir-/Alternate-Art-Einträge zeigten das Bild der Normalkarte
+// (Hinweis aus r/FinalFantasyTCG zu "Yuna (Signature)"), siehe
+// tools/catalog/fix_finalfantasy_variant_images.py.
+private const val CATALOG_SEED_VERSION = 41
 
 private const val SEALED_CATALOG_SEED_VERSION_KEY = "sealedCatalogSeedVersion"
 // 2 (11.08.): Pokemon Elite Trainer Boxes von Alt-CDN-Produktfotos auf
@@ -3891,7 +3895,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         variant = card.variant,
                         rarity = card.rarity,
                         imageUrl = card.imageUrl,
-                        marketPriceUsd = card.marketPriceUsd,
+                        // marketPriceUsd = TCGplayer-Live-Preis (30.09., siehe 37.sqm) - Seed-Werte veraltet
+                        marketPriceUsd = null,
                         cardmarketId = card.cardmarketId
                     )
                 }
@@ -3903,7 +3908,6 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                         variant = card.variant,
                         rarity = card.rarity,
                         imageUrl = card.imageUrl,
-                        marketPriceUsd = card.marketPriceUsd,
                         // SQLDelight kann den COALESCE(?, cardmarketId)-Parameter nicht
                         // benennen (kein direkter Spalten-Bezug) - generierter Name ist
                         // schlicht "value", siehe PortfolioQueries.kt.
@@ -3933,7 +3937,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     variant = card.variant,
                     rarity = card.rarity,
                     imageUrl = card.imageUrl,
-                    marketPriceUsd = card.marketPriceUsd,
+                    marketPriceUsd = null,
                     cardmarketId = card.cardmarketId
                 )
                 val inserted = if (checkMovedCards) dbQueries.lastStatementChanges().executeAsOne() else 1L
@@ -3948,7 +3952,6 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     variant = card.variant,
                     rarity = card.rarity,
                     imageUrl = card.imageUrl,
-                    marketPriceUsd = card.marketPriceUsd,
                     value = card.cardmarketId,
                     id = card.id
                 )
@@ -4025,9 +4028,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                     category = entry.category,
                     game = entry.game,
                     imageUrl = entry.imageUrl,
-                    marketPriceUsd = entry.marketPriceUsd
+                    // marketPriceUsd = TCGplayer-Live-Preis (30.09., siehe 37.sqm), nicht mehr aus dem Seed
+                    marketPriceUsd = null
                 )
-                dbQueries.updateSealedCatalogPrice(marketPriceUsd = entry.marketPriceUsd, id = entry.id)
             }
         }
         setSetting(SEALED_CATALOG_SEED_VERSION_KEY, SEALED_CATALOG_SEED_VERSION.toString())
@@ -4052,6 +4055,37 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // Kompletter Katalog über alle Sets hinweg (für die Suche beim Hinzufügen)
     fun getAllCatalog(): List<CardCatalogEntity> {
         return allSets.flatMap { (set, _) -> dbQueries.selectCatalogForSet(set.id).executeAsList() }
+    }
+
+    // --- TCGplayer-Preise (30.09., siehe TcgplayerPriceSync.kt) ---
+
+    // Gruppen (= TCGplayer-Sets) aller Karten/Produkte, deren Preis der
+    // Nutzer sieht: Sammlung, Wants, Binder, Decks, Vault (alle Accounts)
+    fun tcgplayerRelevantGroupIds(): Set<Int> {
+        val cardIds = dbQueries.selectPriceRelevantCardIds().executeAsList().mapNotNull { it }
+        val sealedIds = dbQueries.selectPriceRelevantSealedIds().executeAsList().mapNotNull { it }
+        return cardIds.mapNotNull { TcgplayerMapping.card(it)?.groupId }.toSet() +
+            sealedIds.mapNotNull { TcgplayerMapping.sealed(it)?.groupId }.toSet()
+    }
+
+    fun tcgplayerGroupFetchTimes(): Map<Int, Long> =
+        dbQueries.selectTcgplayerGroupFetches().executeAsList().associate { it.groupId.toInt() to it.fetchedAt }
+
+    // Preise einer abgeholten Gruppe auf alle zugeordneten Karten/Produkte
+    // schreiben. Karten, deren Produkt (noch) keinen Preis hat, werden auf
+    // NULL gesetzt statt einen alten Wert stehen zu lassen.
+    fun applyTcgplayerGroupPrices(groupId: Int, pricesByProduct: Map<Int, Map<String, Double>>) {
+        dbQueries.transaction {
+            TcgplayerMapping.cardsInGroup(groupId).forEach { (cardId, entry) ->
+                val price = pricesByProduct[entry.productId]?.let { pickTcgplayerPrice(it, entry.subType) }
+                dbQueries.updateCatalogUsdPrice(price, cardId)
+            }
+            TcgplayerMapping.sealedInGroup(groupId).forEach { (sealedId, entry) ->
+                val price = pricesByProduct[entry.productId]?.let { pickTcgplayerPrice(it, entry.subType) }
+                dbQueries.updateSealedCatalogPrice(price, sealedId)
+            }
+            dbQueries.upsertTcgplayerGroupFetch(groupId.toLong(), currentTimeMillis())
+        }
     }
 
     // Cardmarket-Preisabgleich (28.07., verfeinert nach Nutzer-Vorgabe
@@ -4627,8 +4661,15 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // Alle Einträge (über alle TCGs), deren Alarm-Schwelle der aktuelle
     // Cardmarket-Preis erreicht/unterschritten hat - für die Meldung beim
     // App-Start nach dem täglichen Preisabgleich
-    fun getTriggeredSealedAlarms(accountId: Long) =
-        dbQueries.selectTriggeredSealedAlarms(accountId).executeAsList()
+    // usd (30.09.): bei gewählter TCGplayer-Preisquelle gegen den Dollar-Preis prüfen
+    fun getTriggeredSealedAlarms(accountId: Long, usd: Boolean = false): List<com.tcgportfolio.companion.db.SelectTriggeredSealedAlarms> =
+        if (usd) {
+            dbQueries.selectTriggeredSealedAlarmsUsd(accountId).executeAsList().map {
+                com.tcgportfolio.companion.db.SelectTriggeredSealedAlarms(it.id, it.game, it.priceAlarmEur, it.name, it.marketPriceEur)
+            }
+        } else {
+            dbQueries.selectTriggeredSealedAlarms(accountId).executeAsList()
+        }
 
     // Eigener Preis für Sealed-Produkte (20.08., Nutzer-Vorgabe "genau so
     // wie bei Karten") - gleiche Semantik wie setCustomPrice() darunter
@@ -5401,7 +5442,7 @@ lostThunderSetSeed to lostThunderCatalogSeed,
     // "keine Prüfung verfügbar", die UI zeigt dann nichts statt einer
     // falschen "alles ok"-Aussage)
     fun validateDeck(deckId: Long, game: String): DeckRuleCheckResult? {
-        if (game != "Pokemon" && game != "DBFW" && game != "MTG" && game != "FinalFantasy") return null
+        if (game !in setOf("Pokemon", "DBFW", "MTG", "FinalFantasy", "OnePiece", "Digimon")) return null
         val cards = getDeckCards(deckId).map {
             DeckRuleCheckCard(
                 cardId = it.cardId,
@@ -5409,7 +5450,8 @@ lostThunderSetSeed to lostThunderCatalogSeed,
                 quantity = it.quantity,
                 supertype = it.ruleSupertype,
                 subtypes = decodeRuleSubtypes(it.ruleSubtypes),
-                number = it.number
+                number = it.number,
+                rarity = it.rarity
             )
         }
         val deck = dbQueries.selectDeckById(deckId).executeAsOneOrNull()
@@ -5419,6 +5461,9 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             // Magic (08.09.): nur mit gewähltem Format, siehe MtgDeckRules.kt
             "MTG" -> MtgFormat.fromKey(deck?.format)?.let { checkMtgDeckRules(cards, it, deck?.commanderCardId) }
             "FinalFantasy" -> checkFinalFantasyDeckRules(cards)
+            // One Piece + Digimon (30.09., siehe OnePieceDigimonDeckRules.kt)
+            "OnePiece" -> checkOnePieceDeckRules(cards)
+            "Digimon" -> checkDigimonDeckRules(cards)
             else -> null
         }
     }
@@ -5467,6 +5512,21 @@ lostThunderSetSeed to lostThunderCatalogSeed,
             dbQueries.updateDeckFormat(effectiveFormat, commander, deckId)
         }
         return deckId
+    }
+
+    // Starter-Deck als neues Deck (29.09., siehe StarterDecks.kt) - Karten-Ids
+    // stehen fest, nur noch prüfen, ob sie im lokalen Katalog sind (ein nicht
+    // geseedetes Set darf das Anlegen nicht abbrechen). Rückgabe: Deck-Id +
+    // Anzahl übernommener Karten + fehlende Ids
+    fun createDeckFromStarterList(accountId: Long, deck: StarterDeckList): Triple<Long, Long, List<String>> {
+        val cards = deck.cards.orEmpty()
+        val present = cards.filter { (cardId, _) -> dbQueries.selectCatalogCardById(cardId).executeAsOneOrNull() != null }
+        val missing = cards.map { it.first } - present.map { it.first }.toSet()
+        val deckId = addDeck(accountId, deck.name, deck.game)
+        dbQueries.transaction {
+            present.forEach { (cardId, quantity) -> addCardToDeck(deckId, cardId, quantity.toLong()) }
+        }
+        return Triple(deckId, present.sumOf { it.second.toLong() }, missing)
     }
 
     // --- Export/Import (Backup, solange es noch keinen Sync-Server gibt) ---

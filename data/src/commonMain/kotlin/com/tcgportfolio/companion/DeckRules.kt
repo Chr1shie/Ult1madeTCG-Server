@@ -17,7 +17,9 @@ data class DeckRuleCheckCard(
     val quantity: Long,
     val supertype: String?,
     val subtypes: List<String>,
-    val number: String? = null
+    val number: String? = null,
+    // Katalog-Seltenheit (30.09.) - bei One Piece erkennt "L" den Leader
+    val rarity: String? = null
 )
 
 data class DeckRuleCheckResult(
