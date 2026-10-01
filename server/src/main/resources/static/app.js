@@ -475,6 +475,31 @@ let openVaultCategory = "ALL";
 // App-Default, bis der echte Wert vom Server geladen ist.
 let marketFactor = 0.8;
 
+// Preisquelle (01.10., Parität zur App 1.4, siehe GET/POST /api/priceSource):
+// "cardmarket" (EUR) oder "tcgplayer" (USD), serverweit. Spiele ohne
+// Cardmarket-Preise (Gundam) zeigen IMMER TCGplayer-Dollar. Pro Karte immer
+// nur EINE Währung; spielübergreifende Summen addieren nie Euro und Dollar.
+let PRICE_SOURCE = "cardmarket";
+let USD_ONLY_GAMES = ["Gundam"];
+let priceSourceLoading = null; // {done, total} während TCGplayer-Preise laden
+function usdFor(game) { return PRICE_SOURCE === "tcgplayer" || USD_ONLY_GAMES.includes(game); }
+// Marktpreis der gewählten Quelle (item.game bzw. aktuelles TCG)
+function mp(item, game) {
+  const g = game || item.game || activeGame;
+  const v = usdFor(g) ? item.marketPriceUsd : item.marketPriceEur;
+  return (v === null || v === undefined) ? null : v;
+}
+async function loadPriceSource() {
+  try {
+    const res = await authedFetch("/api/priceSource");
+    if (!res.ok) return;
+    const data = await res.json();
+    PRICE_SOURCE = data.source || "cardmarket";
+    USD_ONLY_GAMES = data.usdOnlyGames || ["Gundam"];
+    priceSourceLoading = data.loading ? { done: data.done, total: data.total } : null;
+  } catch (e) { /* offline - Cardmarket bleibt */ }
+}
+
 // Kartenbild-Sprache (07.09., sprachbewusste Kartenbilder - siehe
 // LocalizedCardImages.kt): globaler Modus "asScanned"/"de"/"en" vom Server
 // (GET/POST /api/cardImageLanguageMode, synct mit der App). Jede
@@ -726,7 +751,8 @@ function labelFor(game) {
 // EUR-Formatierung wie in der App (ValueOverviewScreen.kt: Komma statt
 // Punkt, "€" hinten) - eigener Kotlin-unabhängiger Nachbau hier, kein
 // geteilter Code zwischen App und Weboberfläche (siehe CONCEPT.md)
-function formatEur(amount) {
+// Seit 01.10. währungsbewusst: "12,50 €" bzw. "$1,234.50" (US-Schreibweise)
+function formatMoney(amount, usd) {
   if (amount === null || amount === undefined) return "–";
   const negative = amount < 0;
   const abs = Math.abs(amount);
@@ -734,8 +760,15 @@ function formatEur(amount) {
   const whole = Math.floor(cents / 100);
   const fraction = cents % 100;
   const fractionStr = fraction < 10 ? "0" + fraction : "" + fraction;
+  if (usd) {
+    return (negative ? "-" : "") + "$" + String(whole).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + fractionStr;
+  }
   return (negative ? "-" : "") + whole + "," + fractionStr + " €";
 }
+// In der Währung des aktuell gewählten TCGs
+function formatEur(amount) { return formatMoney(amount, usdFor(activeGame)); }
+// Immer Euro - für die reinen Cardmarket-Ansichten (Zuordnung, Notierungen)
+function formatEurFixed(amount) { return formatMoney(amount, false); }
 
 // AUSSCHLIESSLICH der echte Cardmarket-Preis (03.08., Nutzer-Vorgabe "dann
 // nehmen wir USD-Alt-Preise raus und gut ist" - siehe CONCEPT.md
@@ -743,16 +776,14 @@ function formatEur(amount) {
 // die kompakte Kachel-Badge, nicht die ausführliche Detailansicht (siehe
 // renderDetailCardmarketOptions()).
 function formatTileMarketPrice(item) {
-  if (item.marketPriceEur !== null && item.marketPriceEur !== undefined) {
-    return formatEur(item.marketPriceEur);
-  }
-  return "–";
+  const price = mp(item);
+  return price !== null ? formatMoney(price, usdFor(item.game || activeGame)) : "–";
 }
 
 // Für Summenbildung (Wishlist-/Binder-Statuszeilen) - dieselbe
 // Cardmarket-only-Regel wie formatTileMarketPrice() oben
 function tileMarketEur(item) {
-  return item.marketPriceEur || 0;
+  return mp(item) || 0;
 }
 
 function setAccent(color) {
@@ -1217,7 +1248,7 @@ function closeSealedWishlistOverlay() {
 }
 
 function sealedWlPriceSum(items) {
-  return items.reduce((sum, it) => sum + (it.marketPriceEur || 0), 0);
+  return items.reduce((sum, it) => sum + (mp(it) || 0), 0);
 }
 
 function buildSealedWlRow(mainText, subText, thumbUrl) {
@@ -1288,7 +1319,7 @@ function renderSealedWishlistOverlay() {
       content.appendChild(empty);
     }
     for (const it of listItems) {
-      const priceText = it.marketPriceEur != null ? formatEur(it.marketPriceEur) : tr("no price", "kein Preis");
+      const priceText = mp(it) != null ? formatEur(mp(it)) : tr("no price", "kein Preis");
       const alarmText = it.priceAlarmEur != null
         ? "🔔 " + tr("alert at ", "Alarm bei ") + formatEur(it.priceAlarmEur)
         : "";
@@ -2854,7 +2885,7 @@ function renderOpenSetBody(body, set, ownedForGame) {
   const ownedByCardId = new Map(ownedInSet.map(item => [item.cardId, item]));
   if (setFilter === "full") {
     const items = catalog.map(c => ownedByCardId.get(c.id) || {
-      cardId: c.id, name: c.name, imageUrl: c.imageUrl, marketPriceEur: c.marketPriceEur,
+      cardId: c.id, name: c.name, imageUrl: c.imageUrl, marketPriceEur: c.marketPriceEur, marketPriceUsd: c.marketPriceUsd,
       quantity: 0, isHolo: false, game: activeGame, rarity: c.rarity
     });
     const missingIds = new Set(catalog.filter(c => !ownedByCardId.has(c.id)).map(c => c.id));
@@ -2867,7 +2898,7 @@ function renderOpenSetBody(body, set, ownedForGame) {
   } else {
     // missing
     const missing = catalog.filter(c => !ownedByCardId.has(c.id)).map(c => ({
-      cardId: c.id, name: c.name, imageUrl: c.imageUrl, marketPriceEur: c.marketPriceEur,
+      cardId: c.id, name: c.name, imageUrl: c.imageUrl, marketPriceEur: c.marketPriceEur, marketPriceUsd: c.marketPriceUsd,
       quantity: 0, isHolo: false, game: activeGame, rarity: c.rarity
     }));
     const displayed = applySortAndFilter(missing);
@@ -4126,8 +4157,8 @@ async function ensureSealedCatalogLoaded(game) {
 // der App ist, genau so übernehmen") - fast 1:1-Nachbau von
 // ValueOverviewScreen.kt in der App.
 function marketTotalEur(item) {
-  if (item.marketPriceEur === null || item.marketPriceEur === undefined) return null;
-  return item.marketPriceEur * item.quantity;
+  const price = mp(item);
+  return price === null ? null : price * item.quantity;
 }
 
 // Eigener Preis (20.08., Parität zur App): ist einer gesetzt und der
@@ -4137,12 +4168,12 @@ function marketTotalEur(item) {
 // ValueOverviewScreen.kt für dieselbe Logik App-seitig.
 function effectiveUnitEurGlobal(item) {
   if (item.customPriceEur !== null && item.customPriceEur !== undefined && item.customPriceInTotal === 1) return item.customPriceEur;
-  return (item.marketPriceEur === null || item.marketPriceEur === undefined) ? null : item.marketPriceEur;
+  return mp(item);
 }
 
 function effectiveUnitEurGame(item) {
   if (item.customPriceEur !== null && item.customPriceEur !== undefined && (item.customPriceInTotal === 1 || item.customPriceInGameTotal === 1)) return item.customPriceEur;
-  return (item.marketPriceEur === null || item.marketPriceEur === undefined) ? null : item.marketPriceEur;
+  return mp(item);
 }
 
 function effectiveTotalEurGame(item) {
@@ -4166,8 +4197,17 @@ function renderValuePanel() {
   const totalSpentEur = all.reduce((s, i) => s + i.purchasePrice * i.quantity, 0);
   const totalProfitEur = totalMarketEur - totalSpentEur;
 
-  const grandTotalEur = allCards.reduce((s, i) => s + ((effectiveUnitEurGlobal(i) || 0) * i.quantity), 0) +
-    allSealed.reduce((s, i) => s + ((effectiveUnitEurGlobal(i) || 0) * i.quantity), 0);
+  // Dollar-only-Spiele (01.10., Gundam) laufen bei Euro-Anzeige NICHT in die
+  // Euro-Summe, sondern als eigene Dollar-Zeile darunter - nie Euro + Dollar
+  const globalUsd = PRICE_SOURCE === "tcgplayer";
+  const separateUsd = (game) => !globalUsd && USD_ONLY_GAMES.includes(game);
+  const everything = allCards.concat(allSealed);
+  const grandTotalEur = everything.filter(i => !separateUsd(i.game))
+    .reduce((s, i) => s + ((effectiveUnitEurGlobal(i) || 0) * i.quantity), 0);
+  const separateTotals = {};
+  everything.filter(i => separateUsd(i.game)).forEach(i => {
+    separateTotals[i.game] = (separateTotals[i.game] || 0) + (effectiveUnitEurGlobal(i) || 0) * i.quantity;
+  });
 
   // "Eigene Werte" (20.08., Parität zur App): Summe ALLER von Hand
   // eingetragenen Preise über alle TCGs, unabhängig von den Schaltern
@@ -4186,15 +4226,19 @@ function renderValuePanel() {
   const note = document.createElement("p");
   note.className = "status";
   note.style.cssText = "display:block;text-align:left;margin:0;color:rgba(255,255,255,0.55);font-size:0.85rem;";
-  note.textContent = tr("Market prices come from Cardmarket. Cards/products without a Cardmarket match don't show up here yet.", "Marktpreise stammen von Cardmarket. Karten/Produkte ohne Cardmarket-Zuordnung tauchen hier noch nicht auf.");
+  const srcName = usdFor(activeGame) ? "TCGplayer" : "Cardmarket";
+  note.textContent = tr("Market prices come from " + srcName + ". Cards/products without a " + srcName + " price don't show up here yet.", "Marktpreise stammen von " + srcName + ". Karten/Produkte ohne " + srcName + "-Preis tauchen hier noch nicht auf.");
   panel.appendChild(note);
 
   const heroAll = document.createElement("div");
   heroAll.className = "valueHero";
   heroAll.innerHTML =
     "<div class=\"label\">" + tr("Total collection value", "Gesamtwert der Sammlung") + "</div>" +
-    "<div class=\"amount\">" + formatEur(grandTotalEur) + "</div>" +
-    "<div class=\"label\">" + tr("all TCGs", "alle TCGs") + "</div>";
+    "<div class=\"amount\">" + formatMoney(grandTotalEur, globalUsd) + "</div>" +
+    "<div class=\"label\">" + (Object.keys(separateTotals).length === 0 ? tr("all TCGs", "alle TCGs")
+      : tr("all TCGs with Cardmarket prices", "alle TCGs mit Cardmarket-Preisen") +
+        Object.entries(separateTotals).filter(([, v]) => v > 0).map(([g, v]) =>
+          "<br>+ " + formatMoney(v, true) + " " + labelFor(g) + tr(" (TCGplayer, not included)", " (TCGplayer, nicht enthalten)")).join("")) + "</div>";
   panel.appendChild(heroAll);
 
   const heroGame = document.createElement("div");
@@ -4224,7 +4268,7 @@ function renderValuePanel() {
   }
 
   addStat(tr("Spent", "Ausgegeben"), formatEur(totalSpentEur));
-  addStat(tr("Your own values", "Eigene Werte"), formatEur(yourWorthEur), tr("all TCGs, always counted", "alle TCGs, zählt immer"));
+  addStat(tr("Your own values", "Eigene Werte"), formatMoney(yourWorthEur, PRICE_SOURCE === "tcgplayer"), tr("all TCGs, always counted", "alle TCGs, zählt immer"));
   addStat(
     totalProfitEur >= 0 ? tr("Profit so far", "Gewinn bisher") : tr("Loss so far", "Verlust bisher"),
     formatEur(totalProfitEur),
@@ -4323,7 +4367,7 @@ function openCustomPricedOverlay(cpCards, cpSealed) {
       ? tr("counts in all totals", "zählt in allen Gesamtwerten")
       : (item.customPriceInGameTotal === 1 ? tr("counts in this TCG's total only", "zählt nur im TCG-Gesamtwert") : tr("not counted in any total", "zählt in keinem Gesamtwert"));
     col.innerHTML = "<div style=\"font-weight:700;\">" + item.name + "</div>" +
-      "<div style=\"font-size:0.82rem;color:" + colorFor(item.game) + ";\">" + formatEur(item.customPriceEur) + " · " + scope + "</div>";
+      "<div style=\"font-size:0.82rem;color:" + colorFor(item.game) + ";\">" + formatMoney(item.customPriceEur, usdFor(item.game)) + " · " + scope + "</div>";
     row.appendChild(col);
     const trash = document.createElement("button");
     trash.className = "detailCmChip";
@@ -4407,7 +4451,7 @@ async function openCardmarketMappingOverlay() {
   } else {
     mapped.forEach(card => {
       const subtitle = "→ " + card.manualProductName +
-        (card.marketPriceEur !== null && card.marketPriceEur !== undefined ? " (" + formatEur(card.marketPriceEur) + ")" : " - " + tr("no price found", "kein Preis gefunden"));
+        (card.marketPriceEur !== null && card.marketPriceEur !== undefined ? " (" + formatEurFixed(card.marketPriceEur) + ")" : " - " + tr("no price found", "kein Preis gefunden"));
       list.appendChild(buildCardmarketMappingRow(card, subtitle, card.id));
     });
   }
@@ -4499,7 +4543,7 @@ function openCardmarketAssignOverlay(card) {
       row.style.cssText = "display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;";
       row.innerHTML =
         "<div style=\"color:#fff;font-size:0.85rem;\">" + item.name + "</div>" +
-        "<div style=\"color:var(--accent);font-weight:bold;font-size:0.85rem;\">" + (item.priceEur !== null ? formatEur(item.priceEur) : "-") + "</div>";
+        "<div style=\"color:var(--accent);font-weight:bold;font-size:0.85rem;\">" + (item.priceEur !== null ? formatEurFixed(item.priceEur) : "-") + "</div>";
       row.addEventListener("click", async () => {
         await fetch("/api/cardmarketMapping/assign", {
           method: "POST",
@@ -4623,7 +4667,7 @@ async function openSealedCardmarketMappingOverlay() {
   } else {
     mapped.forEach(item => {
       const subtitle = "→ " + item.manualProductName +
-        (item.marketPriceEur !== null && item.marketPriceEur !== undefined ? " (" + formatEur(item.marketPriceEur) + ")" : " - " + tr("no price found", "kein Preis gefunden"));
+        (item.marketPriceEur !== null && item.marketPriceEur !== undefined ? " (" + formatEurFixed(item.marketPriceEur) + ")" : " - " + tr("no price found", "kein Preis gefunden"));
       list.appendChild(buildSealedCardmarketMappingRow(item, subtitle, item.id));
     });
   }
@@ -4720,7 +4764,7 @@ function openSealedCardmarketAssignOverlay(item) {
         row.style.cssText = "display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;";
         row.innerHTML =
           "<div style=\"color:#fff;font-size:0.85rem;\">" + result.name + "</div>" +
-          "<div style=\"color:var(--accent);font-weight:bold;font-size:0.85rem;\">" + (result.priceEur !== null ? formatEur(result.priceEur) : "-") + "</div>";
+          "<div style=\"color:var(--accent);font-weight:bold;font-size:0.85rem;\">" + (result.priceEur !== null ? formatEurFixed(result.priceEur) : "-") + "</div>";
         row.addEventListener("click", async () => {
           await fetch("/api/sealedCardmarketMapping/assign", {
             method: "POST",
@@ -4858,11 +4902,16 @@ async function openCardDetail(item, sourceEl) {
   // war der jetzt behobene Nutzer-Fund ("können wir das dann so wie bei den
   // Karten machen die garnicht zu geordnet sind oder von denen es mehrere
   // Preise gibt").
-  const hasCardmarketOptions = (item.marketPriceEurOptions || []).length > 0;
+  // TCGplayer-Dollar (01.10.): ein Preis je Karte, die Cardmarket-
+  // Notierungsauswahl entfällt
+  const detailUsd = usdFor(item.game || activeGame);
+  const hasCardmarketOptions = !detailUsd && (item.marketPriceEurOptions || []).length > 0;
   const hasSimpleEurPrice = !hasCardmarketOptions && item.marketPriceEur !== null && item.marketPriceEur !== undefined;
-  document.getElementById("detailPriceRow").innerHTML = hasCardmarketOptions ? "" :
+  document.getElementById("detailPriceRow").innerHTML = detailUsd
+    ? "<span>" + tr("Market price (TCGplayer)", "Marktpreis (TCGplayer)") + "</span><span class=\"value\">" + formatMoney(mp(item), true) + "</span>"
+    : hasCardmarketOptions ? "" :
     hasSimpleEurPrice
-      ? "<span>" + tr("Market price (Cardmarket)", "Marktpreis (Cardmarket)") + "</span><span class=\"value\">" + formatEur(item.marketPriceEur) + "</span>"
+      ? "<span>" + tr("Market price (Cardmarket)", "Marktpreis (Cardmarket)") + "</span><span class=\"value\">" + formatEurFixed(item.marketPriceEur) + "</span>"
       : "<span>" + tr("Market price", "Marktpreis") + "</span><span class=\"value\">–</span>";
   renderDetailCardmarketOptions(item);
   renderDetailArtVariants(item);
@@ -5280,18 +5329,18 @@ function renderDetailCardmarketOptions(item) {
   wrap.classList.remove("visible");
   row.style.cursor = "";
   row.onclick = null;
-  if (options.length === 0) {
+  if (options.length === 0 || usdFor(item.game || activeGame)) {
     row.innerHTML = "";
     return;
   }
   if (options.length <= 1) {
-    row.innerHTML = "<span>" + tr("Market price (Cardmarket)", "Marktpreis (Cardmarket)") + "</span><span class=\"value\">" + formatEur(item.marketPriceEur || 0) + "</span>";
+    row.innerHTML = "<span>" + tr("Market price (Cardmarket)", "Marktpreis (Cardmarket)") + "</span><span class=\"value\">" + formatEurFixed(item.marketPriceEur || 0) + "</span>";
     return;
   }
 
   const identity = item.cardId || item.catalogId || item.name;
   const expanded = detailCmExpandedFor === identity;
-  row.innerHTML = "<span>" + tr("Prices", "Preise") + "</span><span class=\"value\">" + formatEur(item.marketPriceEur || 0) + " " + (expanded ? "▴" : "▾") + "</span>";
+  row.innerHTML = "<span>" + tr("Prices", "Preise") + "</span><span class=\"value\">" + formatEurFixed(item.marketPriceEur || 0) + " " + (expanded ? "▴" : "▾") + "</span>";
   row.style.cursor = "pointer";
   row.onclick = () => {
     detailCmExpandedFor = expanded ? null : identity;
@@ -5317,7 +5366,7 @@ function renderDetailCardmarketOptions(item) {
     // Index 0 ist normalerweise die "normale" Variante (günstigste) -
     // "Standard" statt "Special Card #1" (Nutzer-Vorgabe 31.07.), erst ab
     // Index 1 wirklich besondere Notierungen
-    chip.textContent = index === 0 ? ("Standard (" + formatEur(price) + ")") : ("Special Card #" + index + " (" + formatEur(price) + ")");
+    chip.textContent = index === 0 ? ("Standard (" + formatEurFixed(price) + ")") : ("Special Card #" + index + " (" + formatEurFixed(price) + ")");
     // Sealed-Produkte (11.08.) - dieselbe Chip-Liste, aber item.cardId gibt
     // es dort nicht (siehe item.category !== undefined-Unterscheidung
     // anderswo in dieser Datei), stattdessen item.catalogId.
@@ -5568,6 +5617,8 @@ document.addEventListener("keydown", (e) => {
 
 async function loadData() {
   const status = document.getElementById("status");
+  // Preisquelle zuerst (01.10.), damit alle Preise gleich in der richtigen Währung rendern
+  await loadPriceSource();
   try {
     const [cardsRes, sealedRes] = await Promise.all([
       authedFetch("/api/collection"),
@@ -5717,6 +5768,57 @@ function renderDetailImageLanguage(item) {
 
 // Globale Kartenbild-Sprache (07.09.) - Chips im Accounts-Overlay, speichert
 // sofort (POST /api/cardImageLanguageMode) und zeichnet das Grid neu
+// Preisquelle (01.10., Parität zur App 1.4) - Chips im Einstellungs-Overlay.
+// Beim Wechsel auf TCGplayer holt der Server die Preise der eigenen Sets im
+// Hintergrund; hier wird der Fortschritt angezeigt und danach neu geladen.
+function renderPriceSourceSection() {
+  const wrap = document.getElementById("priceSourceChips");
+  const status = document.getElementById("priceSourceStatus");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  [["cardmarket", "Cardmarket (€)"], ["tcgplayer", "TCGplayer ($)"]].forEach(([code, label]) => {
+    const chip = document.createElement("button");
+    chip.className = "gridSortChip" + (PRICE_SOURCE === code ? " active" : "");
+    chip.textContent = label;
+    chip.disabled = !!priceSourceLoading;
+    chip.addEventListener("click", async () => {
+      if (PRICE_SOURCE === code || priceSourceLoading) return;
+      const res = await fetch("/api/priceSource", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({ source: code })
+      });
+      if (!res.ok) {
+        showAddToast(tr("Saving failed.", "Speichern fehlgeschlagen."));
+        return;
+      }
+      const data = await res.json();
+      PRICE_SOURCE = data.source;
+      priceSourceLoading = data.loading ? { done: 0, total: 0 } : null;
+      renderPriceSourceSection();
+      if (priceSourceLoading) pollPriceSourceProgress(); else loadData();
+    });
+    wrap.appendChild(chip);
+  });
+  if (status) {
+    status.textContent = !priceSourceLoading ? "" :
+      (priceSourceLoading.total
+        ? tr("Loading TCGplayer prices… " + priceSourceLoading.done + " of " + priceSourceLoading.total + " sets",
+             "TCGplayer-Preise werden geladen … " + priceSourceLoading.done + " von " + priceSourceLoading.total + " Sets")
+        : tr("Loading TCGplayer prices…", "TCGplayer-Preise werden geladen …"));
+  }
+}
+
+async function pollPriceSourceProgress() {
+  while (true) {
+    await new Promise(r => setTimeout(r, 1500));
+    await loadPriceSource();
+    renderPriceSourceSection();
+    if (!priceSourceLoading) break;
+  }
+  loadData();
+}
+
 function renderCardImageLanguageSection() {
   const wrap = document.getElementById("cardImageLangChips");
   if (!wrap) return;
@@ -5798,6 +5900,7 @@ function renderLanguageSection() {
 
 function renderAccountsOverlay() {
   renderLanguageSection();
+  renderPriceSourceSection();
   renderHiddenGamesSection();
   const list = document.getElementById("accountsList");
   list.innerHTML = "";

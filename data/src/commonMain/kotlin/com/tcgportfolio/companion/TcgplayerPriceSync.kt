@@ -36,6 +36,12 @@ const val PRICE_SOURCE_SETTING_KEY = "priceSource"
 const val PRICE_SOURCE_CARDMARKET = "cardmarket"
 const val PRICE_SOURCE_TCGPLAYER = "tcgplayer"
 
+// Spiele ohne Cardmarket-Preise (01.10., Nutzer-Idee "bei Gundam haben wir ja
+// keine Euro-Preise ... zumindest Richtwerte") - zeigen IMMER TCGplayer-Dollar,
+// ihre Preise werden auch bei Euro-Anzeige geladen. Wert = TCGplayer-Kategorie.
+// Cyberpunk bewusst NICHT: laut Nutzer schon bei Cardmarket gelistet -> Euro.
+val TCGPLAYER_ONLY_GAMES: Map<String, Int> = mapOf("Gundam" to 86)
+
 private const val TCGCSV_BASE = "https://tcgcsv.com/tcgplayer"
 private const val TCGCSV_USER_AGENT = "Ult1madeTCG/1.4 (+https://ult1madetcg.com)"
 private const val TCGPLAYER_MAX_AGE_MILLIS = 20L * 60 * 60 * 1000
@@ -133,8 +139,11 @@ suspend fun refreshTcgplayerPrices(
     force: Boolean = false,
     onProgress: ((done: Int, total: Int) -> Unit)? = null
 ): Int {
-    if (repository.getSetting(PRICE_SOURCE_SETTING_KEY) != PRICE_SOURCE_TCGPLAYER) return 0
-    val wanted = if (onlyExtra) extraGroupIds else repository.tcgplayerRelevantGroupIds() + extraGroupIds
+    // Bei Euro-Anzeige nur die Spiele ohne Cardmarket-Preise (TCGPLAYER_ONLY_GAMES)
+    val allGames = repository.getSetting(PRICE_SOURCE_SETTING_KEY) == PRICE_SOURCE_TCGPLAYER
+    val onlyCategories = TCGPLAYER_ONLY_GAMES.values.toSet()
+    val wanted = (if (onlyExtra) extraGroupIds else repository.tcgplayerRelevantGroupIds() + extraGroupIds)
+        .filter { allGames || TcgplayerMapping.groupCategory[it] in onlyCategories }
     val fetched = repository.tcgplayerGroupFetchTimes()
     val now = currentTimeMillis()
     val due = wanted.filter { gid ->

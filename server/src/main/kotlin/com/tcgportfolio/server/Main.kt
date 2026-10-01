@@ -9,6 +9,12 @@ import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_EN
 import com.tcgportfolio.companion.CARD_IMAGE_LANGUAGE_MODE_AS_SCANNED
 import com.tcgportfolio.companion.PortfolioRepository
 import com.tcgportfolio.companion.refreshCardmarketPricesIfStale
+import com.tcgportfolio.companion.refreshTcgplayerPrices
+import com.tcgportfolio.companion.tcgplayerGroupIdsForCards
+import com.tcgportfolio.companion.PRICE_SOURCE_SETTING_KEY
+import com.tcgportfolio.companion.PRICE_SOURCE_CARDMARKET
+import com.tcgportfolio.companion.PRICE_SOURCE_TCGPLAYER
+import com.tcgportfolio.companion.TCGPLAYER_ONLY_GAMES
 import com.tcgportfolio.companion.refreshDbfwCardRulesIfStale
 import com.tcgportfolio.companion.refreshPokemonCardRulesIfStale
 import com.tcgportfolio.companion.searchCardmarketProducts
@@ -55,6 +61,7 @@ import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -280,6 +287,30 @@ data class SealedProductResponse(
 // übernehmen - beide Werte müssen nicht übereinstimmen.
 @Serializable
 data class MarketFactorResponse(val factor: Float)
+
+// Preisquelle der Weboberfläche (01.10., Parität zur App 1.4, siehe
+// PriceDisplay.kt/TcgplayerPriceSync.kt): "cardmarket" (EUR) oder "tcgplayer"
+// (USD), serverweit gespeichert wie der Umrechnungsfaktor - bewusst getrennt
+// von der Einstellung der App. loading/done/total = Fortschritt beim Laden der
+// TCGplayer-Preise; usdOnlyGames = Spiele ohne Cardmarket (immer Dollar).
+@Serializable
+data class PriceSourceResponse(
+    val source: String,
+    val loading: Boolean = false,
+    val done: Int = 0,
+    val total: Int = 0,
+    val usdOnlyGames: List<String> = emptyList()
+)
+
+@Serializable
+data class SetPriceSourceRequest(val source: String)
+
+// Laufender TCGplayer-Abruf (für die Fortschrittsanzeige der Weboberfläche)
+object TcgplayerRefreshState {
+    @Volatile var loading = false
+    @Volatile var done = 0
+    @Volatile var total = 0
+}
 
 // Set-Tracking auf der Weboberfläche (26.07.) - Sets als eigene Antwort mit
 // Fortschritt (owned/total), analog zur Set-Auswahl in der App
@@ -522,7 +553,9 @@ data class SealedWishlistItemResponse(
     val category: String?,
     val imageUrl: String?,
     val marketPriceEur: Double?,
-    val priceAlarmEur: Double?
+    val priceAlarmEur: Double?,
+    // TCGplayer-Preis (01.10., siehe 37.sqm)
+    val marketPriceUsd: Double? = null
 )
 
 @Serializable
@@ -870,6 +903,13 @@ fun Application.ult1madeServerModule() {
             } catch (e: Exception) {
                 logger.warn("Cardmarket-Preisabgleich fehlgeschlagen: ${e.message}")
             }
+            // TCGplayer-Preise (01.10.) - nur bei Dollar-Anzeige alle eigenen
+            // Sets, sonst nur Gundam (keine Cardmarket-Preise), max. 1x täglich
+            try {
+                refreshTcgplayerPrices(repository)
+            } catch (e: Exception) {
+                logger.warn("TCGplayer-Preisabgleich fehlgeschlagen: ${e.message}")
+            }
             delay(6 * 60 * 60 * 1000L)
         }
     }
@@ -1148,6 +1188,12 @@ fun Application.ult1madeServerModule() {
             if (setId == null) {
                 call.respond(HttpStatusCode.BadRequest, "setId fehlt")
                 return@get
+            }
+            // TCGplayer-Preise dieses Sets (01.10.) - nur bei Dollar-Anzeige bzw.
+            // für Gundam, höchstens 1x täglich je Set (refreshTcgplayerPrices
+            // filtert selbst nach Quelle und Alter)
+            runCatching {
+                refreshTcgplayerPrices(repository, tcgplayerGroupIdsForCards(repository.getCatalogForSet(setId).map { it.id }), onlyExtra = true)
             }
             val cards = repository.getCatalogForSet(setId).map {
                 CatalogCardResponse(
@@ -1642,7 +1688,8 @@ fun Application.ult1madeServerModule() {
                     category = it.category,
                     imageUrl = it.imageUrl,
                     marketPriceEur = it.marketPriceEur,
-                    priceAlarmEur = it.priceAlarmEur
+                    priceAlarmEur = it.priceAlarmEur,
+                    marketPriceUsd = it.marketPriceUsd
                 )
             }
             call.respond(results)
@@ -2242,6 +2289,43 @@ fun Application.ult1madeServerModule() {
             // ist, siehe PortfolioRepository.importSyncData()
             repository.setSetting("marketFactorUpdatedAt", System.currentTimeMillis().toString())
             call.respond(MarketFactorResponse(clamped))
+        }
+        // Preisquelle (01.10., siehe PriceSourceResponse) - beim Wechsel auf
+        // TCGplayer werden die Preise der eigenen Sets im Hintergrund geholt,
+        // die Weboberfläche fragt den Fortschritt über GET ab
+        get("/api/priceSource") {
+            call.respond(
+                PriceSourceResponse(
+                    source = repository.getSetting(PRICE_SOURCE_SETTING_KEY) ?: PRICE_SOURCE_CARDMARKET,
+                    loading = TcgplayerRefreshState.loading,
+                    done = TcgplayerRefreshState.done,
+                    total = TcgplayerRefreshState.total,
+                    usdOnlyGames = TCGPLAYER_ONLY_GAMES.keys.toList()
+                )
+            )
+        }
+        post("/api/priceSource") {
+            val body = call.receive<SetPriceSourceRequest>()
+            val source = if (body.source == PRICE_SOURCE_TCGPLAYER) PRICE_SOURCE_TCGPLAYER else PRICE_SOURCE_CARDMARKET
+            repository.setSetting(PRICE_SOURCE_SETTING_KEY, source)
+            if (source == PRICE_SOURCE_TCGPLAYER && !TcgplayerRefreshState.loading) {
+                TcgplayerRefreshState.loading = true
+                TcgplayerRefreshState.done = 0
+                TcgplayerRefreshState.total = 0
+                call.application.launch(Dispatchers.IO) {
+                    try {
+                        refreshTcgplayerPrices(repository) { done, total ->
+                            TcgplayerRefreshState.done = done
+                            TcgplayerRefreshState.total = total
+                        }
+                    } finally {
+                        TcgplayerRefreshState.loading = false
+                    }
+                }
+            }
+            call.respond(
+                PriceSourceResponse(source, TcgplayerRefreshState.loading, usdOnlyGames = TCGPLAYER_ONLY_GAMES.keys.toList())
+            )
         }
         // TCGs pro Account ausblenden (17.08., Nutzer-Vorgabe) - gespeichert
         // als kommaseparierte Codes-Liste im bestehenden Settings-Store, per

@@ -221,6 +221,14 @@
       <p class="backupHint" data-de="Sichtbare TCGs (aktiver Account): Antippen blendet ein TCG in dieser Weboberfläche aus bzw. wieder ein. Karten und Daten bleiben dabei unangetastet.">Visible TCGs (active account): tap to hide or show a TCG in this web UI. Cards and data stay untouched.</p>
       <div id="hiddenGamesChips" class="hiddenGamesChips"></div>
     </div>
+    <!-- Preisquelle (01.10., Parität zur App 1.4) - Cardmarket (EUR) oder
+         TCGplayer (USD), gilt für diesen Server; siehe renderPriceSourceSection()
+         in app.js. Gundam immer in Dollar (Cardmarket führt es nicht). -->
+    <div class="backupSection">
+      <p class="backupHint" data-de="Preise: Cardmarket (Europa, in Euro) oder TCGplayer (USA, in Dollar). Gilt für diese Weboberfläche. TCGplayer-Preise werden einmal am Tag für die Sets mit eigenen Karten geladen und beim Öffnen eines Sets. Gundam steht immer in Dollar, weil Cardmarket es nicht führt.">Prices: Cardmarket (Europe, in euros) or TCGplayer (USA, in dollars). Applies to this web UI. TCGplayer prices are loaded once a day for the sets you have cards in, and when you open a set. Gundam is always shown in dollars, because Cardmarket doesn't list it.</p>
+      <div id="priceSourceChips" class="hiddenGamesChips"></div>
+      <p class="backupStatus" id="priceSourceStatus"></p>
+    </div>
     <!-- Sprache (18.08., Nutzer-Vorgabe "auch hier Englisch als Standard,
          in den Einstellungen auf Deutsch umstellbar") - siehe
          renderLanguageSection() in app.js; Wahl gilt pro Browser
